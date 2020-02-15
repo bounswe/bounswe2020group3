@@ -4,13 +4,13 @@
 This is the github repository for Bogazici University's Fundamentals of Software Engineering courses(CMPE352 and CMPE451). We will work on a project which will be assigned later in these courses as group 3. 
 
 # Group Members
--
--
--
--
--
--
--
--
--
+- Mahir Efe Kaya
+- Mustafa Küçük
+- Ali Furkan Budak
+- Furkan Cansever
+- Handenur Karabul
+- Ramazan Koç
+- Yahya Bedirhan Pak
+- Yusuf Bayam
+- Fatih Akgöz
 

@@ -4,15 +4,13 @@
 Welcome to our github repository for Bogazici University's Fundamentals of Software Engineering courses(CMPE352 and CMPE451). We will work on Academic Collaboration Platform project as group 3. You can view our [Wiki Page](https://github.com/bounswe/bounswe2020group3/wiki) for details.
 
 # Group Members
-* [Mahir Efe KAYA](https://github.com/bounswe/bounswe2020group3/wiki/Mahir-Efe-KAYA)
-* [Ali Furkan Budak](https://github.com/bounswe/bounswe2020group3/wiki/Ali-Furkan-Budak)
-* [Ramazan KOÇ](https://github.com/bounswe/bounswe2020group3/wiki/Ramazan-KOÇ)
-* [Yusuf Bayam](https://github.com/bounswe/bounswe2020group3/wiki/Yusuf-Bayam)
-* [Furkan Cansever](https://github.com/bounswe/bounswe2020group3/wiki/Furkan-Cansever)
-* [Yahya Bedirhan Pak (Communicator)](https://github.com/bounswe/bounswe2020group3/wiki/Yahya-Bedirhan-Pak)
-* [Hande Karabul](https://github.com/bounswe/bounswe2020group3/wiki/Hande-Karabul)
-* [Mustafa Küçük](https://github.com/bounswe/bounswe2020group3/wiki/Mustafa-Kucuk)
-* [Fatih Akgöz](https://github.com/bounswe/bounswe2020group3/wiki/Fatih-Akgoz)
+
+
+|<img src="https://avatars3.githubusercontent.com/u/33317652?s=460&v=4" alt="alt text" width="150" heigth="150"> | <img src="https://avatars0.githubusercontent.com/u/44057069?s=460&v=4" alt="alt text" width="150" heigth="150"> | <img src="https://avatars3.githubusercontent.com/u/40214943?s=460&v=4" alt="alt text" width="150" heigth="150"> | <img src="https://avatars2.githubusercontent.com/u/30761287?s=460&v=4" alt="alt text" width="150" heigth="150"> | <img src="https://avatars0.githubusercontent.com/u/36513454?s=460&v=4" alt="alt text" width="150" heigth="150">
+|---|---|---|---|---|
+|[Yahya Bedirhan Pak   (Communicator)](https://github.com/bounswe/bounswe2020group3/wiki/Yahya-Bedirhan-Pak)|[Mahir Efe Kaya](https://github.com/bounswe/bounswe2020group3/wiki/Mahir-Efe-KAYA)|[Ali Furkan Budak](https://github.com/bounswe/bounswe2020group3/wiki/Ali-Furkan-Budak)|[Furkan Cansever](https://github.com/bounswe/bounswe2020group3/wiki/Furkan-Cansever)|[Yusuf Bayam](https://github.com/bounswe/bounswe2020group3/wiki/Yusuf-Bayam)|
+|<img src="https://avatars1.githubusercontent.com/u/32142999?s=460&v=4" alt="alt text" width="150" heigth="150"> | <img src="https://avatars1.githubusercontent.com/u/40241636?s=460&v=4" alt="alt text" width="150" heigth="150"> | <img src="https://avatars2.githubusercontent.com/u/60943929?s=460&v=4" alt="alt text" width="150" heigth="150"> | <img src="https://avatars3.githubusercontent.com/u/44064984?s=460&v=4" alt="alt text" width="150" heigth="150"> |
+|[Hande Karabul](https://github.com/bounswe/bounswe2020group3/wiki/Hande-Karabul)|[Ramazan Koç](https://github.com/bounswe/bounswe2020group3/wiki/Ramazan-KOÇ)|[Mustafa Küçük](https://github.com/bounswe/bounswe2020group3/wiki/Mustafa-Kucuk)| [Fatih Akgöz](https://github.com/bounswe/bounswe2020group3/wiki/Fatih-Akgoz)|
 
 # Project Description
 Our project aims to provide an colloborative platform for academicians where they can find colloborators, widen their networks and provide an environment to create interdisciplinary studies.

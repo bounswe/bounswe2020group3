@@ -9,7 +9,7 @@ Welcome to our github repository for Bogazici University's Fundamentals of Softw
 * [Ramazan KOÇ](https://github.com/bounswe/bounswe2020group3/wiki/Ramazan-KOÇ)
 * [Yusuf Bayam](https://github.com/bounswe/bounswe2020group3/wiki/Yusuf-Bayam)
 * [Furkan Cansever](https://github.com/bounswe/bounswe2020group3/wiki/Furkan-Cansever)
-* [Yahya Bedirhan Pak (Coordinator)](https://github.com/bounswe/bounswe2020group3/wiki/Yahya-Bedirhan-Pak)
+* [Yahya Bedirhan Pak (Communicator)](https://github.com/bounswe/bounswe2020group3/wiki/Yahya-Bedirhan-Pak)
 * [Hande Karabul](https://github.com/bounswe/bounswe2020group3/wiki/Hande-Karabul)
 * [Mustafa Küçük](https://github.com/bounswe/bounswe2020group3/wiki/Mustafa-Kucuk)
 * [Fatih Akgöz](https://github.com/bounswe/bounswe2020group3/wiki/Fatih-Akgoz)

@@ -4,11 +4,19 @@
   "description": "backend project for practice app",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon -r esm index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Bounswe2020 group3",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^8.2.0"
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.13"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
   }
 }

@@ -6,7 +6,7 @@ const test = require('./routes/test')
 const express = require('express');
 const app = express();
  
-mongoose.connect('mongodb+srv://Baris:hulohulohulo@cluster0-envaa.mongodb.net/test?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://deneme:deneme@cluster0-envaa.mongodb.net/test?retryWrites=true&w=majority')
     .then(() => console.log('Now connected to MongoDB!'))
     .catch(err => console.error('Something went wrong', err));
  

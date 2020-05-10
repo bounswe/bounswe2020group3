@@ -1,9 +1,8 @@
-import { Router } from "express";
+const express = require('express');
+const testRoute = express.Router();
 
-const testRoute = Router();
-
-testRoute.get("/", async (req, res) => {
+testRoute.get('/', async (req, res) => {
   res.status(200).send("Test OK!");
 });
 
-export default testRoute;
+module.exports = testRoute;

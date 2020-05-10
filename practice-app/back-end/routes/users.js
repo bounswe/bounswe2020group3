@@ -19,13 +19,14 @@ router.post('/', async (req, res) => {
         user = new User({
             name: req.body.name,
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            registration_date: Date().toString()
         });
 
         user.password = crypto(user.password, { asString: true });
 
         await user.save();
-        res.send(user);
+        res.send('Success!');
     }
 });
  

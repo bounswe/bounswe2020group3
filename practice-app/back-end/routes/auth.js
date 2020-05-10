@@ -3,9 +3,6 @@ const express = require('express');
 const router = express.Router();
 const crypto = require("sha256");
 
-
-
-
 router.post('/', async (req, res) => {
     // First Validate The Request
     const { error } = validateLogin(req.body);

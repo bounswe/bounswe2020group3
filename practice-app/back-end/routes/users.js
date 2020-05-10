@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
         user.password = crypto(user.password, { asString: true });
 
         await user.save();
-        res.send('Success!');
+        res.send("Success!");
     }
 });
  

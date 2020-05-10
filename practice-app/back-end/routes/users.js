@@ -1,6 +1,7 @@
 const { User, validate } = require('../models/user');
 const express = require('express');
 const router = express.Router();
+const crypto = require("sha256");
  
 router.post('/', async (req, res) => {
     // First Validate The Request
@@ -18,10 +19,14 @@ router.post('/', async (req, res) => {
         user = new User({
             name: req.body.name,
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            registration_date: Date().toString()
         });
+
+        user.password = crypto(user.password, { asString: true });
+
         await user.save();
-        res.send(user);
+        res.send('Success!');
     }
 });
  

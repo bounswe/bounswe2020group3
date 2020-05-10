@@ -1,11 +1,11 @@
-const { User, validate } = require('../models/user');
+const { User, validateRegister } = require('../models/user');
 const express = require('express');
 const router = express.Router();
 const crypto = require("sha256");
  
 router.post('/', async (req, res) => {
     // First Validate The Request
-    const { error } = validate(req.body);
+    const { error } = validateRegister(req.body);
     if (error) {
         return res.status(400).send(error.details[0].message);
     }

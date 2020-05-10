@@ -1,25 +1,16 @@
-import express from "express";
-import bodyParser from "body-parser";
-import indexRoute from "./routes";
-import config from "./config";
-import { connectDatabase } from "./database";
-
-//Create app instance
+const Joi = require('joi');
+//Joi.objectId = require('joi-objectid')(Joi);
+const mongoose = require('mongoose');
+const users = require('./routes/users');
+const express = require('express');
 const app = express();
-
-//Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-// Load API routes
-app.use(config.api.prefix, indexRoute);
-
-connectDatabase();
-
-// Start Server
-const port = config.port;
-app.listen(port, () => {
-    console.log(`Server listening on port: ${port}`);
-});
-
-export default app;
+ 
+mongoose.connect('mongodb+srv://Baris:hulohulohulo@cluster0-envaa.mongodb.net/test?retryWrites=true&w=majority')
+    .then(() => console.log('Now connected to MongoDB!'))
+    .catch(err => console.error('Something went wrong', err));
+ 
+app.use(express.json());
+app.use('/api/users', users);
+ 
+const port = process.env.PORT || 4000;
+app.listen(port, () => console.log(`Listening on port ${port}...`));

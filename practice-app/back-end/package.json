@@ -4,8 +4,9 @@
   "description": "backend project for practice app",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -r esm index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon -r esm src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint"
   },
   "author": "Bounswe2020 group3",
   "license": "ISC",
@@ -19,6 +20,9 @@
     "sha256": "^0.2.0"
   },
   "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
     "nodemon": "^2.0.3"
   }
 }

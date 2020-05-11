@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import config from "./config";
+import mongoose from 'mongoose';
+import config from './config';
 
 export const connectDatabase = () => {
   mongoose
@@ -9,7 +9,7 @@ export const connectDatabase = () => {
       useUnifiedTopology: true,
     })
     .then(() => {
-      console.log(`Database connected.`);
+      console.log('Database connected.');
     })
     .catch((err) => {
       console.log(`Database connection error ${err}`);

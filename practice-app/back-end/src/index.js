@@ -15,7 +15,6 @@ app.use(bodyParser.json());
 app.use(config.api.prefix, indexRoute);
 
 connectDatabase();
-
 // Start Server
 const { port } = config;
 app.listen(port, () => {

@@ -1,3 +1,5 @@
+import crypto from 'sha256';
+
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
@@ -46,4 +48,8 @@ export function validateLogin(req) {
     password: Joi.string().min(5).max(255).required(),
   };
   return Joi.validate(req, schema);
+}
+
+export function checkPassword(req, user) {
+  return user.password === crypto(req.body.password, { asString: true });
 }

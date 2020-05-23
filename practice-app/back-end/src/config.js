@@ -7,4 +7,5 @@ export default {
   api: {
     prefix: '/api',
   },
+  predict_api_key: process.env.PREDICT_API_KEY,
 };

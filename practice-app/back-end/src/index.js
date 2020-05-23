@@ -11,6 +11,10 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Use Cors
+var cors = require('cors')
+app.use(cors())
+
 // Load API routes
 app.use(config.api.prefix, indexRoute);
 

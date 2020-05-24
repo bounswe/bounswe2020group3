@@ -14,7 +14,13 @@ app.use(bodyParser.json());
 // Load API routes
 app.use(config.api.prefix, indexRoute);
 
-connectDatabase();
+app.get('/',(req, res) => {
+  res.json({
+    message: 'HELLO GUYS 👋',
+  });
+})
+
+// connectDatabase();
 // Start Server
 const { port } = config;
 app.listen(port, () => {

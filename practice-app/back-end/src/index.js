@@ -16,7 +16,7 @@ app.use(config.api.prefix, indexRoute);
 
 app.get('/',(req, res) => {
   res.json({
-    message: 'HELLO GUYS 👋',
+    message: 'WELCOME THE PAPERLAYER 👋',
   });
 })
 

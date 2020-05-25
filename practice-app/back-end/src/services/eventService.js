@@ -5,10 +5,15 @@ const API_KEY = config.predict_api_key;
 
 export const filterConferences = async (radius,location,limit) => {
   const list = [];
+  let params = '';
+  let ll = '';
   if (location != null){
-    const ll = location.replace(' ',',');
-    const params = `?label.op=any&label=conference,science,career,education,technology&within=${radius}km@${ll}&limit=${limit}`;
-    const response = await fetch(`https://api.predicthq.com/v1/events/${params}`, { 
+    ll = location.replace(' ',',');
+    params = `?label.op=any&label=conference,science,career,education,technology&within=${radius}km@${ll}&limit=${limit}`;
+  }else {
+    params = `?label.op=any&label=conference,science,career,education,technology&limit=${limit}`;
+  }
+  const response = await fetch(`https://api.predicthq.com/v1/events/${params}`, { 
       method:'get',
       headers: {
         Authorization: `Bearer ${API_KEY}`,
@@ -28,7 +33,6 @@ export const filterConferences = async (radius,location,limit) => {
         address: result.entities[0],
       });
     });
-  }
   return {
     count: list.length,
     conferences: list,

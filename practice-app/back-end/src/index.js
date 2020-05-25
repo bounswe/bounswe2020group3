@@ -20,7 +20,7 @@ app.get('/',(req, res) => {
   });
 })
 
-// connectDatabase();
+connectDatabase();
 // Start Server
 const { port } = config;
 app.listen(port, () => {

@@ -10,11 +10,11 @@ import app from '../../index';
 // ./node_modules/mocha/bin/mocha  -r esm --timeout 10000 src/api/routes/events.test.js 
 
 describe('GET /events/filter with no parameters',() => {
-  it('should respond with no events', async () => {
+  it('should respond with all events without no filtering', async () => {
     const response = await request(app)
       .get('/api/events/filter')
       .expect(200);
-    expect(response.body.count).to.equal(0);
+    expect(response.body.count).to.greaterThan(0);
   });
 });
 

@@ -22,8 +22,8 @@ router.post('/', async (req, res) => {
     return res.status(401).send('Invalid username or password! Sifre bozuk');
   }
 
-  const token = jwt.sign({ id: user.id }, 'PrivateKey');
-  res.send(token);
+  const token = jwt.sign({ id: user.id }, 'PrivateKey', { expiresIn: '15m' });
+  res.send({ Message: 'Login Success!', Token: token });
 });
 
 export default router;

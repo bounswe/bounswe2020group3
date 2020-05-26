@@ -2,10 +2,10 @@
   "name": "back-end",
   "version": "1.0.0",
   "description": "backend project for practice app",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "nodemon -r esm src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha -r esm --timeout 10000 src/*.test.js src/**/*.test.js",
     "lint": "eslint",
     "debug": "nodemon --inspect -r esm src/index.js"
   },
@@ -13,17 +13,18 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
+    "chai": "^4.2.0",
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "isomorphic-unfetch": "^3.0.0",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.5.7",
-    "mongoose": "^5.9.16",
+    "mocha": "^7.2.0",
+    "mongoose": "^5.9.13",
     "npm": "^6.14.5",
-    "sha256": "^0.2.0"
+    "sha256": "^0.2.0",
+    "supertest": "^4.0.2"
   },
   "devDependencies": {
     "eslint": "^6.8.0",

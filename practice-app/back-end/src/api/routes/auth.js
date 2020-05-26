@@ -13,17 +13,17 @@ router.post('/', async (req, res) => {
 
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    return res.status(401).send('Invalid username or password! User yok');
+    return res.status(401).send({ message: 'Invalid username or password! User yok' });
   }
 
   const checkPass = checkPassword(req, user);
 
   if (!checkPass) {
-    return res.status(401).send('Invalid username or password! Sifre bozuk');
+    return res.status(401).send({ message: 'Invalid username or password! Sifre bozuk' });
   }
 
   const token = jwt.sign({ id: user.id }, 'PrivateKey', { expiresIn: '15m' });
-  res.send({ Message: 'Login Success!', Token: token });
+  res.send({ message: 'Login Success!', user_token: token });
 });
 
 export default router;

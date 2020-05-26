@@ -18,11 +18,11 @@ app.use(cors());
 // Load API routes
 app.use(config.api.prefix, indexRoute);
 
-app.get('/',(req, res) => {
+app.get('/', (req, res) => {
   res.json({
     message: 'WELCOME THE PAPERLAYER 👋',
   });
-})
+});
 
 connectDatabase();
 // Start Server

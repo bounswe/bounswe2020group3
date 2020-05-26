@@ -8,4 +8,5 @@ export default {
     prefix: '/api',
   },
   predict_api_key: process.env.PREDICT_API_KEY,
+  geo_location: process.env.GEO_LOCATION,
 };

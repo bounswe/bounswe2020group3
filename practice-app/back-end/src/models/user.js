@@ -27,6 +27,11 @@ export const User = mongoose.model('User', new mongoose.Schema({
     type: String,
     required: false,
   },
+  
+  interestedAreas: { 
+	type: [String],
+	required: false,
+  }
 }));
 
 export function validateRegister(user) {

@@ -72,7 +72,7 @@ export default class Login extends Component {
                 </div>
                 <p style = {{color:"red",textAlign: "center",fontWeight: "bold",fontFamily: 'Fira Sans'}}>{this.state.message}</p>
                 <button type="submit" className="btn btn-primary btn-block" >Submit</button>
-
+                {/* 
                 <a href="https://www.facebook.com/" id="facebook-button"  className="btn btn-block btn-social btn-facebook" style={{fontFamily: 'Fira Sans'}}>
                 <i className="fa fa-facebook"></i> Login with Facebook
                 </a>
@@ -84,7 +84,7 @@ export default class Login extends Component {
                 <a href="https://www.linkedin.com/" id="linkedin-button"  className="btn btn-block btn-social btn-linkedin" style={{fontFamily: 'Fira Sans'}}>
                 <i className="fa fa-linkedin"></i> Login with linkedin
                 </a>
-
+                  */}
                 <p className="forgot-password text-right">
                     No account? <a href="/registration">Register</a>
                 </p>

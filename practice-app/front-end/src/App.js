@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Login from "./components/login.component";
 import Registration from "./components/registration.component";
 import Home from "./components/home.component";
+import PaperAPI from "./components/paperapi.component";
 
 function App() {
   return (<Router>
@@ -33,6 +34,7 @@ function App() {
             <Route path="/home" component={Home} />
             <Route path="/login" component={Login} />
             <Route path="/registration" component={Registration} />
+            <Route path="/paperapi" component={PaperAPI} />
           </Switch>
         </div>
       </div>

@@ -6,20 +6,19 @@ import { connectDatabase } from './database';
 
 // Create app instance
 const app = express();
+const cors = require('cors');
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Use Cors
-const cors = require('cors');
-
 app.use(cors());
 
 // Load API routes
 app.use(config.api.prefix, indexRoute);
 
-app.get('/', (req, res) => {
+app.get('/', (req, res) => {
   res.json({
     message: 'WELCOME THE PAPERLAYER 👋',
   });

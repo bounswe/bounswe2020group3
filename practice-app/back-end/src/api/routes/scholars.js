@@ -3,6 +3,7 @@ import { Scholar } from '../../models/scholar';
 
 const gScholar = require('google-scholar-extended');
 const mongoose = require('mongoose');
+const { ObjectId } = require('mongodb');
 
 const scholarRoute = Router();
 
@@ -22,6 +23,7 @@ const Article = new mongoose.Schema({
 
 });
 
+// Get all scholars
 scholarRoute.get('/', async (req, res) => {
   try {
     const scholars = await Scholar.find();
@@ -31,13 +33,13 @@ scholarRoute.get('/', async (req, res) => {
   }
 });
 
-// Creating one subscriber
+// Creating one scholar
 scholarRoute.post('/', async (req, res) => {
   // eslint-disable-next-line no-use-before-define
   let articlesnew = await getGoogleScholar(req.body.scholar_id);
 
   // eslint-disable-next-line no-const-assign,no-undef
-  articlesnew = (await articlesnew).concat(req.body.articles);
+  articlesnew = articlesnew.concat(req.body.articles);
   const scholar = new Scholar({
     name: req.body.name,
     bio: req.body.bio,
@@ -47,29 +49,29 @@ scholarRoute.post('/', async (req, res) => {
   });
 
   try {
-    const newSubscriber = await scholar.save();
-    res.status(201).json(newSubscriber);
+    const newscholar = await scholar.save();
+    res.status(201).json(newscholar);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
-// Getting one subscriber
+// Getting one scholar
 // eslint-disable-next-line no-use-before-define
 scholarRoute.get('/:id', getScholar, (req, res) => {
   res.json(res.scholar);
 });
 
-// Deleting one subscriber
+// Deleting one scholar
 // eslint-disable-next-line no-use-before-define
 scholarRoute.delete('/', getScholaranddelete, async (req, res) => {
   try {
-    res.json({ message: 'Deleted This Subscriber' });
+    res.json({ message: 'Deleted This scholar' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
-// Updating one subscriber
+// Updating one scholar
 // eslint-disable-next-line no-use-before-define
 scholarRoute.patch('/:id', getScholar, async (req, res) => {
   if (req.body.bio != null) {
@@ -84,7 +86,7 @@ scholarRoute.patch('/:id', getScholar, async (req, res) => {
     let articlesnew = await getGoogleScholar(req.body.scholar_id);
 
     // eslint-disable-next-line no-const-assign,no-undef
-    articlesnew = (await articlesnew).concat(res.scholar.articles);
+    articlesnew = articlesnew.concat(res.scholar.articles);
     res.scholar.articles = articlesnew;
   }
   try {
@@ -96,30 +98,33 @@ scholarRoute.patch('/:id', getScholar, async (req, res) => {
   }
 });
 
-// Middleware function for gettig subscriber object by its name in the body
+// Middleware function for gettig scholar object by its name in the body
 async function getScholar(req, res, next) {
   let scholar = null;
+
   try {
-    scholar = await Scholar.find({ name: req.body.name });
-    if (scholar == null) {
-      return res.status(404).json({ message: 'Cant find subscribesaasdasr' });
+    scholar = await Scholar.find({ _id: ObjectId(req.body._id) });
+    if (scholar == null || scholar.length == 0) {
+      return res.status(404).json({ message: 'Cant find scholar' });
     }
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
 
-  res.scholar = scholar;
+  res.scholar = scholar[0];
   next();
 }
+
 async function getScholaranddelete(req, res, next) {
   try {
-    console.log(req.body.name);
-    await Scholar.findOneAndDelete({ name: req.body.name });
+    await Scholar.findOneAndDelete({ _id: ObjectId(req.body._id) });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
   next();
 }
+
+// Returns Scholar's articles from Google Scholar
 // eslint-disable-next-line no-unused-vars
 async function getGoogleScholar(scholarID) {
   // eslint-disable-next-line no-unused-vars
@@ -128,7 +133,7 @@ async function getGoogleScholar(scholarID) {
   arr = arr.results;
 
   // eslint-disable-next-line no-unused-vars
-  const arr2 = [Article];
+  const arr2 = [];
   let i;
   // eslint-disable-next-line no-plusplus
   for (i = 0; i < arr.length; i++) {

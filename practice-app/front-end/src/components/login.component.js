@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import 'bootstrap-social/bootstrap-social.css';
 import 'font-awesome/css/font-awesome.min.css';
 import axios from 'axios';
+import config from '../config';
 
 export default class Login extends Component {
 
@@ -34,7 +35,7 @@ export default class Login extends Component {
             password: this.state.password
           };
     
-          axios.post(`http://localhost:5001/api/login`, user, {headers: {'Content-Type': 'Application/json'}})
+          axios.post(`${config.API_URL}/api/login`, user, {headers: {'Content-Type': 'Application/json'}})
           .then(res => {
             this.setState({ success : true });
             console.log(res);

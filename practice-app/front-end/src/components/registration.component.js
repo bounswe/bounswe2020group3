@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from 'axios';
+import config from '../config';
 
 export default class Registration extends Component {
 
@@ -47,7 +48,7 @@ export default class Registration extends Component {
         password: this.state.password
       };
 
-      axios.post(`http://localhost:5001/api/register`, user, {headers: {'Content-Type': 'Application/json'}})
+      axios.post(`${config.API_URL}/api/register`, user, {headers: {'Content-Type': 'Application/json'}})
       .then(res => {
         this.setState({ success : true });
         console.log(res);

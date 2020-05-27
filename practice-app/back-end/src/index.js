@@ -12,17 +12,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Use Cors
-var cors = require('cors')
-app.use(cors())
+const cors = require('cors');
+
+app.use(cors());
 
 // Load API routes
 app.use(config.api.prefix, indexRoute);
 
-app.get('/',(req, res) => {
+app.get('/', (req, res) => {
   res.json({
     message: 'WELCOME THE PAPERLAYER 👋',
   });
-})
+});
 
 connectDatabase();
 // Start Server

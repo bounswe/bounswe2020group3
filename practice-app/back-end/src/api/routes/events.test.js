@@ -1,15 +1,15 @@
+import app from '../../index';
+
 const request = require('supertest');
 const { expect } = require('chai');
 const { getLocation } = require('../../services/geoLocation');
 
-import app from '../../index';
-
 // app.listen();
 
 // Test in terminal only this test
-// ./node_modules/mocha/bin/mocha  -r esm --timeout 10000 src/api/routes/events.test.js 
+// ./node_modules/mocha/bin/mocha  -r esm --timeout 10000 src/api/routes/events.test.js
 
-describe('GET /events/filter with no parameters',() => {
+describe('GET /events/filter with no parameters', () => {
   it('should respond with all events without no filtering', async () => {
     const response = await request(app)
       .get('/api/events/filter')
@@ -44,6 +44,6 @@ describe('/GET geoLocation service with place parameter', () => {
   it('should respond with lattitude and longitutude', async () => {
     const response = await getLocation('Istanbul');
     const result = response.split(' ').map(Number);
-    expect(result).to.deep.equal([ 41.009998, 28.950001 ]);
+    expect(result).to.deep.equal([41.009998, 28.950001]);
   });
 });

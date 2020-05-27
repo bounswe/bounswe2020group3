@@ -15,7 +15,7 @@ eventsRoute.get('/search', async (req, res) => {
 });
 
 eventsRoute.get('/filter', async (req, res) => {
-  const { radius,place } = req.query;
+  const { radius, place } = req.query;
 
   const location = await getLocation(place);
   // Get 30 events within given place around radius.

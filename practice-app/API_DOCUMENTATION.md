@@ -25,3 +25,14 @@ Returned JSON Object from request `BASE_URL/newsList/5ecd18d8f76c2700dceb6487`
 
     {"_id":"5eceae0afd6fd127ccbc46a5","sourceName":"Seeking Alpha","author":"Tariq Dennison","title":"Beating The S&P 500 Since 1997 With A 1986-1996 Dividend Screen","description":"In this article, we look at how a list of top-yielding S&P 500 stocks that increased dividends every year from 1986-1996 performed since 1997 versus the S&P 500","url":"https://seekingalpha.com/article/4350332-beating-s-and-p-500-since-1997-1986minus-1996-dividend-screen%22,%22urlImage%22:%22https://static1.seekingalpha.com/uploads/2020/5/26/27788673-15904754899273922.jpg%22,%22publishedAt%22:%222020-05-27T17:47:20Z%22,%22content%22:%22One benefit of keeping old almanacs and yearbooks on your bookshelf is that it is sometimes easier to get a snapshot of perspectives and top 10 lists from a specific past year than could be found onl… [+18080 chars]","relatedUser":"5ecd18d8f76c2700dceb6487","v":0},{"_id":"5eceae0bfd6fd127ccbc46a6","sourceName":"Plos.org","author":"Xinzhe Li, Bruno Mota, Toshiyuki Kondo, Slawomir Nasuto, Yoshikatsu Hayashi","title":"EEG dynamical network analysis method reveals the neural signature of visual-motor coordination","description":"Human visual-motor coordination is an essential function of movement control, which requires interactions of multiple brain regions. Understanding the cortical-motor coordination is important for improving physical therapy for motor disabilities. However, its…","url":"https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0231767%22,%22urlImage%22:%22https://journals.plos.org/plosone/article/figure/image?id=10.1371/journal.pone.0231767.g015&size=inline%22,%22publishedAt%22:%222020-05-27T17:40:21Z%22,%22content%22:%22Introduction/r/nFunctional connectivity is a widely-used method to understand brain activity under visual-motor coordination [1]. A number of studies have shown that the visual-motor coordination invol… [+73831 chars]","relatedUser":"5ecd18d8f76c2700dceb6487","v":0}
 
+## Searching Events
+Filters by radius and place and returns events. If no filter is defined, it returns 30 events.
+
+**URL :** `api/events/search`<br>
+**METHOD :** `GET`<br>
+**AUTHORIZATION :** `-`<br>
+**PARAMETERS :** `?key={key}`
+### RESPONSE
+Returned JSON Object from request `BASE_URL/api/events/search?key=covid`
+
+    {"count":1,"results":[{"title":"COVID-19 - Shelter in place - Washington","description":"State of emergency since 29th of February. Shelter in place since 23rd of March, ban on all gatherings and events, schools and daycare are closed. Bars and restaurants are closed, take-away and delivery allowed, non-essential shops are closed.\n\nOrder extend until at least May 31.","labels":["disaster","estimated","health","lockdown"],"start":"2020-03-23T00:00:00Z","end":"2020-05-31T23:59:59Z","timezone":null,"location":[-120.740138,47.751074],"scope":"region","country":"US"}]}

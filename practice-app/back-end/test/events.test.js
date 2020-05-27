@@ -1,8 +1,8 @@
-import app from '../../index';
+import app from '../src/index';
 
 const request = require('supertest');
 const { expect } = require('chai');
-const { getLocation } = require('../../services/geoLocation');
+const { getLocation } = require('../src/services/geoLocation');
 
 // app.listen();
 

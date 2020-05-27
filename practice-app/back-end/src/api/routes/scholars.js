@@ -128,7 +128,7 @@ async function getGoogleScholar(scholarID) {
   arr = arr.results;
 
   // eslint-disable-next-line no-unused-vars
-  const arr2 = [Article];
+  const arr2 = [];
   let i;
   // eslint-disable-next-line no-plusplus
   for (i = 0; i < arr.length; i++) {

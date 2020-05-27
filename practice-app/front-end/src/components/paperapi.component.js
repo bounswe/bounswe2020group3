@@ -33,7 +33,7 @@ export default class PaperAPI extends Component {
             param1[0]: param1[1],
           };
           */}
-        const baseurl = '${config.API_URL}';
+        const baseurl = `${config.API_URL}`;
         const arr = this.state.endpoint.split("?");
         var qs = require('qs');
 

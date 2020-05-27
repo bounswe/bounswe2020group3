@@ -1,22 +1,23 @@
+import { User } from '../../models/user';
+
 const express = require('express')
 const router = express.Router()
 
-const News = require('../models/news');
-const User = require('../models/user');
+const News = require('../../models/news');
 const Request = require("request"); //using for http requests
 const util = require('util'); //making request work with await function
 const requestPromise = util.promisify(Request);
 
 // Create new news about given paramaters
 router.get('/:userId', async (req, res) => {
-   const user = await User.findById(req.params.userId);
-   const interestedAreas =user.interestedAreas;
+   const user = await User.find({_id:req.params.userId});
+   const interestedAreas =user.interestedAreas || ['graph theory', 'shortest path'];
   var i;
   var newsList= [];
   
   for(i = 0; i < interestedAreas.length; i++)
   {
-	searchWord = interestedAreas[i];
+	var searchWord = interestedAreas[i];
 	//constructing http link for using newsAPI
 	const http= "http://newsapi.org/v2/everything?q="+searchWord+"&sortBy=publishedAt&apiKey=518571c399c94e0f9704b87d9b60941d";
 	var news='empty';
@@ -26,7 +27,7 @@ router.get('/:userId', async (req, res) => {
 	  res.status(400).json({ message: response.error })
 	  return;
 	}
-	data=JSON.parse(response.body);
+	var data=JSON.parse(response.body);
 	if(data['status']=='error'){
 		console.dir('Error type = '+data['code']);
 		console.dir('Error message = '+data['message'])
@@ -60,4 +61,4 @@ router.get('/:userId', async (req, res) => {
   }
 })
 
-module.exports = router
+export default router;

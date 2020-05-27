@@ -4,7 +4,8 @@
   "description": "backend project for practice app",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon -r esm src/index.js",
+    "start": "node -r esm src/index.js",
+    "dev": "nodemon -r esm src/index.js",
     "test": "mocha -r esm --timeout 10000 test/*.test.js test/**/*.test.js test/*.js",
     "lint": "eslint",
     "debug": "nodemon --inspect -r esm src/index.js"

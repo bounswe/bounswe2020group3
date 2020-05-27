@@ -6,7 +6,7 @@ import { getLocation } from '../../services/geoLocation';
 const eventsRoute = Router();
 
 eventsRoute.get('/search', async (req, res) => {
-  const inputKey = req.query.key;
+  const inputKey = req.query.key || '';
   // Get 4 related keywords;
   const relatedKeywords = await getRelatedKeywords(inputKey, 4);
   const conferences = await getConferences(relatedKeywords);

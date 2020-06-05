@@ -15,12 +15,14 @@ function makeid(length) {
  }
 
 var email = makeid(Math.random() * 13); 
-var pw = '1234567890'                 ;
+var pw = '1234567890';
+var topics = ["atv", 'kanald', 'duzdunya', 'flatearth', 'filatört']
 
 const users = {
   name: "osmanaga",
   email: email,
   password: pw,
+  topics: topics
 };
 describe('POST /register with right credentials', () => {
   it('should register with success', async () => {

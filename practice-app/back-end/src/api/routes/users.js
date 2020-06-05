@@ -22,6 +22,7 @@ router.post('/', async (req, res) => {
     email: req.body.email,
     password: req.body.password,
     registration_date: Date().toString(),
+    topics: req.body.topics
   });
 
   user.password = crypto(user.password, { asString: true });

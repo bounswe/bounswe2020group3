@@ -1,5 +1,7 @@
 
-# BASE URL: 13.58.21.212:5001
+
+# FRONTEND URL: 13.58.21.212:5001
+# BACKEND BASE URL: 13.58.21.212:5001
 
 ## Filtering Events
 Filters by radius and place and returns events. If no filter is defined, it returns 30 events.

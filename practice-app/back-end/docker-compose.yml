@@ -1,0 +1,14 @@
+version: '3'
+services:
+  practice-app:
+    image: 'practice-app'
+    ports:
+     - "5001:5001"
+    environment:
+     - NODE_ENV=production
+     - PORT=5001
+     - DATABASE_CONNECTION=mongodb+srv://admin:admin123123@cluster0-envaa.mongodb.net/test?retryWrites=true&w=majority
+     - DATABASE_CONNECTION2=mongodb+srv://Baris:hulohulohulo@cluster0-envaa.mongodb.net/test?retryWrites=true&w=majority
+     - PREDICT_API_CLIENT_SECRET=ODOnrBWoxzJOc0S0uD78zGE9lPGplCJLjTVLK1J8qvzSoPTnQtsdJw
+     - PREDICT_API_KEY=2H51mk2DcO_dFYZWci79NffvKTrtC1xAxIG-LoaV
+     - GEO_LOCATION=00b69e97bamshd6501b013f44e00p101f14jsnc3c8f50e5954

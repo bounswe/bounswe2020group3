@@ -76,8 +76,6 @@ scholarRoute.delete('/', getScholaranddelete, async (req, res) => {
 // Updating one scholar
 // eslint-disable-next-line no-use-before-define
 scholarRoute.patch('/', getScholar, async (req, res) => {
-  console.log(res.scholar);
-
   if (req.query.bio != null) {
     res.scholar.bio = req.query.bio;
   }
@@ -94,8 +92,6 @@ scholarRoute.patch('/', getScholar, async (req, res) => {
     res.scholar.articles = articlesnew;
   }
 
-  console.log(res.scholar);
-
   try {
     const updatedScholar = await res.scholar.save();
     res.json(updatedScholar);
@@ -108,7 +104,6 @@ scholarRoute.patch('/', getScholar, async (req, res) => {
 // Middleware function for gettig scholar object by its name in the body
 async function getScholar(req, res, next) {
   let scholar = null;
-  console.log(req.query);
   try {
     scholar = await Scholar.find({ _id: ObjectId(req.query._id) });
     if (scholar == null || scholar.length == 0) {

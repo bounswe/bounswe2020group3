@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { Scholar } from '../../models/scholar';
+import { func } from 'joi';
 
 const gScholar = require('google-scholar-extended');
 const mongoose = require('mongoose');
@@ -31,6 +32,7 @@ scholarRoute.get('/', async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+
 });
 
 // Creating one scholar
@@ -58,7 +60,7 @@ scholarRoute.post('/', async (req, res) => {
 
 // Getting one scholar
 // eslint-disable-next-line no-use-before-define
-scholarRoute.get('/:id', getScholar, (req, res) => {
+scholarRoute.get('/single', getScholar, async (req, res) => {
   res.json(res.scholar);
 });
 
@@ -73,22 +75,27 @@ scholarRoute.delete('/', getScholaranddelete, async (req, res) => {
 });
 // Updating one scholar
 // eslint-disable-next-line no-use-before-define
-scholarRoute.patch('/:id', getScholar, async (req, res) => {
-  if (req.body.bio != null) {
-    res.scholar.bio = req.body.bio;
+scholarRoute.patch('/', getScholar, async (req, res) => {
+  console.log(res.scholar);
+
+  if (req.query.bio != null) {
+    res.scholar.bio = req.query.bio;
   }
-  if (req.body.area != null) {
-    res.scholar.area = req.body.area;
+  if (req.query.area != null) {
+    res.scholar.area = req.query.area;
   }
-  if (req.body.scholar_id != null) {
-    res.scholar.scholar_id = req.body.scholar_id;
+  if (req.query.scholar_id != null) {
+    res.scholar.scholar_id = req.query.scholar_id;
     // eslint-disable-next-line no-use-before-define,no-unused-vars
-    let articlesnew = await getGoogleScholar(req.body.scholar_id);
+    let articlesnew = await getGoogleScholar(req.query.scholar_id);
 
     // eslint-disable-next-line no-const-assign,no-undef
     articlesnew = articlesnew.concat(res.scholar.articles);
     res.scholar.articles = articlesnew;
   }
+
+  console.log(res.scholar);
+
   try {
     const updatedScholar = await res.scholar.save();
     res.json(updatedScholar);
@@ -101,16 +108,15 @@ scholarRoute.patch('/:id', getScholar, async (req, res) => {
 // Middleware function for gettig scholar object by its name in the body
 async function getScholar(req, res, next) {
   let scholar = null;
-
+  console.log(req.query);
   try {
-    scholar = await Scholar.find({ _id: ObjectId(req.body._id) });
+    scholar = await Scholar.find({ _id: ObjectId(req.query._id) });
     if (scholar == null || scholar.length == 0) {
       return res.status(404).json({ message: 'Cant find scholar' });
     }
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
-
   res.scholar = scholar[0];
   next();
 }

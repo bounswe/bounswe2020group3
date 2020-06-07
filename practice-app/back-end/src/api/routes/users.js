@@ -35,8 +35,7 @@ router.get('/', async (req, res) => {
   if (res.statusCode === 400) {
     return res.status(400);
   }
-  const users = await User.find({});
-  console.log(users);
+  const users = await User.find({}).select('email registration_date');
   return res.send(users);
 });
 

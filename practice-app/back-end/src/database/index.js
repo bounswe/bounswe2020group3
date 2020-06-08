@@ -1,12 +1,18 @@
 import mongoose from 'mongoose';
-import config from './config';
+import config from '../config';
+import { getMockDatabaseURI } from './mock';
 
-export const connectDatabase = () => {
+export const connectDatabase = async () => {
+  const connectionURI = config.isTesting()
+    ? await getMockDatabaseURI()
+    : config.databaseURL;
+
   mongoose
-    .connect(config.databaseURL, {
+    .connect(connectionURI, {
       useNewUrlParser: true,
       useFindAndModify: false,
       useUnifiedTopology: true,
+      useCreateIndex: true,
     })
     .then(() => {
       console.log('Database connected.');

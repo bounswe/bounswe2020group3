@@ -10,11 +10,18 @@ const requestPromise = util.promisify(Request);
 
 // Create new news about given paramaters
 router.get('/:userId', async (req, res) => {
-   const user = await User.find({_id:req.params.userId});
-   const interestedAreas =user.interestedAreas || ['graph theory', 'shortest path'];
+	//console.dir('hi');
+   const user = await User.findOne({_id:req.params.userId});
+   //console.dir(user);
+   //console.dir(user._doc.interestedAreas);
+   //console.dir(user.interestedAreas);
+   //const testNew = await News.findOne({_id:"5ecebdffdfe894737ca52b77"});
+   //console.dir(testNew);
+   //console.dir(testNew.title);
+   
+   const interestedAreas =user._doc.interestedAreas || ['graph theory', 'shortest path'];
   var i;
   var newsList= [];
-  
   for(i = 0; i < interestedAreas.length; i++)
   {
 	var searchWord = interestedAreas[i];
@@ -27,6 +34,7 @@ router.get('/:userId', async (req, res) => {
 	  res.status(400).json({ message: response.error })
 	  return;
 	}
+	//console.dir(response);
 	var data=JSON.parse(response.body);
 	if(data['status']=='error'){
 		console.dir('Error type = '+data['code']);
@@ -35,6 +43,7 @@ router.get('/:userId', async (req, res) => {
 		return;
 	}
 	else if (data['status']=='ok') { //getting just 1 news for each interested area for given user
+		//console.dir(data);
 		news= new News( 
 		{
 		sourceID: data['articles'][0]['source']['id'],

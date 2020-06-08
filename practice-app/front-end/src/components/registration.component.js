@@ -55,7 +55,9 @@ export default class Registration extends Component {
         console.log(res.data);
       }, (error) => {
         this.setState({ success : false });
-        this.setState({ message : error.response.data });
+        const temp = JSON.stringify(error.response.data);
+        const temp2 = JSON.parse(temp);
+        this.setState({ message : temp2["message"] });
         console.log(error);
       })}
     

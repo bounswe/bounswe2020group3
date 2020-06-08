@@ -1,79 +1,95 @@
 import React, { Component } from "react";
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown';
-import axios from 'axios';
-import config from '../config';
+import { sendRequest } from "../helpers/requestHelper";
 
 export default class PaperAPI extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      endpoint: "",
+      success: null,
+      message: "",
+      type: "get",
+      body: "",
+    };
+  }
 
-    constructor(props) {
-        super(props);
-        this.state = {
-          endpoint : "",
-          success : null,
-          message: ""
-        }
-      } 
-      handleEndpoint = event => {
-        this.setState({
-          endpoint: event.target.value
-        });
-      };
+  handleEndpoint = (event) => {
+    this.setState({
+      endpoint: event.target.value,
+    });
+  };
 
-      handleSubmit = event => {
-        event.preventDefault()
-        {/*
-        const arr = this.state.endpoint.split("?");
-        console.log(arr);
-        const params = arr[1].split("&");
-        const param1 = params[0].split("=");
-        const param2 = params[1].split("=");
-        const str1 = param1[0];
-        const request = {
-            param1[0]: param1[1],
-          };
-          */}
-        const baseurl = `${config.API_URL}`;
-        const arr = this.state.endpoint.split("?");
-        var qs = require('qs');
+  handleBody = (event) => {
+    this.setState({ body: event.target.value });
+  };
 
-          axios.get(baseurl.concat(arr[0]), qs.parse(arr[1]), {headers: {'Content-Type': 'Application/json'}})
-          .then(res => {
-            this.setState({ message : JSON.stringify(res.data) });
-            console.log(res);
-            console.log(res.data);
-          }, (error) => {
-            this.setState({ message : "Can't GET !"});
-            console.log(error);
-          })}
+  handleSubmit = (event) => {
+    event.preventDefault();
+    this.setState({ message: "Loading..." });
+    sendRequest(this.state.endpoint, this.state.type, this.state.body)
+      .then((res) => {
+        console.log(res);
+        return res.json();
+      })
+      .then((res) => {
+        console.log(res);
+        this.setState({ message: JSON.stringify(res, null, 2) });
+        console.log(res);
+      })
+      .catch((err) => {
+        this.setState({ message: "Error sending request !" });
+        console.log(err);
+      });
+  };
 
-          
-    render(){
-        return (
-          <div>
-              <form onSubmit={this.handleSubmit}>       
-            <div  style={{ display: "flex", flexDirection: "row" }}>
-            {/*
-            <DropdownButton id="dropdown-basic-button" title="Type">
-            <Dropdown.Item href="#/action-1">GET</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">POST</Dropdown.Item>
-            </DropdownButton>
-                */}
-        <input class="form-control" type="text" placeholder="Endpoint" onChange={this.handleEndpoint}></input>
-        <button type="submit" className="btn btn-primary">Submit</button>
-        </div>
-        
+  render() {
+    return (
+      <div>
+        <h5 style={{ textAlign: "left" }}>Example : /api/test</h5>
+        <form onSubmit={this.handleSubmit}>
+          <div className="paper-api-container">
+            <select
+              className="custom-select paper-api-select"
+              onChange={(event) => {
+                this.setState({ type: event.target.value });
+              }}
+              defaultValue="get"
+            >
+              <option value="get">
+                GET
+              </option>
+              <option value="post">POST</option>
+              <option value="put">PUT</option>
+              <option value="patch">PATCH</option>
+              <option value="delete">DELETE</option>
+            </select>
+            <input
+              className="form-control paper-api-input"
+              type="text"
+              placeholder="Endpoint"
+              onChange={this.handleEndpoint}
+            />
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </div>
         </form>
-
-        <p style = {{textAlign: "left",fontWeight: "bold"}}> Example : /api/test </p>
-
-        <div class="pre-scrollable">
-          
-        {this.state.message}
-        
+        {this.state.type !== "get" && (
+          <div>
+            <h5 style={{ textAlign: "left" }}>Body</h5>
+            <textarea
+              className="form-control paper-api-body"
+              type="text"
+              placeholder="Body"
+              onChange={this.handleBody}
+            />
+          </div>
+        )}
+        <h5>Result</h5>
+        <div className="pre-scrollable paper-api-result">
+          <pre>{this.state.message}</pre>
         </div>
-
-        </div>
-        );
-    }
+      </div>
+    );
+  }
 }

@@ -7,35 +7,35 @@ const newsSchema = new mongoose.Schema({
   },
   sourceName: {
     type: String,
-    required: true
+    required: false
   },
   author: {
     type: String,
-    required: true
+    required: false
   },
   title: {
     type: String,
-    required: true
+    required: false
   },
   description: {
     type: String,
-    required: true
+    required: false
   },
   url: {
     type: String,
-    required: true
+    required: false
   },
    urlImage: {
     type: String,
-    required: true
+    required: false
   },
   publishedAt: {
     type: String,
-    required: true
+    required: false
   },
   content: {
     type: String,
-    required: true
+    required: false
   },
   
   relatedUser: {

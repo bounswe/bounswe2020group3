@@ -1,11 +1,11 @@
 import config from '../config';
+
 const fetch = require('isomorphic-unfetch');
 
 const API_KEY = config.geo_location;
 
 
 export const getLocation = async (place) => {
-  
   if (place === undefined) {
     return null;
   }
@@ -18,19 +18,18 @@ export const getLocation = async (place) => {
     },
   }).then((response) => {
     if (response.status >= 400) {
-      throw new Error("Bad response from server");
+      throw new Error('Bad response from server');
     }
     return response.json().then((res) => {
       // If location is not found, return null
-      
-      if (res.results.length == 0) {
+
+      if (res.results.length === 0) {
         return null;
-      } else {
-        // Returns first location's latitude and longitude
-        return res.results[0].geometry;
       }
+      // Returns first location's latitude and longitude
+      return res.results[0].geometry;
     });
   });
 
   return ll;
-}
+};

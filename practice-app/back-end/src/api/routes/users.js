@@ -6,15 +6,21 @@ const router = Router();
 
 router.post('/', async (req, res) => {
   // First Validate The Request
+  const body1 = req.body;
+  console.log(body1);
   const { error } = validateRegister(req.body);
   if (error) {
-    return res.status(400).send(error.details[0].message);
+    return res.status(400).send({
+      message: error.details[0].message,
+    });
   }
 
   // Check if this user already exisits
   let user = await User.findOne({ email: req.body.email });
   if (user) {
-    return res.status(400).send('That user already exisits!');
+    return res.status(400).send({
+      message: 'That user already exisits!',
+    });
   }
   // Insert the new user if they do not exist yet
   user = new User({
@@ -28,14 +34,16 @@ router.post('/', async (req, res) => {
   user.password = crypto(user.password, { asString: true });
 
   await user.save();
-  res.send('Success!');
+  res.send({
+    message: 'Success!',
+  });
 });
 
 router.get('/', async (req, res) => {
   if (res.statusCode === 400) {
     return res.status(400);
   }
-  const users = await User.find({}).select('email registration_date');
+  const users = await User.find({}).select('email registration_date topics');
   return res.send(users);
 });
 

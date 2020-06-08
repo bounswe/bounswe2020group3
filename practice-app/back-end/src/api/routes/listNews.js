@@ -19,7 +19,7 @@ router.get('/:userId', async (req, res) => {
    //console.dir(testNew);
    //console.dir(testNew.title);
    
-   const interestedAreas =user._doc.interestedAreas || ['graph theory', 'shortest path'];
+   const interestedAreas =user._doc.topics || ['graph theory', 'shortest path'];
   var i;
   var newsList= [];
   for(i = 0; i < interestedAreas.length; i++)

@@ -16,7 +16,8 @@ describe('GET /events/filter with no parameters', () => {
     const response = await request(app)
       .get('/api/events/filter')
       .expect(200);
-    expect(response.body.count).to.greaterThan(0);
+    expect(response.body.count).to.equal(0);
+    expect(response.body.conferences).to.have.length(0);
   });
 });
 
@@ -38,6 +39,7 @@ describe('GET /events/filter with some paramaters', () => {
   });
 });
 
+// CHANGE LAST TWO TEST CASE.
 describe('/GET geoLocation service with place parameter', () => {
   it('should respond with null', async () => {
     const response = await getLocation('aplacethatisnotintheworld');
@@ -45,8 +47,8 @@ describe('/GET geoLocation service with place parameter', () => {
   });
   it('should respond with lattitude and longitutude', async () => {
     const response = await getLocation('Istanbul');
-    const result = response.split(' ').map(Number);
-    expect(result).to.deep.equal([41.009998, 28.950001]);
+    const result = [response.lat,response.lng];
+    expect(result).to.deep.equal([41.0096334, 28.9651646]);
   });
 });
 

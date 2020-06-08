@@ -3,36 +3,35 @@ import config from '../config';
 
 const API_KEY = config.predict_api_key;
 
-export const filterConferences = async (radius, location, limit) => {
+export const filterConferences = async (radius,location,limit) => {
   const list = [];
   let params = '';
   let ll = '';
-  if (location != null) {
-    ll = location.replace(' ', ',');
+  if (location != null){
+    ll = `${location.lat},${location.lng}`;
     params = `?label.op=any&label=conference,science,career,education,technology&within=${radius}km@${ll}&limit=${limit}`;
-  } else {
-    params = `?label.op=any&label=conference,science,career,education,technology&limit=${limit}`;
-  }
-  const response = await fetch(`https://api.predicthq.com/v1/events/${params}`, {
-    method: 'get',
-    headers: {
-      Authorization: `Bearer ${API_KEY}`,
-      Accept: 'application/json',
-    },
-  });
-  const json = await response.json();
-  json.results.forEach((result) => {
-    list.push({
-      title: result.title,
-      description: result.description,
-      labels: result.labels,
-      start: result.start,
-      end: result.end,
-      country: result.country,
-      state: result.state,
-      address: result.entities[0],
+    const response = await fetch(`https://api.predicthq.com/v1/events/${params}`, { 
+      method:'get',
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+        Accept: 'application/json',
+      },
     });
-  });
+    const json = await response.json();
+    json.results.forEach((result) => {
+      list.push({
+        title: result.title,
+        description: result.description,
+        labels: result.labels,
+        start: result.start,
+        end: result.end,
+        country: result.country,
+        state: result.state,
+        address: result.entities[0],
+      });
+    });
+  }
+  
   return {
     count: list.length,
     conferences: list,

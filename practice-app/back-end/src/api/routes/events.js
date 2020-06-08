@@ -15,13 +15,23 @@ eventsRoute.get('/search', async (req, res) => {
 });
 
 eventsRoute.get('/filter', async (req, res) => {
-  const { radius, place } = req.query;
+  const { radius,place,limit } = req.query;
+
 
   const location = await getLocation(place);
-  // Get 30 events within given place around radius.
-  const conferences = await filterConferences(radius, location, 30);
 
+  let conferences;
+  if (limit === undefined) {
+    // default limit size 30
+    conferences = await filterConferences(radius, location, 30);
+  } else {
+    conferences = await filterConferences(radius, location, limit);
+  }
+ 
+ 
+  // Get 30 events with default limit or events as much as given limit.
   res.status(200).send(conferences);
+
 });
 
 

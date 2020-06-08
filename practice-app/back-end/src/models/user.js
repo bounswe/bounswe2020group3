@@ -27,11 +27,10 @@ export const User = mongoose.model('User', new mongoose.Schema({
     type: String,
     required: false,
   },
-  
-  interestedAreas: { 
-	type: [String],
-	required: false,
-  }
+  topics: {
+    type: Array,
+    required: false,
+  },
 }));
 
 export function validateRegister(user) {
@@ -41,6 +40,7 @@ export function validateRegister(user) {
       .email(),
     password: Joi.string().min(5).max(255).required(),
     registration_date: Joi.string(),
+    topics: Joi.array(),
 
   };
   return Joi.validate(user, schema);

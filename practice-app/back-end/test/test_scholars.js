@@ -38,7 +38,7 @@ describe('GET /get all scholars', () => {
 describe('GET /get one scholar', () => {
     it('should get one scholar', async () => {
         const response = await request(app)
-            .get('/api/scholars/:id').send({ _id: newScholar._id })
+            .get('/api/scholars/single').query({ _id: newScholar._id })
             .expect(200);
 
         var scholar = response.body;
@@ -57,7 +57,7 @@ describe('PATCH /update a scholar', () => {
         };
 
         const response = await request(app)
-            .patch('/api/scholars/:id').send(updateScholar)
+            .patch('/api/scholars/').query(updateScholar)
             .expect(200);
     });
 });

@@ -1,4 +1,5 @@
 import crypto from 'sha256';
+
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
@@ -26,11 +27,10 @@ export const User = mongoose.model('User', new mongoose.Schema({
     type: String,
     required: false,
   },
-  
-  topics: { 
-	type: Array,
-	required: false,
-  }
+  topics: {
+    type: Array,
+    required: false,
+  },
 }));
 
 export function validateRegister(user) {
@@ -40,7 +40,7 @@ export function validateRegister(user) {
       .email(),
     password: Joi.string().min(5).max(255).required(),
     registration_date: Joi.string(),
-    topics: Joi.array()
+    topics: Joi.array(),
 
   };
   return Joi.validate(user, schema);

@@ -34,7 +34,7 @@ export default class Login extends Component {
             email: this.state.email,
             password: this.state.password
           };
-    
+          
           axios.post(`${config.API_URL}/api/login`, user, {headers: {'Content-Type': 'Application/json'}})
           .then(res => {
             this.setState({ success : true });
@@ -42,7 +42,9 @@ export default class Login extends Component {
             console.log(res.data);
           }, (error) => {
             this.setState({ success : false });
-            this.setState({ message : error.response.data });
+            const temp = JSON.stringify(error.response.data)
+            const temp2 = JSON.parse(temp)
+            this.setState({ message : temp2["message"] });
             console.log(error);
           })}
 

@@ -22,13 +22,21 @@ router.post('/', async (req, res) => {
     email: req.body.email,
     password: req.body.password,
     registration_date: Date().toString(),
-    topics: req.body.topics
+    topics: req.body.topics,
   });
 
   user.password = crypto(user.password, { asString: true });
 
   await user.save();
   res.send('Success!');
+});
+
+router.get('/', async (req, res) => {
+  if (res.statusCode === 400) {
+    return res.status(400);
+  }
+  const users = await User.find({}).select('email registration_date');
+  return res.send(users);
 });
 
 export default router;

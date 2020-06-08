@@ -21,6 +21,7 @@
         "consistent-return": "off",
         "import/prefer-default-export": "off",
         "no-unused-vars": "warn",
-        "no-irregular-whitespace": "off"
+        "no-irregular-whitespace": "off",
+        "linebreak-style": "off"
     }
 }

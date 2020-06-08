@@ -9,4 +9,5 @@ export default {
   },
   predict_api_key: process.env.PREDICT_API_KEY,
   geo_location: process.env.GEO_LOCATION,
+  isTesting: () => process.env.NODE_ENV === 'test',
 };

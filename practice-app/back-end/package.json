@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node -r esm src/index.js",
     "dev": "nodemon -r esm src/index.js",
-    "test": "mocha -r esm --timeout 100000 test/*.test.js test/**/*.test.js test/*.js",
+    "test": "env NODE_ENV=test mocha -r esm --timeout 100000 test/*.test.js test/**/*.test.js test/*.js",
     "lint": "eslint",
     "debug": "nodemon --inspect -r esm src/index.js"
   },
@@ -25,6 +25,8 @@
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^7.2.0",
+    "mongodb": "^3.5.8",
+    "mongodb-memory-server": "^6.6.1",
     "mongoose": "^5.9.13",
     "npm": "^6.14.5",
     "sha256": "^0.2.0",

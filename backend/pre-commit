@@ -7,21 +7,9 @@
 #prepare python environment
 source backend/orgenv/Scripts/activate
 
-#run pylint
-LANG=en_US.UTF-8 PYTHONIOENCODING=utf8 pylint --rcfile=.pylintrc backend
-
-if [ $? -eq 0 ]
-then
-  echo "Successfully finished static code analysis with pylint"
-  exit 0
-else
-  echo "There are errors in static code analysis with pylint so please check your files" >&2
-  exit 0
-fi
-
 
 #run bandit
-bandit -r backend
+bandit -r backend/backend
 
 if [ $? -eq 0 ]
 then

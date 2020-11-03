@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+## Environment Variables
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+You should create a file ".env" and set REACT_APP_API_URL to the correct value found in our Discord channel.
 
 ## Available Scripts
 

@@ -5,7 +5,7 @@
 # it wants to stop the commit.
 
 #prepare python environment
-source orgenv/Scripts/activate
+source backend/orgenv/Scripts/activate
 
 #run pylint
 LANG=en_US.UTF-8 PYTHONIOENCODING=utf8 pylint --rcfile=.pylintrc organon

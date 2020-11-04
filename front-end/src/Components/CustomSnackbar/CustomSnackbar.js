@@ -6,8 +6,14 @@ import Box from "@material-ui/core/Box";
 import Slide from '@material-ui/core/Slide';
 import IconButton from "@material-ui/core/IconButton";
 
-function TransitionDown(props) {
-    return <Slide {...props} direction="down" />;
+class TransitionDown extends Component {
+    constructor(props){
+        super(props);
+    }
+    render(){
+        return <Slide {...this.props} direction="down" />;
+
+    }
   }
   
 
@@ -66,8 +72,12 @@ export default class CustomSnackbar extends Component {
         return (
             <div className=''>
     
-                <Snackbar  open={open} autoHideDuration={6000} onClose={this.handleClose}>
-                {/* TransitionComponent={TransitionDown} transitionDuration={{enter: 1000, exit:1000}} */}
+                <Snackbar
+                    open={open}
+                    autoHideDuration={6000}
+                    onClose={this.handleClose}
+/* TransitionComponent={TransitionDown} transitionDuration={{enter: 1000, exit:1000}} */
+                    anchorOrigin={{ vertical: "top", horizontal: "center" }}>
                     <Alert severity={type} onClose={this.handleClose}>{message}</Alert>
                 </Snackbar>
             </div>

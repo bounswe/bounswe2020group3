@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 import AlertTypes from '../Common/AlertTypes.json';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
-
+import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
 
 
 const errorMessages = {
@@ -15,18 +15,20 @@ const errorMessages = {
 }
 
   const Container = styled(Box)({
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    background: 'linear-gradient(90deg, rgba(0,151,255,1) 10%, rgba(255,106,106,1) 50%, rgba(0,151,255,1) 90%)',
+
     border: 0,
     borderRadius: 3,
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
     color: 'white',
-    height: "50%",
-    width: "50%",
+    height: "100vh",
+    width: "100%",
     margin: "auto",
-    padding: '10px 30px',
+    // padding: '10px 30px',
     '& .MuiTextField-root': {
         margin: "10px",
-        width: "50%",
+        width: "30%",
+        minWidth: "250px"
       }
   });
 
@@ -111,7 +113,7 @@ export default class RegistrationPage extends Component {
         if (!this.state.success) {
             return (
                 <Container>
-                   
+                   <PrimarySearchAppBar/>
                     <form className="" onSubmit={this.handleSubmit}>
                         <h3>Registration</h3>
                         <div className="">
@@ -165,7 +167,7 @@ export default class RegistrationPage extends Component {
                         <Button type="submit" variant="contained" color="primary" className="">Register</Button>
 
                         <p className="">
-                            Already registered <a href="/login">login?</a>
+                            Already registered? <a href="/login">Login.</a>
                         </p>
                     </form>
                     <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>

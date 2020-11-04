@@ -16,7 +16,6 @@ const errorMessages = {
 
   const Container = styled(Box)({
     background: 'linear-gradient(90deg, rgba(0,151,255,1) 10%, rgba(255,106,106,1) 50%, rgba(0,151,255,1) 90%)',
-
     border: 0,
     borderRadius: 3,
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
@@ -108,12 +107,16 @@ export default class RegistrationPage extends Component {
                 console.log(error);
             })
     }
+    goToLogin = () => {
+        this.props.history.push("/login");
+    }
 
     render() {
+        // console.log(this.props.history, "asd")
         if (!this.state.success) {
             return (
                 <Container>
-                   <PrimarySearchAppBar/>
+                   <PrimarySearchAppBar loginNav={this.goToLogin}/>
                     <form className="" onSubmit={this.handleSubmit}>
                         <h3>Registration</h3>
                         <div className="">

@@ -1,6 +1,6 @@
 import './App.css';
 import RegistrationPage from "./Views/RegistrationPage";
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 
 function App() {
   return (

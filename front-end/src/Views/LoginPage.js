@@ -34,14 +34,12 @@ const errorMessages = {
   });
 
   
-export default class RegistrationPage extends Component {
+export default class LoginPage extends Component {
     
     constructor(props) {
         super(props);
         this.SnackbarRef = React.createRef();
         this.state = {
-            name: "",
-            surname: "",
             email: "",
             password: "",
             success: null,
@@ -49,18 +47,6 @@ export default class RegistrationPage extends Component {
             messageType: ""
         }
     }
-
-    handleFirstname = event => {
-        this.setState({
-            name: event.target.value
-        });
-    };
-
-    handleSurname = event => {
-        this.setState({
-            surname: event.target.value
-        });
-    };
 
     handleEmail = event => {
         this.setState({
@@ -79,9 +65,9 @@ export default class RegistrationPage extends Component {
     }
 
     handleSubmit = (event) => {
-        const { name, surname, email, password, message } = this.state;
+        const { email, password, message } = this.state;
         event.preventDefault()
-        if (name === "" || surname === "" || email === "" || password === "" )
+        if ( email === "" || password === "" )
         {
             console.log("open")
             
@@ -90,27 +76,23 @@ export default class RegistrationPage extends Component {
             });
             return ;     
         } 
-        const user = {
-            name: name.concat(" ", surname),
-            email: email,
-            password: password
-        };
+        // const user = {
+        //     email: email,
+        //     password: password
+        // };
 
-        axios.post(`${config.API_URL}/api/register`, user, { headers: { 'Content-Type': 'Application/json' } })
-            .then(res => {
-                this.setState({ success: true });
-                console.log(res);
-                console.log(res.data);
-            }, (error) => {
-                this.setState({ success: false });
-                const temp = JSON.stringify(error.response.data);   
-                const temp2 = JSON.parse(temp);
-                this.setState({ message: temp2["message"] });
-                console.log(error);
-            })
-    }
-    goToLogin = () => {
-        this.props.history.push("/login");
+        // axios.post(`${config.API_URL}/api/register`, user, { headers: { 'Content-Type': 'Application/json' } })
+        //     .then(res => {
+        //         this.setState({ success: true });
+        //         console.log(res);
+        //         console.log(res.data);
+        //     }, (error) => {
+        //         this.setState({ success: false });
+        //         const temp = JSON.stringify(error.response.data);   
+        //         const temp2 = JSON.parse(temp);
+        //         this.setState({ message: temp2["message"] });
+        //         console.log(error);
+        //     })
     }
     goToRegister = () => {
         this.props.history.push("/register");
@@ -121,32 +103,9 @@ export default class RegistrationPage extends Component {
         if (!this.state.success) {
             return (
                 <Container>
-                  <PrimarySearchAppBar loginNav={this.goToLogin}/>
+                   <PrimarySearchAppBar registerNav={this.goToRegister}/>
                     <form className="" onSubmit={this.handleSubmit}>
-                        <h3>Registration</h3>
-                        <div className="">
-                            <TextField
-                                error=""
-                                id="standard-error-helper-text"
-                                label="First Name"
-                                onChange={this.handleFirstname}
-                                defaultValue=""
-                                helperText=""
-                            />
-                        </div>
-
-                        <div className="">
-
-                            <TextField
-                                error=""
-                                id="standard-error-helper-text"
-                                label="Last Name"
-                                onChange={this.handleSurname}
-                                defaultValue=""
-                                helperText=""
-                            />
-                        </div>
-
+                        <h3>Login</h3>
                         <div className="">
                             <TextField
                                 type="email"
@@ -175,7 +134,7 @@ export default class RegistrationPage extends Component {
                         <Button type="submit" variant="contained" color="primary" className="">Register</Button>
 
                         <p className="">
-                            Already registered? <a href="/login">Login.</a>
+                            Don't have an account? <a href="/register">Signup!</a>
                         </p>
                     </form>
                     <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>

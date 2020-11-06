@@ -15,7 +15,9 @@ const errorMessages = {
 }
 
   const Container = styled(Box)({
-    background: 'linear-gradient(90deg, rgba(0,151,255,1) 10%, rgba(255,106,106,1) 50%, rgba(0,151,255,1) 90%)',
+  //  background: 'linear-gradient(90deg, rgba(0,151,255,1) 10%, rgba(255,106,106,1) 50%, rgba(0,151,255,1) 90%)',
+   // background: "#164a9e",
+    background:"#7a96c2",
     border: 0,
     borderRadius: 3,
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',

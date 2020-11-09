@@ -1,19 +1,16 @@
-* **Project: GENERAL / FRONTEND / BACKEND / ANDROID**
+* **Project: (select one) GENERAL / FRONTEND / BACKEND / ANDROID**
 
-* **I'm submitting a ... (remove the irrelevant one)**
-  - [ ] bug report
-  - [ ] feature request
-  - [ ] documentation request
+* **This is a: (select one) BUG REPORT / FEATURE REQUEST / DOCUMENTATION REQUEST**
 
-* **Briefly describe the issue.**
+* **Description of the issue**
 
 A brief description of the general problem/request.
 
-* **For feature requests, please explain the expected functionality.**
+* **For feature requests: Expected functionality of the requested feature**
 
 Ex. which inputs should be given and what outputs are expected for an API endpoint feature request.
 
-* **For bug reports, please explain how to reproduce the bug, and what was the expected behaviour.**
+* **For bug reports: Explanation of how to reproduce the bug, and what was the expected behaviour.**
 
 Ex. The "Add" button doesn't work in home page.  
 How to reproduce: Click on the "Add" button on home page.  

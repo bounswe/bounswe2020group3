@@ -7,7 +7,7 @@ from .models.example import Example
 from .serializers.example import ExampleModelSerializer
 from .views.example import ExampleGenericAPIView, ExampleDetailGenericAPIView
 from .views.profile import ProfileViewSet
-from .views.auth import register, logout_view
+from .views.auth import RegisterGenericAPIView, LogoutGenericAPIView
 from .views.user import UserViewSet
 from django.contrib.auth import views as auth_views
 
@@ -25,9 +25,9 @@ urlpatterns = [
                                                                  serializer_class=ExampleModelSerializer,
                                                                  lookup_field='id')),
 
-    path('register/', register),
+    path('register/', RegisterGenericAPIView.as_view()),
     path('auth/', obtain_auth_token, name='auth'),
-    path('logout/', logout_view),
+    path('logout/', LogoutGenericAPIView.as_view()),
     path('reset_password/', auth_views.PasswordResetView.as_view(),
          name="reset_password"),
     path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(),

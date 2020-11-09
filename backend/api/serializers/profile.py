@@ -3,6 +3,9 @@ from rest_framework import serializers
 
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Profile serializer, includes also profile owner
+    """
     owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:

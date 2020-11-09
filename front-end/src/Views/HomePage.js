@@ -3,7 +3,6 @@ import axios from 'axios';
 import config from '../config';
 import { styled } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
@@ -51,9 +50,18 @@ export default class HomePage extends Component {
         this.props.history.push("/login");
     };
 
-    renderProject(){return <p>ML</p>}
-    renderFeed(){return <p>alpha beta gama</p>}
-    renderEvents(){return <p>Hackathon number one</p>}
+    renderProject(){
+      var projects = ["ML","AI","DL"];
+      return projects.map((item) => {return (<p>{item}</p>)});
+    };
+    renderFeed(){
+      var news = ["alpha", "beta", "gama","delta","epsilon","zeta" ];
+      return news.map((item) => {return (<p>{item}</p>)});
+    };
+    renderEvents(){
+      var events = ["Hackathon number one","Hackathon number two","Hackathon number three"];
+      return events.map((item) => {return (<p>{item}</p>)});
+    };
 
     render() {
       // console.log(this.props.history, "asd")
@@ -70,26 +78,17 @@ export default class HomePage extends Component {
                       <h2> Projects </h2>
                       <Paper>
                       {this.renderProject()}
-                      {this.renderProject()}
-                      {this.renderProject()}
                       </Paper>
                     </div>
                     <div class="column middle">
                     <h2> Feeds </h2>
                       <Paper>
                       {this.renderFeed()}
-                      {this.renderFeed()}
-                      {this.renderFeed()}
-                      {this.renderFeed()}
-                      {this.renderFeed()}
-                      {this.renderFeed()}
                       </Paper>
                     </div>
                     <div class="column right">
                     <h2> Upcoming Events </h2>
                       <Paper>
-                      {this.renderEvents()}
-                      {this.renderEvents()}
                       {this.renderEvents()}
                       </Paper>
                     </div>

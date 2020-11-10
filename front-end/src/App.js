@@ -1,5 +1,6 @@
 import './App.css';
 import RegistrationPage from "./Views/RegistrationPage";
+import HomePage from "./Views/HomePage";
 import LoginPage from "./Views/LoginPage";
 import { Switch, Route } from "react-router-dom";
 import config from "./config";
@@ -9,15 +10,15 @@ function App() {
   return (
     <div className="App">
       <Switch>
-            <Route exact path="/" component={RegistrationPage} />
-            <Route path="/home" component={RegistrationPage} />
+
+            <Route exact path="/" component={HomePage } />
+            <Route path="/home" component={HomePage} />
             <Route path={config.Login_Path} component={LoginPage} />
             <Route path={config.Register_Path} component={RegistrationPage} />
-            {/* Left as an example for constructing an authenticated route */}
+          {/* Left as an example for constructing an authenticated route */}
             <AuthenticatedRoute path="/paperapi" component={LoginPage} />
-          </Switch>
+      </Switch>
     </div>
   );
 }
-
 export default App;

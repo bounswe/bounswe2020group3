@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from 'axios';
+import config from '../config';
 import { styled } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -7,13 +8,14 @@ import Box from '@material-ui/core/Box';
 import AlertTypes from '../Common/AlertTypes.json';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
-import config from "../config";
+import { setCookie } from '../Components/Auth/Authenticate';
+
 
 const Messages = {
     emptyFieldError: "Please Fill All Areas!",
-    registerSuccess: "Registration Successful!",
-    somethingWrong : "Something Went Wrong!"
-
+    loginSuccess : "Login Successful",
+    loginFail : "Login Failed"
+    
 }
 
   const Container = styled(Box)({
@@ -36,46 +38,31 @@ const Messages = {
   });
 
   
-export default class RegistrationPage extends Component {
+export default class LoginPage extends Component {
     
     constructor(props) {
         super(props);
         this.SnackbarRef = React.createRef();
         this.state = {
-           // name: "",
-           // surname: "",
+            //email: "",
             username: "",
-            email: "",
             password: "",
             success: null,
             message: "",
-            messageType: "",
+            messageType: ""
         }
     }
 
-    handleFirstname = event => {
-        this.setState({
-            name: event.target.value
-        });
-    };
-    
+    // handleEmail = event => {
+    //     this.setState({
+    //         email: event.target.value
+    //     });
+    // };
     handleUsername = event => {
         this.setState({
             username: event.target.value
-        });
-    };
-
-    handleSurname = event => {
-        this.setState({
-            surname: event.target.value
-        });
-    };
-
-    handleEmail = event => {
-        this.setState({
-            email: event.target.value
-        });
-    };
+        })
+    }
 
     handlePassword = event => {
         this.setState({
@@ -88,45 +75,37 @@ export default class RegistrationPage extends Component {
     }
 
     handleSubmit = (event) => {
-        const { username, email, password } = this.state;
+        const { username, password, message } = this.state;
         event.preventDefault()
-        if (username === ""|| email === "" || password === "" )
-        {
-            console.log("open")
-            
-            this.setState({message: Messages.emptyFieldError, messageType:AlertTypes.Warning, password:""} , () => {
+        if (username === "" || password === "" )
+        {            
+            this.setState({message: Messages.emptyFieldError, messageType:AlertTypes.Warning} , () => {
                 this.handleSnackbarOpen();
             });
             return ;     
         } 
         const user = {
-            username: username,
-            email: email,
+            username:username,
             password: password
         };
-        
-        axios.post(`${config.API_URL}/api/register/`, user, { headers: { 'Content-Type': 'Application/json' } })
+
+        axios.post(`${config.API_URL}${config.Login_Url}`, user, { headers: { 'Content-Type': 'Application/json' } })
             .then(res => {
-                this.setState({ success: true, messageType: AlertTypes.Success, message: Messages.registerSuccess }, () => {
-                    this.handleSnackbarOpen()
+                console.log(res.data.token, "ASD")
+                let token = res.data.token;
+                this.setState({ success: true, message: Messages.loginSuccess, messageType: AlertTypes.Success }, () => {
+                    setCookie(token);
+                    this.handleSnackbarOpen();
                 });
                 console.log(res);
                 console.log(res.data);
-                setTimeout(() => { this.props.history.push("/login"); }, 2000);    
-                //this.props.history.push('/login')
-
-
             }, (error) => {
-                this.setState({ success: false });
-                //const temp = JSON.stringify(error);   
-                //const temp2 = JSON.parse(temp);
-                this.setState({ message: Messages.somethingWrong });
+                this.setState({ success: false, message: Messages.loginFail, messageType: AlertTypes.Error });
                 console.log(error);
             })
     }
-    goToLogin = () => {
-        this.props.history.push(config.Login_Path);
-    }
+
+
     goToRegister = () => {
         this.props.history.push(config.Register_Path);
     }
@@ -135,49 +114,16 @@ export default class RegistrationPage extends Component {
         // console.log(this.props.history, "asd")
             return (
                 <Container>
-                  <PrimarySearchAppBar loginNav={this.goToLogin}/>
+                   <PrimarySearchAppBar registerNav={this.goToRegister}/>
                     <form className="" onSubmit={this.handleSubmit}>
-                        <h3>Registration</h3>
+                        <h3>Login</h3>
                         <div className="">
                             <TextField
+                                type="text"
                                 error=""
                                 id="standard-error-helper-text"
                                 label="Username"
                                 onChange={this.handleUsername}
-                                defaultValue=""
-                                helperText=""
-                            />
-                        </div>
-                        {/* <div className="">
-                            <TextField
-                                error=""
-                                id="standard-error-helper-text"
-                                label="First Name"
-                                onChange={this.handleFirstname}
-                                defaultValue=""
-                                helperText=""
-                            />
-                        </div>
-
-                        <div className="">
-
-                            <TextField
-                                error=""
-                                id="standard-error-helper-text"
-                                label="Last Name"
-                                onChange={this.handleSurname}
-                                defaultValue=""
-                                helperText=""
-                            />
-                        </div> */}
-
-                        <div className="">
-                            <TextField
-                                type="email"
-                                error=""
-                                id="standard-error-helper-text"
-                                label="Email"
-                                onChange={this.handleEmail}
                                 defaultValue=""
                                 helperText=""
                             />
@@ -194,12 +140,10 @@ export default class RegistrationPage extends Component {
                                 helperText=""
                             />
                         </div>
-
-                 
-                        <Button type="submit" variant="contained" color="primary" className="">Register</Button>
+                        <Button type="submit" variant="contained" color="primary" className="">Login</Button>
 
                         <p className="">
-                            Already registered? <a href="/login">Login.</a>
+                            Don't have an account? <a href="/register">Signup!</a>
                         </p>
                     </form>
                     <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>

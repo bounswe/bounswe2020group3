@@ -212,7 +212,8 @@ export default function PrimarySearchAppBar(props) {
             >
               <AccountCircle />
             </IconButton> */}
-            <Button variant="contained" color="primary" className="" onClick={props.loginNav}>Login</Button>
+            <Button variant="contained" color="primary" className="" onClick={() => {props.registerNav ? props.registerNav() : console.log("no registerNav Prop!")}}>Register</Button>
+            <Button variant="contained" color="primary" className="" onClick={() => {props.loginNav ? props.loginNav() : console.log("no loginNav Prop!") }}>Login</Button>
 
           </div>
           <div className={classes.sectionMobile}>

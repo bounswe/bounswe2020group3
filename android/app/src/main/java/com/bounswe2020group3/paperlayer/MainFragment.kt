@@ -17,9 +17,6 @@ class MainFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_main, container, false)
-        view.findViewById<Button>(R.id.exitButton).setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.navigateToLogin)
-        }
         return view
     }
 

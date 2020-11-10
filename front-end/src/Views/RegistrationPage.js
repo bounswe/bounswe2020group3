@@ -34,7 +34,7 @@ const Messages = {
 
   
 export default class RegistrationPage extends Component {
-    
+
     constructor(props) {
         super(props);
         this.SnackbarRef = React.createRef();
@@ -48,21 +48,9 @@ export default class RegistrationPage extends Component {
         }
     }
 
-    handleFirstname = event => {
-        this.setState({
-            name: event.target.value
-        });
-    };
-    
     handleUsername = event => {
         this.setState({
             username: event.target.value
-        });
-    };
-
-    handleSurname = event => {
-        this.setState({
-            surname: event.target.value
         });
     };
 
@@ -107,7 +95,7 @@ export default class RegistrationPage extends Component {
                 });
                 console.log(res);
                 console.log(res.data);
-                setTimeout(() => { this.props.history.push("/login"); }, 5000);    
+                setTimeout(() => { this.props.history.push(config.Login_Path); }, 5000);    
 
 
             }, (error) => {
@@ -173,5 +161,4 @@ export default class RegistrationPage extends Component {
                     <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>
                 </Container>);
     }
-
 }    

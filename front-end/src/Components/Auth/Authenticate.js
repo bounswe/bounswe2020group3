@@ -13,21 +13,15 @@ export const setCookie = (token) => {
 }
 
 export const authenticate = async () => {
-  
     if (getAccessToken()) {
         return true;
     }
-
-
     redirectToLogin()
     return false
 }
 
 const redirectToLogin = () => {
-    window.location.replace(
-        `http://localhost:3000${config.Login_Path}`
-        //`http://localhost:3000/${config.Login_Path}?next=${window.location.href}`
-    ) 
+    window.location.replace(`http://localhost:3000${config.Login_Path}`);
 }
 export const AuthenticatedRoute = ({
     component: Component,

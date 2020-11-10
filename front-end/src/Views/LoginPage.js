@@ -41,7 +41,6 @@ export default class LoginPage extends Component {
         super(props);
         this.SnackbarRef = React.createRef();
         this.state = {
-            //email: "",
             username: "",
             password: "",
             success: null,

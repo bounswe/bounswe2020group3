@@ -13,12 +13,6 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonDemo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Demo Button"/>
-
         <TextView
             android:id="@+id/loginTextView"
             android:layout_width="match_parent"

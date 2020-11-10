@@ -77,7 +77,6 @@ export default class HomePage extends Component {
     };
 
     render() {
-      // console.log(this.props.history, "asd")
         if (!this.state.success) {
             return (
                 <Container>

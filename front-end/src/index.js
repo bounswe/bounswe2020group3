@@ -8,7 +8,7 @@ import history from "./history";
 
 ReactDOM.render(
     <BrowserRouter history={history}>
-        <App />
+        <App/>
     </BrowserRouter>,
     document.getElementById("root")
 );

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import axios from 'axios';
-import config from '../config';
 import { styled } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -8,7 +7,7 @@ import Box from '@material-ui/core/Box';
 import AlertTypes from '../Common/AlertTypes.json';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
-
+import config from "../config";
 
 const errorMessages = {
     emptyFieldError: "Please Fill All Areas!"
@@ -46,7 +45,7 @@ export default class RegistrationPage extends Component {
             password: "",
             success: null,
             message: "",
-            messageType: ""
+            messageType: "",
         }
     }
 
@@ -110,10 +109,10 @@ export default class RegistrationPage extends Component {
             })
     }
     goToLogin = () => {
-        this.props.history.push("/login");
+        this.props.history.push(config.Login_Path);
     }
     goToRegister = () => {
-        this.props.history.push("/register");
+        this.props.history.push(config.Register_Path);
     }
 
     render() {

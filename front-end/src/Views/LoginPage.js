@@ -8,10 +8,14 @@ import Box from '@material-ui/core/Box';
 import AlertTypes from '../Common/AlertTypes.json';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
+import { setCookie } from '../Components/Auth/Authenticate';
 
 
-const errorMessages = {
-    emptyFieldError: "Please Fill All Areas!"
+const Messages = {
+    emptyFieldError: "Please Fill All Areas!",
+    loginSuccess : "Login Successful",
+    loginFail : "Login Failed"
+    
 }
 
   const Container = styled(Box)({
@@ -40,7 +44,8 @@ export default class LoginPage extends Component {
         super(props);
         this.SnackbarRef = React.createRef();
         this.state = {
-            email: "",
+            //email: "",
+            username: "",
             password: "",
             success: null,
             message: "",
@@ -48,11 +53,16 @@ export default class LoginPage extends Component {
         }
     }
 
-    handleEmail = event => {
+    // handleEmail = event => {
+    //     this.setState({
+    //         email: event.target.value
+    //     });
+    // };
+    handleUsername = event => {
         this.setState({
-            email: event.target.value
-        });
-    };
+            username: event.target.value
+        })
+    }
 
     handlePassword = event => {
         this.setState({
@@ -65,42 +75,43 @@ export default class LoginPage extends Component {
     }
 
     handleSubmit = (event) => {
-        const { email, password, message } = this.state;
+        const { username, password, message } = this.state;
         event.preventDefault()
-        if ( email === "" || password === "" )
-        {
-            console.log("open")
-            
-            this.setState({message: errorMessages.emptyFieldError, messageType:AlertTypes.Warning} , () => {
+        if (username === "" || password === "" )
+        {            
+            this.setState({message: Messages.emptyFieldError, messageType:AlertTypes.Warning} , () => {
                 this.handleSnackbarOpen();
             });
             return ;     
         } 
-        // const user = {
-        //     email: email,
-        //     password: password
-        // };
+        const user = {
+            username:username,
+            password: password
+        };
 
-        // axios.post(`${config.API_URL}/api/register`, user, { headers: { 'Content-Type': 'Application/json' } })
-        //     .then(res => {
-        //         this.setState({ success: true });
-        //         console.log(res);
-        //         console.log(res.data);
-        //     }, (error) => {
-        //         this.setState({ success: false });
-        //         const temp = JSON.stringify(error.response.data);   
-        //         const temp2 = JSON.parse(temp);
-        //         this.setState({ message: temp2["message"] });
-        //         console.log(error);
-        //     })
+        axios.post(`${config.API_URL}${config.Login_Url}`, user, { headers: { 'Content-Type': 'Application/json' } })
+            .then(res => {
+                console.log(res.data.token, "ASD")
+                let token = res.data.token;
+                this.setState({ success: true, message: Messages.loginSuccess, messageType: AlertTypes.Success }, () => {
+                    setCookie(token);
+                    this.handleSnackbarOpen();
+                });
+                console.log(res);
+                console.log(res.data);
+            }, (error) => {
+                this.setState({ success: false, message: Messages.loginFail, messageType: AlertTypes.Error });
+                console.log(error);
+            })
     }
+
+
     goToRegister = () => {
-        this.props.history.push("/register");
+        this.props.history.push(config.Register_Path);
     }
 
     render() {
         // console.log(this.props.history, "asd")
-        if (!this.state.success) {
             return (
                 <Container>
                    <PrimarySearchAppBar registerNav={this.goToRegister}/>
@@ -108,11 +119,11 @@ export default class LoginPage extends Component {
                         <h3>Login</h3>
                         <div className="">
                             <TextField
-                                type="email"
+                                type="text"
                                 error=""
                                 id="standard-error-helper-text"
-                                label="Email"
-                                onChange={this.handleEmail}
+                                label="Username"
+                                onChange={this.handleUsername}
                                 defaultValue=""
                                 helperText=""
                             />
@@ -129,9 +140,7 @@ export default class LoginPage extends Component {
                                 helperText=""
                             />
                         </div>
-
-                 
-                        <Button type="submit" variant="contained" color="primary" className="">Register</Button>
+                        <Button type="submit" variant="contained" color="primary" className="">Login</Button>
 
                         <p className="">
                             Don't have an account? <a href="/register">Signup!</a>
@@ -139,10 +148,6 @@ export default class LoginPage extends Component {
                     </form>
                     <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>
                 </Container>);
-        }
-        else
-            return (<p style={{ color: "green", textAlign: "center", fontWeight: "bold", fontSize: 25, fontFamily: 'Fira Sans' }}>Registration is completed !</p>);
-
     }
 
 }    

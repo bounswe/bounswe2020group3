@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
+import androidx.navigation.Navigation
 
 class MainFragment : Fragment(), MainContract.View {
 
@@ -19,6 +21,12 @@ class MainFragment : Fragment(), MainContract.View {
         val view = inflater.inflate(R.layout.fragment_main, container, false)
         setPresenter(MainPresenter(this, DependencyInjectorImpl()))
         presenter.onViewCreated()
+        view.findViewById<Button>(R.id.loginButton).setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.navigateToLogin)
+        }
+        view.findViewById<Button>(R.id.registerButton).setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.navigateToRegisterFromMain)
+        }
         return view
     }
 

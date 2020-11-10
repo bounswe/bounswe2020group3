@@ -1,4 +1,4 @@
-package com.bounswe2020group3.paperlayer
+package com.bounswe2020group3.paperlayer.login
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

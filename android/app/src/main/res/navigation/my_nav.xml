@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.bounswe2020group3.paperlayer.LoginFragment"
+        android:name="com.bounswe2020group3.paperlayer.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bounswe2020group3.paperlayer.LoginFragment">
+    tools:context="com.bounswe2020group3.paperlayer.login.LoginFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

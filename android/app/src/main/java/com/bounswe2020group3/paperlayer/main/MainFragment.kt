@@ -1,4 +1,4 @@
-package com.bounswe2020group3.paperlayer
+package com.bounswe2020group3.paperlayer.main
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.navigation.Navigation
+import com.bounswe2020group3.paperlayer.DependencyInjectorImpl
+import com.bounswe2020group3.paperlayer.R
 
 class MainFragment : Fragment(), MainContract.View {
 

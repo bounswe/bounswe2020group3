@@ -14,7 +14,7 @@
         android:padding="20dp">
 
         <TextView
-            android:id="@+id/loginTextView"
+            android:id="@+id/textViewLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -25,7 +25,7 @@
             android:textSize="36sp" />
 
         <TextView
-            android:id="@+id/loginEmailTextView"
+            android:id="@+id/textViewLoginEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -36,7 +36,7 @@
 
 
         <EditText
-            android:id="@+id/fr_login_usernameEditText"
+            android:id="@+id/editTextUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -46,7 +46,7 @@
             android:hint="example@domain.com" />
 
         <TextView
-            android:id="@+id/loginPasswordTextView"
+            android:id="@+id/textViewLoginPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -57,7 +57,7 @@
 
 
         <EditText
-            android:id="@+id/fr_login_passwordEditText"
+            android:id="@+id/editTextLoginPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -67,21 +67,21 @@
             android:hint="Password" />
 
         <Button
-            android:id="@+id/fr_login_loginButton"
+            android:id="@+id/buttonLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Login" />
 
         <Button
-            android:id="@+id/fr_login_registerButton"
+            android:id="@+id/buttonRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="Register" />
 
         <Button
-            android:id="@+id/fr_login_loginGuestButton"
+            android:id="@+id/buttonGuest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"

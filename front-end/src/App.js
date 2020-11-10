@@ -7,10 +7,11 @@ function App() {
     <div className="App">
       <Switch>
             <Route exact path="/" component={RegistrationPage} />
-            <Route path="/home" component={RegistrationPage} />
-            <Route path="/login" component={RegistrationPage} />
-            <Route path="/registration" component={RegistrationPage} />
-            <Route path="/paperapi" component={RegistrationPage} />
+            <Route exact path="/home" component={RegistrationPage} />
+            <Route exact path="/login" component={RegistrationPage} />
+            <Route exact path="/registration" component={RegistrationPage} />
+            <Route exact path="/paperapi" component={RegistrationPage} />
+            <Route path="" component={RegistrationPage}/>
           </Switch>
     </div>
   );

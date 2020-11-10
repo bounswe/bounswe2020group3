@@ -10,8 +10,11 @@ import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
 
 
-const errorMessages = {
-    emptyFieldError: "Please Fill All Areas!"
+const Messages = {
+    emptyFieldError: "Please Fill All Areas!",
+    registerSuccess: "Registration Successful!",
+    somethingWrong : "Something Went Wrong!"
+
 }
 
   const Container = styled(Box)({
@@ -40,8 +43,9 @@ export default class RegistrationPage extends Component {
         super(props);
         this.SnackbarRef = React.createRef();
         this.state = {
-            name: "",
-            surname: "",
+           // name: "",
+           // surname: "",
+            username: "",
             email: "",
             password: "",
             success: null,
@@ -53,6 +57,12 @@ export default class RegistrationPage extends Component {
     handleFirstname = event => {
         this.setState({
             name: event.target.value
+        });
+    };
+    
+    handleUsername = event => {
+        this.setState({
+            username: event.target.value
         });
     };
 
@@ -79,33 +89,39 @@ export default class RegistrationPage extends Component {
     }
 
     handleSubmit = (event) => {
-        const { name, surname, email, password, message } = this.state;
+        const { username, email, password } = this.state;
         event.preventDefault()
-        if (name === "" || surname === "" || email === "" || password === "" )
+        if (username === ""|| email === "" || password === "" )
         {
             console.log("open")
             
-            this.setState({message: errorMessages.emptyFieldError, messageType:AlertTypes.Warning} , () => {
+            this.setState({message: Messages.emptyFieldError, messageType:AlertTypes.Warning, password:""} , () => {
                 this.handleSnackbarOpen();
             });
             return ;     
         } 
         const user = {
-            name: name.concat(" ", surname),
+            username: username,
             email: email,
             password: password
         };
-
-        axios.post(`${config.API_URL}/api/register`, user, { headers: { 'Content-Type': 'Application/json' } })
+        
+        axios.post(`${config.API_URL}/api/register/`, user, { headers: { 'Content-Type': 'Application/json' } })
             .then(res => {
-                this.setState({ success: true });
+                this.setState({ success: true, messageType: AlertTypes.Success, message: Messages.registerSuccess }, () => {
+                    this.handleSnackbarOpen()
+                });
                 console.log(res);
                 console.log(res.data);
+                setTimeout(() => { this.props.history.push("/login"); }, 2000);    
+                //this.props.history.push('/login')
+
+
             }, (error) => {
                 this.setState({ success: false });
-                const temp = JSON.stringify(error.response.data);   
-                const temp2 = JSON.parse(temp);
-                this.setState({ message: temp2["message"] });
+                //const temp = JSON.stringify(error);   
+                //const temp2 = JSON.parse(temp);
+                this.setState({ message: Messages.somethingWrong });
                 console.log(error);
             })
     }
@@ -115,13 +131,22 @@ export default class RegistrationPage extends Component {
 
     render() {
         // console.log(this.props.history, "asd")
-        if (!this.state.success) {
             return (
                 <Container>
                    <PrimarySearchAppBar loginNav={this.goToLogin}/>
                     <form className="" onSubmit={this.handleSubmit}>
                         <h3>Registration</h3>
                         <div className="">
+                            <TextField
+                                error=""
+                                id="standard-error-helper-text"
+                                label="Username"
+                                onChange={this.handleUsername}
+                                defaultValue=""
+                                helperText=""
+                            />
+                        </div>
+                        {/* <div className="">
                             <TextField
                                 error=""
                                 id="standard-error-helper-text"
@@ -142,7 +167,7 @@ export default class RegistrationPage extends Component {
                                 defaultValue=""
                                 helperText=""
                             />
-                        </div>
+                        </div> */}
 
                         <div className="">
                             <TextField
@@ -177,10 +202,6 @@ export default class RegistrationPage extends Component {
                     </form>
                     <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>
                 </Container>);
-        }
-        else
-            return (<p style={{ color: "green", textAlign: "center", fontWeight: "bold", fontSize: 25, fontFamily: 'Fira Sans' }}>Registration is completed !</p>);
-
     }
 
 }    

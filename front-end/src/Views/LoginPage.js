@@ -19,8 +19,6 @@ const Messages = {
 }
 
   const Container = styled(Box)({
-  //  background: 'linear-gradient(90deg, rgba(0,151,255,1) 10%, rgba(255,106,106,1) 50%, rgba(0,151,255,1) 90%)',
-   // background: "#164a9e",
     background:"#7a96c2",
     border: 0,
     borderRadius: 3,
@@ -29,7 +27,6 @@ const Messages = {
     height: "100vh",
     width: "100%",
     margin: "auto",
-    // padding: '10px 30px',
     '& .MuiTextField-root': {
         margin: "10px",
         width: "30%",
@@ -44,7 +41,6 @@ export default class LoginPage extends Component {
         super(props);
         this.SnackbarRef = React.createRef();
         this.state = {
-            //email: "",
             username: "",
             password: "",
             success: null,
@@ -52,12 +48,6 @@ export default class LoginPage extends Component {
             messageType: ""
         }
     }
-
-    // handleEmail = event => {
-    //     this.setState({
-    //         email: event.target.value
-    //     });
-    // };
     handleUsername = event => {
         this.setState({
             username: event.target.value
@@ -111,7 +101,6 @@ export default class LoginPage extends Component {
     }
 
     render() {
-        // console.log(this.props.history, "asd")
             return (
                 <Container>
                    <PrimarySearchAppBar registerNav={this.goToRegister}/>

@@ -14,7 +14,7 @@ function App() {
             <Route path={config.Login_Path} component={LoginPage} />
             <Route path={config.Register_Path} component={RegistrationPage} />
             {/* Left as an example for constructing an authenticated route */}
-            <AuthenticatedRoute path="/paperapi" component={RegistrationPage} />
+            <AuthenticatedRoute path="/paperapi" component={LoginPage} />
           </Switch>
     </div>
   );

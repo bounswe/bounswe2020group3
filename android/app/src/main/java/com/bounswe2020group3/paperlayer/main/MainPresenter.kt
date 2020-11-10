@@ -1,10 +1,8 @@
-package com.bounswe2020group3.paperlayer
+package com.bounswe2020group3.paperlayer.main
 
-import android.util.Log
 import timber.log.Timber
 
-class MainPresenter(view: MainContract.View,
-                    dependencyInjector: DependencyInjector)
+class MainPresenter(view: MainContract.View)
   : MainContract.Presenter {
 
   private var view: MainContract.View? = view

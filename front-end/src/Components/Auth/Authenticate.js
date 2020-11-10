@@ -13,26 +13,7 @@ export const setCookie = (token) => {
 }
 
 export const authenticate = async () => {
-    // if (getRefreshToken()) {
-    //   try {
-    //     const tokens = await refreshTokens() // call an API, returns tokens
-
-    //   //  const expires = (tokens.expires_in || 60 * 60) * 1000
-    //   //  const inOneHour = new Date(new Date().getTime() + expires)
-
-    //     // you will have the exact same setters in your Login page/app too
-
-
-    //     // , { expires: inOneHour }
-    //     Cookies.set('access_token', tokens.access_token)
-    //     Cookies.set('refresh_token', tokens.refresh_token)
-
-    //     return true
-    //   } catch (error) {
-    //     redirectToLogin()
-    //     return false
-    //   }
-    // }
+  
     if (getAccessToken()) {
         return true;
     }
@@ -46,9 +27,7 @@ const redirectToLogin = () => {
     window.location.replace(
         `http://localhost:3000${config.Login_Path}`
         //`http://localhost:3000/${config.Login_Path}?next=${window.location.href}`
-    )
-    // if your Login page is inside the same app
-    //history.push('/login') 
+    ) 
 }
 export const AuthenticatedRoute = ({
     component: Component,

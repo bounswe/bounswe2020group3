@@ -24,24 +24,47 @@
             android:textColor="@color/black"
             android:textSize="36sp" />
 
+        <TextView
+            android:id="@+id/loginEmailTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="left"
+            android:text="Email"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+
         <EditText
             android:id="@+id/usernameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:background="@color/teal_200"
             android:ems="10"
             android:inputType="textPersonName"
-            android:hint="Userame" />
+            android:hint="example@domain.com" />
+
+        <TextView
+            android:id="@+id/loginPasswordTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="left"
+            android:text="Password"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
 
         <EditText
             android:id="@+id/passwordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:background="@color/teal_200"
             android:ems="10"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:hint="Password" />
 
         <Button
             android:id="@+id/loginButton"
@@ -49,12 +72,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Login" />
+
         <Button
             android:id="@+id/registerButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:text="Register" />
+
+        <Button
+            android:id="@+id/loginGuestButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Login as a Guest" />
 
     </LinearLayout>
 

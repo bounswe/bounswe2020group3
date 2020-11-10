@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.navigation.Navigation
-import com.bounswe2020group3.paperlayer.DependencyInjectorImpl
 import com.bounswe2020group3.paperlayer.R
 
 class MainFragment : Fragment(), MainContract.View {
@@ -21,7 +20,7 @@ class MainFragment : Fragment(), MainContract.View {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_main, container, false)
-        setPresenter(MainPresenter(this, DependencyInjectorImpl()))
+        setPresenter(MainPresenter(this))
         presenter.onViewCreated()
         view.findViewById<Button>(R.id.loginButton).setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.navigateToLogin)

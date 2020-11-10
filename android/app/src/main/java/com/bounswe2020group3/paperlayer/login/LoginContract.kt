@@ -18,9 +18,9 @@ interface LoginContract {
     }
 
     interface View{
-        fun bindViews()
         fun initOnClicks()
         fun getLayout(): android.view.View
+        fun resetEditText()
     }
 
 }

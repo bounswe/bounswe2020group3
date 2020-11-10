@@ -3,34 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_nav"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/mainFragment">
 
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.bounswe2020group3.paperlayer.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/navigateToMain"
-            app:destination="@id/mainFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@anim/fragment_fade_exit" />
-        <action
-            android:id="@+id/navigateToRegister"
-            app:destination="@id/registerFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/mainFragment"
-        android:name="com.bounswe2020group3.paperlayer.MainFragment"
+        android:name="com.bounswe2020group3.paperlayer.main.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/navigateToLogin"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/navigateToRegisterFromMain"
+            app:destination="@id/registerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.bounswe2020group3.paperlayer.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/navigateToRegister"
+            app:destination="@id/registerFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.bounswe2020group3.paperlayer.RegisterFragment"
+        android:name="com.bounswe2020group3.paperlayer.register.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" />
 </navigation>

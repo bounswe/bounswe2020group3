@@ -4,7 +4,6 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
 # C extensions
 *.so
 
@@ -130,6 +129,10 @@ pip-selfcheck.json
 .idea/mongoSettings.xml
 
 .idea/
+.vscode
+
+## DB
+db.sqlite3
 
 ## File-based project format:
 *.iws

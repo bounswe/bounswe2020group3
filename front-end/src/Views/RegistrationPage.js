@@ -11,14 +11,12 @@ import config from "../config";
 
 const Messages = {
     emptyFieldError: "Please Fill All Areas!",
-    registerSuccess: "Registration Successful!",
+    registerSuccess: "Registration Successful! You'll be redirected to login.",
     somethingWrong : "Something Went Wrong!"
 
 }
 
   const Container = styled(Box)({
-  //  background: 'linear-gradient(90deg, rgba(0,151,255,1) 10%, rgba(255,106,106,1) 50%, rgba(0,151,255,1) 90%)',
-   // background: "#164a9e",
     background:"#7a96c2",
     border: 0,
     borderRadius: 3,
@@ -27,7 +25,6 @@ const Messages = {
     height: "100vh",
     width: "100%",
     margin: "auto",
-    // padding: '10px 30px',
     '& .MuiTextField-root': {
         margin: "10px",
         width: "30%",
@@ -42,8 +39,6 @@ export default class RegistrationPage extends Component {
         super(props);
         this.SnackbarRef = React.createRef();
         this.state = {
-           // name: "",
-           // surname: "",
             username: "",
             email: "",
             password: "",
@@ -105,22 +100,20 @@ export default class RegistrationPage extends Component {
             password: password
         };
         
-        axios.post(`${config.API_URL}/api/register/`, user, { headers: { 'Content-Type': 'Application/json' } })
+        axios.post(`${config.API_URL}${config.Register_Url}`, user, { headers: { 'Content-Type': 'Application/json' } })
             .then(res => {
                 this.setState({ success: true, messageType: AlertTypes.Success, message: Messages.registerSuccess }, () => {
                     this.handleSnackbarOpen()
                 });
                 console.log(res);
                 console.log(res.data);
-                setTimeout(() => { this.props.history.push("/login"); }, 2000);    
-                //this.props.history.push('/login')
+                setTimeout(() => { this.props.history.push("/login"); }, 5000);    
 
 
             }, (error) => {
-                this.setState({ success: false });
-                //const temp = JSON.stringify(error);   
-                //const temp2 = JSON.parse(temp);
-                this.setState({ message: Messages.somethingWrong });
+                this.setState({ success: false, messageType:AlertTypes.Error, message: Messages.somethingWrong } , () =>{
+                    this.handleSnackbarOpen();
+                });
                 console.log(error);
             })
     }
@@ -132,7 +125,6 @@ export default class RegistrationPage extends Component {
     }
 
     render() {
-        // console.log(this.props.history, "asd")
             return (
                 <Container>
                   <PrimarySearchAppBar loginNav={this.goToLogin}/>
@@ -148,29 +140,6 @@ export default class RegistrationPage extends Component {
                                 helperText=""
                             />
                         </div>
-                        {/* <div className="">
-                            <TextField
-                                error=""
-                                id="standard-error-helper-text"
-                                label="First Name"
-                                onChange={this.handleFirstname}
-                                defaultValue=""
-                                helperText=""
-                            />
-                        </div>
-
-                        <div className="">
-
-                            <TextField
-                                error=""
-                                id="standard-error-helper-text"
-                                label="Last Name"
-                                onChange={this.handleSurname}
-                                defaultValue=""
-                                helperText=""
-                            />
-                        </div> */}
-
                         <div className="">
                             <TextField
                                 type="email"
@@ -194,7 +163,6 @@ export default class RegistrationPage extends Component {
                                 helperText=""
                             />
                         </div>
-
                  
                         <Button type="submit" variant="contained" color="primary" className="">Register</Button>
 

@@ -3,25 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/secondaryLightColor"
     tools:context="com.bounswe2020group3.paperlayer.login.LoginFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/teal_700"
         android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/textViewLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@color/white"
+            android:layout_margin="8dp"
+            android:textColor="@color/colorBlack"
+            android:background="@color/colorWhite"
             android:gravity="center"
-            android:text="Paperlayer Login Screen"
-            android:textColor="@color/black"
+            android:text="@string/text_login_screen"
             android:textSize="36sp" />
 
         <TextView
@@ -29,62 +28,60 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:gravity="left"
-            android:text="Email"
-            android:textColor="@color/black"
+            android:layout_marginHorizontal="16dp"
+            android:gravity="start"
+            android:textColor="@color/colorBlack"
+            android:text="@string/text_email"
             android:textSize="20sp" />
 
 
         <EditText
             android:id="@+id/editTextUsername"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@color/teal_200"
-            android:ems="10"
+            android:layout_height="36dp"
+
+            style="@style/EditTextDefault"
             android:inputType="textPersonName"
-            android:hint="example@domain.com" />
+            android:hint="@string/text_email" />
 
         <TextView
             android:id="@+id/textViewLoginPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:gravity="left"
-            android:text="Password"
-            android:textColor="@color/black"
+            android:layout_marginHorizontal="16dp"
+            android:gravity="start"
+            android:text="@string/text_password"
+            android:textColor="@color/colorBlack"
             android:textSize="20sp" />
-
 
         <EditText
             android:id="@+id/editTextLoginPassword"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@color/teal_200"
-            android:ems="10"
+            android:layout_height="36dp"
+            style="@style/EditTextDefault"
             android:inputType="textPassword"
-            android:hint="Password" />
+            android:hint="@string/text_password"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Login" />
+            style="@style/ButtonDefault"
+            android:text="@string/text_login" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Register" />
+            style="@style/ButtonDefault"
+            android:text="@string/text_register" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonGuest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            style="@style/ButtonDefault"
             android:text="Login as a Guest" />
 
     </LinearLayout>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/teal_700"
+    android:background="@color/secondaryLightColor"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:padding="20dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/buttonDemo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/ButtonDefault"
         android:text="Demo Button"/>
 
     <TextView
@@ -18,24 +18,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@color/white"
+        android:background="@color/colorWhite"
         android:gravity="center"
-        android:text="Paperlayer Main Screen"
-        android:textColor="@color/black"
+        android:text="@string/text_main_screen"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/colorBlack"
+        android:layout_margin="16dp"
+        android:padding="16dp"
         android:textSize="36sp" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Login" />
+        style="@style/ButtonDefault"
+        android:text="@string/text_login" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/registerButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Register" />
+        style="@style/ButtonDefault"
+        android:text="@string/text_register" />
 
 </LinearLayout>

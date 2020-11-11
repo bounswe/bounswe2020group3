@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
-import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : Fragment(), MainContract.View {
 
@@ -23,17 +22,13 @@ class MainFragment : Fragment(), MainContract.View {
         val view = inflater.inflate(R.layout.fragment_main, container, false)
         setPresenter(MainPresenter(this))
         presenter.onViewCreated()
-        return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        loginButton.setOnClickListener {
+        view.findViewById<Button>(R.id.loginButton).setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.navigateToLogin)
         }
-        registerButton.setOnClickListener {
+        view.findViewById<Button>(R.id.registerButton).setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.navigateToRegisterFromMain)
         }
+        return view
     }
 
     override fun onDestroy() {

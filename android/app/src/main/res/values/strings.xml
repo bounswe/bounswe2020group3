@@ -1,14 +1,4 @@
 <resources>
     <string name="app_name">PaperLayer</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_profile">Profile</string>
-    <string name="title_projects">Projects</string>
-    <string name="title_home">Home</string>
-    <string name="text_main_screen">PaperLayer Main Screen</string>
-    <string name="text_login">Login</string>
-    <string name="text_register">Register</string>
-    <string name="text_email">E-Mail</string>
-    <string name="text_password">Password</string>
-    <string name="text_login_screen">PaperLayer Login Screen</string>
-
 </resources>

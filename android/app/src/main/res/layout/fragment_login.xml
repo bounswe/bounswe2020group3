@@ -14,7 +14,7 @@
         android:padding="20dp">
 
         <TextView
-            android:id="@+id/loginTextView"
+            android:id="@+id/textViewLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -24,37 +24,68 @@
             android:textColor="@color/black"
             android:textSize="36sp" />
 
-        <EditText
-            android:id="@+id/usernameEditText"
+        <TextView
+            android:id="@+id/textViewLoginEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:gravity="left"
+            android:text="Email"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+
+        <EditText
+            android:id="@+id/editTextUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:background="@color/teal_200"
             android:ems="10"
             android:inputType="textPersonName"
-            android:hint="Userame" />
+            android:hint="example@domain.com" />
 
-        <EditText
-            android:id="@+id/passwordEditText"
+        <TextView
+            android:id="@+id/textViewLoginPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="left"
+            android:text="Password"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+
+        <EditText
+            android:id="@+id/editTextLoginPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:background="@color/teal_200"
             android:ems="10"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:hint="Password" />
 
         <Button
-            android:id="@+id/loginButton"
+            android:id="@+id/buttonLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Login" />
+
         <Button
-            android:id="@+id/registerButton"
+            android:id="@+id/buttonRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:text="Register" />
+
+        <Button
+            android:id="@+id/buttonGuest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Login as a Guest" />
 
     </LinearLayout>
 

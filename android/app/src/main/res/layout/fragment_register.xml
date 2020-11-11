@@ -2,26 +2,21 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/RegisterLayout"
+    android:id="@+id/editTextbirthdate"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/secondaryColor"
     tools:context="com.bounswe2020group3.paperlayer.register.RegisterFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        style="@style/Theme.PaperLayer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:theme="@style/Theme.PaperLayer">
+        android:layout_height="match_parent">
 
         <EditText
             android:id="@+id/editTextUsername"
-            style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="35dp"
-            android:background="@color/secondaryLightColor"
             android:ems="10"
             android:hint="Username"
             android:inputType="textPersonName"
@@ -31,12 +26,10 @@
 
         <EditText
             android:id="@+id/editTextEmail"
-            style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="35dp"
-            android:background="@color/secondaryLightColor"
             android:ems="10"
             android:hint="Email"
             android:inputType="textEmailAddress"
@@ -46,12 +39,10 @@
 
         <EditText
             android:id="@+id/editTextPassword"
-            style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="35dp"
-            android:background="@color/secondaryLightColor"
             android:ems="10"
             android:hint="Password"
             android:inputType="textPassword"
@@ -61,12 +52,10 @@
 
         <EditText
             android:id="@+id/editTextPasswordConfirm"
-            style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="15dp"
-            android:background="@color/secondaryLightColor"
             android:ems="10"
             android:hint="Password Confirm"
             android:inputType="textPassword"
@@ -76,12 +65,10 @@
 
         <EditText
             android:id="@+id/editTextDateOfBirth"
-            style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="35dp"
-            android:background="@color/secondaryLightColor"
             android:ems="10"
             android:hint="01/01/1996"
             android:inputType="date"
@@ -91,11 +78,9 @@
 
         <TextView
             android:id="@+id/registerTextView"
-            style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@color/primaryColor"
             android:text="Paper Layer \nRegister Page"
             android:textAlignment="center"
             android:textSize="24sp"
@@ -105,7 +90,6 @@
 
         <Button
             android:id="@+id/buttonRegister"
-            style="@style/ButtonDefault"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
@@ -115,58 +99,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextDateOfBirth" />
 
-        <TextView
-            android:id="@+id/errorUsername"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:text="Username is either not unique or not in a suitable format."
-            android:textAllCaps="false"
-            android:textColor="@color/design_default_color_error"
-            android:textSize="10sp"
-            android:textStyle="italic"
-            android:visibility="invisible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextUsername"
-            tools:visibility="invisible" />
-
-        <TextView
-            android:id="@+id/errorEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:text="Email is either already taken or does not exist"
-            android:textAllCaps="false"
-            android:textColor="@color/design_default_color_error"
-            android:textSize="10sp"
-            android:textStyle="italic"
-            android:visibility="invisible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextEmail"
-            tools:visibility="invisible" />
-
-        <TextView
-            android:id="@+id/errorPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:text="Password either does not match or contains illegal characters"
-            android:textAllCaps="false"
-            android:textColor="@color/design_default_color_error"
-            android:textSize="10sp"
-            android:textStyle="italic"
-            android:visibility="invisible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextPasswordConfirm"
-            tools:visibility="invisible" /><![CDATA[
-
-        =======
-            android:visibility="invisible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextDateOfBirth"
-            tools:visibility="invisible" />
->>>>>>> Stashed changes
-
-    ]]>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

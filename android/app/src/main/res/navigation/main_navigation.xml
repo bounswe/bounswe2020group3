@@ -30,9 +30,15 @@
         android:id="@+id/registerFragment"
         android:name="com.bounswe2020group3.paperlayer.register.RegisterFragment"
         android:label="fragment_register"
-        tools:layout="@layout/fragment_register" >
-        <action
-            android:id="@+id/navigateToLoginFromRegister"
-            app:destination="@id/loginFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_register" />
+    <fragment
+        android:id="@+id/projectFragment"
+        android:name="com.bounswe2020group3.paperlayer.project.ProjectFragment"
+        android:label="fragment_project"
+        tools:layout="@layout/fragment_project" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.bounswe2020group3.paperlayer.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

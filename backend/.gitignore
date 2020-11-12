@@ -157,3 +157,6 @@ fabric.properties
 # My Additions
 Logs/
 DotfuscationRoot/
+
+# Mac extension
+.DS_Store

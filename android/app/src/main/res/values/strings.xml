@@ -10,5 +10,11 @@
     <string name="text_email">E-Mail</string>
     <string name="text_password">Password</string>
     <string name="text_login_screen">PaperLayer Login Screen</string>
+    <string name="err_no_matching_passwords">The passwords entered does not match</string>
+    <string name="err_invalid_username">You must enter an username at least length of 6 characters.</string>
+    <string name="err_invalid_email">You must enter a valid email.</string>
+    <string name="err_invalid_password">You must enter a password at least length of 6 characters.</string>
+    <string name="err_not_unique_username">Username is either not unique or not in a suitable format.</string>
+
 
 </resources>

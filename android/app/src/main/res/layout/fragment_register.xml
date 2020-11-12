@@ -13,6 +13,7 @@
 
         <EditText
             android:id="@+id/editTextUsername"
+            style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
@@ -26,6 +27,7 @@
 
         <EditText
             android:id="@+id/editTextEmail"
+            style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
@@ -39,6 +41,7 @@
 
         <EditText
             android:id="@+id/editTextPassword"
+            style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
@@ -52,6 +55,7 @@
 
         <EditText
             android:id="@+id/editTextPasswordConfirm"
+            style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
@@ -65,6 +69,7 @@
 
         <EditText
             android:id="@+id/editTextDateOfBirth"
+            style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
@@ -90,6 +95,7 @@
 
         <Button
             android:id="@+id/buttonRegister"
+            style="@style/ButtonDefault"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"

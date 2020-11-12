@@ -54,8 +54,7 @@ class RegisterFragment : Fragment(), RegisterContract.View {
             view.findViewById<EditText>(R.id.editTextPasswordConfirm).setText("")
             view.findViewById<EditText>(R.id.editTextPassword).setText("")
             view.findViewById<TextView>(R.id.errorPassword).visibility = View.VISIBLE
-            view.findViewById<TextView>(R.id.errorPassword).setText("You must enter a password at " +
-                    "least length of 6 characters,which should not contain '*,-,/,(,{")
+            view.findViewById<TextView>(R.id.errorPassword).setText(getString(R.string.err_invalid_password))
             return null
         }
         else if(password == confirmPassword) {
@@ -65,7 +64,7 @@ class RegisterFragment : Fragment(), RegisterContract.View {
             view.findViewById<EditText>(R.id.editTextPasswordConfirm).setText("")
             view.findViewById<EditText>(R.id.editTextPassword).setText("")
             view.findViewById<TextView>(R.id.errorPassword).visibility = View.VISIBLE
-            view.findViewById<TextView>(R.id.errorPassword).setText("The passwords entered does not match")
+            view.findViewById<TextView>(R.id.errorPassword).setText(getString(R.string.err_no_matching_passwords))
             return null
         }
 
@@ -74,8 +73,7 @@ class RegisterFragment : Fragment(), RegisterContract.View {
         // TODO: add a system to check if the username has been taken
         var username = view.findViewById<EditText>(R.id.editTextUsername).text.toString()
         if (username.length < 6){
-            view.findViewById<TextView>(R.id.errorUsername).setText("You must enter a username at " +
-                    "least length of 6 characters,which should not contain '*,-,/,(,{")
+            view.findViewById<TextView>(R.id.errorUsername).setText(getString(R.string.err_invalid_username))
             view.findViewById<TextView>(R.id.errorUsername).visibility = View.VISIBLE
             return null
         }
@@ -87,7 +85,7 @@ class RegisterFragment : Fragment(), RegisterContract.View {
         // TODO: add a system to check if the email exists
         var email = view.findViewById<EditText>(R.id.editTextEmail).text.toString()
         if(email == "") {
-            view.findViewById<TextView>(R.id.errorEmail).setText("You must enter a valid email.")
+            view.findViewById<TextView>(R.id.errorEmail).setText(getString(R.string.err_invalid_email))
             view.findViewById<TextView>(R.id.errorEmail).visibility = View.VISIBLE
             return null
         }

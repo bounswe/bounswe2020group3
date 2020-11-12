@@ -3,6 +3,10 @@ package com.bounswe2020group3.paperlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(){
@@ -11,18 +15,13 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        navigationBarBottom.setOnNavigationItemSelectedListener {
-            when(it.itemId){
-                R.id.itemHome -> showToast("Home")
-                R.id.itemProfile -> showToast("Profile")
-                R.id.itemProjects -> showToast("Projects")
-                else -> false
-            }
-        }
-    }
+        val navController = findNavController(R.id.fragment)
+        val appBarConfiguration = AppBarConfiguration(setOf(
+            R.id.mainFragment, R.id.projectFragment, R.id.profileFragment
+        ))
+        setupActionBarWithNavController(navController, appBarConfiguration)
 
-    private fun showToast(message: String): Boolean {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-        return true
+        navigationBarBottom.setupWithNavController(navController)
+
     }
 }

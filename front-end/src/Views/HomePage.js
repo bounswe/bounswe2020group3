@@ -9,14 +9,14 @@ import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-
+import { theme } from "../Common/ColorTheme";
 
 const errorMessages = {
     emptyFieldError: "Please Fill All Areas!"
 }
 
 const Container = styled(Box)({
-    background: 'linear-gradient(90deg, rgba(0,151,255,1) 10%, rgba(0,151,255,1) 90%)',
+    background: theme.palette.primary.main,
     border: 0,
     borderRadius: 3,
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',

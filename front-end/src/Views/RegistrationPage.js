@@ -1,13 +1,16 @@
 import React, { Component } from "react";
+import "../App.css"
 import axios from 'axios';
 import { styled } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Box from '@material-ui/core/Box';
 import AlertTypes from '../Common/AlertTypes.json';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
 import config from "../config";
+import Box from '@material-ui/core/Box';
+import { theme } from "../Common/ColorTheme";
+import Typography from '@material-ui/core/Typography';
 
 const Messages = {
     emptyFieldError: "Please Fill All Areas!",
@@ -15,13 +18,10 @@ const Messages = {
     somethingWrong : "Something Went Wrong!"
 
 }
-
   const Container = styled(Box)({
-    background:"#7a96c2",
+    background: theme.palette.secondary.light,
     border: 0,
     borderRadius: 3,
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-    color: 'white',
     height: "100vh",
     width: "100%",
     margin: "auto",
@@ -32,9 +32,8 @@ const Messages = {
       }
   });
 
-  
 export default class RegistrationPage extends Component {
-
+    
     constructor(props) {
         super(props);
         this.SnackbarRef = React.createRef();
@@ -113,13 +112,15 @@ export default class RegistrationPage extends Component {
     }
 
     render() {
+        console.log(theme.palette)
             return (
-                <Container>
-                  <PrimarySearchAppBar loginNav={this.goToLogin}/>
+                <Container color="secondary">
+                  <PrimarySearchAppBar  loginNav={this.goToLogin}/>
                     <form className="" onSubmit={this.handleSubmit}>
-                        <h3>Registration</h3>
+                        <Typography variant="h5" color="textPrimary">Registration</Typography>
                         <div className="">
                             <TextField
+                                color="primary"
                                 error=""
                                 id="standard-error-helper-text"
                                 label="Username"
@@ -130,6 +131,7 @@ export default class RegistrationPage extends Component {
                         </div>
                         <div className="">
                             <TextField
+                                color="primary"
                                 type="email"
                                 error=""
                                 id="standard-error-helper-text"
@@ -142,6 +144,7 @@ export default class RegistrationPage extends Component {
 
                         <div className="">
                             <TextField
+                                color="primary"
                                 type="password"
                                 error=""
                                 id="standard-error-helper-text"
@@ -152,7 +155,7 @@ export default class RegistrationPage extends Component {
                             />
                         </div>
                  
-                        <Button type="submit" variant="contained" color="primary" className="">Register</Button>
+                        <Button type="submit" variant="contained"  className="yohey"   /*style={{color: "#c3fdff", backgroundColor:"#90caf9"}}*/ >Register</Button>
 
                         <p className="">
                             Already registered? <a href="/login">Login.</a>

@@ -3,6 +3,8 @@ from .models.example import Example
 
 # Register your models here.
 from .models.profile import Profile
+from .models.event import Event
 
 admin.site.register(Example)
 admin.site.register(Profile)
+admin.site.register(Event)

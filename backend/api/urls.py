@@ -7,6 +7,7 @@ from .models.example import Example
 from .serializers.example import ExampleModelSerializer
 from .views.example import ExampleGenericAPIView, ExampleDetailGenericAPIView
 from .views.profile import ProfileViewSet
+from .views.event import EventViewSet
 from .views.auth import RegisterGenericAPIView, LogoutGenericAPIView
 from .views.user import UserViewSet
 from django.contrib.auth import views as auth_views
@@ -14,7 +15,7 @@ from django.contrib.auth import views as auth_views
 router = DefaultRouter()
 router.register(r'profiles', ProfileViewSet)
 router.register(r'users', UserViewSet)
-
+router.register(r'events', EventViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

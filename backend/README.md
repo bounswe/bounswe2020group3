@@ -1,3 +1,39 @@
+## Development
+If you haven't install python dependencies please follow [Installing dependencies](Installing-dependencies).
+
+## Run with docker
+You can start the development server with this command (Add -d flag if you want to run it as daemon):
+```
+docker-compose up
+```
+You can stop the server either with `CTRL + C` or `docker-compose stop`
+If you want to remove container, `docker-compose down`
+
+### Execute commands inside container
+If you want to run django commands such as `createsuperuser` use these commands:
+
+(You need to run `docker-compose up -d` or open a new terminal to execute commands)
+```
+docker-compose exec paperlayer_backend <command>
+docker-compose exec paperlayer_backend ./manage.py createsuperuser
+docker-compose exec paperlayer_backend ./manage.py makemigrations
+docker-compose exec paperlayer_backend ./manage.py shell
+```
+
+### Permission denied error
+If you get permission denied errors for `docker/run.sh` script. Run these commands:
+```
+chown <username> docker/run.sh
+chmod +x docker/run.sh
+```
+
+## Run without docker (not recommended)
+You can start development server with these commands:
+```
+python manage.py migrate
+python manage.py runserver
+```
+
 ## Installing dependencies
 
 Install poetry in your global:
@@ -16,7 +52,7 @@ which python
 ```
 You should see something like `/Users/username/Library/Caches/pypoetry/virtualenvs/backend-HbhKE7kK-py3.9/bin/python`
 
-If it returns `/usr/bin/python` or `/usr/local/bin/python3` it means it didn't activate the virtual environment. Try opening new terminal and run `poetry shell` again
+If it returns `/usr/bin/python` or `/usr/local/bin/python3` it means it didn't activate the virtual environment properly. Try opening new terminal and run `poetry shell` again
 
 Install dependencies with poetry:
 ```

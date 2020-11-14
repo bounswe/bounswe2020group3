@@ -17,9 +17,11 @@ class Profile(models.Model):
     age = models.IntegerField(default=0)
     share_age = models.BooleanField(default=True)
     expertise = models.TextField(default='')
-    gender = models.CharField(choices=GENDER_CHOICES, default="do not want to share", max_length=100)
+    gender = models.CharField(choices=GENDER_CHOICES,
+                              default="do not want to share", max_length=100)
     interests = models.TextField(default='')
-    owner = models.ForeignKey('auth.User', related_name='profile', on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        'auth.User', related_name='profile', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['created']

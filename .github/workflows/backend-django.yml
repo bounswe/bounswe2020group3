@@ -36,4 +36,4 @@ jobs:
         poetry run flake8 . --count --show-source --statistics --exclude=*/migrations/*
     - name: Run Tests
       run: |
-        poetry run pytest
+        poetry run pytest --cov

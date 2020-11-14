@@ -16,7 +16,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
 from .swagger_api import schema_view
+from rest_framework.routers import DefaultRouter
 
+router = DefaultRouter()
 
 urlpatterns = [
     url(r'^swagger(?P<format>\.json|\.yaml)$',
@@ -29,4 +31,5 @@ urlpatterns = [
         name='schema-redoc'),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
+    path('', include(router.urls)),
 ]

@@ -12,9 +12,9 @@ interface LoginContract {
         fun showToast(message: String)
         fun created()
 
-        fun onLoginButtonClicked(mailEditText: EditText, passwordEditText: EditText)
-        fun onRegisterButtonClicked(mailEditText: EditText, passwordEditText: EditText)
-        fun onGuestButtonClicked(mailEditText: EditText, passwordEditText: EditText)
+        fun onLoginButtonClicked(userEmail: String, userPassword: String)
+        fun onRegisterButtonClicked(userEmail: String, userPassword: String)
+        fun onGuestButtonClicked(userEmail: String, userPassword: String)
     }
 
     interface View{

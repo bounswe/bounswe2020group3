@@ -12,7 +12,8 @@ import config from "../config";
 const Messages = {
     emptyFieldError: "Please Fill All Areas!",
     registerSuccess: "Registration Successful! You'll be redirected to login.",
-    somethingWrong : "Something Went Wrong!"
+    somethingWrong : "Something Went Wrong!",
+    emptyNameError: "Please enter your name and surname."
 
 }
 
@@ -45,6 +46,9 @@ export default class RegistrationPage extends Component {
             success: null,
             message: "",
             messageType: "",
+            lastName: "",
+            middleName: "",
+            firstName: ""
         }
     }
 
@@ -69,9 +73,24 @@ export default class RegistrationPage extends Component {
     handleSnackbarOpen = () => {
         this.SnackbarRef.current.turnOnSnackbar();
     }
+    handleFirstName = event => {
+        this.setState({
+            firstName: event.target.value
+        })
+    }
+    handleMiddleName = event => {
+        this.setState({
+            middleName: event.target.value
+        })
+    }
+    handleLastName = event => {
+        this.setState({
+            lastName: event.target.value
+        })
+    }
 
     handleSubmit = (event) => {
-        const { username, email, password } = this.state;
+        const { username, email, password, firstName, lastName, middleName } = this.state;
         event.preventDefault()
         if (username === ""|| email === "" || password === "" )
         {
@@ -82,10 +101,22 @@ export default class RegistrationPage extends Component {
             });
             return ;     
         } 
+        if (firstName === "" || lastName === "")
+        {            
+            this.setState({message: Messages.emptyNameError, messageType:AlertTypes.Warning} , () => {
+                this.handleSnackbarOpen();
+            });
+            return ;     
+        }
         const user = {
+            first_name: firstName,
+            middle_name: middleName,
+            last_name: lastName,
             username: username,
             email: email,
             password: password
+            
+
         };
         
         axios.post(`${config.API_URL}${config.Register_Url}`, user, { headers: { 'Content-Type': 'Application/json' } })
@@ -139,7 +170,39 @@ export default class RegistrationPage extends Component {
                                 helperText=""
                             />
                         </div>
-
+                        <div>
+                        <TextField
+                                type="text"
+                                error=""
+                                id="standard-error-helper-text"
+                                label="First Name"
+                                onChange={this.handleFirstName}
+                                defaultValue=""
+                                helperText=""
+                            />
+                        </div>
+                        <div>
+                            <TextField
+                                type="text"
+                                error=""
+                                id="standard-error-helper-text"
+                                label="Middle Name (optional)"
+                                onChange={this.handleMiddleName}
+                                defaultValue=""
+                                helperText=""
+                            />
+                        </div>
+                        <div>
+                            <TextField
+                                type="text"
+                                error=""
+                                id="standard-error-helper-text"
+                                label="Lastname"
+                                onChange={this.handleLastName}
+                                defaultValue=""
+                                helperText=""
+                            />
+                        </div>
                         <div className="">
                             <TextField
                                 type="password"

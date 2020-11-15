@@ -14,10 +14,12 @@ class RegisterSerializer(serializers.Serializer):
 
     def save(self, **kwargs):
         data = self.validated_data
-        user = User.objects.create_user(data['username'], email=data['email'], password=data['password'])
+        user = User.objects.create_user(data['username'], email=data['email'], 
+                                        password=data['password'])
         user.save()
         profile = Profile(owner=user, name=data['first_name'],
-                          middle_name=data['middle_name'], last_name=data['last_name'])
+                          middle_name=data['middle_name'], 
+                          last_name=data['last_name'])
         profile.save()
         return user
 # class LoginSerializer(serializers.Serializer):

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.bounswe2020group3.paperlayer.main.MainFragment"
-        android:label="fragment_main"
+        android:label="PaperLayer"
         tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/navigateToLogin"
@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.bounswe2020group3.paperlayer.login.LoginFragment"
-        android:label="fragment_login"
+        android:label="Login"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/navigateToRegister"
@@ -29,6 +29,20 @@
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.bounswe2020group3.paperlayer.register.RegisterFragment"
-        android:label="fragment_register"
-        tools:layout="@layout/fragment_register" />
+        android:label="Register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/navigateToLoginFromRegister"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/projectFragment"
+        android:name="com.bounswe2020group3.paperlayer.project.ProjectFragment"
+        android:label="Project"
+        tools:layout="@layout/fragment_project" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.bounswe2020group3.paperlayer.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

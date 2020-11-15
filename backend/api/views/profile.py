@@ -6,7 +6,6 @@ from rest_framework import renderers
 from api.models.profile import Profile
 from api.permission import IsOwnerOrReadOnly
 from api.serializers.profile import ProfileSerializer
-from rest_framework.response import Response
 
 
 class ProfileViewSet(viewsets.ModelViewSet):

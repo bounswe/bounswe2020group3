@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from api.models.project import Project
 from api.permission import IsMemberOrReadOnly
-from api.serializers.profile import ProfileSerializer
+from api.serializers.project import ProjectSerializer
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -12,7 +12,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     `update` and `destroy` actions.
     """
     queryset = Project.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = ProjectSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsMemberOrReadOnly]
 

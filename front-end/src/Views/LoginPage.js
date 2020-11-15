@@ -86,6 +86,7 @@ export default class LoginPage extends Component {
                 this.setState({ success: true, message: Messages.loginSuccess, messageType: AlertTypes.Success }, () => {
                     setCookie(token);
                     this.handleSnackbarOpen();
+                    setTimeout(() => { this.props.history.push(''); }, 1500);    
                 });
                 console.log(res);
                 console.log(res.data);

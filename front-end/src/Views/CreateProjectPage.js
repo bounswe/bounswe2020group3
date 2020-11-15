@@ -31,14 +31,21 @@ const Container = styled(Box)({
       }
   });
 
-export default class HomePage extends Component {
+export default class CreateProjectPage extends Component {
     constructor(props) {
         super(props);
         this.SnackbarRef = React.createRef();
         this.state = {
             success: null,
             message: "",
-            messageType: ""
+            messageType: "",
+            projectTitle: "",
+            projectType : "",
+            projectDescription: "",
+            dueDate : "",
+            privateProject : false,
+            projectState: "",
+            collaborators: ""
         }
     };
 
@@ -46,26 +53,7 @@ export default class HomePage extends Component {
     handleSnackbarOpen = () => {
         this.SnackbarRef.current.turnOnSnackbar();
     };
-    goToLogin = () => {
-        this.props.history.push(config.Login_Path);
-    };
-    goToProjectCreation = () => {
-      this.props.history.push(config.Create_Project_Path);
-  };
-
-    renderProject(){
-      var projects = ["ML","AI","DL"];
-      return projects.map((item) => {return (<p>{item}</p>)});
-    };
-    renderFeed(){
-      var news = ["alpha", "beta", "gama","delta","epsilon","zeta" ];
-      return news.map((item) => {return (<p>{item}</p>)});
-    };
-    renderEvents(){
-      var events = ["Hackathon number one","Hackathon number two","Hackathon number three"];
-      return events.map((item) => {return (<p>{item}</p>)});
-    };
-
+   
     render() {
         if (!this.state.success) {
             return (

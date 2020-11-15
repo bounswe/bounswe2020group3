@@ -9,4 +9,7 @@ interface ProfileContract {
 
     interface View: BaseView<Presenter> {
     }
+
+    interface Model {
+    }
 }

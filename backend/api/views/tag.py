@@ -1,8 +1,7 @@
-from rest_framework import generics, viewsets
+from rest_framework import viewsets
 from rest_framework import permissions
 from api.models.tag import Tag
 from api.serializers.tag import TagSerializer
-from api.permission import IsMemberOrReadOnly
 
 
 class TagViewSet(viewsets.ModelViewSet):

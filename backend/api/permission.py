@@ -43,4 +43,5 @@ class IsMilestoneMemberOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the members of the project.
-        return request.user in obj.project.members or request.user == obj.project.owner
+        return request.user in obj.project.members or \
+            request.user == obj.project.owner

@@ -21,7 +21,8 @@ class Project(models.Model):
         'auth.User', related_name='owner', on_delete=models.CASCADE)
     members = models.ManyToManyField('auth.User', related_name='members')
     state = models.CharField(choices=STATE_CHOICES,
-                             default="seeking for collaborators", max_length=100)
+                             default="seeking for collaborators",
+                             max_length=100)
     project_type = models.CharField(choices=TYPE_CHOICES,
                                     default="conference", max_length=100)
     due_date = models.DateField(default=datetime.date.today)

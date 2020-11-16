@@ -7,6 +7,7 @@
     <string name="text_main_screen">PaperLayer Main Screen</string>
     <string name="text_login">Login</string>
     <string name="text_register">Register</string>
+    <string name="text_guest">Login as a guest</string>
     <string name="text_email">E-Mail</string>
     <string name="text_password">Password</string>
     <string name="text_login_screen">PaperLayer Login Screen</string>

@@ -39,13 +39,13 @@ class LoginFragment : Fragment(),LoginContract.View {
 
     override fun initOnClicks() {
         fragment_view.buttonLogin.setOnClickListener {
-            this.presenter.onLoginButtonClicked(fragment_view.editTextUsername,fragment_view.editTextLoginPassword)
+            this.presenter.onLoginButtonClicked(fragment_view.editTextUsername.editText?.text.toString(),fragment_view.editTextLoginPassword.editText?.text.toString())
         }
         fragment_view.buttonRegister.setOnClickListener {
-            this.presenter.onRegisterButtonClicked(fragment_view.editTextUsername,fragment_view.editTextLoginPassword)
+            this.presenter.onRegisterButtonClicked(fragment_view.editTextUsername.editText?.text.toString(),fragment_view.editTextLoginPassword.editText?.text.toString())
         }
         fragment_view.buttonGuest.setOnClickListener {
-            this.presenter.onGuestButtonClicked(fragment_view.editTextUsername,fragment_view.editTextLoginPassword)
+            this.presenter.onGuestButtonClicked(fragment_view.editTextUsername.editText?.text.toString(),fragment_view.editTextLoginPassword.editText?.text.toString())
         }
     }
 
@@ -54,7 +54,7 @@ class LoginFragment : Fragment(),LoginContract.View {
     }
 
     override fun resetEditText() {
-        fragment_view.editTextUsername.text.clear()
-        fragment_view.editTextLoginPassword.text.clear()
+        fragment_view.editTextUsername.editText?.text?.clear()
+        fragment_view.editTextLoginPassword.editText?.text?.clear()
     }
 }

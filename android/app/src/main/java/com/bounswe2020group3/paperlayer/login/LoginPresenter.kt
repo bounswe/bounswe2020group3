@@ -25,9 +25,9 @@ class LoginPresenter: LoginContract.Presenter {
         this.view.initOnClicks()
     }
 
-    override fun onLoginButtonClicked(mailEditText: EditText, passwordEditText: EditText) {
-        val userEmail=mailEditText.text.toString()
-        val userPassword=passwordEditText.text.toString()
+    override fun onLoginButtonClicked(userEmail: String, userPassword: String) {
+        //val userEmail=mailEditText.text.toString()
+        //val userPassword=passwordEditText.text.toString()
         //Model is not implemented yet
         //Ex: AuthenticationSystem.check(userEmail,userPassword)
         view.resetEditText()
@@ -35,12 +35,12 @@ class LoginPresenter: LoginContract.Presenter {
         Navigation.findNavController(view.getLayout()).navigate(R.id.navigateToRegister)
     }
 
-    override fun onRegisterButtonClicked(mailEditText: EditText, passwordEditText: EditText) {
+    override fun onRegisterButtonClicked(userEmail: String, userPassword: String) {
         view.resetEditText()
         Navigation.findNavController(view.getLayout()).navigate(R.id.navigateToRegister)
     }
 
-    override fun onGuestButtonClicked(mailEditText: EditText, passwordEditText: EditText) {
+    override fun onGuestButtonClicked(userEmail: String, userPassword: String) {
         view.resetEditText()
         //Navigation must be changed to guest page after guest page created
         Navigation.findNavController(view.getLayout()).navigate(R.id.navigateToRegister)

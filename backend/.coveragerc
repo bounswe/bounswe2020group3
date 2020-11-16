@@ -1,0 +1,10 @@
+[run]
+source =
+    backend
+    api
+
+omit =
+    **/migrations/**
+    backend/asgi.py
+    backend/settings.py
+    backend/wsgi.py

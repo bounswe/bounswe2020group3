@@ -75,3 +75,24 @@ In .vscode/settings.json:
 }
 ```
 You can find your python path with `which python` command after activating the virtual environment with `poetry shell`
+
+
+## Deployment to Heroku
+
+In .github/workflows folder, `backend-heroku.yml` file is a script that triggers a action for deployment to Heroku server.
+
+It will work at every pull request and push to `master` branch
+
+`Admin user` is created and will be shared with only team members.
+
+**! Important**
+
+If there are changes in models or database, please push your changes after making migrations.( NOT migrate )
+```python
+python manage.py makemigrations
+```
+
+This will update the `migrations` folder according to your changes.
+
+Heroku handles the remaining stuffs in the its own server. (You don't have run `python manage.py migrate`)
+

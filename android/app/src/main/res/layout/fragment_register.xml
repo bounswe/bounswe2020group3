@@ -2,14 +2,17 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/editTextbirthdate"
+    android:id="@+id/RegisterLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/secondaryColor"
     tools:context="com.bounswe2020group3.paperlayer.register.RegisterFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/Theme.PaperLayer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:theme="@style/Theme.PaperLayer">
 
         <EditText
             android:id="@+id/editTextUsername"
@@ -18,6 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="35dp"
+            android:background="@color/secondaryLightColor"
             android:ems="10"
             android:hint="Username"
             android:inputType="textPersonName"
@@ -32,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="35dp"
+            android:background="@color/secondaryLightColor"
             android:ems="10"
             android:hint="Email"
             android:inputType="textEmailAddress"
@@ -46,6 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="35dp"
+            android:background="@color/secondaryLightColor"
             android:ems="10"
             android:hint="Password"
             android:inputType="textPassword"
@@ -60,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="15dp"
+            android:background="@color/secondaryLightColor"
             android:ems="10"
             android:hint="Password Confirm"
             android:inputType="textPassword"
@@ -74,6 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="35dp"
+            android:background="@color/secondaryLightColor"
             android:ems="10"
             android:hint="01/01/1996"
             android:inputType="date"
@@ -83,9 +91,11 @@
 
         <TextView
             android:id="@+id/registerTextView"
+            style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:background="@color/primaryColor"
             android:text="Paper Layer \nRegister Page"
             android:textAlignment="center"
             android:textSize="24sp"
@@ -160,10 +170,17 @@
             android:textColor="@color/design_default_color_error"
             android:textSize="10sp"
             android:textStyle="italic"
+<<<<<<< Updated upstream
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextDateOfBirth"
             tools:visibility="invisible"
             android:visibility="invisible" />
+=======
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextDateOfBirth"
+            tools:visibility="invisible" />
+>>>>>>> Stashed changes
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

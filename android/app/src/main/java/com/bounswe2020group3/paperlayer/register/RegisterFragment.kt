@@ -21,6 +21,11 @@ class RegisterFragment : Fragment(), RegisterContract.View {
     private lateinit var presenter: RegisterContract.Presenter
     //private lateinit var name : String
     //private lateinit var password : String
+<<<<<<< Updated upstream
+=======
+    private lateinit var name : String
+    private lateinit var password : String
+>>>>>>> Stashed changes
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,6 +41,10 @@ class RegisterFragment : Fragment(), RegisterContract.View {
            }
 
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
        }
 
         return view
@@ -54,7 +63,12 @@ class RegisterFragment : Fragment(), RegisterContract.View {
             view.findViewById<EditText>(R.id.editTextPasswordConfirm).setText("")
             view.findViewById<EditText>(R.id.editTextPassword).setText("")
             view.findViewById<TextView>(R.id.errorPassword).visibility = View.VISIBLE
+<<<<<<< Updated upstream
             view.findViewById<TextView>(R.id.errorPassword).setText(getString(R.string.err_invalid_password))
+=======
+            view.findViewById<TextView>(R.id.errorPassword).setText("You must enter a password at " +
+                    "least length of 6 characters,which should not contain '*,-,/,(,{")
+>>>>>>> Stashed changes
             return null
         }
         else if(password == confirmPassword) {
@@ -64,7 +78,11 @@ class RegisterFragment : Fragment(), RegisterContract.View {
             view.findViewById<EditText>(R.id.editTextPasswordConfirm).setText("")
             view.findViewById<EditText>(R.id.editTextPassword).setText("")
             view.findViewById<TextView>(R.id.errorPassword).visibility = View.VISIBLE
+<<<<<<< Updated upstream
             view.findViewById<TextView>(R.id.errorPassword).setText(getString(R.string.err_no_matching_passwords))
+=======
+            view.findViewById<TextView>(R.id.errorPassword).setText("The passwords entered does not match")
+>>>>>>> Stashed changes
             return null
         }
 
@@ -73,7 +91,12 @@ class RegisterFragment : Fragment(), RegisterContract.View {
         // TODO: add a system to check if the username has been taken
         var username = view.findViewById<EditText>(R.id.editTextUsername).text.toString()
         if (username.length < 6){
+<<<<<<< Updated upstream
             view.findViewById<TextView>(R.id.errorUsername).setText(getString(R.string.err_invalid_username))
+=======
+            view.findViewById<TextView>(R.id.errorUsername).setText("You must enter a username at " +
+                    "least length of 6 characters,which should not contain '*,-,/,(,{")
+>>>>>>> Stashed changes
             view.findViewById<TextView>(R.id.errorUsername).visibility = View.VISIBLE
             return null
         }
@@ -85,7 +108,11 @@ class RegisterFragment : Fragment(), RegisterContract.View {
         // TODO: add a system to check if the email exists
         var email = view.findViewById<EditText>(R.id.editTextEmail).text.toString()
         if(email == "") {
+<<<<<<< Updated upstream
             view.findViewById<TextView>(R.id.errorEmail).setText(getString(R.string.err_invalid_email))
+=======
+            view.findViewById<TextView>(R.id.errorEmail).setText("You must enter a valid email.")
+>>>>>>> Stashed changes
             view.findViewById<TextView>(R.id.errorEmail).visibility = View.VISIBLE
             return null
         }

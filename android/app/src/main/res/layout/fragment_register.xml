@@ -158,29 +158,15 @@
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextPasswordConfirm"
-            tools:visibility="invisible" />
+            tools:visibility="invisible" /><![CDATA[
 
-        <TextView
-            android:id="@+id/errorBirthDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:text="Given date of birth is not valid"
-            android:textAllCaps="false"
-            android:textColor="@color/design_default_color_error"
-            android:textSize="10sp"
-            android:textStyle="italic"
-<<<<<<< Updated upstream
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextDateOfBirth"
-            tools:visibility="invisible"
-            android:visibility="invisible" />
-=======
+        =======
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextDateOfBirth"
             tools:visibility="invisible" />
 >>>>>>> Stashed changes
 
+    ]]>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

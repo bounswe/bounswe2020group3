@@ -8,6 +8,7 @@ import com.bounswe2020group3.paperlayer.R
 class CreateUserService {
     companion object {
         public fun checkRegistration(view: View): Boolean {
+            nameCheck(view)
             var p = passwordCheck(view) != null
             var e = emailCheck(view) != null
             var u = usernameCheck(view) != null
@@ -26,6 +27,7 @@ class CreateUserService {
                         "least length of 6 characters,which should not contain '*,-,/,(,{")
                 return null
             } else if (password == confirmPassword) {
+                view.findViewById<TextView>(R.id.errorPassword).visibility = View.INVISIBLE
                 return password
             } else {
                 view.findViewById<EditText>(R.id.editTextPasswordConfirm).setText("")
@@ -35,6 +37,20 @@ class CreateUserService {
                 return null
             }
 
+        }
+        fun nameCheck(view: View) : String?{
+            var firstName = view.findViewById<EditText>(R.id.editTextFirstName).text.toString()
+            var middleName: String = view.findViewById<EditText>(R.id.editTextMiddleName).text.toString()
+            var lastName: String = view.findViewById<EditText>(R.id.editTextLastName).text.toString()
+            if(firstName.length<1 || lastName.length <1){
+                view.findViewById<TextView>(R.id.errorName).setText(R.string.err_invalid_name)
+                view.findViewById<TextView>(R.id.errorName).visibility = View.VISIBLE
+
+                return null
+            }
+            view.findViewById<TextView>(R.id.errorName).visibility = View.INVISIBLE
+
+            return null
         }
 
         fun usernameCheck(view: View): String? {
@@ -46,6 +62,8 @@ class CreateUserService {
                 view.findViewById<TextView>(R.id.errorUsername).visibility = View.VISIBLE
                 return null
             }
+            view.findViewById<TextView>(R.id.errorUsername).visibility = View.INVISIBLE
+
             return username
 
         }
@@ -59,6 +77,8 @@ class CreateUserService {
                 view.findViewById<TextView>(R.id.errorEmail).visibility = View.VISIBLE
                 return null
             }
+            view.findViewById<TextView>(R.id.errorEmail).visibility = View.INVISIBLE
+
             return email
         }
     }

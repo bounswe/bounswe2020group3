@@ -65,7 +65,7 @@ export default class LoginPage extends Component {
     }
 
     handleSubmit = (event) => {
-        const { username, password, message } = this.state;
+        const { username, password } = this.state;
         event.preventDefault()
         if (username === "" || password === "" )
         {            

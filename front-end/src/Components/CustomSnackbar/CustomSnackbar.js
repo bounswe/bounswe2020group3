@@ -1,32 +1,10 @@
 import React, { Component } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import { styled } from '@material-ui/core/styles';
-import Box from "@material-ui/core/Box";
-import Slide from '@material-ui/core/Slide';
-
-class TransitionDown extends Component {
-    constructor(props){
-        super(props);
-    }
-    render(){
-        return <Slide {...this.props} direction="down" />;
-
-    }
-  }
-  
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-
-const StyledAlert = styled(Box)({
-    width: '100%',
-        '& > * + *': {
-            marginTop: "2px"
-        }
-  });
-
 
 export default class CustomSnackbar extends Component {
 

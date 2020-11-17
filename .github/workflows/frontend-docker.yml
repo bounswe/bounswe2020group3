@@ -15,5 +15,5 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the Docker image
       run: |
-      cd front-end/
+      cd front-end
       docker build . --file Dockerfile --tag paperlayer-frontend:$(date +%s)

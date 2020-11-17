@@ -172,13 +172,11 @@ import React, { Component } from "react";
 import axios from 'axios';
 import config from '../config';
 import { Button, styled } from '@material-ui/core';
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import DateComponent from "../Components/Date/DateComponent";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -190,7 +188,6 @@ import { Autocomplete } from "@material-ui/lab";
 const errorMessages = {
   emptyFieldError: "Please Fill All Areas!"
 }
-
 
 const leftDiv = {
   // float: 'left',

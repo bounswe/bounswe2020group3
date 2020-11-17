@@ -2,10 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/RegisterLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/secondaryColor"
+    android:background="@color/secondaryLightColor"
     tools:context="com.bounswe2020group3.paperlayer.register.RegisterFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,11 +20,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="35dp"
-            android:background="@color/secondaryLightColor"
-            android:ems="10"
-            android:hint="Username"
+            android:hint="@string/text_username"
             android:inputType="textPersonName"
             android:textSize="14sp"
+
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/registerTextView" />
 
@@ -36,9 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="35dp"
-            android:background="@color/secondaryLightColor"
-            android:ems="10"
-            android:hint="Email"
+            android:hint="@string/text_email"
             android:inputType="textEmailAddress"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"

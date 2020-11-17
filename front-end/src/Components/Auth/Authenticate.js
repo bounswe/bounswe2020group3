@@ -6,14 +6,18 @@ import React, { Component } from "react";
 
 export const getAccessToken = () => Cookies.get('access_token')
 export const getRefreshToken = () => Cookies.get('refresh_token')
+export const getUserId = () => Cookies.get('user_id');
 export const isAuthenticated = () => !!getAccessToken()
 
 export const setCookie = (token) => {
     Cookies.set("access_token", token);
 }
+export const setIdCookie = (id) => {
+    Cookies.set("user_id", id);
+}
 
 export const authenticate = async () => {
-    if (getAccessToken()) {
+    if (getAccessToken() && getUserId()) {
         return true;
     }
     redirectToLogin()

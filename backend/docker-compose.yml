@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  paperlayer_backend:
+    build: .
+    command: ./docker/run-local.sh
+    environment:
+      - BACKEND_DEBUG=True
+      - BACKEND_ENVIRONMENT=development
+    ports:
+      - 8000:8080

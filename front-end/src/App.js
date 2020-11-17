@@ -2,16 +2,15 @@ import './App.css';
 import RegistrationPage from "./Views/RegistrationPage";
 import HomePage from "./Views/HomePage";
 import LoginPage from "./Views/LoginPage";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, BrowserRouter } from "react-router-dom";
 import config from "./config";
-import { AuthenticateBeforeRender, AuthenticatedRoute } from './Components/Auth/Authenticate';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { theme } from './Common/ColorTheme';
+import { AuthenticatedRoute } from './Components/Auth/Authenticate';
+import history from "./history";
+
 function App() {
   return (
-    <ThemeProvider theme={ theme }>
-      <div className="App">
+    <div className="App">
+      <BrowserRouter history={history}>
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route path="/home" component={HomePage} />
@@ -20,8 +19,9 @@ function App() {
           {/* Left as an example for constructing an authenticated route */}
           <AuthenticatedRoute path="/paperapi" component={LoginPage} />
         </Switch>
-      </div>
-    </ThemeProvider>
+      </BrowserRouter>
+
+    </div>
   );
 }
 export default App;

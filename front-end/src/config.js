@@ -1,4 +1,4 @@
-export default {
+const config = {
   //API_URL: process.env.REACT_APP_API_URL,
   API_URL: "http://localhost:8000", //for convenience
   Login_Path : "/login",
@@ -6,3 +6,4 @@ export default {
   Login_Url : "/api/auth/",
   Register_Url : "/api/register/"
 }
+export default config

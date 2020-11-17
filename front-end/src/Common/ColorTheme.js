@@ -24,19 +24,3 @@ export const theme = createMuiTheme({
     tonalOffset: 0.2,
   },
 });
-// export const theme = createMuiTheme({
-//   palette: {
-//     primary: {
-//       // light: will be calculated from palette.primary.main,
-//       main: '#1565c0',
-//       // dark: will be calculated from palette.primary.main,
-//       // contrastText: will be calculated to contrast with palette.primary.main
-//     },
-//     secondary: {
-//       light: '#c3fdff',
-//       main: '#90caf9',
-//       // dark: will be calculated from palette.secondary.main,
-//     },
-//     // error: will use the default color
-//   },
-// });

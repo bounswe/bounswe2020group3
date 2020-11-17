@@ -19,7 +19,8 @@ const Messages = {
 
 }
   const Container = styled(Box)({
-    background: theme.palette.secondary.light,
+    // background: theme.palette.secondary.light,
+    background: "white",
     border: 0,
     borderRadius: 3,
     height: "100vh",
@@ -155,7 +156,7 @@ export default class RegistrationPage extends Component {
                             />
                         </div>
                  
-                        <Button type="submit" variant="contained"  className="yohey"   /*style={{color: "#c3fdff", backgroundColor:"#90caf9"}}*/ >Register</Button>
+                        <Button type="submit" variant="contained"  color="primary" className=""   /*style={{color: "#c3fdff", backgroundColor:"#90caf9"}}*/ >Register</Button>
 
                         <p className="">
                             Already registered? <a href="/login">Login.</a>

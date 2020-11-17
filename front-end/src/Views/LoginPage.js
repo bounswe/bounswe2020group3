@@ -5,6 +5,7 @@ import { styled } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
+import Typography from "@material-ui/core/Typography";
 import AlertTypes from '../Common/AlertTypes.json';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
@@ -13,13 +14,13 @@ import { setCookie } from '../Components/Auth/Authenticate';
 
 const Messages = {
     emptyFieldError: "Please Fill All Areas!",
-    loginSuccess : "Login Successful",
-    loginFail : "Login Failed"
-    
+    loginSuccess: "Login Successful",
+    loginFail: "Login Failed"
+
 }
 
-  const Container = styled(Box)({
-    background:"#7a96c2",
+const Container = styled(Box)({
+    background: "white",
     border: 0,
     borderRadius: 3,
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
@@ -31,12 +32,12 @@ const Messages = {
         margin: "10px",
         width: "30%",
         minWidth: "250px"
-      }
-  });
+    }
+});
 
-  
+
 export default class LoginPage extends Component {
-    
+
     constructor(props) {
         super(props);
         this.SnackbarRef = React.createRef();
@@ -67,15 +68,14 @@ export default class LoginPage extends Component {
     handleSubmit = (event) => {
         const { username, password } = this.state;
         event.preventDefault()
-        if (username === "" || password === "" )
-        {            
-            this.setState({message: Messages.emptyFieldError, messageType:AlertTypes.Warning} , () => {
+        if (username === "" || password === "") {
+            this.setState({ message: Messages.emptyFieldError, messageType: AlertTypes.Warning }, () => {
                 this.handleSnackbarOpen();
             });
-            return ;     
-        } 
+            return;
+        }
         const user = {
-            username:username,
+            username: username,
             password: password
         };
 
@@ -86,7 +86,7 @@ export default class LoginPage extends Component {
                 this.setState({ success: true, message: Messages.loginSuccess, messageType: AlertTypes.Success }, () => {
                     setCookie(token);
                     this.handleSnackbarOpen();
-                    setTimeout(() => { this.props.history.push(''); }, 1500);    
+                    setTimeout(() => { this.props.history.push(''); }, 1500);
                 });
                 console.log(res);
                 console.log(res.data);
@@ -102,42 +102,43 @@ export default class LoginPage extends Component {
     }
 
     render() {
-            return (
-                <Container>
-                   <PrimarySearchAppBar registerNav={this.goToRegister}/>
-                    <form className="" onSubmit={this.handleSubmit}>
-                        <h3>Login</h3>
-                        <div className="">
-                            <TextField
-                                type="text"
-                                error=""
-                                id="standard-error-helper-text"
-                                label="Username"
-                                onChange={this.handleUsername}
-                                defaultValue=""
-                                helperText=""
-                            />
-                        </div>
+        return (
+            <Container>
+                <PrimarySearchAppBar registerNav={this.goToRegister} />
+                <form className="" onSubmit={this.handleSubmit}>
+                    <Typography variant="h4" color="primary">Login</Typography>
+                    <div className="">
+                        <TextField
+                            type="text"
+                            error=""
+                            id="standard-error-helper-text"
+                            label="Username"
+                            onChange={this.handleUsername}
+                            defaultValue=""
+                            helperText=""
+                        />
+                    </div>
 
-                        <div className="">
-                            <TextField
-                                type="password"
-                                error=""
-                                id="standard-error-helper-text"
-                                label="Password"
-                                onChange={this.handlePassword}
-                                defaultValue=""
-                                helperText=""
-                            />
-                        </div>
-                        <Button type="submit" variant="contained" color="primary" className="">Login</Button>
-
-                        <p className="">
+                    <div className="">
+                        <TextField
+                            type="password"
+                            error=""
+                            id="standard-error-helper-text"
+                            label="Password"
+                            onChange={this.handlePassword}
+                            defaultValue=""
+                            helperText=""
+                        />
+                    </div>
+                    <Button type="submit" variant="contained" color="primary" className="">Login</Button>
+                    <p>
+                        <Typography variant='inherit' color="primary">
                             Don't have an account? <a href="/register">Signup!</a>
-                        </p>
-                    </form>
-                    <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>
-                </Container>);
+                        </Typography>
+                    </p>
+                </form>
+                <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
+            </Container>);
     }
 
 }    

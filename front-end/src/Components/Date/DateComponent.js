@@ -21,7 +21,7 @@ function DateComponent(props) {
                     value={selectedDate}
                     placeholder={currentDate}
                     //for accessing the data
-                    onChange={date => props.handleDateChange(date)}
+                    onChange={date => handleDate(date)}
                     minDate={new Date()}
                     format="dd/MM/yyyy"
                     variant="dialog"

@@ -1,173 +1,3 @@
-// import React, { Component } from "react";
-// import axios from 'axios';
-// import config from '../config';
-// import { Button, styled } from '@material-ui/core';
-// import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-// import TextField from '@material-ui/core/TextField';
-// import Box from '@material-ui/core/Box';
-// import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
-// import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
-// import Grid from '@material-ui/core/Grid';
-// import Paper from '@material-ui/core/Paper';
-// import DateComponent from "../Components/Date/DateComponent";
-// import InputLabel from '@material-ui/core/InputLabel';
-// import MenuItem from '@material-ui/core/MenuItem';
-// import "../index.scss";
-// import Select from '@material-ui/core/Select';
-// import FormControl from '@material-ui/core/FormControl';
-
-// const errorMessages = {
-//   emptyFieldError: "Please Fill All Areas!"
-// }
-
-
-
-// const Container = styled(Box)({
-//   background: '#fafafa',
-//   border: 0,
-//   borderRadius: 3,
-//   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-//   color: 'white',
-//   height: "100vh",
-//   width: "100%",
-//   margin: "auto",
-//   '& .MuiTextField-root': {
-
-//     margin: "10px",
-//     width: "30%",
-//     minWidth: "250px"
-//   }
-// });
-
-// export default class CreateProjectPage extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.SnackbarRef = React.createRef();
-//     this.state = {
-//       success: null,
-//       message: "",
-//       messageType: "",
-//       projectTitle: "",
-//       projectType: "",
-//       projectDescription: "",
-//       dueDate: "",
-//       privateProject: false,
-//       projectState: "",
-//       collaborators: "",
-//       date: null,
-//       isPublic: null
-
-//     }
-//   };
-//   handleDateChange = (date) => {
-//     this.setState({ date: date });
-//   };
-
-//   handleSnackbarOpen = () => {
-//     this.SnackbarRef.current.turnOnSnackbar();
-//   };
-//   handlePrivacyChange = (e) => {
-//     this.setState({ isPublic: e.target.value })
-//   }
-
-//   render() {
-//     return (
-//       <Container>
-//         <PrimarySearchAppBar />
-//         <h1> Create a Project </h1>
-//         <div class="row">
-//           <div className="">
-//             <TextField
-//               type="text"
-//               error=""
-//               label="Title"
-//               onChange={this.handleUsername}
-//               defaultValue=""
-//               helperText="Title of the Project"
-//               variant="filled"
-//             />
-//             <TextField
-//               type="text"
-//               error=""
-//               label="Type"
-//               onChange={this.handleUsername}
-//               defaultValue=""
-//               helperText="Type of the Project"
-//               variant="filled"
-
-//             />
-//           </div>
-//           <div className="">
-//             <TextField
-//               type="text"
-//               error=""
-//               label="Username"
-//               onChange={this.handleUsername}
-//               defaultValue=""
-//               placeholder="Please describe the project."
-//               helperText=""
-//               rows={10}
-//               multiline
-//               // style={alignLeft}
-//               variant="filled" />
-//             <TextField
-//               // style={alignRight}
-//               type="text"
-//               error=""
-//               label="Username"
-//               onChange={this.handleUsername}
-//               defaultValue=""
-//               placeholder="Please list relevant tags for this project."
-//               helperText=""
-//               multiline
-//               rows={10}
-//               variant="filled" />
-//           </div>
-//           <div className="">
-//             <DateComponent
-//               handleDateChange={this.handleDateChange}
-//               helperText="Due Date"
-//               // style={{left:"0", position:"absolute" }}
-//             />
-
-//             {/* <TextField
-//               type="text"
-//               error=""
-//               label="Project State"
-//               onChange={this.handleUsername}
-//               defaultValue=""
-//               placeholder=""
-//               helperText=""
-//               variant="filled" /> */}
-//               <FormControl>
-//             <InputLabel id="demo-simple-select-helper-label">Accesibility</InputLabel>
-//             <Select
-//               style={{minWidth:"120px"}}
-//               value={null}
-//               onChange={this.handlePrivacyChange}
-//               labelId="demo-simple-select-helper-label"
-//             >
-//               <MenuItem value={true}>Public</MenuItem>
-//               <MenuItem value={false}>Private</MenuItem>
-//             </Select>
-//             </FormControl>
-//             {/* <TextField
-//               type="text"
-//               error=""
-//               label="Project State"
-//               onChange={this.handleUsername}
-//               defaultValue=""
-//               placeholder=""
-//               helperText=""
-//               variant="filled" /> */}
-//           </div>
-//         </div>
-//         <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
-//       </Container>);
-//   }
-
-// }
-
 import React, { Component } from "react";
 import axios from 'axios';
 import config from '../config';
@@ -187,6 +17,11 @@ import { Autocomplete } from "@material-ui/lab";
 
 const errorMessages = {
   emptyFieldError: "Please Fill All Areas!"
+}
+const projectTypes = {
+  conference: "conference",
+  journal: "journal",
+  institution : "institution"
 }
 
 const leftDiv = {
@@ -214,8 +49,6 @@ const width = {
   minWidth: "450px"
 
 }
-
-
 const Container = styled(Box)({
   background: '#fafafa',
   border: 0,
@@ -242,7 +75,7 @@ export default class CreateProjectPage extends Component {
       message: "",
       messageType: "",
       projectTitle: "",
-      projectType: "",
+      projectType: null,
       projectDescription: "",
       projectTags: "",
       dueDate: "",
@@ -255,7 +88,7 @@ export default class CreateProjectPage extends Component {
     }
   };
   handleDateChange = (date) => {
-    this.setState({ date: date });
+    this.setState({ dueDate: date });
   };
   handleTitleChange = (e) => {
     this.setState({ projectTitle: e.target.value });
@@ -284,7 +117,7 @@ export default class CreateProjectPage extends Component {
   }
 
   render() {
-    const { isPublic } = this.state;
+    const { isPublic, projectType } = this.state;
     console.log(this.state)
     return (
       <Container>
@@ -330,7 +163,7 @@ export default class CreateProjectPage extends Component {
           </div>
           <div style={rightDiv}>
             <div>
-              <TextField
+              {/* <TextField
                 type="text"
                 error=""
                 label="Type"
@@ -339,7 +172,8 @@ export default class CreateProjectPage extends Component {
                 helperText="Type of the Project"
                 variant="filled"
                 style={width}
-              />
+              /> */}
+             
             </div>
             <div>
               <TextField
@@ -356,7 +190,7 @@ export default class CreateProjectPage extends Component {
                 variant="filled" />
             </div>
             <div>
-            <TextField
+              <TextField
                 type="text"
                 label="Project State"
                 onChange={this.handleProjectStateChange}
@@ -365,7 +199,7 @@ export default class CreateProjectPage extends Component {
                 multiline
                 style={width}
                 variant="filled" />
-                </div>
+            </div>
             <div>
               <FormControl>
                 <InputLabel style={{ marginLeft: "12px" }} id="demo-simple-select-helper-label">Accesibility</InputLabel>
@@ -379,8 +213,21 @@ export default class CreateProjectPage extends Component {
                   <MenuItem value={false}>Private</MenuItem>
                 </Select>
               </FormControl>
+              <FormControl>
+                <InputLabel style={{ marginLeft: "12px" }} id="demo-simple-select-helper-label2">Project Type</InputLabel>
+                <Select
+                  style={{ minWidth: "150px", marginLeft: "12px", marginTop: "10px" }}
+                  value={projectType}
+                  onChange={this.handleTypeChange}
+                  labelId="demo-simple-select-helper-label2"
+                >
+                  <MenuItem value={projectTypes.conference}>Conference</MenuItem>
+                  <MenuItem value={projectTypes.institution}>Institution</MenuItem>
+                  <MenuItem value={projectTypes.journal}>Journal</MenuItem>
+                </Select>
+              </FormControl>
             </div>
-            
+
           </div>
           <TextField
                 type="text"

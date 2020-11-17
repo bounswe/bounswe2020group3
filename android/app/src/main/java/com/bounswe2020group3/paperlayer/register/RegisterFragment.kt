@@ -14,12 +14,17 @@ import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.main.MainContract
 import com.bounswe2020group3.paperlayer.main.MainPresenter
+import com.bounswe2020group3.paperlayer.register.CreateUserService.Companion.checkRegistration
 
 class RegisterFragment : Fragment(), RegisterContract.View {
 
     private lateinit var presenter: RegisterContract.Presenter
+<<<<<<< Updated upstream
     private lateinit var name : String
     private lateinit var password : String
+=======
+
+>>>>>>> Stashed changes
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,11 +45,22 @@ class RegisterFragment : Fragment(), RegisterContract.View {
                view.findViewById<EditText>(R.id.editTextPasswordConfirm).setText("")
                view.findViewById<EditText>(R.id.editTextPassword).setText("")
 
+<<<<<<< Updated upstream
            }
+=======
+
+
+>>>>>>> Stashed changes
        }
 
         return view
     }
+<<<<<<< Updated upstream
+=======
+
+
+
+>>>>>>> Stashed changes
     override fun setPresenter(presenter: RegisterContract.Presenter) {
         this.presenter = presenter
     }

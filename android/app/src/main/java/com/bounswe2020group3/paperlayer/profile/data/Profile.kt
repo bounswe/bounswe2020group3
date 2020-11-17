@@ -20,7 +20,7 @@ data class Profile (
     @field:Json(name = "expertise")
     var expertise: String,
     @field:Json(name = "gender")
-    var gender: Gender,
+    var gender: String,
     @field:Json(name = "interests")
     var interests: String
 )

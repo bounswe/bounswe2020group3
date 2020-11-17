@@ -25,9 +25,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Lint
       run: |
-        cd frontend
+        cd front-end
         npm run lint
     - name: Build
       run: |
-        cd frontend
+        cd front-end
         npm run build

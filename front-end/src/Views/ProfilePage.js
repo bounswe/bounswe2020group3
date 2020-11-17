@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-import axios from 'axios';
-import config from '../config';
 import { styled } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
-import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
@@ -12,9 +9,9 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
 
-const errorMessages = {
-    emptyFieldError: "Please Fill All Areas!"
-}
+// const errorMessages = {
+//     emptyFieldError: "Please Fill All Areas!"
+// }
 
 const Container = styled(Box)({
     background: 'linear-gradient(90deg, rgba(0,151,255,1) 10%, rgba(0,151,255,1) 90%)',

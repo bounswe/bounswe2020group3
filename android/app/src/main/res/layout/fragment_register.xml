@@ -13,110 +13,149 @@
         android:layout_height="match_parent"
         android:theme="@style/Theme.PaperLayer">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextUsername"
             style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
-            android:layout_marginTop="35dp"
+
+            android:layout_marginTop="20dp"
+            android:ems="10"
             android:hint="@string/text_username"
             android:inputType="textPersonName"
+
             android:textSize="14sp"
-
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/registerTextView" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextFirstName"
+            style="@style/EditTextDefault"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="@string/text_firstname"
+            android:inputType="textPersonName"
+
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextUsername" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextMiddleName"
+            style="@style/EditTextDefault"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="20dp"
+
+            android:ems="10"
+            android:hint="@string/text_middlename"
+            android:inputType="textPersonName"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.666"
+            app:layout_constraintStart_toEndOf="@+id/editTextFirstName"
+            app:layout_constraintTop_toBottomOf="@+id/editTextUsername" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextLastName"
+            style="@style/EditTextDefault"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="@string/text_lastname"
+            android:inputType="textPersonName"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextFirstName" />
+
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextEmail"
             style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
+
             android:layout_marginTop="35dp"
+            android:ems="10"
             android:hint="@string/text_email"
             android:inputType="textEmailAddress"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextUsername" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextLastName" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextPassword"
             style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="35dp"
-            android:background="@color/secondaryLightColor"
             android:ems="10"
-            android:hint="Password"
+
+            android:hint="@string/text_password"
             android:inputType="textPassword"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextPasswordConfirm"
             style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="15dp"
-            android:background="@color/secondaryLightColor"
+
             android:ems="10"
-            android:hint="Password Confirm"
+            android:hint="@string/text_password_confirm"
             android:inputType="textPassword"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextDateOfBirth"
             style="@style/EditTextDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:layout_marginStart="35dp"
             android:layout_marginTop="35dp"
-            android:background="@color/secondaryLightColor"
             android:ems="10"
-            android:hint="01/01/1996"
+            android:hint="@string/text_birthdate_example"
             android:inputType="date"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextPasswordConfirm" />
 
-        <TextView
-            android:id="@+id/registerTextView"
-            style="@style/EditTextDefault"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@color/primaryColor"
-            android:text="Paper Layer \nRegister Page"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonRegister"
             style="@style/ButtonDefault"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="395dp"
+            android:layout_height="56dp"
             android:layout_marginTop="35dp"
-            android:text="REGISTER"
+            android:text="@string/text_register"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextDateOfBirth" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/errorUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
-            android:text="Username is either not unique or not in a suitable format."
+            android:text="@string/err_invalid_username"
             android:textAllCaps="false"
             android:textColor="@color/design_default_color_error"
             android:textSize="10sp"
@@ -126,12 +165,27 @@
             app:layout_constraintTop_toBottomOf="@+id/editTextUsername"
             tools:visibility="invisible" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/errorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:text="@string/err_no_name"
+            android:textAllCaps="false"
+            android:textColor="@color/design_default_color_error"
+            android:textSize="10sp"
+            android:textStyle="italic"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextLastName"
+            tools:visibility="invisible" />
+
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/errorEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
-            android:text="Email is either already taken or does not exist"
+            android:text="@string/err_invalid_email"
             android:textAllCaps="false"
             android:textColor="@color/design_default_color_error"
             android:textSize="10sp"
@@ -141,12 +195,12 @@
             app:layout_constraintTop_toBottomOf="@+id/editTextEmail"
             tools:visibility="invisible" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/errorPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
-            android:text="Password either does not match or contains illegal characters"
+            android:text="@string/err_invalid_password"
             android:textAllCaps="false"
             android:textColor="@color/design_default_color_error"
             android:textSize="10sp"
@@ -154,15 +208,6 @@
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextPasswordConfirm"
-            tools:visibility="invisible" /><![CDATA[
-
-        =======
-            android:visibility="invisible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextDateOfBirth"
             tools:visibility="invisible" />
->>>>>>> Stashed changes
-
-    ]]>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

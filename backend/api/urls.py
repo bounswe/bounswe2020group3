@@ -7,12 +7,18 @@ from .serializers.example import ExampleModelSerializer
 from .views.example import ExampleGenericAPIView, ExampleDetailGenericAPIView
 from .views.profile import ProfileViewSet
 from .views.auth import RegisterGenericAPIView, LogoutGenericAPIView, AuthView
+from .views.project import ProjectViewSet
+from .views.milestone import MilestoneViewSet
+from .views.tag import TagViewSet
 from .views.user import UserViewSet
 from django.contrib.auth import views as auth_views
 
 router = DefaultRouter()
 router.register(r'profiles', ProfileViewSet)
 router.register(r'users', UserViewSet)
+router.register(r'projects', ProjectViewSet)
+router.register(r'milestones', MilestoneViewSet)
+router.register(r'tags', TagViewSet)
 
 
 urlpatterns = [

@@ -41,10 +41,6 @@ class MainFragment : Fragment(), MainContract.View {
         super.onDestroy()
     }
 
-    override fun onDemoTap() {
-        presenter.demo()
-    }
-
     override fun showToast(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }

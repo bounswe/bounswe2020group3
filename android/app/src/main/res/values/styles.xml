@@ -17,4 +17,9 @@
         <item name="android:padding">8dp</item>
         <item name="font">@font/roboto</item>
     </style>
+    <style name="Block">
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
 </resources>

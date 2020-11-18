@@ -3,11 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".project.ProjectFragment">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textViewProjectName"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Project Fragment" />
-
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="Project Title"
+        android:textColor="@color/colorBlack"
+        android:layout_margin="8dp"
+        style="@style/TextAppearance.MaterialComponents.Headline2"
+        />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textViewProjectType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="Project Type"
+        android:textColor="@color/colorBlack"
+        android:layout_margin="8dp"
+        style="@style/TextAppearance.MaterialComponents.Headline4"
+        />
 </LinearLayout>

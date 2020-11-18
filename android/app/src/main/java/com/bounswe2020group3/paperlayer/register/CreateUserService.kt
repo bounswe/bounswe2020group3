@@ -66,7 +66,6 @@ class CreateUserService {
 
             var firstname = view.findViewById<EditText>(R.id.editTextFirstName).text.toString()
             var lastname = view.findViewById<EditText>(R.id.editTextLastName).text.toString()
-            var middlename = view.findViewById<EditText>(R.id.editTextMiddleName).text.toString()
             if(firstname == "" || lastname == ""){
                 view.findViewById<TextView>(R.id.errorName).visibility = View.VISIBLE
                 view.findViewById<TextView>(R.id.errorName).setText(R.string.err_invalid_name)

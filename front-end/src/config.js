@@ -6,6 +6,8 @@ const config = {
   Register_Path: "/register",
   Login_Url : "/api/auth/",
   Register_Url : "/api/register/",
-  Create_Project_Path :"/create-project"
+  Create_Project_Path :"/create-project",
+  Create_Project_Url : "/api/projects/",
+  Homepage_Path: "/home"
 }
 export default config;

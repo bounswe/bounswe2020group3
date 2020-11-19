@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import DateFnsUtils from '@date-io/date-fns'
-import { KeyboardDatePicker, MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import { KeyboardDatePicker, MuiPickersUtilsProvider /*DatePicker*/ } from "@material-ui/pickers";
 
 function DateComponent(props) {
     const [selectedDate, handleDateChange] = useState(new Date());
@@ -8,12 +8,14 @@ function DateComponent(props) {
     var currentDate = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
 
     const handleDate = (date) => {
+        
+        let dateString = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
+        console.log(dateString + " ASD ADS")
         handleDateChange(date);
-        props.handleDateChange(date);
+        props.handleDateChange(dateString);        
     }
 
     return (
-        
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                     style={props.style}
@@ -28,7 +30,6 @@ function DateComponent(props) {
                     helperText={props.helperText}
                 />
             </MuiPickersUtilsProvider>
-        
     );
 }
 

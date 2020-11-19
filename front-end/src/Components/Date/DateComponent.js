@@ -10,7 +10,6 @@ function DateComponent(props) {
     const handleDate = (date) => {
         
         let dateString = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
-        console.log(dateString + " ASD ADS")
         handleDateChange(date);
         props.handleDateChange(dateString);        
     }

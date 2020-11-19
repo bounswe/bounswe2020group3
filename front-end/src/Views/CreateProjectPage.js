@@ -198,7 +198,6 @@ export default class CreateProjectPage extends Component {
 
   render() {
     const { isPublic, projectType, projectState } = this.state;
-    console.log(this.state.dueDate)
     return (
       <Container>
         <PrimarySearchAppBar />

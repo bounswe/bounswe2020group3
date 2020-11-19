@@ -1,4 +1,4 @@
-export default {
+const config = {
   //API_URL: process.env.REACT_APP_API_URL,
   //API_URL: "http://localhost:8000", //for convenience
   API_URL:"https://paperlayer.herokuapp.com",
@@ -8,3 +8,4 @@ export default {
   Register_Url : "/api/register/",
   Create_Project_Path :"/create-project"
 }
+export default config;

@@ -24,9 +24,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override fun onStart() {
         super.onStart()
-        buttonProfileFetch.setOnClickListener { _ ->
-            presenter.fetchProfile(1)
-        }
+        presenter.fetchProfile(1)
     }
 
     override fun onDestroy() {
@@ -39,17 +37,23 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     }
 
     override fun updateProfileUI(profile: Profile?) {
-        textViewProfileName.text = profile?.name
-        textViewProfileMiddleName.text = profile?.middleName
-        textViewProfileLastName.text = profile?.lastName
+        val fullName = "${profile?.name} ${profile?.lastName}"
+        textViewFullName.text = fullName
+        textViewBio.text = profile?.bio
+        textViewAge.text = profile?.age.toString()
+        textViewGender.text = profile?.gender
+        textViewInterests.text = profile?.interests
+        textViewExpertise.text = profile?.expertise
     }
 
     override fun showLoading() {
         progressBarProfile.visibility = View.VISIBLE
+        layoutProfileDetail.visibility = View.INVISIBLE
     }
 
     override fun hideLoading() {
         progressBarProfile.visibility = View.INVISIBLE
+        layoutProfileDetail.visibility = View.VISIBLE
     }
 
     override fun showErrorToast(message: String) {

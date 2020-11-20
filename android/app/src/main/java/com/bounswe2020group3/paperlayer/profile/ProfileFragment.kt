@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.profile.data.Profile
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -22,9 +23,14 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         presenter.fetchProfile(1)
+
+        imageButtonSettings.setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToProfileEditFromProfile)
+        }
     }
 
     override fun onDestroy() {

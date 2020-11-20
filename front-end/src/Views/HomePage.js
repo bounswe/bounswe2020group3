@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { styled } from '@material-ui/core';
+import config from '../config';
+import { Button, styled } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
@@ -44,8 +45,11 @@ export default class HomePage extends Component {
         this.SnackbarRef.current.turnOnSnackbar();
     };
     goToLogin = () => {
-        this.props.history.push("/login");
+        this.props.history.push(config.Login_Path);
     };
+    goToProjectCreation = () => {
+      this.props.history.push(config.Create_Project_Path);
+  };
 
     renderProject(){
       var projects = ["ML","AI","DL"];
@@ -74,7 +78,9 @@ export default class HomePage extends Component {
                       <h2> Projects </h2>
                       <Paper>
                       {this.renderProject()}
+                      
                       </Paper>
+                      <Button variant="contained" color="primary" className="" onClick={this.goToProjectCreation}>Create a Project</Button>
                     </div>
                     <div class="column middle">
                     <h2> Feeds </h2>

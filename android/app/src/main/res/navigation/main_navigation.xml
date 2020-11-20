@@ -35,6 +35,7 @@
             android:id="@+id/navigateToLoginFromRegister"
             app:destination="@id/loginFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/projectFragment"
         android:name="com.bounswe2020group3.paperlayer.project.ProjectFragment"
@@ -48,6 +49,8 @@
     <fragment
         android:id="@+id/projectMainFragment"
         android:name="com.bounswe2020group3.paperlayer.project.ProjectMainFragment"
-        android:label="fragment_project_main"
-        tools:layout="@layout/fragment_project_main" />
+        android:label="ProjectMainFragment"
+        tools:layout="@layout/fragment_project_main"/>
+
+
 </navigation>

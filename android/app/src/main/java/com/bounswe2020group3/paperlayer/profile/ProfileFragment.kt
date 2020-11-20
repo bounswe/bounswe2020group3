@@ -48,11 +48,11 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override fun showLoading() {
         progressBarProfile.visibility = View.VISIBLE
-        layoutProfileDetail.visibility = View.INVISIBLE
+        layoutProfileDetail.visibility = View.GONE
     }
 
     override fun hideLoading() {
-        progressBarProfile.visibility = View.INVISIBLE
+        progressBarProfile.visibility = View.GONE
         layoutProfileDetail.visibility = View.VISIBLE
     }
 

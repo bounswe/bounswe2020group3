@@ -273,4 +273,16 @@
 
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/imageButtonSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorTransparent"
+        android:src="@drawable/ic_baseline_settings_24"
+        android:layout_marginVertical="@dimen/margin_md"
+        android:layout_marginHorizontal="@dimen/margin_md"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/profile_settings_description" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,6 +25,7 @@
     <string name="err_invalid_name">Please enter a valid name.</string>
     <string name="err_no_name">Please enter your name.</string>
     <string name="profile_avatar_description">Profile avatar</string>
+    <string name="profile_settings_description">Settings button</string>
     <string name="profile_email">Email</string>
     <string name="profile_age">Age</string>
     <string name="profile_interests">Interests</string>

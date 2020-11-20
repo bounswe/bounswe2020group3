@@ -54,9 +54,10 @@
 
                         <ImageView
                             android:id="@+id/imageViewProfileAvatar"
-                            android:layout_width="150dp"
-                            android:layout_height="150dp"
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
                             android:contentDescription="@string/profile_avatar_description"
+                            android:padding="0dp"
                             android:scaleType="centerCrop"
                             android:src="@drawable/ic_user" />
 
@@ -101,8 +102,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="@dimen/padding_lg"
-            android:paddingVertical="@dimen/padding_md">
+            android:paddingVertical="@dimen/padding_md"
+            android:paddingStart="@dimen/padding_lg">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -277,12 +278,12 @@
         android:id="@+id/imageButtonSettings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorTransparent"
-        android:src="@drawable/ic_baseline_settings_24"
-        android:layout_marginVertical="@dimen/margin_md"
         android:layout_marginHorizontal="@dimen/margin_md"
+        android:layout_marginVertical="@dimen/margin_md"
+        android:background="@color/colorTransparent"
+        android:contentDescription="@string/profile_settings_description"
+        android:src="@drawable/ic_baseline_settings_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/profile_settings_description" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

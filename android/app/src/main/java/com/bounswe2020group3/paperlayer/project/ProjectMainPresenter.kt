@@ -1,10 +1,11 @@
-package com.bounswe2020group3.paperlayer.login
+package com.bounswe2020group3.paperlayer.project
 
 import android.widget.EditText
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.project.ProjectMainContract
 import kotlinx.android.synthetic.main.fragment_login.view.*
+import timber.log.Timber
 
 class ProjectMainPresenter: ProjectMainContract.Presenter {
 
@@ -18,8 +19,8 @@ class ProjectMainPresenter: ProjectMainContract.Presenter {
         this.view =view
     }
 
-    override fun showToast(message: String) {
-        TODO("Not yet implemented")
+    override fun showMessage(message: String) {
+        this.view.showToast(message)
     }
 
     override fun created() {

@@ -5,7 +5,7 @@ interface ProjectMainContract {
     interface Presenter {
         fun onViewCreated()
         fun setView(view: View)
-        fun showToast(message: String)
+        fun showMessage(message: String)
         fun created()
 
         fun onLoginButtonClicked(userEmail: String, userPassword: String)
@@ -16,6 +16,7 @@ interface ProjectMainContract {
     interface View{
         fun initOnClicks()
         fun getLayout(): android.view.View
+        fun showToast(message: String)
         fun resetEditText()
     }
 

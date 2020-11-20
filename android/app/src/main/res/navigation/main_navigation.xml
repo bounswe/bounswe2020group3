@@ -39,10 +39,19 @@
         android:id="@+id/profileFragment"
         android:name="com.bounswe2020group3.paperlayer.profile.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/navigateToProfileEditFromProfile"
+            app:destination="@id/profileEditFragment" />
+    </fragment>
     <fragment
         android:id="@+id/projectFragment"
         android:name="com.bounswe2020group3.paperlayer.project.ProjectFragment"
         android:label="Project"
         tools:layout="@layout/fragment_project" />
+    <fragment
+        android:id="@+id/profileEditFragment"
+        android:name="com.bounswe2020group3.paperlayer.profile.edit.ProfileEditFragment"
+        android:label="fragment_profile_edit"
+        tools:layout="@layout/fragment_profile_edit" />
 </navigation>

@@ -52,6 +52,6 @@
     <fragment
         android:id="@+id/profileEditFragment"
         android:name="com.bounswe2020group3.paperlayer.profile.edit.ProfileEditFragment"
-        android:label="fragment_profile_edit"
+        android:label="Edit Profile"
         tools:layout="@layout/fragment_profile_edit" />
 </navigation>

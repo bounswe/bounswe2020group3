@@ -31,4 +31,5 @@
     <string name="profile_interests">Interests</string>
     <string name="profile_gender">Gender</string>
     <string name="profile_expertise">Expertise</string>
+    <string name="profile_bio">Biography</string>
 </resources>

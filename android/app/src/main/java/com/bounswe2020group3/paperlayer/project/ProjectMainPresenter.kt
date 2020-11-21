@@ -1,51 +1,67 @@
 package com.bounswe2020group3.paperlayer.project
 
-import android.widget.EditText
+
+import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.project.ProjectMainContract
-import kotlinx.android.synthetic.main.fragment_login.view.*
-import timber.log.Timber
+import io.reactivex.disposables.CompositeDisposable
+
+
+private const val TAG = "ProjectMainPresenter"
 
 class ProjectMainPresenter: ProjectMainContract.Presenter {
 
+    //Project Main Fragment view
     private lateinit var view: ProjectMainContract.View
+    //Model for fetch data
+    private var model: ProjectMainContract.Model = ProjectModel()
+    //Disposable
+    private var disposable = CompositeDisposable()
 
-    override fun onViewCreated() {
-        TODO("Not yet implemented")
-    }
-
+    //set project main fragment as a view of main project presenter
     override fun setView(view: ProjectMainContract.View) {
         this.view =view
+    }
+
+    override fun created() {
+        this.view.writeLogMessage("i",TAG,"Project Main Presenter Created")
+        // #FIX# Currently hardcoded
+        fetchAllProjectsOfOwner(3)
     }
 
     override fun showMessage(message: String) {
         this.view.showToast(message)
     }
 
-    override fun created() {
-        this.view.initOnClicks()
+    override fun fetchAllProjectsOfOwner(ownerId: Int) {
+        this.view.writeLogMessage("i",TAG, "Fetching all projects of owner $ownerId ...")
+        val getProjectObservable = model.getAllProjectsOfOwner(ownerId).subscribe(
+                { projectList ->
+                    for (project in projectList){
+                        this.view.addProjectCard(project.name,project.description,project.owner,project.id)
+                        this.view.writeLogMessage("i",TAG,"Project Fetched")
+                    }
+                    this.view.writeLogMessage("i",TAG,"Fetching finished.")
+                    this.view.submitProjectCardList()
+                },
+                { error ->
+                    this.view.writeLogMessage("e",TAG,"Error in fetching all projects of owner $ownerId")
+                }
+        )
+        disposable.add(getProjectObservable)
     }
 
-    override fun onLoginButtonClicked(userEmail: String, userPassword: String) {
-        //val userEmail=mailEditText.text.toString()
-        //val userPassword=passwordEditText.text.toString()
-        //Model is not implemented yet
-        //Ex: AuthenticationSystem.check(userEmail,userPassword)
-        view.resetEditText()
-        //Navigation must be changed to profile page after profile page created
-        Navigation.findNavController(view.getLayout()).navigate(R.id.navigateToRegister)
+    override fun onViewProjectButtonClicked(item: ProjectCard, position: Int) {
+        //Navigation to project page, gives projectID as a bundle
+        val bundle = bundleOf("projectID" to item.projectId )
+        Navigation.findNavController(view.getLayout()).navigate(R.id.navigateToProjectFromProjectMainFragment,bundle)
     }
 
-    override fun onRegisterButtonClicked(userEmail: String, userPassword: String) {
-        view.resetEditText()
-        Navigation.findNavController(view.getLayout()).navigate(R.id.navigateToRegister)
-    }
-
-    override fun onGuestButtonClicked(userEmail: String, userPassword: String) {
-        view.resetEditText()
-        //Navigation must be changed to guest page after guest page created
-        Navigation.findNavController(view.getLayout()).navigate(R.id.navigateToRegister)
+    override fun onEditProjectButtonClicked(item: ProjectCard, position: Int) {
+        //#FIX# Update this after edit project page added
+        //Navigation to project page, gives projectID as a bundle
+        val bundle = bundleOf("projectID" to item.projectId )
+        Navigation.findNavController(view.getLayout()).navigate(R.id.navigateToProjectFromProjectMainFragment,bundle)
     }
 
 }

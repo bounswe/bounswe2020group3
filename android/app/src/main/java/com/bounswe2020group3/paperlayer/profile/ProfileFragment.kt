@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.profile.common.ProfileCommonContract
 import com.bounswe2020group3.paperlayer.profile.data.Profile
 import kotlinx.android.synthetic.main.fragment_profile.*
 

@@ -4,13 +4,13 @@ from rest_framework import serializers
 
 
 class RegisterSerializer(serializers.Serializer):
-    first_name = serializers.CharField(allow_blank=False)
-    middle_name = serializers.CharField()
-    last_name = serializers.CharField(allow_blank=False)
+    first_name = serializers.CharField()
+    middle_name = serializers.CharField(allow_blank=True)
+    last_name = serializers.CharField()
 
-    username = serializers.CharField(allow_blank=False)
-    email = serializers.EmailField(allow_blank=False)
-    password = serializers.CharField(allow_blank=False)
+    username = serializers.CharField()
+    email = serializers.EmailField()
+    password = serializers.CharField()
 
     def save(self, **kwargs):
         data = self.validated_data

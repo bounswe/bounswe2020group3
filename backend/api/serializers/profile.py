@@ -7,9 +7,10 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     Profile serializer, includes also profile owner
     """
     owner = serializers.ReadOnlyField(source='owner.username')
+    email = serializers.ReadOnlyField(source='owner.email')
 
     class Meta:
         model = Profile
-        fields = ['name', 'middle_name', 'last_name', 'owner',
+        fields = ['name', 'middle_name', 'last_name', 'owner', 'email',
                   'bio', 'photo_url', 'age', 'share_age', 'expertise',
-                  'gender', 'interests']
+                  'gender', 'interests', 'share_bio', 'share_gender', 'share_affiliations']

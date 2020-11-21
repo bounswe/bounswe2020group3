@@ -20,6 +20,14 @@ docker-compose exec paperlayer_backend ./manage.py makemigrations
 docker-compose exec paperlayer_backend ./manage.py shell
 ```
 
+For Windows users:
+```
+docker-compose exec paperlayer_backend python manage.py <command>
+docker-compose exec paperlayer_backend python manage.py createsuperuser
+docker-compose exec paperlayer_backend python manage.py makemigrations
+docker-compose exec paperlayer_backend python manage.py shell
+```
+
 ### Permission denied error
 If you get permission denied errors for `docker/run.sh` script. Run these commands:
 ```

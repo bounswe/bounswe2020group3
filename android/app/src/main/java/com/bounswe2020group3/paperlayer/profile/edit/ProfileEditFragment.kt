@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.bounswe2020group3.paperlayer.R
 
 
-class ProfileEditFragment : Fragment(), ProfileEditContract.View{
+class ProfileEditFragment : Fragment(), ProfileEditContract.View {
 
     private lateinit var presenter: ProfileEditContract.Presenter
 
@@ -23,8 +23,4 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View{
         this.presenter = presenter
     }
 
-    override fun onDestroy() {
-        this.presenter.onDestroy()
-        super.onDestroy()
-    }
 }

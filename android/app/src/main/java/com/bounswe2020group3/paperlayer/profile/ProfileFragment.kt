@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.profile.common.ProfileCommonContract
 import com.bounswe2020group3.paperlayer.profile.data.Profile
 import kotlinx.android.synthetic.main.fragment_profile.*
 
@@ -38,10 +39,6 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         presenter.onDestroy()
     }
 
-    override fun setPresenter(presenter: ProfileContract.Presenter) {
-        this.presenter = presenter
-    }
-
     override fun updateProfileUI(profile: Profile?) {
         val fullName = "${profile?.name} ${profile?.lastName}"
         textViewFullName.text = fullName
@@ -50,6 +47,10 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         textViewGender.text = profile?.gender
         textViewInterests.text = profile?.interests
         textViewExpertise.text = profile?.expertise
+    }
+
+    override fun setPresenter(presenter: ProfileContract.Presenter) {
+        this.presenter = presenter
     }
 
     override fun showLoading() {

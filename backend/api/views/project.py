@@ -3,6 +3,7 @@ from rest_framework import permissions
 from api.models.project import Project
 from api.permission import IsMemberOrReadOnly
 from api.serializers.project import ProjectSerializer
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -14,6 +15,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsMemberOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['owner__id']
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

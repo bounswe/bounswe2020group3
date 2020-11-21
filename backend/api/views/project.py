@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-
 class ProjectViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,

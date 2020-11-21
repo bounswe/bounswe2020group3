@@ -6,7 +6,7 @@ from api.permission import IsFileMemberOrReadOnly
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import action
 from django.http import FileResponse
-from rest_framework.response import Response
+
 
 class FileViewSet(viewsets.ModelViewSet):
 
@@ -19,12 +19,8 @@ class FileViewSet(viewsets.ModelViewSet):
     serializer_class = FileSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsFileMemberOrReadOnly]
-                
-        
+
     @action(detail=True)
     def retrieve_file(self, request, pk=None):
-        filename=self.get_object().file
+        filename = self.get_object().file
         return FileResponse(filename)
-
-
-

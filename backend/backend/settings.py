@@ -104,7 +104,7 @@ SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,
 }
 
-#Path to files.
+# Path to files.
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 

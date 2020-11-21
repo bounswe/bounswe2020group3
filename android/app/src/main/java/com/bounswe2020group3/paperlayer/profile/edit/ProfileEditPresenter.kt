@@ -19,7 +19,7 @@ class ProfileEditPresenter(view: ProfileEditContract.View): ProfileEditContract.
         disposable.clear()
     }
 
-    private fun getUserProfileData(): Profile? {
+    override fun getUserProfileData(): Profile? {
         return this.userProfileData
     }
 
@@ -59,13 +59,5 @@ class ProfileEditPresenter(view: ProfileEditContract.View): ProfileEditContract.
                 }
         )
         disposable.add(getProfileObservable)
-    }
-
-    override fun onFirstNameChange(firstname: String) {
-        val profile = getUserProfileData()
-        if(profile != null) {
-            profile.name = firstname
-            updateProfile(profile)
-        }
     }
 }

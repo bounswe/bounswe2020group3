@@ -27,10 +27,17 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
 
         presenter.subscribeUserProfile()
 
-        editTextFirstName.setOnFocusChangeListener { _: View, hasFocus: Boolean ->
-            if(!hasFocus) {
-                val firstName = editTextFirstName.text.toString()
-                presenter.onFirstNameChange(firstName)
+        imageButtonSave.setOnClickListener{
+            val profileData = presenter.getUserProfileData()
+            if(profileData != null) {
+                profileData.name = editTextFirstName.text.toString()
+                profileData.lastName = editTextLastName.text.toString()
+                profileData.expertise = editTextExpertise.text.toString()
+                profileData.interests = editTextInterests.text.toString()
+                profileData.gender = editTextGender.text.toString()
+                profileData.age = editTextAge.text.toString().toInt()
+                profileData.bio = editTextBio.text.toString()
+                presenter.updateProfile(profileData)
             }
         }
     }

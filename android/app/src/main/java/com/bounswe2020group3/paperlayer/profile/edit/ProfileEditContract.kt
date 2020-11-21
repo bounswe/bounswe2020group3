@@ -9,7 +9,7 @@ interface ProfileEditContract {
         fun subscribeUserProfile()
         fun loadUserProfile()
         fun updateProfile(updatedProfile: Profile)
-        fun onFirstNameChange(firstName: String)
+        fun getUserProfileData(): Profile?
     }
 
     interface View : BaseView<Presenter> {

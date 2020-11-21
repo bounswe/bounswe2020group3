@@ -56,7 +56,7 @@ class IsFileMemberOrReadOnly(permissions.BasePermission):
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
         c1 = request.method in permissions.SAFE_METHODS
-        c2 = obj.project.is_public:
+        c2 = obj.project.is_public
 
         if c1 and c2:
             return True

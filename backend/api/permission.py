@@ -55,8 +55,10 @@ class IsFileMemberOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
-        c = request.method in permissions.SAFE_METHODS and obj.project.is_public:
-        if c:
+        c1 = request.method in permissions.SAFE_METHODS
+        c2 = obj.project.is_public:
+
+        if c1 and c2:
             return True
 
         # Write permissions are only allowed to the members of the project.

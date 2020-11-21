@@ -26,7 +26,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter.fetchProfile(1)
+        presenter.subscribeUserProfile()
 
         imageButtonSettings.setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToProfileEditFromProfile)
@@ -38,14 +38,19 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         presenter.onDestroy()
     }
 
-    override fun updateProfileUI(profile: Profile?) {
-        val fullName = "${profile?.name} ${profile?.lastName}"
+    override fun onResume() {
+        super.onResume()
+        presenter.loadUserProfile()
+    }
+
+    override fun updateProfileUI(profile: Profile) {
+        val fullName = "${profile.name} ${profile.lastName}"
         textViewFullName.text = fullName
-        textViewBio.text = profile?.bio
-        textViewAge.text = profile?.age.toString()
-        textViewGender.text = profile?.gender
-        textViewInterests.text = profile?.interests
-        textViewExpertise.text = profile?.expertise
+        textViewBio.text = profile.bio
+        textViewAge.text = profile.age.toString()
+        textViewGender.text = profile.gender
+        textViewInterests.text = profile.interests
+        textViewExpertise.text = profile.expertise
     }
 
     override fun setPresenter(presenter: ProfileContract.Presenter) {

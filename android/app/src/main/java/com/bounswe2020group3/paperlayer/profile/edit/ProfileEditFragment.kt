@@ -1,7 +1,6 @@
 package com.bounswe2020group3.paperlayer.profile.edit
 
 import android.os.Bundle
-import android.text.Editable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +25,24 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter.fetchProfile(1)
+        presenter.subscribeUserProfile()
+
+        editTextFirstName.setOnFocusChangeListener { _: View, hasFocus: Boolean ->
+            if(!hasFocus) {
+                val firstName = editTextFirstName.text.toString()
+                presenter.onFirstNameChange(firstName)
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDestroy()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.loadUserProfile()
     }
 
     override fun setPresenter(presenter: ProfileEditContract.Presenter) {
@@ -51,14 +67,14 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun updateProfileUI(profile: Profile?) {
-        editTextFirstName.setText(profile?.name)
-        editTextLastName.setText(profile?.lastName)
-        editTextExpertise.setText(profile?.expertise)
-        editTextInterests.setText(profile?.interests)
-        editTextGender.setText(profile?.gender)
-        editTextAge.setText(profile?.age.toString())
-        editTextBio.setText(profile?.bio)
+    override fun updateProfileUI(profile: Profile) {
+        editTextFirstName.setText(profile.name)
+        editTextLastName.setText(profile.lastName)
+        editTextExpertise.setText(profile.expertise)
+        editTextInterests.setText(profile.interests)
+        editTextGender.setText(profile.gender)
+        editTextAge.setText(profile.age.toString())
+        editTextBio.setText(profile.bio)
     }
 
 }

@@ -1,7 +1,5 @@
 package com.bounswe2020group3.paperlayer.profile.common
 
-import com.bounswe2020group3.paperlayer.base.BasePresenter
-import com.bounswe2020group3.paperlayer.base.BaseView
 import com.bounswe2020group3.paperlayer.profile.data.Profile
 import io.reactivex.Single
 import retrofit2.http.GET

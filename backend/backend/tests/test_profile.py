@@ -3,11 +3,11 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from api.models.profile import Profile
-from api.serializers.profile import ProfileSerializer
-
 
 class ProfileTests(APITestCase):
+    """
+        Tests for the profile model.
+    """
     def setUp(self):
         self.username = 'john_doe'
         self.password = 'foobar'

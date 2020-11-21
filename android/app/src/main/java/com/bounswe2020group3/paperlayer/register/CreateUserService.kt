@@ -4,17 +4,27 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.register.data.Register
 
 class CreateUserService {
     companion object {
-        public fun checkRegistration(view: View): Boolean {
-            var p = passwordCheck(view) != null
-            var e = emailCheck(view) != null
-            var u = usernameCheck(view) != null
-            nameCheck(view)
-            return p && e && u
+        public fun checkRegistration(view: View): Register? {
+            var p = passwordCheck(view)
+            var e = emailCheck(view)
+            var u = usernameCheck(view)
+            var fn = firstnameCheck(view)
+            var ln = lastnameCheck(view)
+            if (p != null &&
+                e != null &&
+                u != null &&
+                fn != null &&
+                ln != null
+            )
+                return Register(fn, "", ln, u, e, p)
 
+            return null
         }
+
 
         fun passwordCheck(view: View): String? {
             var password = view.findViewById<EditText>(R.id.editTextPassword).text.toString()
@@ -62,11 +72,10 @@ class CreateUserService {
             }
             return email
         }
-        fun nameCheck(view:View) : String? {
+        fun firstnameCheck(view:View) : String? {
 
             var firstname = view.findViewById<EditText>(R.id.editTextFirstName).text.toString()
-            var lastname = view.findViewById<EditText>(R.id.editTextLastName).text.toString()
-            if(firstname == "" || lastname == ""){
+            if(firstname == ""){
                 view.findViewById<TextView>(R.id.errorName).visibility = View.VISIBLE
                 view.findViewById<TextView>(R.id.errorName).setText(R.string.err_invalid_name)
 
@@ -74,7 +83,20 @@ class CreateUserService {
             }
             view.findViewById<TextView>(R.id.errorName).visibility = View.INVISIBLE
 
-            return null
+            return firstname
+        }
+        fun lastnameCheck(view:View) : String? {
+
+            var lastname = view.findViewById<EditText>(R.id.editTextLastName).text.toString()
+            if( lastname == ""){
+                view.findViewById<TextView>(R.id.errorName).visibility = View.VISIBLE
+                view.findViewById<TextView>(R.id.errorName).setText(R.string.err_invalid_name)
+
+                return null
+            }
+            view.findViewById<TextView>(R.id.errorName).visibility = View.INVISIBLE
+
+            return lastname
         }
     }
 }

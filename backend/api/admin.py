@@ -4,9 +4,13 @@ from .models.example import Example
 # Register your models here.
 from .models.profile import Profile
 from .models.project import Project
+
 from .models.file import File
+from .models.event import Event
+
 
 admin.site.register(Example)
 admin.site.register(Profile)
 admin.site.register(Project)
 admin.site.register(File)
+admin.site.register(Event)

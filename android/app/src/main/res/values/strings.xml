@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">PaperLayer</string>
+    <string name="app_logo_description">PaperLayer Logo</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_profile">Profile</string>
     <string name="title_projects">Projects</string>
@@ -11,5 +12,22 @@
     <string name="text_email">E-Mail</string>
     <string name="text_password">Password</string>
     <string name="text_login_screen">PaperLayer Login Screen</string>
-
+    <string name="err_no_matching_passwords">The passwords entered does not match</string>
+    <string name="err_invalid_username">You must enter an username at least length of 6 characters.</string>
+    <string name="err_invalid_email">You must enter a valid email.</string>
+    <string name="err_invalid_password">You must enter a password at least length of 6 characters.</string>
+    <string name="err_not_unique_username">Username is either not unique or not in a suitable format.</string>
+    <string name="text_username">Username</string>
+    <string name="text_password_confirm">Password Confirm</string>
+    <string name="text_birthday_example">Birthday (DD/MM/YYYY)</string>
+    <string name="text_first_name">First name</string>
+    <string name="text_last_name">Last name</string>
+    <string name="err_invalid_name">Please enter a valid name.</string>
+    <string name="err_no_name">Please enter your name.</string>
+    <string name="profile_avatar_description">Profile avatar</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_age">Age</string>
+    <string name="profile_interests">Interests</string>
+    <string name="profile_gender">Gender</string>
+    <string name="profile_expertise">Expertise</string>
 </resources>

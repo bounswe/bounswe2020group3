@@ -1,22 +1,20 @@
 import React, { Component } from "react";
-import axios from 'axios';
 import config from '../config';
-import { styled } from '@material-ui/core';
+import { Button, styled } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
-import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import { theme } from "../Common/ColorTheme";
 
-
-const errorMessages = {
-    emptyFieldError: "Please Fill All Areas!"
-}
+// const errorMessages = {
+//     emptyFieldError: "Please Fill All Areas!"
+// }
 
 const Container = styled(Box)({
-    background: 'linear-gradient(90deg, rgba(0,151,255,1) 10%, rgba(0,151,255,1) 90%)',
+    background: theme.palette.primary.main,
     border: 0,
     borderRadius: 3,
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
@@ -47,8 +45,11 @@ export default class HomePage extends Component {
         this.SnackbarRef.current.turnOnSnackbar();
     };
     goToLogin = () => {
-        this.props.history.push("/login");
+        this.props.history.push(config.Login_Path);
     };
+    goToProjectCreation = () => {
+      this.props.history.push(config.Create_Project_Path);
+  };
 
     renderProject(){
       var projects = ["ML","AI","DL"];
@@ -77,7 +78,9 @@ export default class HomePage extends Component {
                       <h2> Projects </h2>
                       <Paper>
                       {this.renderProject()}
+                      
                       </Paper>
+                      <Button variant="contained" color="primary" className="" onClick={this.goToProjectCreation}>Create a Project</Button>
                     </div>
                     <div class="column middle">
                     <h2> Feeds </h2>

@@ -15,8 +15,4 @@ class MainPresenter(view: MainContract.View)
     Timber.d("onViewCreated")
   }
 
-  override fun demo() {
-    Timber.d("Demo button tapped!")
-    view?.showToast("DEMOOO")
-  }
 }

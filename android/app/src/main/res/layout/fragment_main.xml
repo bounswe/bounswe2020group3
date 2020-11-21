@@ -6,11 +6,12 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonDemo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/ButtonDefault"
+        android:visibility="gone"
         android:text="Demo Button"/>
 
     <TextView
@@ -27,14 +28,14 @@
         android:padding="16dp"
         android:textSize="36sp" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/ButtonDefault"
         android:text="@string/text_login" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/registerButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

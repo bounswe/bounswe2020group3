@@ -12,6 +12,7 @@ from .views.milestone import MilestoneViewSet
 from .views.tag import TagViewSet
 from .views.user import UserViewSet
 from .views.file import FileViewSet
+from .views.event import EventViewSet
 from django.contrib.auth import views as auth_views
 
 router = DefaultRouter()
@@ -21,7 +22,7 @@ router.register(r'projects', ProjectViewSet)
 router.register(r'milestones', MilestoneViewSet)
 router.register(r'tags', TagViewSet)
 router.register(r'files', FileViewSet)
-
+router.register(r'events', EventViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

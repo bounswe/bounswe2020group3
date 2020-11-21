@@ -28,7 +28,7 @@ class IsMemberOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the members of the snippet.
-        return request.user in obj.members or request.user == obj.owner
+        return request.user in obj.members.all() or request.user == obj.owner
 
 
 class IsMilestoneMemberOrReadOnly(permissions.BasePermission):
@@ -43,7 +43,7 @@ class IsMilestoneMemberOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the members of the project.
-        return request.user in obj.project.members or \
+        return request.user in obj.project.members.all() or \
             request.user == obj.project.owner
 
 class IsFileMemberOrReadOnly(permissions.BasePermission):
@@ -58,5 +58,5 @@ class IsFileMemberOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the members of the project.
-        return request.user in obj.project.members or \
+        return request.user in obj.project.members.all() or \
             request.user == obj.project.owner

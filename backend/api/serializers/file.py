@@ -9,4 +9,4 @@ class FileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = File
-        fields = '__all__'
+        fields = ['id','file','remark','timestamp','project']

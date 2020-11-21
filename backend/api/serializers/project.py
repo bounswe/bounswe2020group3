@@ -10,5 +10,6 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['id','name', 'description', 'requirements', 'owner',
+        fields = ['id', 'name', 'description', 'requirements', 'owner',
                   'members', 'is_public', 'state', 'project_type', 'due_date']
+

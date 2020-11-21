@@ -1,0 +1,51 @@
+package com.bounswe2020group3.paperlayer.project
+
+import android.widget.EditText
+import androidx.navigation.Navigation
+import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.project.ProjectMainContract
+import kotlinx.android.synthetic.main.fragment_login.view.*
+import timber.log.Timber
+
+class ProjectMainPresenter: ProjectMainContract.Presenter {
+
+    private lateinit var view: ProjectMainContract.View
+
+    override fun onViewCreated() {
+        TODO("Not yet implemented")
+    }
+
+    override fun setView(view: ProjectMainContract.View) {
+        this.view =view
+    }
+
+    override fun showMessage(message: String) {
+        this.view.showToast(message)
+    }
+
+    override fun created() {
+        this.view.initOnClicks()
+    }
+
+    override fun onLoginButtonClicked(userEmail: String, userPassword: String) {
+        //val userEmail=mailEditText.text.toString()
+        //val userPassword=passwordEditText.text.toString()
+        //Model is not implemented yet
+        //Ex: AuthenticationSystem.check(userEmail,userPassword)
+        view.resetEditText()
+        //Navigation must be changed to profile page after profile page created
+        Navigation.findNavController(view.getLayout()).navigate(R.id.navigateToRegister)
+    }
+
+    override fun onRegisterButtonClicked(userEmail: String, userPassword: String) {
+        view.resetEditText()
+        Navigation.findNavController(view.getLayout()).navigate(R.id.navigateToRegister)
+    }
+
+    override fun onGuestButtonClicked(userEmail: String, userPassword: String) {
+        view.resetEditText()
+        //Navigation must be changed to guest page after guest page created
+        Navigation.findNavController(view.getLayout()).navigate(R.id.navigateToRegister)
+    }
+
+}

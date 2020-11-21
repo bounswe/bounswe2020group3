@@ -6,8 +6,8 @@ export const theme = createMuiTheme({
       light: "#5e92f3", // will be calculated from palette.primary.main,
       main: '#1565c0',
       dark: "#003c8f",// will be calculated from palette.primary.main,
-      text: "ffffff",
-      contrastText: "white" //will be calculated to contrast with palette.primary.main
+      text: "#ffffff",
+      contrastText: "#ffffff" //will be calculated to contrast with palette.primary.main
     },
     secondary: {
       light: '#c3fdff',

@@ -10,4 +10,3 @@ class FileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = File
         fields = ['id', 'file', 'remark', 'timestamp', 'project']
-        

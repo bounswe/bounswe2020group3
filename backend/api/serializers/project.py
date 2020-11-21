@@ -12,4 +12,3 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
         model = Project
         fields = ['id', 'name', 'description', 'requirements', 'owner',
                   'members', 'is_public', 'state', 'project_type', 'due_date']
-

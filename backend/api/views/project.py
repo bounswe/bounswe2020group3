@@ -23,12 +23,14 @@ class ProjectViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
     @action(detail=True)
-    def project_files(self, request, pk=None):     
+    def project_files(self, request, pk=None):
         project = self.get_object()
         projects_of_user = File.objects.filter(project=project)
         serializer_context = {
             'request': request,
         }
-        file_serializer = FileSerializer(projects_of_user, 
-                            context=serializer_context, many=True)
+        file_serializer = FileSerializer(
+                projects_of_user,
+                context=serializer_context,
+                many=True)
         return Response(file_serializer.data)

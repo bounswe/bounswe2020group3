@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
+import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.profile.data.Profile
 import kotlinx.android.synthetic.main.fragment_profile_edit.*
@@ -82,6 +84,10 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
         editTextGender.setText(profile.gender)
         editTextAge.setText(profile.age.toString())
         editTextBio.setText(profile.bio)
+    }
+
+    override fun navigateBack() {
+        Navigation.findNavController(requireView()).navigate(R.id.profileFragment)
     }
 
 }

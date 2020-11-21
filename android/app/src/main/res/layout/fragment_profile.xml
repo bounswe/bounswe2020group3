@@ -59,7 +59,7 @@
                             android:contentDescription="@string/profile_avatar_description"
                             android:padding="0dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/ic_user" />
+                            android:src="@drawable/ic_avatar" />
 
                     </com.google.android.material.card.MaterialCardView>
 
@@ -84,7 +84,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
-                    android:text="Ali Mehmet Celâl Şengör is a Turkish geologist. He is currently on the faculty at Istanbul Technical University, Department of Geological Engineering."
+                    android:layout_gravity="center"
+                    android:text="Ali Mehmet Celâl Şengör is a Turkish geologist."
                     android:textColor="@color/colorBlack"
                     android:textSize="16sp" />
             </LinearLayout>

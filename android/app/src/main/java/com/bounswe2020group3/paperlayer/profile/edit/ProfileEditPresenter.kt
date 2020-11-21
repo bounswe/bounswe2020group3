@@ -1,5 +1,6 @@
 package com.bounswe2020group3.paperlayer.profile.edit
 
+import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.profile.ProfileContract
 import com.bounswe2020group3.paperlayer.profile.ProfileModel
 import com.bounswe2020group3.paperlayer.profile.data.Profile
@@ -46,16 +47,14 @@ class ProfileEditPresenter(view: ProfileEditContract.View): ProfileEditContract.
     }
 
     override fun updateProfile(updatedProfile: Profile) {
-        view?.showInfoToast("Profile will be updated.")
         val getProfileObservable = model.updateUserProfile(updatedProfile).subscribe(
                 { profile ->
                     view?.updateProfileUI(profile)
-                    view?.hideLoading()
+                    view?.navigateBack()
                     view?.showInfoToast("Profile is updated.")
                 },
                 { error ->
-                    view?.hideLoading()
-                    view?.showErrorToast("Error while updating the profile")
+                    view?.showErrorToast("An error occurred while updating the profile. Please try again.")
                 }
         )
         disposable.add(getProfileObservable)

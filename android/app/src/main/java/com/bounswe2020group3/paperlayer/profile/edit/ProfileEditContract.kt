@@ -18,5 +18,6 @@ interface ProfileEditContract {
         fun showInfoToast(message: String = "Info")
         fun showErrorToast(message: String = "Error")
         fun updateProfileUI(profile: Profile)
+        fun navigateBack()
     }
 }

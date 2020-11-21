@@ -10,10 +10,10 @@ import retrofit2.http.PATCH
 import retrofit2.http.Path
 
 interface ProfileEditContract {
-    interface Presenter: BasePresenter {
+    interface Presenter: BasePresenter, ProfileCommonContract.Presenter {
     }
 
-    interface View: BaseView<Presenter> {
+    interface View: BaseView<Presenter>, ProfileCommonContract.View {
     }
 
     interface Model: ProfileCommonContract.Model {

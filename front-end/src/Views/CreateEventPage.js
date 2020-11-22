@@ -14,7 +14,7 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import { theme } from "../Common/ColorTheme";
 import AlertTypes from '../Common/AlertTypes.json';
-import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
+import { getAccessToken } from '../Components/Auth/Authenticate';
 import { format } from "date-fns";
 
 const Messages = {

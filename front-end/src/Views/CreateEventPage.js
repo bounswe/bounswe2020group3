@@ -9,7 +9,7 @@ import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
 import DateComponent from "../Components/Date/DateComponent";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import "../index.scss";
+// import "../index.scss";
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import { theme } from "../Common/ColorTheme";
@@ -20,35 +20,20 @@ import { format } from "date-fns";
 const Messages = {
   emptyFieldError: "Please Fill All Areas!",
   titleEmpty: "Event title can not be empty!",
-  EventCreationFail: "Event Creation Failed. Please try again.",
-  EventCreationSuccess: "Event Created."
+  eventCreationFail: "Event Creation Failed. Please try again.",
+  eventCreationSuccess: "Event Created."
 }
 const eventTypes = {
-  conference: "conference",
-  journal: "journal",
-  institution: "instutution"
+  conference: "academic conference",
+  journal: "journal submission",
+  institution: "funded project"
 }
 
-const leftDiv = {
-  // float: 'left',
+const middleDiv = {
   margin: "auto",
   width: "50%",
   textAlign: "center",
   minWidth: "500px",
-  display: "inline-block",
-  height: "420px",
-  verticalAlign: "middle",
-  lineHeight: "1"
-
-}
-const rightDiv = {
-  // float: 'right',
-  margin: "auto",
-  width: "50%",
-  textAlign: "center",
-  minWidth: "500px",
-  display: "inline-block",
-  height: "420px",
   verticalAlign: "middle",
   lineHeight: "1"
 
@@ -110,9 +95,8 @@ export default class CreateEventPage extends Component {
       eventType: null,
       eventDescription: "",
       date: format(new Date(), 'yyyy-MM-dd'),
-      eventState: "",
       // collaborator: ,
-      deadlineDate: null,
+      deadlineDate: (new Date(), 'yyyy-MM-dd'),
       isPublic: true
 
     }
@@ -133,55 +117,36 @@ export default class CreateEventPage extends Component {
   handleSnackbarOpen = () => {
     this.SnackbarRef.current.turnOnSnackbar();
   };
-  handlePrivacyChange = (e) => {
-    this.setState({ isPublic: e.target.value });
-  }
+
   handleDescriptionChange = (e) => {
     this.setState({ eventDescription: e.target.value });
   }
-  // handleCollaboratorChange = (e) =>{
-  //   this.setState({collaborator: e.target.value});
-  // }
-  handleProjectStateChange = (e) => {
-    this.setState({ eventState: e.target.value });
-  }
-//   getSelfProfile = () => {
-//     const id = getUserId()
-//     const url = `${config.API_URL}/api/users/${id}/`;
-//     return url;
-//   }
-
   submitProject = () => {
-    const { projectTitle, projectDescription, projectRequirements, collaborators,
-      isPublic, projectState, projectType, date } = this.state;      /* members [] for now */
-    if (projectTitle === "" || projectDescription === "" || projectRequirements === "" || collaborators === []
-      || projectState === "" || projectType === "") {
+    const { eventTitle, eventDescription, eventType, date, deadlineDate } = this.state;      /* members [] for now */
+    if (eventTitle === "" || eventDescription === "" || eventType === "") {
       this.setState({ message: Messages.emptyFieldError, messageType: AlertTypes.Warning }, () => {
         this.handleSnackbarOpen();
       });
+
       return;
     }
-    const project = {
-      name: projectTitle,
-      description: projectDescription,
-      requirements: projectRequirements,
-      members: collaborators,
-      is_public: isPublic,
-      state: projectState,
-      project_type: projectType,
-      due_date: date
-      ///ADD EVENTS HERE
+    const event = {
+      title: eventTitle,
+      description: eventDescription,
+      event_type: eventType,
+      date: date,
+      deadline: deadlineDate
     };
-    axios.post(`${config.API_URL}${config.Create_Project_Url}`, project, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.post(`${config.API_URL}${config.Event_Creation_Url}`, event, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         console.log(res.data)
-        this.setState({ success: true, message: Messages.projectCreationSuccess, messageType: AlertTypes.Success }, () => {
+        this.setState({ success: true, message: Messages.eventCreationSuccess, messageType: AlertTypes.Success }, () => {
           this.handleSnackbarOpen();
-          setTimeout(() => { this.props.history.push(config.Homepage_Path); }, 1500);
+          setTimeout(() => { this.props.history.push('/'); }, 3000);
         });
 
       }, (error) => {
-        this.setState({ success: false, message: Messages.projectCreationFail, messageType: AlertTypes.Error });
+        this.setState({ success: false, message: Messages.eventCreationFail, messageType: AlertTypes.Error });
         this.handleSnackbarOpen()
         console.log(error);
       })
@@ -190,14 +155,14 @@ export default class CreateEventPage extends Component {
   }
 
   render() {
-    const { isPublic, projectType, projectState } = this.state;
+    const { eventType } = this.state;
     return (
       <Container>
         <PrimarySearchAppBar />
         <FormWrapper>
-          <h1 style={{ color: "black" }}> Create a Project </h1>
+          <h1 style={{ color: "black" }}> Create an Event </h1>
 
-          <div style={leftDiv}>
+          <div style={middleDiv}>
             <div>
               <TextField
                 type="text"
@@ -205,7 +170,7 @@ export default class CreateEventPage extends Component {
                 label="Title"
                 onChange={this.handleTitleChange}
                 defaultValue=""
-                helperText="Title of the Project"
+                helperText="Event Title"
                 variant="filled"
                 style={width}
               />
@@ -214,10 +179,10 @@ export default class CreateEventPage extends Component {
               <TextField
                 type="text"
                 error=""
-                label="Project Description"
+                label="Event Description"
                 onChange={this.handleDescriptionChange}
                 defaultValue=""
-                placeholder="Please describe the project."
+                placeholder="Please write a short description for the event."
                 helperText=""
                 rows={10}
                 multiline
@@ -231,49 +196,31 @@ export default class CreateEventPage extends Component {
                 style={width}
               />
             </div>
-
-          </div>
-          <div style={rightDiv}>
             <div>
-              {/* <TextField
-                type="text"
-                error=""
-                label="Type"
-                onChange={this.handleTypeChange}
-                defaultValue=""
-                helperText="Type of the Project"
-                variant="filled"
+              <DateComponent
+                handleDateChange={this.handleDeadlineChange}
+                helperText="Deadline for Submissions"
                 style={width}
-              /> */}
-
+              />
             </div>
+                        
             <div style={{ marginBottom: "10px" }}>
               <FormControl>
-                <InputLabel style={{ marginLeft: "12px" }} id="projectType">Project Type</InputLabel>
+                <InputLabel style={{ marginLeft: "12px" }} id="projectType">Event Type</InputLabel>
                 <Select
                   style={dropdownMenuStyle}
                   value={eventType}
                   onChange={this.handleTypeChange}
                   labelId="projectType"
                 >
-                  <MenuItem value={eventTypes.conference}>Conference</MenuItem>
-                  <MenuItem value={eventTypes.institution}>Institution</MenuItem>
-                  <MenuItem value={eventTypes.journal}>Journal</MenuItem>
+                  <MenuItem value={eventTypes.conference}>Academic Conference</MenuItem>
+                  <MenuItem value={eventTypes.institution}>Funded Project</MenuItem>
+                  <MenuItem value={eventTypes.journal}>Journal Submission</MenuItem>
                 </Select>
               </FormControl>
             </div>
-            <Button color="primary" variant="contained" style={{ marginTop: "20px" }} onClick={this.submitProject}>Create Project</Button>
-
+            <Button color="primary" variant="contained" style={{ marginTop: "20px" }} onClick={this.submitProject}>Create Event</Button>  
           </div>
-          {/* <TextField
-                type="text"
-                label="Collaborators"
-                onChange={this.handleCollaboratorChange}
-                defaultValue=""
-                placeholder="Collaborators"
-                multiline
-                style={{width:"90%"}}
-                variant="filled" /> */}
         </FormWrapper>
         <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
       </Container>);

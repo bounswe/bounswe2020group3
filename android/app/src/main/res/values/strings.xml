@@ -32,4 +32,5 @@
     <string name="profile_gender">Gender</string>
     <string name="profile_expertise">Expertise</string>
     <string name="profile_bio">Biography</string>
+    <string name="profile_gender_dialog_title">Select Gender</string>
 </resources>

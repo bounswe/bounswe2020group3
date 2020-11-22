@@ -30,4 +30,11 @@
     <string name="profile_interests">Interests</string>
     <string name="profile_gender">Gender</string>
     <string name="profile_expertise">Expertise</string>
+    <string name="project_owner_title">Owner</string>
+    <string name="project_type_title">Project Type</string>
+    <string name="project_due_date_title">Due Date</string>
+    <string name="project_state_title">Project State</string>
+    <string name="project_description_title">Project Description</string>
+
+
 </resources>

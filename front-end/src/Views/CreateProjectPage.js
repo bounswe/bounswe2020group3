@@ -5,17 +5,17 @@ import { Button, styled } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
-import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
 import DateComponent from "../Components/Date/DateComponent";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import "../index.scss";
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
-import { theme } from "../Common/ColorTheme";
+// import { theme } from "../Common/ColorTheme";
 import AlertTypes from '../Common/AlertTypes.json';
 import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
 import { format } from "date-fns";
+import UserNavbar from "../Components/TopBar/UserNavbar";
 
 const Messages = {
   emptyFieldError: "Please Fill All Areas!",
@@ -41,7 +41,6 @@ const projectStates = {
 }
 
 const leftDiv = {
-  // float: 'left',
   margin: "auto",
   width: "50%",
   textAlign: "center",
@@ -53,7 +52,6 @@ const leftDiv = {
 
 }
 const rightDiv = {
-  // float: 'right',
   margin: "auto",
   width: "50%",
   textAlign: "center",
@@ -76,7 +74,7 @@ const width = {
 
 }
 const FormWrapper = styled(Box)({
-  backgroundColor: theme.palette.secondary.light,
+  backgroundColor: "#E0E0E0",
   border: 0,
   borderRadius: 3,
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
@@ -268,7 +266,11 @@ export default class CreateProjectPage extends Component {
     console.log(this.state)
     return (
       <Container>
-        <PrimarySearchAppBar />
+        <UserNavbar
+          logout={() => { this.props.history.push(config.Login_Path) }}
+          pushProfile={() => { this.props.history.push("/profile") }}
+          goHome={() => { this.props.history.push(config.Homepage_Path) }}
+        />
         <FormWrapper>
           <h1 style={{ color: "black" }}> Create a Project </h1>
 

@@ -1,7 +1,5 @@
 const config = {
-  //API_URL: process.env.REACT_APP_API_URL,
-  // API_URL: "http://localhost:8000", //for convenience
-  API_URL: "http://paperlayer.herokuapp.com",
+  API_URL: process.env.REACT_APP_API_URL,
   Login_Path : "/login",
   Register_Path: "/register",
   Login_Url : "/api/auth/",
@@ -10,6 +8,6 @@ const config = {
   Event_Creation_Url : "/api/events/",
   Create_Project_Path :"/create-project",
   Create_Project_Url : "/api/projects/",
-  Homepage_Path: "/home"
+  Homepage_Path: "/"
 }
 export default config;

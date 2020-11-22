@@ -158,6 +158,13 @@ export default class CreateProjectPage extends Component {
     const url = `${config.API_URL}/api/users/${id}/`;
     return url;
   }
+  fetchRelatedEvents = () => { 
+    const type = this.state.projectType;
+    if(type === null){
+      return;
+    }
+    axios.get(`${config.API_URL}/api/`)
+  }
 
   submitProject = () => {
     const { projectTitle, projectDescription, projectRequirements, collaborators,

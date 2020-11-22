@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/secondaryLightColor"
     android:gravity="center_vertical"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonDemo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/ButtonDefault"
-        android:visibility="gone"
-        android:text="Demo Button"/>
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_paper_plane"/>
 
     <TextView
         android:id="@+id/loginTextView"

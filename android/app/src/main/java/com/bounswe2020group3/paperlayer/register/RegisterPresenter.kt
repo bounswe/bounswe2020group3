@@ -21,6 +21,8 @@ class RegisterPresenter(view: RegisterContract.View)
     private var disposable = CompositeDisposable()
     override fun onDestroy() {
         this.view = null
+        disposable.clear()
+
     }
     override fun onViewCreated() {
         Timber.d("onViewCreated")
@@ -36,6 +38,7 @@ class RegisterPresenter(view: RegisterContract.View)
                 view?.showInfoToast("Register is complete. You can now login")
                 view?.hideLoading()
                 view?.navigatetologin()
+
             },
             { error ->
 

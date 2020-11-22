@@ -1,12 +1,8 @@
 on:
   release:
-    types: [created]
-  pull_request:
-    branches: 
-      - master
-    
+    types: [created]    
 
-name: Deploy to Amazon ECS
+name: Deploy backend to Amazon ECS
 
 jobs:
   deploy:

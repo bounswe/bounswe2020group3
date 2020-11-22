@@ -5,7 +5,7 @@
     <string name="title_profile">Profile</string>
     <string name="title_projects">Projects</string>
     <string name="title_home">Home</string>
-    <string name="text_main_screen">PaperLayer Main Screen</string>
+    <string name="text_main_screen">PaperLayer</string>
     <string name="text_login">Login</string>
     <string name="text_register">Register</string>
     <string name="text_guest">Login as a guest</string>

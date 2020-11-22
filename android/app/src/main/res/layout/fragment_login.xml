@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/secondaryLightColor"
     tools:context="com.bounswe2020group3.paperlayer.login.LoginFragment">
 
     <LinearLayout
@@ -18,6 +17,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/text_login_screen"
+            android:fontFamily="@font/roboto"
             android:textColor="@color/colorBlack"
             android:layout_margin="8dp"
             style="@style/TextAppearance.MaterialComponents.Headline2"

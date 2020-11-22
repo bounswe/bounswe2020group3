@@ -1,5 +1,6 @@
 from django.db import models
 import datetime
+from .event import Event
 
 STATES = ["seeking for collaborators",
           "open for collaborators", "in progress", "done"]
@@ -26,6 +27,7 @@ class Project(models.Model):
     project_type = models.CharField(choices=TYPE_CHOICES,
                                     default="conference", max_length=100)
     due_date = models.DateField(default=datetime.date.today)
+    events = models.ManyToManyField(Event, blank=True)
 
     class Meta:
         ordering = ['created']

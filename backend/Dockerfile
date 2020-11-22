@@ -30,6 +30,6 @@ RUN poetry install --no-dev
 
 ADD . $ROOT
 
-EXPOSE 8080
+EXPOSE 80
 
 CMD ["gunicorn", "--bind", ":8080", "backend.wsgi:application"]

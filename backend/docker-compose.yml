@@ -8,4 +8,4 @@ services:
       - BACKEND_DEBUG=True
       - BACKEND_ENVIRONMENT=development
     ports:
-      - 8000:8080
+      - 8000:80

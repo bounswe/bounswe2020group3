@@ -1,12 +1,11 @@
 package com.bounswe2020group3.paperlayer.profile.edit
 
-import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.profile.ProfileContract
 import com.bounswe2020group3.paperlayer.profile.ProfileModel
 import com.bounswe2020group3.paperlayer.profile.data.Profile
 import io.reactivex.disposables.CompositeDisposable
 
-class ProfileEditPresenter(view: ProfileEditContract.View): ProfileEditContract.Presenter {
+class ProfileEditPresenter(view: ProfileEditContract.View) : ProfileEditContract.Presenter {
 
     private var view: ProfileEditContract.View? = view
     private var model: ProfileContract.Model = ProfileModel()
@@ -14,7 +13,7 @@ class ProfileEditPresenter(view: ProfileEditContract.View): ProfileEditContract.
     private var userProfileData: Profile? = null
 
     private var disposable = CompositeDisposable()
-    
+
     override fun onDestroy() {
         this.view = null
         disposable.clear()
@@ -25,7 +24,7 @@ class ProfileEditPresenter(view: ProfileEditContract.View): ProfileEditContract.
     }
 
     override fun subscribeUserProfile() {
-        val userProfileSub = model.getUserProfile().subscribe{ profile ->
+        val userProfileSub = model.getUserProfile().subscribe { profile ->
             view?.updateProfileUI(profile)
             this.userProfileData = profile
         }

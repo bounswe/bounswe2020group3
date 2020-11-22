@@ -251,7 +251,7 @@ export default class CreateProjectPage extends Component {
         console.log(res.data)
         this.setState({ success: true, message: Messages.projectCreationSuccess, messageType: AlertTypes.Success }, () => {
           this.handleSnackbarOpen();
-          setTimeout(() => { this.props.history.push(config.Homepage_Path); }, 1500);
+          setTimeout(() => { this.props.history.push(config.Homepage_Path); }, 5000);
         });
 
       }, (error) => {

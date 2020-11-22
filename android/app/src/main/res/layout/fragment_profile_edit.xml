@@ -251,6 +251,7 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
+
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
@@ -273,26 +274,20 @@
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_sm"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="4dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        <Button
+                            android:id="@+id/buttonGenderSelect"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/profile_gender">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/editTextGender"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:singleLine="true"
-                                android:inputType="text"
-                                android:text="Male"
-                                android:textSize="14sp" />
-                        </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_height="match_parent"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:textAllCaps="false"
+                            android:layout_margin="0dp"
+                            android:textColor="@color/colorBlack"
+                            android:text="Gender: Male"/>
 
                     </LinearLayout>
 

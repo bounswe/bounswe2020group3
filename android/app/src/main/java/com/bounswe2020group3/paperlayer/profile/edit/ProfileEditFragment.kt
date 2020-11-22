@@ -1,6 +1,7 @@
 package com.bounswe2020group3.paperlayer.profile.edit
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,15 @@ import androidx.activity.addCallback
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.profile.data.Profile
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_profile_edit.*
 
 
 class ProfileEditFragment : Fragment(), ProfileEditContract.View {
 
     private lateinit var presenter: ProfileEditContract.Presenter
+    private lateinit var genderSelectDialog: MaterialAlertDialogBuilder
+    private var selectedGender: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -36,11 +40,24 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
                 profileData.lastName = editTextLastName.text.toString()
                 profileData.expertise = editTextExpertise.text.toString()
                 profileData.interests = editTextInterests.text.toString()
-                profileData.gender = editTextGender.text.toString()
                 profileData.age = editTextAge.text.toString().toInt()
                 profileData.bio = editTextBio.text.toString()
+                profileData.gender = selectedGender
                 presenter.updateProfile(profileData)
             }
+        }
+
+        val genderOptions = arrayOf("male", "female", "do not want to share")
+        genderSelectDialog = MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.profile_gender_dialog_title)
+                .setItems(genderOptions) { _, which ->
+                    selectedGender = genderOptions[which]
+                    val genderText = "Gender: $selectedGender"
+                    buttonGenderSelect.text = genderText
+                }
+
+        buttonGenderSelect.setOnClickListener{
+            genderSelectDialog.show()
         }
     }
 
@@ -81,9 +98,12 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
         editTextLastName.setText(profile.lastName)
         editTextExpertise.setText(profile.expertise)
         editTextInterests.setText(profile.interests)
-        editTextGender.setText(profile.gender)
         editTextAge.setText(profile.age.toString())
         editTextBio.setText(profile.bio)
+
+        val genderText = "Gender: ${profile.gender}"
+        buttonGenderSelect.text = genderText
+        selectedGender = profile.gender
     }
 
     override fun navigateBack() {

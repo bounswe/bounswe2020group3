@@ -1,14 +1,19 @@
 package com.bounswe2020group3.paperlayer.profile
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.profile.data.Profile
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
+import java.net.URL
 
 
 class ProfileFragment : Fragment(), ProfileContract.View {
@@ -22,9 +27,14 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
-    override fun onStart() {
-        super.onStart()
-        presenter.fetchProfile(1)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        presenter.subscribeUserProfile()
+
+        imageButtonSettings.setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToProfileEditFromProfile)
+        }
     }
 
     override fun onDestroy() {
@@ -32,18 +42,29 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         presenter.onDestroy()
     }
 
-    override fun setPresenter(presenter: ProfileContract.Presenter) {
-        this.presenter = presenter
+    override fun onResume() {
+        super.onResume()
+        presenter.loadUserProfile()
     }
 
-    override fun updateProfileUI(profile: Profile?) {
-        val fullName = "${profile?.name} ${profile?.lastName}"
+    override fun updateProfileUI(profile: Profile) {
+        val fullName = "${profile.name} ${profile.lastName}"
+
         textViewFullName.text = fullName
-        textViewBio.text = profile?.bio
-        textViewAge.text = profile?.age.toString()
-        textViewGender.text = profile?.gender
-        textViewInterests.text = profile?.interests
-        textViewExpertise.text = profile?.expertise
+        textViewBio.text = profile.bio
+        textViewAge.text = profile.age.toString()
+        textViewGender.text = profile.gender
+        textViewInterests.text = profile.interests
+        textViewExpertise.text = profile.expertise
+
+        val imageUrl = profile.photoUrl
+        if(imageUrl != null && imageUrl.contains("http")) {
+            Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
+        }
+    }
+
+    override fun setPresenter(presenter: ProfileContract.Presenter) {
+        this.presenter = presenter
     }
 
     override fun showLoading() {

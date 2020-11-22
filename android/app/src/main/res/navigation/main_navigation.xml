@@ -40,7 +40,23 @@
         android:id="@+id/profileFragment"
         android:name="com.bounswe2020group3.paperlayer.profile.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/navigateToProfileEditFromProfile"
+            app:destination="@id/profileEditFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileEditFragment"
+        android:name="com.bounswe2020group3.paperlayer.profile.edit.ProfileEditFragment"
+        android:label="Edit Profile"
+        tools:layout="@layout/fragment_profile_edit" />
+
     <fragment
         android:id="@+id/projectFragment"
         android:name="com.bounswe2020group3.paperlayer.project.ProjectFragment"
@@ -62,5 +78,5 @@
             app:destination="@id/projectFragment"
             />
     </fragment>
-    
+
 </navigation>

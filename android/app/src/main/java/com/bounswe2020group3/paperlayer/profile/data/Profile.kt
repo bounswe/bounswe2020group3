@@ -4,23 +4,23 @@ import com.squareup.moshi.Json
 
 data class Profile (
     @field:Json(name = "name")
-    var name: String,
+    var name: String?,
     @field:Json(name = "middle_name")
-    var middleName: String,
+    var middleName: String?,
     @field:Json(name = "last_name")
-    var lastName: String,
+    var lastName: String?,
     @field:Json(name = "bio")
-    var bio: String,
+    var bio: String?,
     @field:Json(name = "photo_url")
-    var photoUrl: String,
+    var photoUrl: String?,
     @field:Json(name = "age")
-    var age: Int,
+    var age: Int?,
     @field:Json(name = "share_age")
-    var shareAge: Boolean,
+    var shareAge: Boolean?,
     @field:Json(name = "expertise")
-    var expertise: String,
+    var expertise: String?,
     @field:Json(name = "gender")
-    var gender: String,
+    var gender: String?,
     @field:Json(name = "interests")
-    var interests: String
+    var interests: String?
 )

@@ -28,6 +28,11 @@ const projectTypes = {
   journal: "journal",
   institution: "instutution"
 }
+const eventTypes = {
+  conference: "academic conference",
+  journal: "journal submission",
+  institution: "funded project"
+}
 const projectStates = {
   seekingForCollab: "seeking for collaborators",
   openForCollab: "open for collaborators",
@@ -113,16 +118,16 @@ export default class CreateProjectPage extends Component {
       message: "",
       messageType: "",
       projectTitle: "",
-      projectType: null,
+      projectType: "",
       projectDescription: "",
       projectRequirements: "",
       dueDate: format(new Date(), 'yyyy-MM-dd'),
       projectState: "",
-      // collaborator: ,
-      collaborators: [this.getSelfProfile()],
-      date: null,
-      isPublic: true
-
+      // collaborator: "",
+      collaborators: [this.getSelfProfile()],  //Other members to be added later TODO
+      isPublic: true,
+      events: [],
+      event : ""
     }
   };
   handleDateChange = (date) => {
@@ -132,7 +137,9 @@ export default class CreateProjectPage extends Component {
     this.setState({ projectTitle: e.target.value });
   };
   handleTypeChange = (e) => {
-    this.setState({ projectType: e.target.value });
+    this.setState({ projectType: e.target.value, event: "" },() => {
+      this.fetchRelatedEvents();
+    });
   };
 
   handleSnackbarOpen = () => {
@@ -153,17 +160,70 @@ export default class CreateProjectPage extends Component {
   handleProjectStateChange = (e) => {
     this.setState({ projectState: e.target.value });
   }
+  handleEventChange = (e) => {
+    this.setState({ event: e.target.value });
+  }
   getSelfProfile = () => {
     const id = getUserId()
     const url = `${config.API_URL}/api/users/${id}/`;
     return url;
   }
+  fetchRelatedEvents = (callback) => {
+    const { projectType } = this.state
+    let type = ""
+    if(projectType === projectTypes.conference){ type = eventTypes.conference }
+    else if (projectType === projectTypes.institution){ type = eventTypes.institution }
+    else if (projectType === projectTypes.journal){ type = eventTypes.journal }
+
+    if(type === ""){
+      return;
+    }
+    const event_filter = { event_type : type };
+    axios.get(`${config.API_URL}${config.Event_Creation_Url}?event_type=${event_filter.event_type}`, event_filter, 
+      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        console.log(res.data);
+        const events = res.data;
+        this.setState({events : events}, () =>{
+          if(callback) callback();
+        } );
+
+      })
+  }
+  renderEvents = () => {
+    const { projectType, events, event } = this.state
+    let errorMsg = ""
+    if(projectType === "")
+      errorMsg = "Please provide a project type.";
+    else
+      errorMsg = "No such events at the moment"
+    return (
+      <FormControl>
+        <InputLabel style={{ marginLeft: "12px" }} id="events">Events</InputLabel>
+        <Select
+          style={dropdownMenuStyle}
+          value={event}
+          onChange={this.handleEventChange}
+          labelId="events"
+        >
+          {events.length !== 0
+            ?
+            Object.keys(events).map((id, i) => (
+              <MenuItem value={`${config.API_URL}${config.Event_Creation_Url}${id}/`}>{events[i]["title"]}</MenuItem>
+            ))
+            :
+            <MenuItem disabled value="">{errorMsg}</MenuItem>
+          }
+        </Select>
+      </FormControl>
+    )
+  }
 
   submitProject = () => {
     const { projectTitle, projectDescription, projectRequirements, collaborators,
-      isPublic, projectState, projectType, dueDate } = this.state;      /* members [] for now */
+      isPublic, projectState, projectType, dueDate, event } = this.state;      /* members [] for now */
     if (projectTitle === "" || projectDescription === "" || projectRequirements === "" || collaborators === []
-      || projectState === "" || projectType === "") {
+      ) {
       this.setState({ message: Messages.emptyFieldError, messageType: AlertTypes.Warning }, () => {
         this.handleSnackbarOpen();
       });
@@ -175,16 +235,23 @@ export default class CreateProjectPage extends Component {
       requirements: projectRequirements,
       members: collaborators,
       is_public: isPublic,
-      state: projectState,
-      project_type: projectType,
+      // state: projectState,
+      // project_type: projectType,
       due_date: dueDate
     };
+    if(projectType !== "" )
+      project.project_type = projectType;
+    if(event !== "")
+      project.events = [event]
+    if (projectState !== "")
+      project.state = projectState
+
     axios.post(`${config.API_URL}${config.Create_Project_Url}`, project, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         console.log(res.data)
         this.setState({ success: true, message: Messages.projectCreationSuccess, messageType: AlertTypes.Success }, () => {
           this.handleSnackbarOpen();
-          setTimeout(() => { this.props.history.push(config.Homepage_Path); }, 1500);
+          setTimeout(() => { this.props.history.push(config.Homepage_Path); }, 5000);
         });
 
       }, (error) => {
@@ -198,6 +265,7 @@ export default class CreateProjectPage extends Component {
 
   render() {
     const { isPublic, projectType, projectState } = this.state;
+    console.log(this.state)
     return (
       <Container>
         <PrimarySearchAppBar />
@@ -242,19 +310,6 @@ export default class CreateProjectPage extends Component {
           </div>
           <div style={rightDiv}>
             <div>
-              {/* <TextField
-                type="text"
-                error=""
-                label="Type"
-                onChange={this.handleTypeChange}
-                defaultValue=""
-                helperText="Type of the Project"
-                variant="filled"
-                style={width}
-              /> */}
-
-            </div>
-            <div>
               <TextField
                 style={width}
                 type="text"
@@ -269,29 +324,6 @@ export default class CreateProjectPage extends Component {
                 variant="filled" />
             </div>
             <div style={{ marginBottom: "10px" }}>
-              {/* <TextField
-                type="text"
-                label="Project State"
-                onChange={this.handleProjectStateChange}
-                defaultValue=""
-                placeholder=""
-                multiline
-                style={width}
-                variant="filled" /> */}
-
-              {/* 
-                <InputLabel style={{ marginLeft: "12px" }} id="projectState">Project State</InputLabel>
-                <Select
-                  style={{ minWidth: "120px", marginLeft: "12px", marginTop: "10px" }}
-                  value={projectState}
-                  onChange={this.handleProjectStateChange}
-                  labelId="projectState"
-                >
-                  <MenuItem value={projectStates.seekingForCollab}>Seeking For Collaborators</MenuItem>
-                  <MenuItem value={projectStates.openForCollab}>Open for Collaboration</MenuItem>
-                  <MenuItem value={projectStates.inProg}>In Progress</MenuItem>
-                  <MenuItem value={projectStates.done}>Done</MenuItem>
-                </Select> */}
               <FormControl>
                 <InputLabel style={{ marginLeft: "12px" }} id="projectState">Project State</InputLabel>
                 <Select
@@ -306,8 +338,6 @@ export default class CreateProjectPage extends Component {
                   <MenuItem value={projectStates.done}>Done</MenuItem>
                 </Select>
               </FormControl>
-
-
             </div>
             <div style={{ marginBottom: "10px" }}>
               <FormControl>
@@ -337,11 +367,15 @@ export default class CreateProjectPage extends Component {
                   <MenuItem value={projectTypes.journal}>Journal</MenuItem>
                 </Select>
               </FormControl>
+              {this.renderEvents()}
             </div>
             <Button color="primary" variant="contained" style={{ marginTop: "20px" }} onClick={this.submitProject}>Create Project</Button>
 
           </div>
-          {/* <TextField
+
+          
+          {/* TODO
+           <TextField
                 type="text"
                 label="Collaborators"
                 onChange={this.handleCollaboratorChange}

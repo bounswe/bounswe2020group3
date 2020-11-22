@@ -17,21 +17,20 @@ interface RegisterContract {
     interface View : BaseView<Presenter> {
         fun showLoading()
         fun hideLoading()
-        fun navigateToLogin()
         fun showInfoToast(message: String = "Info")
         fun showErrorToast(message: String = "Error")
         fun showToast(message: String)
+        fun navigatetologin()
     }
 
 
 
     interface Model {
-        fun register(register : Register): Call<Register>
+        fun register(register : Register): Single<Register>
     }
 
     interface RegisterService {
         @POST("/api/register/")
-        @FormUrlEncoded
-        fun register(@Body register : Register): Call<Register>
+        fun register(@Body register : Register): Single<Register>
     }
 }

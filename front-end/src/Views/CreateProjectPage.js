@@ -118,8 +118,8 @@ export default class CreateProjectPage extends Component {
       projectRequirements: "",
       dueDate: format(new Date(), 'yyyy-MM-dd'),
       projectState: "",
-      // collaborator: ,
-      collaborators: [this.getSelfProfile()],
+      // collaborator: "",
+      collaborators: [this.getSelfProfile()],  //Other members to be added later TODO
       date: null,
       isPublic: true
 
@@ -243,19 +243,6 @@ export default class CreateProjectPage extends Component {
           </div>
           <div style={rightDiv}>
             <div>
-              {/* <TextField
-                type="text"
-                error=""
-                label="Type"
-                onChange={this.handleTypeChange}
-                defaultValue=""
-                helperText="Type of the Project"
-                variant="filled"
-                style={width}
-              /> */}
-
-            </div>
-            <div>
               <TextField
                 style={width}
                 type="text"
@@ -270,29 +257,6 @@ export default class CreateProjectPage extends Component {
                 variant="filled" />
             </div>
             <div style={{ marginBottom: "10px" }}>
-              {/* <TextField
-                type="text"
-                label="Project State"
-                onChange={this.handleProjectStateChange}
-                defaultValue=""
-                placeholder=""
-                multiline
-                style={width}
-                variant="filled" /> */}
-
-              {/* 
-                <InputLabel style={{ marginLeft: "12px" }} id="projectState">Project State</InputLabel>
-                <Select
-                  style={{ minWidth: "120px", marginLeft: "12px", marginTop: "10px" }}
-                  value={projectState}
-                  onChange={this.handleProjectStateChange}
-                  labelId="projectState"
-                >
-                  <MenuItem value={projectStates.seekingForCollab}>Seeking For Collaborators</MenuItem>
-                  <MenuItem value={projectStates.openForCollab}>Open for Collaboration</MenuItem>
-                  <MenuItem value={projectStates.inProg}>In Progress</MenuItem>
-                  <MenuItem value={projectStates.done}>Done</MenuItem>
-                </Select> */}
               <FormControl>
                 <InputLabel style={{ marginLeft: "12px" }} id="projectState">Project State</InputLabel>
                 <Select
@@ -307,8 +271,6 @@ export default class CreateProjectPage extends Component {
                   <MenuItem value={projectStates.done}>Done</MenuItem>
                 </Select>
               </FormControl>
-
-
             </div>
             <div style={{ marginBottom: "10px" }}>
               <FormControl>
@@ -342,7 +304,10 @@ export default class CreateProjectPage extends Component {
             <Button color="primary" variant="contained" style={{ marginTop: "20px" }} onClick={this.submitProject}>Create Project</Button>
 
           </div>
-          {/* <TextField
+
+          
+          {/* TODO
+           <TextField
                 type="text"
                 label="Collaborators"
                 onChange={this.handleCollaboratorChange}

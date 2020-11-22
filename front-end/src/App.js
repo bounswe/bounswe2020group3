@@ -17,14 +17,11 @@ function App() {
       <ThemeProvider theme={theme}>
         <BrowserRouter history={history}>
           <Switch>
-            <Route exact path="/" component={HomePage} />
-            <Route path={config.Homepage_Path} component={HomePage} />
-            <Route path={config.Login_Path} component={LoginPage} />
-            <Route path={config.Register_Path} component={RegistrationPage} />
-            <AuthenticatedRoute path={config.Create_Project_Path} component={CreateProjectPage} />
-            {/* Left as an example for constructing an authenticated route */}
-            <AuthenticatedRoute path="/paperapi" component={LoginPage} />
-            <AuthenticatedRoute path={config.Event_Creation_Path} component={CreateEventPage} />
+            <AuthenticatedRoute exact path={config.Homepage_Path} component={HomePage} />
+            <Route exact path={config.Login_Path} component={LoginPage} />
+            <Route exact path={config.Register_Path} component={RegistrationPage} />
+            <AuthenticatedRoute exact path={config.Create_Project_Path} component={CreateProjectPage} />
+            <AuthenticatedRoute exact path={config.Event_Creation_Path} component={CreateEventPage} />
           </Switch>
         </BrowserRouter>
       </ThemeProvider>

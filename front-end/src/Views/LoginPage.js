@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import AlertTypes from '../Common/AlertTypes.json';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
-import { setCookie, setIdCookie } from '../Components/Auth/Authenticate';
+import { setCookie, setIdCookie, setPhotoCookie } from '../Components/Auth/Authenticate';
 
 
 const Messages = {
@@ -88,12 +88,20 @@ export default class LoginPage extends Component {
                     setCookie(token);
                     setIdCookie(user_id);
                     this.handleSnackbarOpen();
-                    setTimeout(() => { this.props.history.push(''); }, 1500);
+                    axios.get(`${config.API_URL}/api/users/${user_id}/`)
+                    .then(res => {
+                    let profile = res.data.profile
+                    if (profile && profile.photo_url) setPhotoCookie(profile.photo_url);
+                    })
+                    setTimeout(() => { this.props.history.push(config.Homepage_Path); }, 1500);
+                }, (error) =>{
+                    console.log(error, "while fetching photo");
                 });
                 console.log(res);
                 console.log(res.data);
             }, (error) => {
                 this.setState({ success: false, message: Messages.loginFail, messageType: AlertTypes.Error });
+                this.handleSnackbarOpen();
                 console.log(error);
             })
     }

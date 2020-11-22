@@ -8,6 +8,7 @@ interface ProjectContract {
     interface Presenter {
         fun setView(view: View)
         fun showMessage(message: String)
+        fun onDestroyed()
 
         fun created()
         fun fetchProject(projectId: Int)

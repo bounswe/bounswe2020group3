@@ -42,6 +42,7 @@ class ProjectMainFragment : Fragment(),ProjectMainContract.View, OnCardClickList
     override fun onDestroy() {
         super.onDestroy()
         resetProjectCardList()
+        this.presenter.onDestroyed()
         writeLogMessage("i",TAG,"ProjectMainFragment destroyed.")
     }
 

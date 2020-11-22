@@ -13,6 +13,7 @@ interface ProjectMainContract {
         fun setView(view: View)
         fun showMessage(message: String)
         fun created()
+        fun onDestroyed()
 
         fun fetchAllProjectsOfOwner(ownerId: Int)
         fun onViewProjectButtonClicked(item: ProjectCard, position: Int)

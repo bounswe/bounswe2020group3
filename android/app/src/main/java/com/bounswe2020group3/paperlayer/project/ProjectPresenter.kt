@@ -21,6 +21,10 @@ class ProjectPresenter : ProjectContract.Presenter {
         this.view.showToast(message)
     }
 
+    override fun onDestroyed() {
+        this.disposable.clear()
+    }
+
     override fun created() {
         this.view.writeLogMessage("i",TAG,"Project Presenter Created")
         this.view.resetProjectUI()

@@ -29,6 +29,10 @@ class ProjectMainPresenter: ProjectMainContract.Presenter {
         fetchAllProjectsOfOwner(3)
     }
 
+    override fun onDestroyed() {
+        disposable.clear()
+    }
+
     override fun showMessage(message: String) {
         this.view.showToast(message)
     }

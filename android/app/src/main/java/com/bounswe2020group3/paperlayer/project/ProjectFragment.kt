@@ -30,6 +30,7 @@ class ProjectFragment : Fragment(),ProjectContract.View {
 
     override fun onDestroy() {
         super.onDestroy()
+        this.presenter.onDestroyed()
         writeLogMessage("i",TAG,"ProjectFragment destroyed.")
     }
 

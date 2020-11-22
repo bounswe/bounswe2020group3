@@ -32,4 +32,4 @@ ADD . $ROOT
 
 EXPOSE 80
 
-CMD ["gunicorn", "--bind", ":8080", "backend.wsgi:application"]
+CMD ["gunicorn", "--bind", ":80", "backend.wsgi:application"]

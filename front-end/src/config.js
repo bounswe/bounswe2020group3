@@ -7,6 +7,9 @@ const config = {
   Login_Url : "/api/auth/",
   Register_Url : "/api/register/",
   Event_Creation_Path : "/create-event",
-  Event_Creation_Url : "/api/events/"
+  Event_Creation_Url : "/api/events/",
+  Create_Project_Path :"/create-project",
+  Create_Project_Url : "/api/projects/",
+  Homepage_Path: "/home"
 }
-export default config
+export default config;

@@ -178,6 +178,7 @@ export default class CreateProjectPage extends Component {
       state: projectState,
       project_type: projectType,
       due_date: dueDate
+      ///ADD EVENTS HERE
     };
     axios.post(`${config.API_URL}${config.Create_Project_Url}`, project, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {

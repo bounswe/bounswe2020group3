@@ -4,6 +4,8 @@ const config = {
   Login_Path : "/login",
   Register_Path: "/register",
   Login_Url : "/api/auth/",
-  Register_Url : "/api/register/"
+  Register_Url : "/api/register/",
+  Event_Creation_Path : "/create-event",
+  Event_Creation_Url : "/api/events/"
 }
 export default config

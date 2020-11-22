@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import AlertTypes from '../Common/AlertTypes.json';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
-import { setCookie } from '../Components/Auth/Authenticate';
+import { setCookie, setIdCookie } from '../Components/Auth/Authenticate';
 
 
 const Messages = {
@@ -83,8 +83,10 @@ export default class LoginPage extends Component {
             .then(res => {
                 console.log(res.data.token, "ASD")
                 let token = res.data.token;
+                let user_id = res.data.id;
                 this.setState({ success: true, message: Messages.loginSuccess, messageType: AlertTypes.Success }, () => {
                     setCookie(token);
+                    setIdCookie(user_id);
                     this.handleSnackbarOpen();
                     setTimeout(() => { this.props.history.push(''); }, 1500);
                 });

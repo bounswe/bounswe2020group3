@@ -69,6 +69,10 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         }
     }
 
+    override fun navigateToLogin() {
+        Navigation.findNavController(requireView()).navigate(R.id.navigateToLoginFromProfile)
+    }
+
     override fun showLoading() {
         progressBarProfile.visibility = View.VISIBLE
         layoutProfileDetail.visibility = View.GONE

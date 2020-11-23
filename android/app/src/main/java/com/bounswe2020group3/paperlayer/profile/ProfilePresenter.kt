@@ -9,6 +9,10 @@ class ProfilePresenter @Inject constructor(private var model: ProfileContract.Mo
 
     private var disposable = CompositeDisposable()
 
+    override fun bind(view: ProfileContract.View) {
+        super.bind(view)
+    }
+
     override fun unbind() {
         super.unbind()
         disposable.clear()
@@ -22,17 +26,21 @@ class ProfilePresenter @Inject constructor(private var model: ProfileContract.Mo
     }
 
     override fun loadUserProfile() {
-        Log.d("Dagger", "Profile Presenter: $model")
         view?.showLoading()
-        val fetchSub = model.fetchUserProfile().subscribe(
-                {
-                    view?.hideLoading()
-                },
-                {
-                    view?.hideLoading()
-                    view?.showErrorToast("An error occurred while fetching profile. Please try again.")
-                }
-        )
-        disposable.add(fetchSub)
+        try {
+            val fetchSub = model.fetchUserProfile().subscribe(
+                    {
+                        view?.hideLoading()
+                    },
+                    {
+                        view?.hideLoading()
+                        view?.showErrorToast("An error occurred while fetching profile. Please try again.")
+                    }
+            )
+            disposable.add(fetchSub)
+        } catch (e: Exception) {
+            view?.showErrorToast("Please log in first.")
+            view?.navigateToLogin()
+        }
     }
 }

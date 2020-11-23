@@ -18,6 +18,7 @@ interface ProfileContract {
         fun showInfoToast(message: String = "Info")
         fun showErrorToast(message: String = "Error")
         fun updateProfileUI(profile: Profile)
+        fun navigateToLogin()
     }
 
     interface Model {

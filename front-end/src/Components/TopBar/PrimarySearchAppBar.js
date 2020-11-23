@@ -4,17 +4,18 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
+// import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
+// import MenuIcon from '@material-ui/icons/Menu';
+// import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { Button } from '@material-ui/core';
+import logo from '../../navbarlogo.png';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -174,9 +175,10 @@ export default function PrimarySearchAppBar(props) {
           >
             <MenuIcon />
           </IconButton> */}
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography className={classes.title} style={{cursor:"pointer"}} variant="h6" noWrap>
             PaperLayer
           </Typography>
+          <img src={logo} style={{height:"50px", cursor:"pointer"}} alt="logo" />
           {/* <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />

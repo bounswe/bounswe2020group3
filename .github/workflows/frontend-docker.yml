@@ -1,0 +1,19 @@
+name: Docker Image CI
+
+on:
+  push:
+    paths: 
+      - 'front-end/**'
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: |
+        cd front-end
+        docker build . --file Dockerfile --tag paperlayer-frontend:$(date +%s)

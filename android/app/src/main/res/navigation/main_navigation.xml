@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.bounswe2020group3.paperlayer.main.MainFragment"
-        android:label="fragment_main"
+        android:label="PaperLayer"
         tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/navigateToLogin"
@@ -20,19 +20,66 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.bounswe2020group3.paperlayer.login.LoginFragment"
-        android:label="fragment_login"
+        android:label="Login"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/navigateToRegister"
             app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/navigateToProjectMainFromLogin"
+            app:destination="@id/projectMainFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.bounswe2020group3.paperlayer.register.RegisterFragment"
-        android:label="fragment_register"
+        android:label="Register"
         tools:layout="@layout/fragment_register" >
         <action
             android:id="@+id/navigateToLoginFromRegister"
             app:destination="@id/loginFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.bounswe2020group3.paperlayer.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/navigateToProfileEditFromProfile"
+            app:destination="@id/profileEditFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileEditFragment"
+        android:name="com.bounswe2020group3.paperlayer.profile.edit.ProfileEditFragment"
+        android:label="Edit Profile"
+        tools:layout="@layout/fragment_profile_edit" />
+
+    <fragment
+        android:id="@+id/projectFragment"
+        android:name="com.bounswe2020group3.paperlayer.project.ProjectFragment"
+        android:label="Project"
+        tools:layout="@layout/fragment_project" >
+        <argument
+            android:name="projectID"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/projectMainFragment"
+        android:name="com.bounswe2020group3.paperlayer.project.ProjectMainFragment"
+        android:label="Project Main"
+        tools:layout="@layout/fragment_project_main">
+        <action
+            android:id="@+id/navigateToProjectFromProjectMainFragment"
+            app:destination="@id/projectFragment"
+            />
+    </fragment>
+
 </navigation>

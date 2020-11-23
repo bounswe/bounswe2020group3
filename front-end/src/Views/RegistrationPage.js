@@ -1,27 +1,29 @@
 import React, { Component } from "react";
+import "../App.css"
 import axios from 'axios';
 import { styled } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Box from '@material-ui/core/Box';
 import AlertTypes from '../Common/AlertTypes.json';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
 import config from "../config";
+import Box from '@material-ui/core/Box';
+import { theme } from "../Common/ColorTheme";
+import Typography from '@material-ui/core/Typography';
 
 const Messages = {
     emptyFieldError: "Please Fill All Areas!",
     registerSuccess: "Registration Successful! You'll be redirected to login.",
-    somethingWrong : "Something Went Wrong!"
+    somethingWrong: "Something Went Wrong!",
+    emptyNameError: "Please enter your name and surname."
 
 }
-
-  const Container = styled(Box)({
-    background:"#7a96c2",
+const Container = styled(Box)({
+    // background: theme.palette.secondary.light,
+    background: "white",
     border: 0,
     borderRadius: 3,
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-    color: 'white',
     height: "100vh",
     width: "100%",
     margin: "auto",
@@ -29,10 +31,9 @@ const Messages = {
         margin: "10px",
         width: "30%",
         minWidth: "250px"
-      }
-  });
+    }
+});
 
-  
 export default class RegistrationPage extends Component {
 
     constructor(props) {
@@ -45,6 +46,9 @@ export default class RegistrationPage extends Component {
             success: null,
             message: "",
             messageType: "",
+            lastName: "",
+            middleName: "",
+            firstName: ""
         }
     }
 
@@ -69,25 +73,50 @@ export default class RegistrationPage extends Component {
     handleSnackbarOpen = () => {
         this.SnackbarRef.current.turnOnSnackbar();
     }
+    handleFirstName = event => {
+        this.setState({
+            firstName: event.target.value
+        })
+    }
+    handleMiddleName = event => {
+        this.setState({
+            middleName: event.target.value
+        })
+    }
+    handleLastName = event => {
+        this.setState({
+            lastName: event.target.value
+        })
+    }
 
     handleSubmit = (event) => {
-        const { username, email, password } = this.state;
+        const { username, email, password, firstName, lastName, middleName } = this.state;
         event.preventDefault()
-        if (username === ""|| email === "" || password === "" )
-        {
+        if (username === "" || email === "" || password === "") {
             console.log("open")
-            
-            this.setState({message: Messages.emptyFieldError, messageType:AlertTypes.Warning, password:""} , () => {
+
+            this.setState({ message: Messages.emptyFieldError, messageType: AlertTypes.Warning, password: "" }, () => {
                 this.handleSnackbarOpen();
             });
-            return ;     
-        } 
+            return;
+        }
+        if (firstName === "" || lastName === "") {
+            this.setState({ message: Messages.emptyNameError, messageType: AlertTypes.Warning }, () => {
+                this.handleSnackbarOpen();
+            });
+            return;
+        }
         const user = {
+            first_name: firstName,
+            middle_name: middleName,
+            last_name: lastName,
             username: username,
             email: email,
             password: password
+
+
         };
-        
+
         axios.post(`${config.API_URL}${config.Register_Url}`, user, { headers: { 'Content-Type': 'Application/json' } })
             .then(res => {
                 this.setState({ success: true, messageType: AlertTypes.Success, message: Messages.registerSuccess }, () => {
@@ -95,11 +124,11 @@ export default class RegistrationPage extends Component {
                 });
                 console.log(res);
                 console.log(res.data);
-                setTimeout(() => { this.props.history.push(config.Login_Path); }, 5000);    
+                setTimeout(() => { this.props.history.push(config.Login_Path); }, 5000);
 
 
             }, (error) => {
-                this.setState({ success: false, messageType:AlertTypes.Error, message: Messages.somethingWrong } , () =>{
+                this.setState({ success: false, messageType: AlertTypes.Error, message: Messages.somethingWrong }, () => {
                     this.handleSnackbarOpen();
                 });
                 console.log(error);
@@ -113,52 +142,90 @@ export default class RegistrationPage extends Component {
     }
 
     render() {
-            return (
-                <Container>
-                  <PrimarySearchAppBar loginNav={this.goToLogin}/>
-                    <form className="" onSubmit={this.handleSubmit}>
-                        <h3>Registration</h3>
-                        <div className="">
-                            <TextField
-                                error=""
-                                id="standard-error-helper-text"
-                                label="Username"
-                                onChange={this.handleUsername}
-                                defaultValue=""
-                                helperText=""
-                            />
-                        </div>
-                        <div className="">
-                            <TextField
-                                type="email"
-                                error=""
-                                id="standard-error-helper-text"
-                                label="Email"
-                                onChange={this.handleEmail}
-                                defaultValue=""
-                                helperText=""
-                            />
-                        </div>
+        console.log(theme.palette)
+        return (
+            <Container color="secondary">
+                <PrimarySearchAppBar loginNav={this.goToLogin} />
+                <form className="" onSubmit={this.handleSubmit}>
+                    <Typography variant="h5" color="primary">Registration</Typography>
+                    <div className="">
+                        <TextField
+                            color="primary"
+                            error=""
+                            id="standard-error-helper-text"
+                            label="Username"
+                            onChange={this.handleUsername}
+                            defaultValue=""
+                            helperText=""
+                        />
+                    </div>
+                    <div className="">
+                        <TextField
+                            color="primary"
+                            type="email"
+                            error=""
+                            id="standard-error-helper-text"
+                            label="Email"
+                            onChange={this.handleEmail}
+                            defaultValue=""
+                            helperText=""
+                        />
+                    </div>
+                    <div>
+                        <TextField
+                            type="text"
+                            error=""
+                            id="standard-error-helper-text"
+                            label="First Name"
+                            onChange={this.handleFirstName}
+                            defaultValue=""
+                            helperText=""
+                        />
+                    </div>
+                    <div>
+                        <TextField
+                            type="text"
+                            error=""
+                            id="standard-error-helper-text"
+                            label="Middle Name (optional)"
+                            onChange={this.handleMiddleName}
+                            defaultValue=""
+                            helperText=""
+                        />
+                    </div>
+                    <div>
+                        <TextField
+                            type="text"
+                            error=""
+                            id="standard-error-helper-text"
+                            label="Lastname"
+                            onChange={this.handleLastName}
+                            defaultValue=""
+                            helperText=""
+                        />
+                    </div>
+                    <div className="">
+                        <TextField
+                            color="primary"
+                            type="password"
+                            error=""
+                            id="standard-error-helper-text"
+                            label="Password"
+                            onChange={this.handlePassword}
+                            defaultValue=""
+                            helperText=""
+                        />
+                    </div>
 
-                        <div className="">
-                            <TextField
-                                type="password"
-                                error=""
-                                id="standard-error-helper-text"
-                                label="Password"
-                                onChange={this.handlePassword}
-                                defaultValue=""
-                                helperText=""
-                            />
-                        </div>
-                 
-                        <Button type="submit" variant="contained" color="primary" className="">Register</Button>
+                    <Button type="submit" variant="contained" color="primary" className=""   /*style={{color: "#c3fdff", backgroundColor:"#90caf9"}}*/ >Register</Button>
 
-                        <p className="">
+                    <p className="">
+                        <Typography variant="inherit" color="primary">
                             Already registered? <a href="/login">Login.</a>
-                        </p>
-                    </form>
-                    <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>
-                </Container>);
+                        </Typography>
+                    </p>
+                </form>
+                <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
+            </Container>);
     }
 }    

@@ -34,7 +34,7 @@ export const authenticate = async () => {
 }
 
 const redirectToLogin = () => {
-    window.location.replace(`http://localhost:3000${config.Login_Path}`);
+    window.location.href = config.Login_Path;
 }
 export const AuthenticatedRoute = ({
     component: Component,

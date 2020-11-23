@@ -10,7 +10,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.login.LoginPresenter
+import javax.inject.Inject
 
 
 private const val TAG = "ProjectMainFragment"
@@ -18,9 +21,12 @@ private const val TAG = "ProjectMainFragment"
 class ProjectMainFragment : Fragment(),ProjectMainContract.View, OnCardClickListener {
 
     //Presenter object
-    private lateinit var presenter: ProjectMainPresenter
+    @Inject
+    lateinit var presenter: ProjectMainPresenter
+
     //View object
     private lateinit var fragmentView: View
+
     //Adapter Object
     private lateinit var projectAdapter: ProjectAdapter
 
@@ -31,18 +37,18 @@ class ProjectMainFragment : Fragment(),ProjectMainContract.View, OnCardClickList
     //Project Card List
     private val projectCardList=ArrayList<ProjectCard>()
 
-    /*
-    * Creates LoginPresenter Object and setView
-    * */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        this.presenter= ProjectMainPresenter()
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (context as MainActivity).getAppComponent().inject(this)
+        mContext=context
     }
 
     override fun onDestroy() {
         super.onDestroy()
         resetProjectCardList()
-        this.presenter.onDestroyed()
+        this.presenter.unbind()
         writeLogMessage("i",TAG,"ProjectMainFragment destroyed.")
     }
 
@@ -53,18 +59,16 @@ class ProjectMainFragment : Fragment(),ProjectMainContract.View, OnCardClickList
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_project_main, container, false)
         this.fragmentView=view
-        //this.recyclerView=fragment_view.recyclerViewProjects
         initRecyclerView()
         resetProjectCardList()
-        this.presenter.setView(this)
-        this.presenter.created()
+        this.presenter.bind(this)
         writeLogMessage("i",TAG,"ProjectMainFragment view created")
         return view
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mContext=context
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        presenter.subscribeAuthToken()
     }
 
     override fun getLayout(): View {

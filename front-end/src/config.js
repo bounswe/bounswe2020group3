@@ -8,6 +8,8 @@ const config = {
   Event_Creation_Url : "/api/events/",
   Create_Project_Path :"/create-project",
   Create_Project_Url : "/api/projects/",
-  Homepage_Path: "/"
+  Homepage_Path: "/",
+  Projectpage_Path: "/project",
+  Projectpage_url: "/api/projects/"
 }
 export default config;

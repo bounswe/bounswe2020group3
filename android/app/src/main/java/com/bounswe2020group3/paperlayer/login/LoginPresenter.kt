@@ -2,6 +2,7 @@ package com.bounswe2020group3.paperlayer.login
 
 
 import android.util.Log
+import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.login.data.UserCredentials
@@ -55,9 +56,10 @@ class LoginPresenter @Inject constructor(private var model: LoginContract.Model)
         val getTokenObservable = model.authLogin(userCredentials).subscribe(
                 { token ->
                     this.view?.writeLogMessage("i", TAG, "Authentication Successful.")
-                    this.view?.writeLogMessage("i", TAG, "Token: " + token.token)
+                    this.view?.writeLogMessage("i", TAG, "Token: " + token.token+" id: "+token.id)
+                    val bundle = bundleOf("ownerID" to token.id )
                     //Navigation must be changed to profile page after profile page created
-                    this.view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectMainFromLogin) }
+                    this.view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectMainFromLogin,bundle) }
                 },
                 { error ->
                     this.view?.writeLogMessage("e", TAG, "Error in authentication")

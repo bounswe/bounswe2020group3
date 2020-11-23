@@ -10,6 +10,9 @@ const config = {
   Create_Project_Url : "/api/projects/",
   Homepage_Path: "/",
   Projectpage_Path: "/project",
-  Projectpage_url: "/api/projects/"
+  Projectpage_url: "/api/projects/",
+  Profilepage_url: "/api/profiles/",
+  User_Path: "/api/users/",
+  Event_Path: "/events"
 }
 export default config;

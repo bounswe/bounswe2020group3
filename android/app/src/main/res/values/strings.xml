@@ -38,4 +38,18 @@
     <string name="project_due_date_title">Due Date</string>
     <string name="project_state_title">Project State</string>
     <string name="project_description_title">Project Description</string>
+    <string name="title_create_project">Create Project</string>
+    <string name="project_name">Project Name</string>
+    <string name="project_description">Project Description</string>
+    <string name="requirements">Requirements</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="text_create">CREATE</string>
+    <string name="project_due_date">Project Due Date</string>
+    <string name="project_type">Project Type :</string>
+    <string name="project_state">Project State :</string>
+    <string name="public_project">Public project?</string>
+    <string name="please_select_date">Please select date..</string>
+    <string name="date">Date</string>
+    <string name="project_successfully_created">Project successfully created!</string>
 </resources>

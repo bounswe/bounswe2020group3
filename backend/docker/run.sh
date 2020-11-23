@@ -6,4 +6,4 @@ echo "Migrate database..."
 python manage.py migrate
 
 echo "Start debug server with live reload"
-exec python manage.py runserver 0.0.0.0:80
+exec gunicorn backend.wsgi --bind=0.0.0.0:80

@@ -8,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.login.LoginPresenter
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_project_main.*
 
 
 private const val TAG = "ProjectMainFragment"
@@ -69,6 +71,10 @@ class ProjectMainFragment : Fragment(),ProjectMainContract.View, OnCardClickList
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.subscribeAuthToken()
+
+        buttonAddProject.setOnClickListener {
+            presenter.onNewProjectButtonClicked()
+        }
     }
 
     override fun getLayout(): View {

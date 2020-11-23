@@ -21,6 +21,7 @@ interface ProjectMainContract {
         fun fetchAllProjectsOfOwner(ownerId: Int)
         fun onViewProjectButtonClicked(item: ProjectCard, position: Int)
         fun onEditProjectButtonClicked(item: ProjectCard, position: Int)
+        fun onNewProjectButtonClicked()
     }
 
     interface View: Mvp.View{

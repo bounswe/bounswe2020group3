@@ -18,6 +18,7 @@ import { Button } from '@material-ui/core';
 import { logout } from "../Auth/Authenticate";
 import Avatar from '@material-ui/core/Avatar';
 import { getPhoto } from "../Auth/Authenticate";
+import logo from '../../navbarlogo.png';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -181,6 +182,7 @@ export default function UserNavbar(props) {
           <Typography className={classes.title} style={{cursor:"pointer"}} variant="h6" noWrap onClick={() => {props.goHome()}}>
             PaperLayer
           </Typography>
+          <img src={logo} style={{height:"50px", cursor:"pointer"}} alt="logo" onClick={() => {props.goHome()}} />
           {/* <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />

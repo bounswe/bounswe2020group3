@@ -15,6 +15,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { Button } from '@material-ui/core';
+import logo from '../../navbarlogo.png';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -174,9 +175,10 @@ export default function PrimarySearchAppBar(props) {
           >
             <MenuIcon />
           </IconButton> */}
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography className={classes.title} style={{cursor:"pointer"}} variant="h6" noWrap>
             PaperLayer
           </Typography>
+          <img src={logo} style={{height:"50px", cursor:"pointer"}} alt="logo" />
           {/* <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />

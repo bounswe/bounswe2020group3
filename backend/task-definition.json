@@ -31,7 +31,32 @@
       "dnsServers": null,
       "mountPoints": [],
       "workingDirectory": null,
-      "secrets": null,
+      "secrets": [
+        {
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:190425834924:secret:EnvironmentVars-tJG4Jy:DB_ADDRESS::",
+          "name": "DB_ADDRESS"
+        },
+        {
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:190425834924:secret:EnvironmentVars-tJG4Jy:DB_NAME::",
+          "name": "DB_NAME"
+        },
+        {
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:190425834924:secret:EnvironmentVars-tJG4Jy:DB_PASSWORD::",
+          "name": "DB_PASSWORD"
+        },
+        {
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:190425834924:secret:EnvironmentVars-tJG4Jy:DB_PORT::",
+          "name": "DB_PORT"
+        },
+        {
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:190425834924:secret:EnvironmentVars-tJG4Jy:DB_USER::",
+          "name": "DB_USER"
+        },
+        {
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:190425834924:secret:EnvironmentVars-tJG4Jy:DJANGO_ENV::",
+          "name": "DJANGO_ENV"
+        }
+      ],
       "dockerSecurityOptions": null,
       "memory": null,
       "memoryReservation": 512,

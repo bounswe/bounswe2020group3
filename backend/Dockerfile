@@ -32,4 +32,6 @@ ADD . $ROOT
 
 EXPOSE 80
 
-CMD ["gunicorn", "--bind", ":80", "backend.wsgi:application"]
+RUN chmod +x ./docker/run.sh
+
+CMD ["./docker/run.sh"]

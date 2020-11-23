@@ -70,7 +70,6 @@ class ProjectMainFragment : Fragment(),ProjectMainContract.View, OnCardClickList
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.subscribeAuthToken()
 
         buttonAddProject.setOnClickListener {
             presenter.onNewProjectButtonClicked()

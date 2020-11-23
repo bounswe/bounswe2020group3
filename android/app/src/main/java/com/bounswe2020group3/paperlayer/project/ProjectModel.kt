@@ -3,7 +3,7 @@ package com.bounswe2020group3.paperlayer.project
 
 import com.bounswe2020group3.paperlayer.login.data.AuthToken
 import com.bounswe2020group3.paperlayer.project.data.Project
-import com.bounswe2020group3.paperlayer.util.SessionManager
+import com.bounswe2020group3.paperlayer.util.Session
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -12,7 +12,7 @@ import io.reactivex.subjects.BehaviorSubject
 import retrofit2.Retrofit
 import javax.inject.Inject
 
-class ProjectModel @Inject constructor(private var sessionManager: SessionManager,retrofit: Retrofit):ProjectMainContract.Model,ProjectContract.Model{
+class ProjectModel @Inject constructor(private var sessionManager: Session,retrofit: Retrofit):ProjectMainContract.Model,ProjectContract.Model{
 
     private var projectService: ProjectMainContract.ProjectService = retrofit.create(ProjectMainContract.ProjectService::class.java)
 

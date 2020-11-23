@@ -38,6 +38,7 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectMainCon
     }
 
     override fun subscribeAuthToken() {
+        this.view?.writeLogMessage("i",TAG, "##1##")
         val userProfileSub = model.getAuthToken().subscribe { token ->
             fetchAllProjectsOfOwner(token.id)
         }

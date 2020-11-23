@@ -120,7 +120,7 @@ export default class HomePage extends Component {
               {/* {this.renderFeed()} */}
                
                   {/* <Paper> */}
-                <img src={homeImage} style={{ width: "80%", marginTop:"50px" }} />
+                <img src={homeImage} alt="" style={{ width: "80%", marginTop:"50px" }} />
               {/* </Paper>  */}
              </Grid> 
             <Grid item sm={4} >

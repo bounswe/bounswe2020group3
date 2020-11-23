@@ -1,15 +1,13 @@
 package com.bounswe2020group3.paperlayer.project
 
+import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import io.reactivex.disposables.CompositeDisposable
+import javax.inject.Inject
 
 private const val TAG = "ProjectPresenter"
 
-class ProjectPresenter : ProjectContract.Presenter {
+class ProjectPresenter  @Inject constructor(private var model: ProjectContract.Model) : BasePresenter<ProjectContract.View>(),ProjectContract.Presenter {
 
-    //Project Fragment view
-    private lateinit var view: ProjectContract.View
-    //Model for fetch data
-    private var model: ProjectContract.Model = ProjectModel()
     //Disposable
     private var disposable = CompositeDisposable()
 
@@ -18,28 +16,30 @@ class ProjectPresenter : ProjectContract.Presenter {
     }
 
     override fun showMessage(message: String) {
-        this.view.showToast(message)
+        this.view?.showToast(message)
     }
 
-    override fun onDestroyed() {
-        this.disposable.clear()
+    override fun bind(view: ProjectContract.View) {
+        super.bind(view)
+        this.view?.writeLogMessage("i",TAG,"Project Presenter Created")
+        this.view?.resetProjectUI()
     }
 
-    override fun created() {
-        this.view.writeLogMessage("i",TAG,"Project Presenter Created")
-        this.view.resetProjectUI()
+    override fun unbind() {
+        super.unbind()
+        disposable.clear()
     }
 
     //Fetch project and update ui
     override fun fetchProject(projectId: Int) {
-        this.view.writeLogMessage("i",TAG,"Fetching the project...")
+        this.view?.writeLogMessage("i",TAG,"Fetching the project...")
         val getProjectObservable = model.getProject(projectId).subscribe(
                 { project ->
-                    this.view.writeLogMessage("i",TAG,"Fetching Successful.")
-                    this.view.updateProjectUI(project)
+                    this.view?.writeLogMessage("i",TAG,"Fetching Successful.")
+                    this.view?.updateProjectUI(project)
                 },
                 { error ->
-                    this.view.writeLogMessage("e",TAG,"Error in fetching project")
+                    this.view?.writeLogMessage("e",TAG,"Error in fetching project")
                 }
         )
         disposable.add(getProjectObservable)

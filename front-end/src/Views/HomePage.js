@@ -1,105 +1,123 @@
 import React, { Component } from "react";
+import axios from 'axios';
 import config from '../config';
 import { Button, styled } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
-import UserNavbar from '../Components/TopBar/UserNavbar';
+import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import { theme } from "../Common/ColorTheme";
-
-// const errorMessages = {
-//     emptyFieldError: "Please Fill All Areas!"
-// }
+import Typography from "@material-ui/core/Typography";
+import UserNavbar from '../Components/TopBar/UserNavbar';
 
 const Container = styled(Box)({
-  background: theme.palette.primary.main,
-  border: 0,
-  borderRadius: 3,
-  boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-  color: 'white',
-  height: "100vh",
-  width: "100%",
-  margin: "auto",
-  '& .MuiTextField-root': {
-    margin: "10px",
-    width: "30%",
-    minWidth: "250px"
-  }
-});
+    background: "white",
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: 'white',
+    height: "100vh",
+    width: "100%",
+    margin: "auto",
+    '& .MuiTextField-root': {
+        margin: "10px",
+        width: "30%",
+        minWidth: "250px"
+      }
+  });
 
 export default class HomePage extends Component {
-  constructor(props) {
-    super(props);
-    this.SnackbarRef = React.createRef();
-    this.state = {
-      success: null,
-      message: "",
-      messageType: ""
+    constructor(props) {
+        super(props);
+        this.SnackbarRef = React.createRef();
+        this.state = {
+            message: "",
+            messageType: "",
+            projects:[],
+            events:[]
+        }
+    };
+
+    handleSnackbarOpen = () => {
+        this.SnackbarRef.current.turnOnSnackbar();
+    };
+    goToLogin = () => {
+        this.props.history.push(config.Login_Path);
+    };
+    goToRegister = () => {
+        this.props.history.push(config.Register_Path);
+    };
+    goToProjectCreation = () => {
+      this.props.history.push(config.Create_Project_Path);
+    };
+    goToEventCreation = () => {
+      this.props.history.push(config.Event_Creation_Path);
+    };
+    goToProject = (pid) => {
+      this.props.history.push(config.Projectpage_Path+"/"+pid);
+    };
+    goToEvent = (eid) => {
+      this.props.history.push(config.Event_Path+"/"+eid);
+    };
+
+    componentDidMount() {
+      axios.get(`${config.API_URL}${config.Create_Project_Url}`, { headers:{'Content-Type':'Application/json'}})
+        .then(res => {
+          const projects = res.data;
+          console.log(projects);
+          this.setState({ projects:projects });
+        });
+      axios.get(`${config.API_URL}${config.Event_Creation_Url}`, { headers:{'Content-Type':'Application/json'}})
+        .then(res => {
+          this.setState({ events:res.data });
+        });
     }
-  };
 
+    renderProject(){
+      var projects = this.state.projects;
+      return projects.map((item) => {return (<Grid item><Button onClick={()=> this.goToProject(item.id)}>{item.name}</Button></Grid>)});
+    };
+    renderFeed(){
+      var news = [];
+      return news.map((item) => {return (<p>{item}</p>)});
+    };
+    renderEvents(){
+      var events = this.state.events;
+      console.log("events is:",events);
+      return events.map((item) => {return (<Grid item><Button onClick={()=> this.goToEvent(item.id)}>{item.title}</Button></Grid>)});
+    };
 
-  handleSnackbarOpen = () => {
-    this.SnackbarRef.current.turnOnSnackbar();
-  };
-  goToLogin = () => {
-    this.props.history.push(config.Login_Path);
-  };
-  goToProjectCreation = () => {
-    this.props.history.push(config.Create_Project_Path);
-  };
-
-  renderProject() {
-    var projects = ["ML", "AI", "DL"];
-    return projects.map((item) => { return (<p>{item}</p>) });
-  };
-  renderFeed() {
-    var news = ["alpha", "beta", "gama", "delta", "epsilon", "zeta"];
-    return news.map((item) => { return (<p>{item}</p>) });
-  };
-  renderEvents() {
-    var events = ["Hackathon number one", "Hackathon number two", "Hackathon number three"];
-    return events.map((item) => { return (<p>{item}</p>) });
-  };
-
-  render() {
-    if (!this.state.success) {
+    render() {
       return (
         <Container>
-          <UserNavbar
+        <UserNavbar
             logout={() => { this.props.history.push(config.Login_Path) }}
             pushProfile={() => { this.props.history.push("/profile") }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
           />
-          <h1> Home Page </h1>
-          <div class="row">
-            <div class="column left">
-              <h2> Projects </h2>
-              <Paper>
-                {this.renderProject()}
-
+          <Typography variant="h4" color="primary">Home Page</Typography>
+          <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline">
+            <Grid item sm={3} >
+              <Typography variant="h5" color="primary">Projects</Typography>
+              <Paper style={{minHeight: "250px"}} elevation={6}>
+              {this.renderProject()}
               </Paper>
               <Button variant="contained" color="primary" className="" onClick={this.goToProjectCreation}>Create a Project</Button>
-            </div>
-            <div class="column middle">
-              <h2> Feeds </h2>
-              <Paper>
-                {this.renderFeed()}
+            </Grid>
+            <Grid item sm={6} >
+              <Typography variant="h5" color="primary">Feed</Typography>
+              <Paper style={{minHeight: "350px"}} elevation={6}>
+              {this.renderFeed()}
               </Paper>
-            </div>
-            <div class="column right">
-              <h2> Upcoming Events </h2>
-              <Paper>
-                {this.renderEvents()}
+            </Grid>
+            <Grid item sm={3} >
+              <Typography variant="h5" color="primary">Upcoming Events</Typography>
+              <Paper style={{minHeight: "250px"}} elevation={6}>
+              {this.renderEvents()}
               </Paper>
-            </div>
-          </div>
-          <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
+              <Button variant="contained" color="primary" onClick={this.goToEventCreation}>Create an Event</Button>
+            </Grid>
+          </Grid>
+          <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>
         </Container>);
     }
-    else
-      return (<p style={{ color: "green", textAlign: "center", fontWeight: "bold", fontSize: 25, fontFamily: 'Fira Sans' }}>Registration is completed !</p>);
-
-  }
-
 }

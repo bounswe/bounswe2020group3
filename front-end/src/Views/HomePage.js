@@ -74,7 +74,7 @@ export default class HomePage extends Component {
 
     renderProject(){
       var projects = this.state.projects;
-      return projects.map((item) => {return (<Grid item><Button onClick={()=> this.goToProject(item.id)}>{item.name}</Button></Grid>)});
+      return projects.map((item) => {return (<Grid item><Button variant="outlined" color="primary" style={{width:"100%"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Button></Grid>)});
     };
     renderFeed(){
       var news = [];
@@ -83,7 +83,7 @@ export default class HomePage extends Component {
     renderEvents(){
       var events = this.state.events;
       console.log("events is:",events);
-      return events.map((item) => {return (<Grid item><Button onClick={()=> this.goToEvent(item.id)}>{item.title}</Button></Grid>)});
+      return events.map((item) => {return (<Grid item><Button variant="outlined" color="primary" style={{width:"100%"}} onClick={()=> this.goToEvent(item.id)}>{item.title}</Button></Grid>)});
     };
 
     render() {
@@ -96,12 +96,14 @@ export default class HomePage extends Component {
           />
           <Typography variant="h4" color="primary">Home Page</Typography>
           <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline">
-            <Grid item sm={3} >
+            <Grid  item sm={3} >
+              <Grid style={{maxHeight:"75vh", overflowY:"scroll"}} item sm={12}>
               <Typography variant="h5" color="primary">Projects</Typography>
               <Paper style={{minHeight: "250px"}} elevation={6}>
               {this.renderProject()}
               </Paper>
-              <Button variant="contained" color="primary" className="" onClick={this.goToProjectCreation}>Create a Project</Button>
+              </Grid>
+              <Button variant="contained" color="primary" style={{marginTop:"10px"}} onClick={this.goToProjectCreation}>Create a Project</Button>
             </Grid>
             <Grid item sm={6} >
               <Typography variant="h5" color="primary">Feed</Typography>
@@ -110,11 +112,13 @@ export default class HomePage extends Component {
               </Paper>
             </Grid>
             <Grid item sm={3} >
+            <Grid style={{maxHeight:"75vh", overflowY:"scroll"}} item sm={12}>
               <Typography variant="h5" color="primary">Upcoming Events</Typography>
               <Paper style={{minHeight: "250px"}} elevation={6}>
               {this.renderEvents()}
               </Paper>
-              <Button variant="contained" color="primary" onClick={this.goToEventCreation}>Create an Event</Button>
+              </Grid>
+              <Button variant="contained" color="primary" style={{marginTop:"10px"}} onClick={this.goToEventCreation}>Create an Event</Button>
             </Grid>
           </Grid>
           <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>

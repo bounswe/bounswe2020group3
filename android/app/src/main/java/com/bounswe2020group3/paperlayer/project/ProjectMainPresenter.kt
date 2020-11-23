@@ -20,7 +20,7 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectMainCon
     override fun bind(view: ProjectMainContract.View) {
         super.bind(view)
         this.view?.writeLogMessage("i",TAG,"Project Main Presenter Created")
-        subscribeAuthToken()
+        //subscribeAuthToken()
     }
 
     override fun unbind() {

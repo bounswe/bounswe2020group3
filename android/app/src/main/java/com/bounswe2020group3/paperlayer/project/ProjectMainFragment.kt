@@ -64,6 +64,17 @@ class ProjectMainFragment : Fragment(),ProjectMainContract.View, OnCardClickList
         initRecyclerView()
         resetProjectCardList()
         this.presenter.bind(this)
+
+        //Getting bundle arguments
+        var ownerID = arguments?.getInt("ownerID")
+        if (ownerID != null) {
+            this.presenter. fetchAllProjectsOfOwner(ownerID) //fetch project and update ui
+        }
+        else{
+            writeLogMessage("e",TAG,"ownerID null")
+        }
+
+
         writeLogMessage("i",TAG,"ProjectMainFragment view created")
         return view
     }

@@ -7,7 +7,7 @@ import javax.inject.Inject
 class SessionManager @Inject constructor(): Session {
 
     private var authToken: BehaviorSubject<AuthToken> = BehaviorSubject.create()
-
+    
     override fun getToken() = authToken
 
     override fun setToken(token: AuthToken) {

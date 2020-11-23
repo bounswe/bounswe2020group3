@@ -4,12 +4,13 @@ import android.util.Log
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import com.bounswe2020group3.paperlayer.profile.ProfileContract
 import com.bounswe2020group3.paperlayer.profile.data.Profile
+import com.bounswe2020group3.paperlayer.profile.data.User
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class ProfileEditPresenter @Inject constructor(private var model: ProfileContract.Model) : BasePresenter<ProfileEditContract.View>(), ProfileEditContract.Presenter {
 
-    private var userProfileData: Profile? = null
+    private var userData: User? = null
 
     private var disposable = CompositeDisposable()
 
@@ -18,37 +19,43 @@ class ProfileEditPresenter @Inject constructor(private var model: ProfileContrac
         disposable.clear()
     }
 
-    override fun getUserProfileData(): Profile? {
-        return this.userProfileData
-    }
-
-    override fun subscribeUserProfile() {
-        val userProfileSub = model.getUserProfile().subscribe { profile ->
-            view?.updateProfileUI(profile)
-            this.userProfileData = profile
+    override fun subscribeUser() {
+        val userSub = model.getUser().subscribe { user ->
+            view?.updateProfileUI(user)
+            this.userData = user
         }
-        disposable.add(userProfileSub)
+        disposable.add(userSub)
     }
 
-    override fun loadUserProfile() {
+    override fun loadUser() {
         Log.d("Dagger", "Profile Presenter: $model")
         view?.showLoading()
-        val fetchSub = model.fetchUserProfile().subscribe(
-                {
-                    view?.hideLoading()
-                },
-                {
-                    view?.hideLoading()
-                    view?.showErrorToast("An error occurred while fetching profile. Please try again.")
-                }
-        )
-        disposable.add(fetchSub)
+        try {
+            val fetchSub = model.fetchUser().subscribe(
+                    {
+                        view?.hideLoading()
+                    },
+                    {
+                        view?.hideLoading()
+                        view?.showErrorToast("An error occurred while fetching profile. Please try again.")
+                    }
+            )
+            disposable.add(fetchSub)
+        } catch (e: Exception) {
+
+        }
+
+        view?.showLoading()
+    }
+
+    override fun getUserData(): User? {
+        return this.userData
     }
 
     override fun updateProfile(updatedProfile: Profile) {
         val getProfileObservable = model.updateUserProfile(updatedProfile).subscribe(
                 { profile ->
-                    view?.updateProfileUI(profile)
+                    view?.updateProfileUIWithProfile(profile)
                     view?.navigateBack()
                     view?.showInfoToast("Profile is updated.")
                 },

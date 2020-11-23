@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.profile.data.Profile
+import com.bounswe2020group3.paperlayer.profile.data.User
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
@@ -36,7 +36,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter.subscribeUserProfile()
+        presenter.subscribeUser()
 
         imageButtonSettings.setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToProfileEditFromProfile)
@@ -45,7 +45,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override fun onResume() {
         super.onResume()
-        presenter.loadUserProfile()
+        presenter.loadUser()
     }
 
     override fun onDestroy() {
@@ -53,9 +53,11 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         presenter.unbind()
     }
 
-    override fun updateProfileUI(profile: Profile) {
+    override fun updateProfileUI(user: User) {
+        val profile = user.profile[0]
         val fullName = "${profile.name} ${profile.lastName}"
 
+        textViewEmail.text = user.email
         textViewFullName.text = fullName
         textViewBio.text = profile.bio
         textViewAge.text = profile.age.toString()

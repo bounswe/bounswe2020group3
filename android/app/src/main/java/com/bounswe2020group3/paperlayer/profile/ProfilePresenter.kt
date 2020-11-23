@@ -1,6 +1,5 @@
 package com.bounswe2020group3.paperlayer.profile
 
-import android.util.Log
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -18,17 +17,22 @@ class ProfilePresenter @Inject constructor(private var model: ProfileContract.Mo
         disposable.clear()
     }
 
-    override fun subscribeUserProfile() {
-        val userProfileSub = model.getUserProfile().subscribe { profile ->
-            view?.updateProfileUI(profile)
-        }
+    override fun subscribeUser() {
+        val userProfileSub = model.getUser().subscribe(
+                { user ->
+                    view?.updateProfileUI(user)
+                },
+                {
+                    error -> view?.showErrorToast("Some error occured.")
+                }
+        )
         disposable.add(userProfileSub)
     }
 
-    override fun loadUserProfile() {
+    override fun loadUser() {
         view?.showLoading()
         try {
-            val fetchSub = model.fetchUserProfile().subscribe(
+            val fetchSub = model.fetchUser().subscribe(
                     {
                         view?.hideLoading()
                     },

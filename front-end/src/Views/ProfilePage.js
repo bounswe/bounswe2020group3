@@ -4,132 +4,107 @@ import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
-import UserNavbar from '../Components/TopBar/UserNavbar';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import config from "../config";
-
-
-// const errorMessages = {
-//     emptyFieldError: "Please Fill All Areas!"
-// }
+import Typography from "@material-ui/core/Typography";
+import { getUserId } from '../Components/Auth/Authenticate';
+import axios from 'axios';
+import config from '../config';
+import UserNavbar from '../Components/TopBar/UserNavbar';
 
 const Container = styled(Box)({
-  background: 'linear-gradient(90deg, rgba(0,151,255,1) 10%, rgba(0,151,255,1) 90%)',
-  border: 0,
-  borderRadius: 3,
-  boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-  color: 'white',
-  height: "100vh",
-  width: "100%",
-  margin: "auto",
-  '& .MuiTextField-root': {
-    margin: "10px",
-    width: "30%",
-    minWidth: "250px"
-  }
-});
+    background: "white",
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: 'white',
+    height: "100vh",
+    width: "100%",
+    margin: "auto",
+    '& .MuiTextField-root': {
+        margin: "10px",
+        width: "30%",
+        minWidth: "250px"
+      }
+  });
 
 export default class HomePage extends Component {
-  constructor(props) {
-    super(props);
-    this.SnackbarRef = React.createRef();
-    this.state = {
-      success: null,
-      message: "",
-      messageType: ""
-    }
-  };
+    constructor(props) {
+        super(props);
+        this.SnackbarRef = React.createRef();
+        this.state = {
+            name:"",
+            middle_name:"",
+            last_name:"",
+            email:"",
+            img:"",
+            bio:"",
+            age:"",
+            expertise:"",
+            gender:"",
+            interests:""
+        }
+    };
 
+    componentDidMount() {
+      axios.get(`${config.API_URL}${config.Profilepage_url}?owner__id=${getUserId()}`, { headers:{'Content-Type':'Application/json'}})
+        .then(res => {
+          const prof = res.data[0];
+          this.setState({name:prof.name, middle_name:prof.middle_name, last_name:prof.last_name, bio:prof.bio, img:prof.photo_url, age:prof.age, expertise:prof.expertise, gender:prof.gender, interests:prof.interests});
+        })
+        axios.get(`${config.API_URL}${config.User_Path}${getUserId()}`, { headers:{'Content-Type':'Application/json'}})
+          .then(res => {
+            this.setState({email:res.data.email});
+          })
+    };
 
-  handleSnackbarOpen = () => {
-    this.SnackbarRef.current.turnOnSnackbar();
-  };
-  goToLogin = () => {
-    this.props.history.push("/login");
-  };
+    handleSnackbarOpen = () => {
+        this.SnackbarRef.current.turnOnSnackbar();
+    };
+    goToLogin = () => {
+        this.props.history.push("/login");
+    };
 
-  renderAreas() {
-    var areas = ["Machine Learning", "AI", "Deep Learning"];
-    return areas.map((item) => { return (<p>{item}</p>) });
-  };
-  renderBio() {
-    var bio = ["Ali Celal Şengör ( born 24 march 1955) is a turkish geologist."];
-    return bio.map((item) => { return (<p>{item}</p>) });
-  };
-  renderContacts() {
-    var contacts = ["Celalsengor1955@gmail.com"];
-    return contacts.map((item) => { return (<p>{item}</p>) });
-  };
-  renderComments() {
-    var comments = ["I worked with him", "Celal is a very diciplined and he learns fast"];
-    return comments.map((item) => { return (<p>{item}</p>) });
-  };
-  renderProfile() {
-    var info = ["Prof. Ali Celal Şengör", "Istanbul"];
-    return info.map((item) => { return (<p>{item}</p>) });
-  };
-  renderGraph() {
-    var info = ["Followers:155", "Following:255", "Favourites:78", "Projects:9"];
-    return info.map((item) => { return (<Paper>{item}</Paper>) });
-  };
-
-  render() {
-    if (!this.state.success) {
+    render() {
       return (
         <Container>
-          <UserNavbar
-            logout={() => { this.props.history.push(config.Login_Path) }}
-            pushProfile={() => { this.props.history.push("/profile") }}
-            goHome={() => { this.props.history.push(config.Homepage_Path) }}
-          />
-          <h1> Profile Page </h1>
-
-          <Grid container direction="row" justify="left" alignItems="center">
-            <Avatar class="left" />
-            <Paper>
-              {this.renderProfile()}
+        <UserNavbar
+          logout={() => { this.props.history.push(config.Login_Path) }}
+          pushProfile={() => { this.props.history.push("/profile") }}
+          goHome={() => { this.props.history.push(config.Homepage_Path) }}
+        />
+          <Typography variant="h4" color="primary">Profile Page</Typography>
+          <Grid container direction="row" justify="left" alignItems="center" >
+            <Avatar src={this.state.img} class="left"/>
+            <Paper elevation={6} style={{minWidth: "150px"}}>
+            <p>{this.state.name+" "+this.state.last_name}</p>
             </Paper>
           </Grid>
-          <Grid container direction="row" justify="left" alignItems="center">
-            {this.renderGraph()}
+
+          <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">
+            <Grid item sm={3}>
+            </Grid>
+            <Grid item sm={6}>
+                <Typography variant="h5" color="primary">Biography</Typography>
+                <Paper elevation={6} style={{minHeight: "100px"}}>
+                <p>{this.state.bio}</p>
+                </Paper>
+                <Typography variant="h5" color="primary">Contact</Typography>
+              <Paper elevation={6}>
+              <p>{this.state.email}</p>
+              </Paper>
+              <Button variant="contained" color="primary" className="">Edit Profile</Button>
+            </Grid>
+            <Grid item sm={3}>
+              <Typography variant="h5" color="primary">Research Areas</Typography>
+              <Paper elevation={6} style={{minHeight: "100px"}}>
+              <p>{this.state.interests}</p>
+              </Paper>
+            </Grid>
           </Grid>
 
-          <div class="row">
-            <div class="column left">
-              <h2> Comments </h2>
-              <Paper>
-                {this.renderComments()}
-              </Paper>
-            </div>
-            <div class="column middle">
-              <div>
-                <h2> Biography </h2>
-                <Paper>
-                  {this.renderBio()}
-                </Paper>
-              </div>
-              <div>
-                <h2> Contact </h2>
-                <Paper>
-                  {this.renderContacts()}
-                </Paper>
-              </div>
-            </div>
-            <div class="column right">
-              <h2> Research Areas </h2>
-              <Paper>
-                {this.renderAreas()}
-              </Paper>
-            </div>
-          </div>
-          <Button type="submit" variant="contained" color="primary" className="">Edit Profile</Button>
-          <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
+          <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>
         </Container>);
-    }
-    else
-      return (<p style={{ color: "green", textAlign: "center", fontWeight: "bold", fontSize: 25, fontFamily: 'Fira Sans' }}>Registration is completed !</p>);
-
-  }
+}
 
 }

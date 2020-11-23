@@ -11,7 +11,7 @@
     <string name="text_guest">Login as a guest</string>
     <string name="text_email">E-Mail</string>
     <string name="text_password">Password</string>
-    <string name="text_login_screen">PaperLayer Login Screen</string>
+    <string name="text_login_screen">PaperLayer</string>
     <string name="err_no_matching_passwords">The passwords entered does not match</string>
     <string name="err_invalid_username">You must enter an username at least length of 6 characters.</string>
     <string name="err_invalid_email">You must enter a valid email.</string>

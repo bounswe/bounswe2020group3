@@ -1,23 +1,28 @@
 package com.bounswe2020group3.paperlayer.profile
 
 import android.util.Log
+import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import io.reactivex.disposables.CompositeDisposable
+import javax.inject.Inject
 
-class ProfilePresenter(view: ProfileContract.View): ProfileContract.Presenter {
-
-    private var view: ProfileContract.View? = view
-    private var model: ProfileContract.Model = ProfileModel()
+class ProfilePresenter @Inject constructor(private var model: ProfileContract.Model) : BasePresenter<ProfileContract.View>(), ProfileContract.Presenter {
 
     private var disposable = CompositeDisposable()
 
+    override fun unbind() {
+        super.unbind()
+        disposable.clear()
+    }
+
     override fun subscribeUserProfile() {
-        val userProfileSub = model.getUserProfile().subscribe{ profile ->
+        val userProfileSub = model.getUserProfile().subscribe { profile ->
             view?.updateProfileUI(profile)
         }
         disposable.add(userProfileSub)
     }
 
     override fun loadUserProfile() {
+        Log.d("Dagger", "Profile Presenter: $model")
         view?.showLoading()
         val fetchSub = model.fetchUserProfile().subscribe(
                 {
@@ -30,10 +35,4 @@ class ProfilePresenter(view: ProfileContract.View): ProfileContract.Presenter {
         )
         disposable.add(fetchSub)
     }
-
-    override fun onDestroy() {
-        this.view = null
-        disposable.clear()
-    }
-
 }

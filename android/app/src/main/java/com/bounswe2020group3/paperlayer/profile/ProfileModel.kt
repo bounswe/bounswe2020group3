@@ -7,8 +7,9 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import javax.inject.Inject
 
-class ProfileModel: ProfileContract.Model {
+class ProfileModel @Inject constructor(): ProfileContract.Model {
 
     private var profileService: ProfileContract.Service = RetrofitProvider.instance.create(ProfileContract.Service::class.java)
     private var userProfile: BehaviorSubject<Profile> = BehaviorSubject.create()

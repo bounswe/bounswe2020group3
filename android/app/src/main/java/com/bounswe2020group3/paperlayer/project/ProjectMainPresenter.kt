@@ -68,4 +68,8 @@ class ProjectMainPresenter: ProjectMainContract.Presenter {
         Navigation.findNavController(view.getLayout()).navigate(R.id.navigateToProjectFromProjectMainFragment,bundle)
     }
 
+    override fun onNewProjectButtonClicked() {
+        Navigation.findNavController(view.getLayout()).navigate(R.id.navigateToProjectCreate)
+    }
+
 }

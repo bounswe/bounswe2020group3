@@ -72,6 +72,12 @@
     </fragment>
 
     <fragment
+        android:id="@+id/projectCreateFragment"
+        android:name="com.bounswe2020group3.paperlayer.projectCreate.ProjectCreateFragment"
+        android:label="Project Create"
+        tools:layout="@layout/fragment_project_create" />
+
+    <fragment
         android:id="@+id/projectMainFragment"
         android:name="com.bounswe2020group3.paperlayer.project.ProjectMainFragment"
         android:label="Project Main"
@@ -80,6 +86,9 @@
             android:id="@+id/navigateToProjectFromProjectMainFragment"
             app:destination="@id/projectFragment"
             />
+        <action
+            android:id="@+id/navigateToProjectCreate"
+            app:destination="@id/projectCreateFragment" />
     </fragment>
-
+    
 </navigation>

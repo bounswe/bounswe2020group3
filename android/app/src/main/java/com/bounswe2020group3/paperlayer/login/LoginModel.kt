@@ -1,24 +1,30 @@
 package com.bounswe2020group3.paperlayer.login
 
-import android.database.Observable
-import android.widget.Toast
 import com.bounswe2020group3.paperlayer.login.data.AuthToken
 import com.bounswe2020group3.paperlayer.login.data.UserCredentials
-import com.bounswe2020group3.paperlayer.network.RetrofitProvider
+import com.bounswe2020group3.paperlayer.util.SessionManager
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
+import retrofit2.Retrofit
+import javax.inject.Inject
 
 
-class LoginModel:LoginContract.Model {
+class LoginModel @Inject constructor(private var sessionManager: SessionManager, retrofit: Retrofit) : LoginContract.Model {
 
-    private var modelService: LoginContract.ModelService = RetrofitProvider.instance.create(LoginContract.ModelService::class.java)
+    private var modelService: LoginContract.ModelService = retrofit.create(LoginContract.ModelService::class.java)
 
-    override fun getToken(userCredentials: UserCredentials): io.reactivex.Observable<AuthToken> {
-        return modelService.getToken(userCredentials)
+    override fun authLogin(userCredentials: UserCredentials): Single<AuthToken> {
+        return modelService.authLogin(userCredentials)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doAfterSuccess{ token -> sessionManager.setToken(token)}
     }
 
+    override fun getAuthToken(): BehaviorSubject<AuthToken> {
+        return sessionManager.getToken()
+    }
 
 }
 

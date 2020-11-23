@@ -3,6 +3,7 @@ package com.bounswe2020group3.paperlayer.profile
 
 import com.bounswe2020group3.paperlayer.network.RetrofitProvider
 import com.bounswe2020group3.paperlayer.profile.data.Profile
+import com.bounswe2020group3.paperlayer.util.TOKEN
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -19,7 +20,7 @@ class ProfileModel @Inject constructor(): ProfileContract.Model {
     }
 
     override fun updateUserProfile(updatedProfile: Profile): Single<Profile> {
-        val authorization = "Token dd533ab6e6ba0b2463e627ccc8009a79c98fa354"
+        val authorization = TOKEN
         return profileService.updateProfile(authorization, 3, updatedProfile)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

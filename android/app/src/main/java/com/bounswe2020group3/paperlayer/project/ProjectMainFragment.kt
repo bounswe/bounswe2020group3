@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.R
+import kotlinx.android.synthetic.main.fragment_project_main.*
 
 
 private const val TAG = "ProjectMainFragment"
@@ -60,6 +62,13 @@ class ProjectMainFragment : Fragment(),ProjectMainContract.View, OnCardClickList
         this.presenter.created()
         writeLogMessage("i",TAG,"ProjectMainFragment view created")
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        buttonAddProject.setOnClickListener {
+            presenter.onNewProjectButtonClicked()
+        }
     }
 
     override fun onAttach(context: Context) {

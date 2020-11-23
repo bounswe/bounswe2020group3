@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 import config from '../../config';
-import { Route } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import React, { Component } from "react";
 
 
@@ -34,7 +34,7 @@ export const authenticate = async () => {
 }
 
 const redirectToLogin = () => {
-    window.location.replace(`http://localhost:3000${config.Login_Path}`);
+    window.location.href = "/login"
 }
 export const AuthenticatedRoute = ({
     component: Component,

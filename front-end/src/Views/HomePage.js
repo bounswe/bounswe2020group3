@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import UserNavbar from '../Components/TopBar/UserNavbar';
+import homeImage from "../paper-plane.png";
 
 const Container = styled(Box)({
     background: "white",
@@ -74,7 +75,12 @@ export default class HomePage extends Component {
 
     renderProject(){
       var projects = this.state.projects;
-      return projects.map((item) => {return (<Grid item><Button variant="outlined" color="primary" style={{width:"100%"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Button></Grid>)});
+      return projects.map((item) => {return (<Box style={{padding:"10px"}} borderColor="primary" border={1}>
+        <Button variant="contained" color="primary" style={{width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Button>
+        <Typography style={{textAlign:"left"}}>
+          {item.description}
+        </Typography>
+        </Box>)});
     };
     renderFeed(){
       var news = [];
@@ -83,7 +89,10 @@ export default class HomePage extends Component {
     renderEvents(){
       var events = this.state.events;
       console.log("events is:",events);
-      return events.map((item) => {return (<Grid item><Button variant="outlined" color="primary" style={{width:"100%"}} onClick={()=> this.goToEvent(item.id)}>{item.title}</Button></Grid>)});
+      return events.map((item) => {return (<Box style={{padding:"10px"}} borderColor="primary" border={1}>
+        <Button variant="contained" color="primary" style={{width:"100%"}} onClick={()=> this.goToEvent(item.id)}>{item.title}</Button>
+        <Typography style={{textAlign:"left"}}>{item.description}</Typography>
+        </Box>)});
     };
 
     render() {
@@ -94,31 +103,34 @@ export default class HomePage extends Component {
             pushProfile={() => { this.props.history.push("/profile") }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
           />
-          <Typography variant="h4" color="primary">Home Page</Typography>
+          {/* <Typography variant="h4" color="primary">Home Page</Typography> */}
           <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline">
-            <Grid  item sm={3} >
-              <Grid style={{maxHeight:"75vh", overflowY:"scroll"}} item sm={12}>
-              <Typography variant="h5" color="primary">Projects</Typography>
-              <Paper style={{minHeight: "250px"}} elevation={6}>
-              {this.renderProject()}
-              </Paper>
+            <Grid item sm={4} >
+              <Grid style={{ maxHeight: "75vh", overflowY: "scroll" }} item sm={12}>
+                <Typography variant="h5" color="primary">Projects</Typography>
+                <Paper style={{ minHeight: "250px" }} elevation={6}>
+                  {this.renderProject()}
+                </Paper>
               </Grid>
-              <Button variant="contained" color="primary" style={{marginTop:"10px"}} onClick={this.goToProjectCreation}>Create a Project</Button>
+              <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToProjectCreation}>Create a Project</Button>
             </Grid>
-            <Grid item sm={6} >
-              <Typography variant="h5" color="primary">Feed</Typography>
-              <Paper style={{minHeight: "350px"}} elevation={6}>
-              {this.renderFeed()}
-              </Paper>
-            </Grid>
-            <Grid item sm={3} >
-            <Grid style={{maxHeight:"75vh", overflowY:"scroll"}} item sm={12}>
-              <Typography variant="h5" color="primary">Upcoming Events</Typography>
-              <Paper style={{minHeight: "250px"}} elevation={6}>
-              {this.renderEvents()}
-              </Paper>
+             <Grid item sm={4} >
+               <Typography variant="h3" color="primary">Home</Typography>
+              
+              {/* {this.renderFeed()} */}
+               
+                  {/* <Paper> */}
+                <img src={homeImage} style={{ width: "80%", marginTop:"50px" }} />
+              {/* </Paper>  */}
+             </Grid> 
+            <Grid item sm={4} >
+              <Grid style={{ maxHeight: "75vh", overflowY: "scroll" }} item sm={12}>
+                <Typography variant="h5" color="primary">Upcoming Events</Typography>
+                <Paper style={{ minHeight: "250px" }} elevation={6}>
+                  {this.renderEvents()}
+                </Paper>
               </Grid>
-              <Button variant="contained" color="primary" style={{marginTop:"10px"}} onClick={this.goToEventCreation}>Create an Event</Button>
+              <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEventCreation}>Create an Event</Button>
             </Grid>
           </Grid>
           <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>

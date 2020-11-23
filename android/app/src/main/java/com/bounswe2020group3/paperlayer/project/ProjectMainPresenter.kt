@@ -76,7 +76,7 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectMainCon
     }
 
     override fun onNewProjectButtonClicked() {
-        Navigation.findNavController(view.getLayout()).navigate(R.id.navigateToProjectCreate)
+        view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectCreate) }
     }
 
 }

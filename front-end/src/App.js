@@ -12,6 +12,8 @@ import CreateEventPage from "./Views/CreateEventPage";
 import history from "./history";
 import ProfilePage from "./Views/ProfilePage";
 import ProjectPage from "./Views/ProjectPage";
+import EventPage from "./Views/EventPage";
+
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
             <AuthenticatedRoute exact path={config.Create_Project_Path} component={CreateProjectPage} />
             <AuthenticatedRoute exact path={config.Event_Creation_Path} component={CreateEventPage} />
             <AuthenticatedRoute path="/project/:projectId" component={ProjectPage} />
+            <AuthenticatedRoute path="/events/:eventId" component={EventPage} />
             <AuthenticatedRoute path="/profile" component={ProfilePage} />
           </Switch>
         </BrowserRouter>

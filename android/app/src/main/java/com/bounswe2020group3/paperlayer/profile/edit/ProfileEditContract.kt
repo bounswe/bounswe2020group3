@@ -2,13 +2,14 @@ package com.bounswe2020group3.paperlayer.profile.edit
 
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.profile.data.Profile
+import com.bounswe2020group3.paperlayer.profile.data.User
 
 interface ProfileEditContract {
     interface Presenter : Mvp.Presenter<View> {
-        fun subscribeUserProfile()
-        fun loadUserProfile()
+        fun subscribeUser()
+        fun loadUser()
         fun updateProfile(updatedProfile: Profile)
-        fun getUserProfileData(): Profile?
+        fun getUserData(): User?
     }
 
     interface View : Mvp.View {
@@ -16,7 +17,8 @@ interface ProfileEditContract {
         fun hideLoading()
         fun showInfoToast(message: String = "Info")
         fun showErrorToast(message: String = "Error")
-        fun updateProfileUI(profile: Profile)
+        fun updateProfileUI(user: User)
+        fun updateProfileUIWithProfile(profile: Profile)
         fun navigateBack()
     }
 }

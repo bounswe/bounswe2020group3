@@ -52,6 +52,9 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@id/profileFragment" />
+        <action
+            android:id="@+id/navigateToLoginFromProfile"
+            app:destination="@id/loginFragment" />
     </fragment>
 
     <fragment

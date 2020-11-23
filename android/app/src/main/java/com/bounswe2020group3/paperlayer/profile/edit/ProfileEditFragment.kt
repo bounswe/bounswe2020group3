@@ -1,5 +1,6 @@
 package com.bounswe2020group3.paperlayer.profile.edit
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,21 +10,30 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.navigation.Navigation
+import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.profile.data.Profile
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_profile_edit.*
+import javax.inject.Inject
 
 
 class ProfileEditFragment : Fragment(), ProfileEditContract.View {
 
-    private lateinit var presenter: ProfileEditContract.Presenter
+    @Inject
+    lateinit var presenter: ProfileEditContract.Presenter
+
     private lateinit var genderSelectDialog: MaterialAlertDialogBuilder
     private var selectedGender: String? = null
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (context as MainActivity).getAppComponent().inject(this)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        setPresenter(ProfileEditPresenter(this))
+        presenter.bind(this)
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile_edit, container, false)
     }
@@ -63,16 +73,12 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter.onDestroy()
+        presenter.unbind()
     }
 
     override fun onResume() {
         super.onResume()
         presenter.loadUserProfile()
-    }
-
-    override fun setPresenter(presenter: ProfileEditContract.Presenter) {
-        this.presenter = presenter
     }
 
     override fun showLoading() {

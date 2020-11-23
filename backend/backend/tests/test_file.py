@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.test import APITestCase
-# from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 class FileTests(APITestCase):
@@ -29,18 +29,15 @@ class FileTests(APITestCase):
                                             format='json')
         project_id = project_response.data["id"]
         project_url = f"http://127.0.0.1:8000/api/projects/{project_id}/"
-        # Another way of getting a file, without having a file.
-        # test_file = SimpleUploadedFile("test_file.txt",
-        #                                b"file_content",
-        #                                content_type="text/txt")
-        with open('backend/tests/test_media/test_file.txt') as test_file:
-            response = self.client.post('/api/files/',
-                                        {'file': test_file,
-                                         'remark': 'test_file',
-                                         'project': project_url},
-                                        format='multipart')
+        test_file = SimpleUploadedFile("test_file.txt",
+                                       b"file_content",
+                                       content_type="text/txt")
+        response = self.client.post('/api/files/',
+                                    {'file': test_file,
+                                     'remark': 'test_file',
+                                     'project': project_url},
+                                    format='multipart')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         file_id = response.data["id"]
-        # file_url = f"http://127.0.0.1:8000/api/files/{file_id}/"
         r_response = self.client.get(f'/api/files/{file_id}/retrieve_file/')
         self.assertEqual(r_response.status_code, status.HTTP_200_OK)

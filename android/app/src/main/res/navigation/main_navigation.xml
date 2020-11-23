@@ -89,6 +89,10 @@
         <action
             android:id="@+id/navigateToProjectCreate"
             app:destination="@id/projectCreateFragment" />
+        <argument
+            android:name="ownerID"
+            app:argType="integer"
+            android:defaultValue="1" />
     </fragment>
     
 </navigation>

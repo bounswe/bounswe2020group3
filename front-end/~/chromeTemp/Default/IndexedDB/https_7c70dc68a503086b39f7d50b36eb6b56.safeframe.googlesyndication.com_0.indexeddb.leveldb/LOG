@@ -1,0 +1,5 @@
+2020/11/22-22:31:53.230 398a Reusing MANIFEST /home/emirhanyasin/Desktop/bounswe2020group3/front-end/~/chromeTemp/Default/IndexedDB/https_7c70dc68a503086b39f7d50b36eb6b56.safeframe.googlesyndication.com_0.indexeddb.leveldb/MANIFEST-000001
+2020/11/22-22:31:55.810 38ec Level-0 table #5: started
+2020/11/22-22:31:55.828 38ec Level-0 table #5: 439 bytes OK
+2020/11/22-22:31:55.837 38ec Delete type=0 #3
+2020/11/22-22:31:55.837 38ec Manual compaction at level-0 from (begin) .. (end); will stop at (end)

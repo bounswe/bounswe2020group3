@@ -1,0 +1,5 @@
+2020/11/22-22:31:53.154 398a Reusing MANIFEST /home/emirhanyasin/Desktop/bounswe2020group3/front-end/~/chromeTemp/Default/IndexedDB/https_googleads.g.doubleclick.net_0.indexeddb.leveldb/MANIFEST-000001
+2020/11/22-22:32:02.758 34e0 Level-0 table #5: started
+2020/11/22-22:32:02.770 34e0 Level-0 table #5: 364 bytes OK
+2020/11/22-22:32:02.776 34e0 Delete type=0 #3
+2020/11/22-22:32:02.776 34e0 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

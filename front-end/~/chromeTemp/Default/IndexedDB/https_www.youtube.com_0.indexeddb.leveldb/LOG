@@ -1,0 +1,8 @@
+2020/11/23-19:55:58.462 3e09 Reusing MANIFEST /home/emirhanyasin/Desktop/bounswe2020group3/front-end/~/chromeTemp/Default/IndexedDB/https_www.youtube.com_0.indexeddb.leveldb/MANIFEST-000001
+2020/11/23-19:55:58.463 3e09 Recovering log #10
+2020/11/23-19:55:58.463 3e09 Reusing old log /home/emirhanyasin/Desktop/bounswe2020group3/front-end/~/chromeTemp/Default/IndexedDB/https_www.youtube.com_0.indexeddb.leveldb/000010.log 
+2020/11/23-19:56:00.479 3e09 Level-0 table #14: started
+2020/11/23-19:56:00.479 3e09 Level-0 table #14: 0 bytes OK
+2020/11/23-19:56:00.492 3e09 Delete type=0 #10
+2020/11/23-19:56:00.492 3e09 Manual compaction at level-0 from (begin) .. (end); will stop at (end)
+2020/11/23-19:56:00.493 3e09 Manual compaction at level-1 from (begin) .. (end); will stop at (end)

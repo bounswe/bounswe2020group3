@@ -1,0 +1,8 @@
+2020/11/23-19:55:45.978 3dbd Reusing MANIFEST /home/emirhanyasin/Desktop/bounswe2020group3/front-end/~/chromeTemp/Default/IndexedDB/https_www.youtube.com_0.indexeddb.leveldb/MANIFEST-000001
+2020/11/23-19:55:45.978 3dbd Recovering log #7
+2020/11/23-19:55:45.978 3dbd Reusing old log /home/emirhanyasin/Desktop/bounswe2020group3/front-end/~/chromeTemp/Default/IndexedDB/https_www.youtube.com_0.indexeddb.leveldb/000007.log 
+2020/11/23-19:55:47.986 3dbd Level-0 table #11: started
+2020/11/23-19:55:47.986 3dbd Level-0 table #11: 0 bytes OK
+2020/11/23-19:55:47.998 3dbd Delete type=0 #7
+2020/11/23-19:55:47.998 3dbd Manual compaction at level-0 from (begin) .. (end); will stop at (end)
+2020/11/23-19:55:47.999 3dbd Manual compaction at level-1 from (begin) .. (end); will stop at (end)

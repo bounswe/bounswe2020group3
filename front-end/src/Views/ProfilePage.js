@@ -64,6 +64,9 @@ export default class HomePage extends Component {
     goToLogin = () => {
         this.props.history.push("/login");
     };
+    goToEditProfile = () => {
+      this.props.history.push(config.Edit_Profile_Path);
+    };
 
     render() {
       return (
@@ -93,7 +96,7 @@ export default class HomePage extends Component {
               <Paper elevation={6}>
               <p>{this.state.email}</p>
               </Paper>
-              <Button variant="contained" color="primary" className="">Edit Profile</Button>
+              <Button variant="contained" color="primary" className="" onClick={this.goToEditProfile}>Edit Profile</Button>
             </Grid>
             <Grid item sm={3}>
               <Typography variant="h5" color="primary">Research Areas</Typography>

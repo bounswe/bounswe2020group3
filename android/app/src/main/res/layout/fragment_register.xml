@@ -54,6 +54,18 @@
 
         </LinearLayout>
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/errorUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:text="@string/err_invalid_username"
+            android:textAllCaps="false"
+            android:textColor="@color/design_default_color_error"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            android:visibility="invisible" />
+
         <LinearLayout
             style="@style/Block"
             android:layout_width="match_parent"
@@ -94,6 +106,24 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/errorName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:text="@string/err_no_name"
+                android:textAllCaps="false"
+                android:textColor="@color/design_default_color_error"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <LinearLayout
             style="@style/Block"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -112,8 +142,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress" />
+
             </com.google.android.material.textfield.TextInputLayout>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/errorEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:text="@string/err_invalid_email"
+                android:textAllCaps="false"
+                android:textColor="@color/design_default_color_error"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                android:visibility="invisible" />
         </LinearLayout>
 
         <LinearLayout
@@ -155,6 +204,24 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/errorPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:text="@string/err_invalid_password"
+                android:textAllCaps="false"
+                android:textColor="@color/design_default_color_error"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                android:visibility="invisible" />
         </LinearLayout>
 
         <LinearLayout
@@ -200,49 +267,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/errorUsername"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/err_invalid_username"
-                android:textAllCaps="false"
-                android:textColor="@color/design_default_color_error"
-                android:textSize="12sp"
-                android:textStyle="italic"
-                android:visibility="invisible" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/errorName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/err_no_name"
-                android:textAllCaps="false"
-                android:textColor="@color/design_default_color_error"
-                android:textSize="12sp"
-                android:textStyle="italic"
-                android:visibility="invisible" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/errorEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/err_invalid_email"
-                android:textAllCaps="false"
-                android:textColor="@color/design_default_color_error"
-                android:textSize="12sp"
-                android:textStyle="italic"
-                android:visibility="invisible" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/errorPassword"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/err_invalid_password"
-                android:textAllCaps="false"
-                android:textColor="@color/design_default_color_error"
-                android:textSize="12sp"
-                android:textStyle="italic"
-                android:visibility="invisible" />
         </LinearLayout>
 
     </LinearLayout>

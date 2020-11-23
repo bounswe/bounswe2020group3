@@ -4,7 +4,7 @@ import config from '../config';
 import { styled,Link } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
-import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
+import UserNavbar from '../Components/TopBar/UserNavbar';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
@@ -59,7 +59,11 @@ export default class HomePage extends Component {
     render() {
       return (
         <Container>
-          <PrimarySearchAppBar loginNav={this.goToLogin}/>
+          <UserNavbar
+            logout={() => { this.props.history.push(config.Login_Path) }}
+            pushProfile={() => { this.props.history.push("/profile") }}
+            goHome={() => { this.props.history.push(config.Homepage_Path) }}
+          />
           <Typography variant="h4" color="primary">Event Page</Typography>
           <Grid container direction="row" justify="space-evenly" alignItems="baseline">
             <Grid item sm={1}/>

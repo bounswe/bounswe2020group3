@@ -1,5 +1,6 @@
 package com.bounswe2020group3.paperlayer.project
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,30 +8,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.project.data.Project
 import kotlinx.android.synthetic.main.fragment_project.view.*
+import javax.inject.Inject
 
 private const val TAG = "ProjectFragment"
 
 class ProjectFragment : Fragment(),ProjectContract.View {
 
     //Presenter object
-    private lateinit var presenter: ProjectPresenter
+    @Inject
+    lateinit var presenter: ProjectPresenter
+
     //View object
     private lateinit var fragmentView: View
 
-    /*
-    * Creates LoginPresenter Object and setView
-    * */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        this.presenter= ProjectPresenter()
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (context as MainActivity).getAppComponent().inject(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        this.presenter.onDestroyed()
+        this.presenter.unbind()
         writeLogMessage("i",TAG,"ProjectFragment destroyed.")
     }
 
@@ -43,7 +45,7 @@ class ProjectFragment : Fragment(),ProjectContract.View {
         this.fragmentView=view
         //Set ProjectPresenter view to project fragment
         this.presenter.setView(this)
-        this.presenter.created()
+        this.presenter.bind(this)
         //Getting bundle arguments
         var projectID = arguments?.getInt("projectID")
         if (projectID != null) {

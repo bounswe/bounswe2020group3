@@ -10,6 +10,8 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { theme } from "./Common/ColorTheme";
 import CreateEventPage from "./Views/CreateEventPage";
 import history from "./history";
+import ProfilePage from "./Views/ProfilePage";
+import ProjectPage from "./Views/ProjectPage";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
             <Route exact path={config.Register_Path} component={RegistrationPage} />
             <AuthenticatedRoute exact path={config.Create_Project_Path} component={CreateProjectPage} />
             <AuthenticatedRoute exact path={config.Event_Creation_Path} component={CreateEventPage} />
+            <AuthenticatedRoute path="/project/:projectId" component={ProjectPage} />
+            <AuthenticatedRoute path="/profile" component={ProfilePage} />
           </Switch>
         </BrowserRouter>
       </ThemeProvider>

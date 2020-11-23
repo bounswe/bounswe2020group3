@@ -65,10 +65,6 @@ export default class HomePage extends Component {
         })
     };
 
-    renderComment(){
-      var projects = ["It is a good project"];
-      return projects.map((item) => {return (<p>{item}</p>)});
-    };
     renderContributor(){
       var mems = this.state.members;
       return mems.map((item) => {return (<p>{item}</p>)});
@@ -88,16 +84,12 @@ export default class HomePage extends Component {
             <Grid item sm={6}>
               <Typography variant="h5" color="primary">{this.state.name}</Typography>
               <Typography variant="h5" color="primary">Brief Description</Typography>
-              <Paper style={{minHeight: "200px"}}>
+              <Paper elevation={6}style={{minHeight: "100px"}}>
               <p>{this.state.desc}</p>
               </Paper>
               <Typography variant="h5" color="primary">Colaboration Qualifications</Typography>
-              <Paper style={{minHeight: "200px"}}>
+              <Paper elevation={6} style={{minHeight: "100px"}}>
               <p>{this.state.reqs}</p>
-              </Paper>
-              <Typography variant="h5" color="primary">Comments</Typography>
-              <Paper style={{minHeight: "200px"}}>
-              {this.renderComment()}
               </Paper>
             </Grid>
             <Grid item sm={3}>
@@ -106,11 +98,11 @@ export default class HomePage extends Component {
               Follow()
               </Paper>
               <Typography variant="h5" color="primary">Contributors</Typography>
-              <Paper style={{minHeight: "200px"}}>
+              <Paper elevation={6} style={{minHeight: "100px"}}>
               {this.renderContributor()}
               </Paper>
               <Typography variant="h5" color="primary">Related Events</Typography>
-              <Paper style={{minHeight: "200px"}}>
+              <Paper elevation={6} style={{minHeight: "100px"}}>
               {this.renderEvents()}
               </Paper>
             </Grid>

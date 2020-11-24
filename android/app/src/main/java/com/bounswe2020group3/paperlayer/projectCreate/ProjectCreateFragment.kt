@@ -8,27 +8,33 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.android.synthetic.main.fragment_project_create.*
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
 class ProjectCreateFragment : Fragment(), ProjectCreateContract.View {
 
-    private lateinit var presenter: ProjectCreateContract.Presenter
+    @Inject
+    lateinit var presenter: ProjectCreateContract.Presenter
+
     private lateinit var projectType: String
     private lateinit var projectState: String
 
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (context as MainActivity).getAppComponent().inject(this)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        presenter.bind(this)
         val view = inflater.inflate(R.layout.fragment_project_create, container, false)
-
-        setPresenter(ProjectCreatePresenter(this))
-        presenter.onViewCreated()
 
         return view
     }
@@ -168,10 +174,5 @@ class ProjectCreateFragment : Fragment(), ProjectCreateContract.View {
     override fun showToast(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
-
-    override fun setPresenter(presenter: ProjectCreateContract.Presenter) {
-        this.presenter = presenter
-    }
-
 
 }

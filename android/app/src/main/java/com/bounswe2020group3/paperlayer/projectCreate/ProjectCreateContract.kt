@@ -1,8 +1,6 @@
 package com.bounswe2020group3.paperlayer.projectCreate
 
-import com.bounswe2020group3.paperlayer.base.BasePresenter
-import com.bounswe2020group3.paperlayer.base.BaseView
-import com.bounswe2020group3.paperlayer.project.ProjectMainContract
+import com.bounswe2020group3.paperlayer.mvp.Mvp
 import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -10,12 +8,12 @@ import retrofit2.http.POST
 import java.util.*
 
 interface ProjectCreateContract {
-    interface Presenter: BasePresenter {
+    interface Presenter: Mvp.Presenter<View> {
         fun onViewCreated()
         fun createProject(projectCreateRequest: ProjectCreateRequest)
     }
 
-    interface View: BaseView<Presenter> {
+    interface View: Mvp.View {
         fun showProgress(show: Boolean)
         fun showSuccess()
         fun displayTime(calendar: Calendar, selectedDate: Long): String

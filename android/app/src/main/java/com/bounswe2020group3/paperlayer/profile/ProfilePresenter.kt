@@ -1,5 +1,6 @@
 package com.bounswe2020group3.paperlayer.profile
 
+import android.util.Log
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class ProfilePresenter @Inject constructor(private var model: ProfileContract.Mo
                     view?.updateProfileUI(user)
                 },
                 {
-                    error -> view?.showErrorToast("Some error occured.")
+                    error -> Log.d("Error", "Some error occured.")
                 }
         )
         disposable.add(userProfileSub)

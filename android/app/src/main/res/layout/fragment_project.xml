@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/primaryColor"
+                android:background="@drawable/gradient"
                 android:padding="16dp">
 
                 <!-- Title, secondary and supporting text -->
@@ -74,15 +74,15 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardViewDueState"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             app:cardElevation="5dp"
             android:layout_margin="8dp">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:background="@color/primaryColor"
+                android:background="@drawable/gradient"
                 android:padding="16dp">
 
                 <!-- Title, secondary and supporting text -->
@@ -139,7 +139,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/primaryColor"
+                android:background="@drawable/gradient"
                 android:orientation="vertical"
                 android:padding="16dp">
 
@@ -148,6 +148,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/project_description_title"
+                    android:layout_gravity="center"
                     android:textAppearance="?attr/textAppearanceHeadline5"
                     />
                 <TextView
@@ -155,6 +156,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
                     android:text="User asdasdasd asdasda
                     asdasdasdasdasdasdasdasdasdasds asdasdsa "
                     android:textAppearance="?attr/textAppearanceBody2"

@@ -13,7 +13,10 @@ import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.profile.data.Profile
 import com.bounswe2020group3.paperlayer.profile.data.User
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile_edit.*
+import kotlinx.android.synthetic.main.fragment_profile_edit.imageViewProfileAvatar
 import javax.inject.Inject
 
 
@@ -117,6 +120,11 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
         val genderText = "Gender: ${profile.gender}"
         buttonGenderSelect.text = genderText
         selectedGender = profile.gender
+
+        val imageUrl = profile.photoUrl
+        if(imageUrl != null && imageUrl.contains("http")) {
+            Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
+        }
     }
 
     override fun navigateBack() {

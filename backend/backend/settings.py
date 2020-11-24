@@ -173,3 +173,6 @@ EMAIL_HOST_USER = 'bounswe2020group3@gmail.com'
 EMAIL_HOST_PASSWORD = 'Group3isthebest'
 
 django_heroku.settings(locals())
+
+# Cors settings
+CORS_ORIGIN_ALLOW_ALL = True

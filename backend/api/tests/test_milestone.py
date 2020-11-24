@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from api.models.project import Project
@@ -17,7 +16,8 @@ class ProfileTests(APITestCase):
         self.member_user = User.objects.create_user(
             username='mehmet', email='mehmet@…', password='1234_secret')
         self.project = Project.objects.create(
-            name='Academic Project', description='This is an academic project.',
+            name='Academic Project',
+            description='This is an academic project.',
             owner=self.user, due_date="2020-12-15")
         self.project.members.add(self.member_user)
 

@@ -256,6 +256,8 @@
                 android:id="@+id/buttonRegister"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/ButtonDefault"
+                android:layout_marginHorizontal="0dp"
                 android:text="@string/text_register"/>
                 android:text="@string/text_register" />
 

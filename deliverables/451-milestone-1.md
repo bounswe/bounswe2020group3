@@ -12,7 +12,7 @@
 - Code Structure Documentation
 - Evaluation of Tools
 - Evaluation of Managing
-- Assessment of the customer presentation
+- [Assessment of the customer presentation](#assessment-of-the-customer-presentation)
 
 # Deliverables
 
@@ -197,3 +197,9 @@ We've prepared two user scenarios for the milestone 1 presentation. These scenar
    * **2.5.2.** The implementation of the system should follow W3C standards and W3C Activity Streams Protocol.
    * **2.5.3.** There shall be a web platform and a native Android application that supports the same functionalities.
    * **2.5.4.** The color designs of the platform will be made to improve the experience of color-blind people.
+   
+# Assessment of the customer presentation
+
+The presentation helped us set a clear direction for our project thanks to the many insigthful feedbacks and suggestions we got from our customers. The reaction from our customers was generally positive as they were following the presentation, and at the end our customer came up with good questions about our path moving forward. The main focus of the customer was the process of joining a project. Although there were some mixed opinions, the customer generally wanted the project owner to describe clear requirements and the collaborators to fit these requirements in order to join the project. This was a thought-provoking idea and led to some internal discussions in the team and has been helpful as it made the product clearer before further development. 
+
+During our earlier customer meetings, our customer warned us to include interesting functinalities to make sure we are on the same page about important features. So we included important functionalities like project creation, profile creation and profile view. In the presentation, our team did a good job coming up with realistic scenarios, and displaying the strong points of our product. We managed the time well and captured the attention of the audience with interesting scenarios. What helped us in this process was that we practiced the presentation earlier internally and made sure everything was working as planned. The lesson we learned for the next time is that we should focus more on the Frontend and communicate more across teams, like Android, Frontend and Backend.

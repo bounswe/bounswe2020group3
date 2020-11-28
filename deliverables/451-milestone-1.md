@@ -6,7 +6,7 @@
   - Moving Forward
 - [Deliverables](#deliverables)
 - Work Done by Each Team Member
-- Challenges Met During DevOps
+- [Challenges Met During DevOps](#Challenges-Met-During-DevOps)
 - [Requirements](#requirements)
 - Design documents
 - API documentation

@@ -30,10 +30,7 @@
 # Work Done By Each Member
 | Name       | Task             |
 |-------------------|--------------------|
-| Mahir Efe KAYA      | [Android]Register page UI <br/>  
-                       [Android] Register Page Functionality<br/> 
-                       [Android] Register<br/> 
-                      [Android] Register Error Checking|
+| Mahir Efe KAYA      | [Android]Register page UI <br/> [Android] Register Page Functionality <br/> [Android] Register <br/> [Android] Register Error Checking|
 | Ahmet Emir Kocağa | Task |
 | Yahya Bedirhan Pak      | Task           |
 | Furkan Cansever    | Task           |

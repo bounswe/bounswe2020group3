@@ -85,22 +85,6 @@ We've prepared two user scenarios for the milestone 1 presentation. These scenar
 | Barış Başmak | I work in the front-end team. For the front-end project: <br/> I created the project.<br/> Designed and coded a simple architecture so that pages could be added in an understandable and effortless way.<br/> Added the dependencies.<br/> Coded the login page and the login functionality.<br/>Coded the registration page. <br/>I implemented the navigation bar for logged in and guest states.<br/> Coded the project creation page. <br/> Coded event creation page <br/>Before the deployment I implemented "visual design" changes to the homepage.<br/> Helped researching about deploying the front-end project. 
 | Ali Furkan Budak | - Implemented 4 endpoints: "register", "auth", "logout", and "reset_password" <br/> - Modified the "auth" endpoint so that it returns the logged-in user's ID <br/> - Modified the "register" endpoint so that it accepts name fields and creates a new Profile with the name information for the registered user. <br/> - Created CRUD endpoints for "Event" objects.  <br/> - Added an optional "events" field to the "Project" model |
 
-
-**1- Requirements**
-We've updated requirements according to the feedback from our new members and customer.
-
-**2- Design Documents**
-We haven't changed the design documents much because the customer and our team are good with it.
-
-**3- API Documentation**
-We're generating our API documentation automatically with swagger.
-
-**4- Project Plan**
-We've planned our tasks according to which milestone will include which requirement. It also includes due date and which person is responsible for that task.
-
-**5- User scenarios** 
-We've prepared two user scenarios for the milestone 1 presentation. These scenarios show the current functionality of the application.
-
 # Challenges Met During DevOps
 As we are a big development team, we needed CI for process mechanics and some automation. For CI, we used the Action feature of Github. By following the steps of Github Action documentation, we implemented some YML files that contain some commands running at Ubuntu. When we open a pull request from our branch to the master branch, these actions are being triggered to run. Implementing scripts for CI was an easy part for us because these scripts contain all commands that we run on a local computer and these were working fine. All we did was automate them. We didn’t encounter any challenges for CI.
 

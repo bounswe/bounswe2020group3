@@ -37,6 +37,7 @@
 | Ahmet Emir Kocağa | Task |
 | Yahya Bedirhan Pak      | Task           |
 | Furkan Cansever    | Task           |
+| Buse Giledereli   | Creating issue template <br/> Researching and creating a document about MySQL Database <br/> Creating Milestone model <br/> Creating Tag model <br/> Adding DjangoFilterBackend to the project <br/> Updating project plan |
 
 **1- Requirements**
 We've updated requirements according to the feedback from our new members and customer.

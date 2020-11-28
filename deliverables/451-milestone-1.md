@@ -1,10 +1,10 @@
 # Table of Contents
 
 - Executive Summary
-- - Introduction
-- - Work Done So far
-- - Road Ahead
-- [Deliverables](#deliverables)
+  - Introduction
+  - Work Done So far
+  - Road Ahead
+- [List and Status of the Deliverables](#deliverables)
 - Work Done by Each Team Member
 - Challenges Met During DevOps
 - [Requirements](#requirements)

@@ -15,9 +15,10 @@
 - Code Structure Documentation
 - [Evaluation of Tools](#evaluation-of-tools)
   - [Backend Tools](#backend-tools)
+  - [Frontend Tools](#frontend-tools)
 - [Evaluation of Managing](#evaluation-of-managing)
 - [Assessment of the customer presentation](#assessment-of-the-customer-presentation)
-- [The code structure and group process](#The-code-structure-and-group-process)
+- [The code structure and group process](#the-code-structure-and-group-process)
 
 # Executive Summary
 
@@ -120,6 +121,7 @@ We're still implementing the android project. You can see the source files in /a
 | Barış Başmak | I work in the front-end team. For the front-end project: <br/> I created the project.<br/> Designed and coded a simple architecture so that pages could be added in an understandable and effortless way.<br/> Added the dependencies.<br/> Coded the login page and the login functionality.<br/>Coded the registration page. <br/>I implemented the navigation bar for logged in and guest states.<br/> Coded the project creation page. <br/> Coded event creation page <br/>Before the deployment I implemented "visual design" changes to the homepage.<br/> Helped researching about deploying the front-end project. 
 | Ali Furkan Budak | - Implemented 4 endpoints: "register", "auth", "logout", and "reset_password" <br/> - Modified the "auth" endpoint so that it returns the logged-in user's ID <br/> - Modified the "register" endpoint so that it accepts name fields and creates a new Profile with the name information for the registered user. <br/> - Created CRUD endpoints for "Event" objects.  <br/> - Added an optional "events" field to the "Project" model |
 | Adil Numan Çelik  | Created File model<br/> Created "retreive_file" endpoint for getting the file<br/> Wrote test cases for File model.<br/> Implemented the first version of endpoints for registration, authorization, password reset but they are replaced with Ali Furkan Budak's implementation due to design choices. <br/> Tested the endpoints. |
+| Ahmet Mert Tahran  | Coding the home page and listing projects and events functionality.<br/> Coding the profile page and listing details functionality.<br/> Coding the project page and listing details functionality.<br/> Coding event page and listing details functionality.|
 
 
 # Challenges Met During DevOps
@@ -426,6 +428,30 @@ a journal.
 **Discord:** We heavily utilize Discord. It is convenient to use because we can have one app for one-to-one and group chats, meetings and screen sharing.
 
 **Whatsapp:** Whatsapp is used for instant communication in our group.
+
+## Frontend Tools
+**Github:** We used GitHub actions, issues, and projects to plan, automate test process and check the health of the development process. To use GitHub effectively, we found a branch creation system that for each issue, we create a branch that its name is the one of the directly related issues. 
+
+**Docker:** We used Docker to easily deploy the application into the server and run faster on our own computers due to the fact that it automates installations and environment configurations
+
+**Nginx:** We used Nginx to dynamic HTTP content handling
+
+**ESLint:** We used ESLint for static code analysis on health test and code quality check
+
+**Discord:** We heavily utilize Discord. It is convenient to use because we can have one app for one-to-one and group chats, meetings and screen sharing to plan, report, and discuss the state of development.
+
+**Whatsapp:** We used Whatsapp for fast or direct communication to plan, report, and discuss the state of development. 
+
+**VS Code:** It is a powerful and user friendly IDE and we generally used this because it has a lot of extensions to design and develop a webpage with React, and its git integration, keymap support and simultaneous coding support is very nice. Thus, it allows us to work more efficiently.
+
+**React:** We used React as the web framework to develop each web page of the platform. It makes the frontend development easier because it has a great and nice community, and this property led us to find a solution for the bugs etc. easily. Since React is a simple framework that it uses the DOM like HTML, it leads learning period to become shorter. As two sides of a coin, React has some problems: there is no direct supports for some features such as state management and routing. Therefore, we need to use additional libraries
+
+**Material.ui:** We used material.ui library in order to make development and design processes faster and easier. For example, we use Snackbar, Toolbar, MuiAlert, Grid and many other components with some minor changes in the pages and they were very useful overall.
+
+**Axios:** we used axios to handle promise-based HTTP request
+
+**Date-io:** we used date-io for date management
+
 
 # Evaluation of managing
 

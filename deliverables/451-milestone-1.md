@@ -27,28 +27,13 @@
 | Project Plan      | Complete           |
 | User scenarios    | Complete           |
 
-**1- Requirements**
-We've updated requirements according to the feedback from our new members and customer.
-
-**2- Design Documents**
-We haven't changed the design documents much because the customer and our team are good with it.
-
-**3- API Documentation**
-We're generating our API documentation automatically with swagger.
-
-**4- Project Plan**
-We've planned our tasks according to which milestone will include which requirement. It also includes due date and which person is responsible for that task.
-
-**5- User scenarios** 
-We've prepared two user scenarios for the milestone 1 presentation. These scenarios show the current functionality of the application.
-
 # Work Done By Each Member
 | Name       | Task             |
 |-------------------|--------------------|
-| Mahir Efe KAYA      | [Android]Register page UI <br/> [Android] Register Page Functionality <br/> [Android] Register's Connection to Backend <br/> [Android] Register Error Checking <br/> Merging the individual parts of the milestone <br/> [Android] Searching for the implementation of the dagger and session manager principle in kotlin|
+| Mahir Efe KAYA      | [Android]Register page UI <br/> [Android] Register Page Functionality <br/> [Android] Register's Connection to Backend <br/> [Android] Register Error Checking <br/> Merging the individual parts of the milestone <br/> Searching for the implementation of the dagger and session manager principle in kotlin|
 | Ahmet Emir Kocağa | Task |
-| Yahya Bedirhan Pak      | [Android] Implementing profile view and edit pages. <br/> Connecting profile view and edit pages with backend. <br/> Creating an initial retrofit and moshi configurations for API requests. <br/> Adding initial dependency injection structure to the project with dagger2. <br/> [Backend] Configuring poetry <br/> Creating Dockerfile and docker-compose <br/> Creating GitHub Actions for backend continuous integration. <br/> Helping Furkan for continuous delivery of the backend and frontend. <br/> [Frontend] Helping Barış with the continuous integration of the frontend.|
-| Furkan Cansever    | Task           |
+| Yahya Bedirhan Pak      | Task           |
+| Furkan Cansever    |  Implemented a script file compatible with Linux and macOS (no longer needed after using [poetry](https://python-poetry.org/)) <br/> Implemented configurations for deployment to Heroku <br/> Handled CD process to Amazon ECS for backend and fronted <br/> Reviewed work is done by backend team members. <br/> Implemented Swagger UI for API documentation.|
 | Buse Giledereli   | Creating issue template <br/> Researching and creating a document about MySQL Database <br/> Creating Milestone model <br/> Creating Tag model <br/> Adding DjangoFilterBackend to the project <br/> Updating project plan |
 
 **1- Requirements**

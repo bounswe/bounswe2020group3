@@ -34,9 +34,9 @@
 | Mahir Efe KAYA  |[Android] Register Page Functionality|
 | Mahir Efe KAYA  |[Android] Register|
 | Mahir Efe KAYA  |[Android] Register Error Checking|
-| API Documentation | Frequently updated |
-| Project Plan      | Complete           |
-| User scenarios    | Complete           |
+| Ahmet Emir Kocağa | Task |
+| Yahya Bedirhan Pak      | Task           |
+| Furkan Cansever    | Task           |
 
 **1- Requirements**
 We've updated requirements according to the feedback from our new members and customer.

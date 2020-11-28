@@ -13,9 +13,11 @@
 - [Project plan](#project-plan)
 - [User scenarios](#User-Scenarios)
 - Code Structure Documentation
-- Evaluation of Tools
+- [Evaluation of Tools](#evaluation-of-tools)
+  - [Backend Tools](#backend-tools)
 - [Evaluation of Managing](#evaluation-of-managing)
 - [Assessment of the customer presentation](#assessment-of-the-customer-presentation)
+- [The code structure and group process](#The-code-structure-and-group-process)
 
 # Executive Summary
 
@@ -51,39 +53,64 @@ In terms of the first milestone, we believe that we are in a good situation but 
 
 # Deliverables
 
-| Deliverable       | Status             |
-|-------------------|--------------------|
-| Requirements      | Complete           |
-| Design Documents  | Complete           |
-| API Documentation | Frequently updated |
-| Project Plan      | Complete           |
-| User scenarios    | Complete           |
+| Deliverable          | Update Frequency                     | Status      |
+|----------------------|--------------------------------------|-------------|
+| Wiki Page            | Weekly                               | Complete    |
+| Issues/Pull Requests | Daily                                | In Progress |
+| Requirements         | As needed                            | Complete    |
+| Design Documents     | As needed                            | Complete    |
+| Project Plan         | As needed                            | Complete    |
+| User scenarios       | As needed                            | Complete    |
+| API Documentation    | As we implement/update new endpoints | In Progress |
+| Frontend Project     | Daily                                | In Progress |
+| Backend Project      | Daily                                | In Progress |
+| Android Project      | Daily                                | In Progress |
 
-**1- Requirements**
+
+**1- Wiki Page**
+We've updated our personal wiki pages, wiki home page and we share our meeting notes occasionally.
+
+**2- Issues/Pull Requests**
+We open issues and pull request for each requested feature implementation, bug fix, documentation. We also attach them with Projects so that we can track our progress on a board. 
+
+**3- Requirements**
 We've updated requirements according to the feedback from our new members and customer.
 
-**2- Design Documents**
-We haven't changed the design documents much because the customer and our team are good with it.
+**4- Design Documents**
+We've updated our class diagrams according to the changes in the implementation.
 
-**3- API Documentation**
-We're generating our API documentation automatically with swagger.
-
-**4- Project Plan**
+**5- Project Plan**
 We've planned our tasks according to which milestone will include which requirement. It also includes due date and which person is responsible for that task.
 
-**5- User scenarios** 
+**6- User scenarios** 
 We've prepared two user scenarios for the milestone 1 presentation. These scenarios show the current functionality of the application.
+
+**7- API Documentation**
+We're generating our API documentation automatically with swagger.
+
+**8- Frontend Project**
+We're still implementing the frontend project. You can see the source files in /front-end directory.
+
+**9- Backend Project** 
+We're still implementing the backebd project. You can see the source files in /backend directory.
+
+**9- Android Project** 
+We're still implementing the android project. You can see the source files in /android directory.
+
 
 # Work Done By Each Member
 | Name       | Task             |
 |-------------------|--------------------|
 | Mahir Efe KAYA      | [Android]Register page UI <br/> [Android] Register Page Functionality <br/> [Android] Register's Connection to Backend <br/> [Android] Register Error Checking <br/> Merging the individual parts of the milestone <br/> Searching for the implementation of the dagger and session manager principle in kotlin|
+| Ramazan Koç     | [Android] Implementing project main page, project page and login page. <br/> Connecting project main page,project page and login page with backend. <br/> Preparing the main scenario that used in android presentation.  <br/> Searched retrofit,dagger,rxjava,materialui. |
 | Ahmet Emir Kocağa | Task |
 | Yahya Bedirhan Pak      | [Android] Implementing profile view and edit pages. <br/> Connecting profile view and edit pages with backend. <br/> Creating an initial retrofit and moshi configurations for API requests. <br/> Adding initial dependency injection structure to the project with dagger2. <br/> [Backend] Configuring poetry <br/> Creating Dockerfile and docker-compose <br/> Creating GitHub Actions for backend continuous integration. <br/> Helping Furkan for continuous delivery of the backend and frontend. <br/> [Frontend] Helping Barış with the continuous integration of the frontend. |
 | Furkan Cansever    |  Implemented a script file compatible with Linux and macOS (no longer needed after using [poetry](https://python-poetry.org/)) <br/> Implemented configurations for deployment to Heroku <br/> Handled CD process to Amazon ECS for backend and fronted <br/> Reviewed work is done by backend team members. <br/> Implemented Swagger UI for API documentation.|
 | Buse Giledereli   | Creating issue template <br/> Researching and creating a document about MySQL Database <br/> Creating Milestone model <br/> Creating Tag model <br/> Adding DjangoFilterBackend to the project <br/> Updating project plan |
 | Barış Başmak | I work in the front-end team. For the front-end project: <br/> I created the project.<br/> Designed and coded a simple architecture so that pages could be added in an understandable and effortless way.<br/> Added the dependencies.<br/> Coded the login page and the login functionality.<br/>Coded the registration page. <br/>I implemented the navigation bar for logged in and guest states.<br/> Coded the project creation page. <br/> Coded event creation page <br/>Before the deployment I implemented "visual design" changes to the homepage.<br/> Helped researching about deploying the front-end project. 
 | Ali Furkan Budak | - Implemented 4 endpoints: "register", "auth", "logout", and "reset_password" <br/> - Modified the "auth" endpoint so that it returns the logged-in user's ID <br/> - Modified the "register" endpoint so that it accepts name fields and creates a new Profile with the name information for the registered user. <br/> - Created CRUD endpoints for "Event" objects.  <br/> - Added an optional "events" field to the "Project" model |
+| Adil Numan Çelik  | Created File model<br/> Created "retreive_file" endpoint for getting the file<br/> Wrote test cases for File model.<br/> Implemented the first version of endpoints for registration, authorization, password reset but they are replaced with Ali Furkan Budak's implementation due to design choices. <br/> Tested the endpoints. |
+
 
 # Challenges Met During DevOps
 As we are a big development team, we needed CI for process mechanics and some automation. For CI, we used the Action feature of Github. By following the steps of Github Action documentation, we implemented some YML files that contain some commands running at Ubuntu. When we open a pull request from our branch to the master branch, these actions are being triggered to run. Implementing scripts for CI was an easy part for us because these scripts contain all commands that we run on a local computer and these were working fine. All we did was automate them. We didn’t encounter any challenges for CI.
@@ -372,6 +399,24 @@ a journal.
 10. After that she checks her projects page to make sure project is created
 11. She clicked details of project to check other descriptions
 
+# Evaluation of tools
+
+## Backend Tools
+
+**Django:** Django makes the most part of the backend development easier as it has numerous bulit-in functionalities, but this has side effects like steep learning curve so we are still trying to fully control it.
+
+**Poetry:** It creates a virtual environment to include only the same versions of python modules accross the backend team. This way, we have less erorrs and backend development is streamlined.
+
+**Docker:** It keeps all required dependecies for the project such as python, python modules, binary files(Postgresql, OpenSSL etc.) in one place. So each team member can have the same development environment in their machines. Without Docker, installing dependencies one by one and making sure that everyone has the same version would be hard to accomplish.
+
+**VS Code:** VS code is a great user friendly code editor. It allow us to work more efficiently.
+
+**Github Desktop:** It makes everything about Github easier and understandable with its easy-to-use UI.
+
+**Discord:** We heavily utilize Discord. It is convenient to use because we can have one app for one-to-one and group chats, meetings and screen sharing.
+
+**Whatsapp:** Whatsapp is used for instant communication in our group.
+
 # Evaluation of managing
 
 To properly manage the progress we decided that every subteam should have their own meeting besides the weekly team meeting. We discuss the outlines of tasks together in weekly meetings and after that every subteam namely backend, frontend, and Android, sets-up a special meeting where tasks are discussed deeply and assigned to members. Despite these attempts, controlling the progress of each team member and trying to be on the same page with them while being sure no task is delayed is challenging especially in a team with 12 students who has myriad of assignemnts, and homeworks from other courses and jobs.
@@ -382,3 +427,12 @@ Initally, we thought that backend had to be ahead of other subteams so that fron
 The presentation helped us set a clear direction for our project thanks to the many insigthful feedbacks and suggestions we got from our customers. The reaction from our customers was generally positive as they were following the presentation, and at the end our customer came up with good questions about our path moving forward. The main focus of the customer was the process of joining a project. Although there were some mixed opinions, the customer generally wanted the project owner to describe clear requirements and the collaborators to fit these requirements in order to join the project. This was a thought-provoking idea and led to some internal discussions in the team and has been helpful as it made the product clearer before further development. 
 
 During our earlier customer meetings, our customer warned us to include interesting functinalities to make sure we are on the same page about important features. So we included important functionalities like project creation, profile creation and profile view. In the presentation, our team did a good job coming up with realistic scenarios, and displaying the strong points of our product. We managed the time well and captured the attention of the audience with interesting scenarios. What helped us in this process was that we practiced the presentation earlier internally and made sure everything was working as planned. The lesson we learned for the next time is that we should focus more on the Frontend and communicate more across teams, like Android, Frontend and Backend.
+
+# The code structure and group process
+
+We have three different teams namely Backend, Android and Frontend all of which are working separately having their preferences on how to implement their part of the project. Group process might differ from team to team.
+Developers have their own branches for implementing, improving or debugging a feature. We do not have strict rules on how to use branches if no one violates another developer’s branch or the main branch. Every branch is created with a prefix which tags the team it belongs to. After completing their coding developers need to create a pull request. Pull requests can have tags representing how critical they are, what they change, which team they belong to, their status and their type all of which helps reviewers. Every pull request is tested by various continuous integration tools such as Github Actions and Docker. If every test is passed, the code should be reviewed by other developers before being merged to the main branch. Number of reviewers depends on the size and priority of the pull request. After passing, tests and getting confirmed by reviewers, the newly requested code can be merged into the main branch. 
+Backend team follows pep-8 coding standards for a more structured, readable and understandable code. They use a tool called flake8 to test and ensure our code is up to those standards. Poetry and pytest are the other tools they use.
+Frontend team uses Eslint for a cleaner code. They make sure every pull request has explanatory comments so that reviewers have an easier time to review. They used material-ui themes and components for minimizing disorders in CSS code.
+Android team uses MVP (model-view-presenter) pattern to organize the presentation layer in the application. They require at least a reviewer for a pull request like the other teams. 
+

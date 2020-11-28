@@ -453,6 +453,25 @@ a journal.
 
 **Date-io:** we used date-io for date management
 
+## Android Tools
+
+**Android Studio:** Android Studio is the most powerful and most used IDE for Android development. It has Git, terminal integtrations. Also it has Gradle support.
+
+**Kotlin :** We decided to use Kotlin for Android project of PaperLayer. There are several reasons behind these decision. One of them is Google announced Kotlin as official language for Android development in 2017. Some of the other reasons are there is lambda expressions, null safety and extension functions. These features are not supported on Java.
+
+**MVP Pattern:** Before we started to implement Android project we discussed about whether we should use some software architecture or not. Then, we decided on using MVP architecture. MVP is Model-View-Presenter and what it does is basically seperate the functionality in three parts. Model is for managing API requests, View is for UI related operations and Presenter is for logic operations. Following this architecture we created a project which is easier to implement, debug and test. Also, by following MVP pattern we tried to accomplish S.O.L.I.D principles as much as possible.
+
+**Retrofit :** We used Retrofit for network operations. Retrofit is a network provider library used in almost every Android project. We created Retrofit instance in our project and we called that instance whenever we need to send a request and get a response. Currently we didn't add AuthenticationInterceptor in our Retrofit instance but we will add it for easier implementation later.
+
+**RxJava:** RxJava is a library that enables us to use reactive programming. We used RxJava to handle request and response with combination of Retrofit instance. Basically when we create and send a request our RxJava instance waits for the response. Whenever the response comes(either success or error) our RxJava is notified and after that we can handle the response.
+
+**Moshi :** Moshi is a library for converting request or response to Kotlin objects. Using Moshi we created our requests as Kotlin objects and when sending request it automatically converts it to JSON object. Also our response is in JSON format and by using Moshi it is converted to Kotlin object. Moshi is great for handling request and response in object oriented programming.
+
+**Dagger :** Dagger is a Dependency Injection library for Android. We used Dagger for this purpose.
+
+**Material Components :** We used Material Components library for customizing UI elements.
+
+**Git :** We used Git as version control system. It allowed us to work as a team.
 
 # Evaluation of managing
 

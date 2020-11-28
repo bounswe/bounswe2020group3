@@ -5,7 +5,7 @@
   - Project Status
   - Moving Forward
 - [Deliverables](#deliverables)
-- Work Done by Each Team Member
+- [Work Done by Each Team Member](#Work-Done-By-Each-Member)
 - [Challenges Met During DevOps](#Challenges-Met-During-DevOps)
 - [Requirements](#requirements)
 - Design documents

@@ -340,6 +340,11 @@ a journal.
 10. After that she checks her projects page to make sure project is created
 11. She clicked details of project to check other descriptions
 
+# Evaluation of managing
+
+To properly manage the progress we decided that every subteam should have their own meeting besides the weekly team meeting. We discuss the outlines of tasks together in weekly meetings and after that every subteam namely backend, frontend, and Android, sets-up a special meeting where tasks are discussed deeply and assigned to members. Despite these attempts, controlling the progress of each team member and trying to be on the same page with them while being sure no task is delayed is challenging especially in a team with 12 students who has myriad of assignemnts, and homeworks from other courses and jobs.
+Initally, we thought that backend had to be ahead of other subteams so that frontend and Android can use the available endpoints. However, this resulted in backend team rushing tasks without setting the rules properly with other subteams for long-term convenience. After a while, we realized that this is costing us time because for almost every endpoint, there was a feedback from either the frontend, or the Android team suggesting modifications. Now we decided to set up a meetings for members who are working on the same functionality so that they can thoroughly plan and decide the expected outcome. We are hoping to apply this system for the tasks of following milestones. 
+
 # Assessment of the customer presentation
 
 The presentation helped us set a clear direction for our project thanks to the many insigthful feedbacks and suggestions we got from our customers. The reaction from our customers was generally positive as they were following the presentation, and at the end our customer came up with good questions about our path moving forward. The main focus of the customer was the process of joining a project. Although there were some mixed opinions, the customer generally wanted the project owner to describe clear requirements and the collaborators to fit these requirements in order to join the project. This was a thought-provoking idea and led to some internal discussions in the team and has been helpful as it made the product clearer before further development. 

@@ -1,9 +1,9 @@
 # Table of Contents
 
-- Executive Summary
-  - Project Description
-  - Project Status
-  - Moving Forward
+- [Executive Summary](#executive-summary)
+  - [Project Description](#project-description)
+  - [Project Status](#project-status)
+  - [Moving Forward](#moving-forward)
 - [Deliverables](#deliverables)
 - [Work Done by Each Team Member](#Work-Done-By-Each-Member)
 - [Challenges Met During DevOps](#Challenges-Met-During-DevOps)

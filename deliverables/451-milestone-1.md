@@ -27,6 +27,17 @@
 | Project Plan      | Complete           |
 | User scenarios    | Complete           |
 
+# Work Done By Each Member
+| Name       | Task             |
+|-------------------|--------------------|
+| Mahir Efe KAYA      | [Android]Register page UI           |
+| Mahir Efe KAYA  |[Android] Register Page Functionality|
+| Mahir Efe KAYA  |[Android] Register|
+| Mahir Efe KAYA  |[Android] Register Error Checking|
+| API Documentation | Frequently updated |
+| Project Plan      | Complete           |
+| User scenarios    | Complete           |
+
 **1- Requirements**
 We've updated requirements according to the feedback from our new members and customer.
 

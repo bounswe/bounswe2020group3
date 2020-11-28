@@ -59,6 +59,21 @@ In terms of the first milestone, we believe that we are in a good situation but 
 | Project Plan      | Complete           |
 | User scenarios    | Complete           |
 
+**1- Requirements**
+We've updated requirements according to the feedback from our new members and customer.
+
+**2- Design Documents**
+We haven't changed the design documents much because the customer and our team are good with it.
+
+**3- API Documentation**
+We're generating our API documentation automatically with swagger.
+
+**4- Project Plan**
+We've planned our tasks according to which milestone will include which requirement. It also includes due date and which person is responsible for that task.
+
+**5- User scenarios** 
+We've prepared two user scenarios for the milestone 1 presentation. These scenarios show the current functionality of the application.
+
 # Work Done By Each Member
 | Name       | Task             |
 |-------------------|--------------------|

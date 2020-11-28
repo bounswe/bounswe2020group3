@@ -35,6 +35,7 @@
 | Yahya Bedirhan Pak      | Task           |
 | Furkan Cansever    |  Implemented a script file compatible with Linux and macOS (no longer needed after using [poetry](https://python-poetry.org/)) <br/> Implemented configurations for deployment to Heroku <br/> Handled CD process to Amazon ECS for backend and fronted <br/> Reviewed work is done by backend team members. <br/> Implemented Swagger UI for API documentation.|
 | Buse Giledereli   | Creating issue template <br/> Researching and creating a document about MySQL Database <br/> Creating Milestone model <br/> Creating Tag model <br/> Adding DjangoFilterBackend to the project <br/> Updating project plan |
+| Ali Furkan Budak | - Implemented 4 endpoints: "register", "auth", "logout", and "reset_password" <br/> - Modified the "auth" endpoint so that it returns the logged-in user's ID <br/> - Modified the "register" endpoint so that it accepts name fields and creates a new Profile with the name information for the registered user. <br/> - Created CRUD endpoints for "Event" objects.  <br/> - Added an optional "events" field to the "Project" model |
 
 **1- Requirements**
 We've updated requirements according to the feedback from our new members and customer.

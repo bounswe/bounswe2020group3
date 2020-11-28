@@ -1,16 +1,17 @@
 # Table of Contents
 
 - Executive Summary
-  - Introduction
-  - Work Done So far
-  - Road Ahead
-- [List and Status of the Deliverables](#deliverables)
+  - Project Description
+  - Project Status
+  - Moving Forward
+- [Deliverables](#deliverables)
 - Work Done by Each Team Member
 - Challenges Met During DevOps
 - [Requirements](#requirements)
 - Design documents
 - API documentation
 - [Project plan](#project-plan)
+- [User scenarios](#User scenarios)
 - User scenarios
 - Code Structure Documentation
 - Evaluation of Tools
@@ -281,6 +282,41 @@ We've prepared two user scenarios for the milestone 1 presentation. These scenar
 | Registration and Sign In   | 1.1.2.2           | Users should be able to sign up with their Google accounts.                                                                                                                                                    | 12.01.2021 | 19.01.2021 | Yunus              | Adil              | Yahya             |                       |
 | Annotation                 | -                 |                                                                                                                                                                                                                | 12.01.2021 | 19.01.2021 | All                | All               | All               | Annotation Research   |
 | Presentation               | -                 | Prepare milestone presentation                                                                                                                                                                                 | 12.01.2021 | 19.01.2021 | All                | All               | All               |                       |
+# User Scenerios
+## Web Scenario
+### Background
+**Umut Cihat Kabasarı** is a master's student. He has no prior research experience and he is working
+on his master's thesis. He wants his project advisor to see the latest version of the project at
+all times and he is considering submitting the outcome of his project as a paper to 
+a journal.
+
+### Steps Shown in Demo
+1. He registers to paperlayer with a unique username, first name, (optional) middle name, last name,email and password.
+2. He is forwarded to the login page and he logs in.
+3. He is forwarded to the home screen. He clicks create a project to create a new project.
+4. He enters the details of his project and sets it public so that his advisor will be able to see it.He also sets the project type in progress since he doesn't wany any collaborators. And he leaves event blank because he doesn't know to which journal he is going to submit his paper to. 
+5. He then goes back to the homepage and scrolls through other projects.
+6. He clicks a project and looks at the details of the project.
+
+## Android Scenario
+### Background
+**Özlem Türeci** is a scientist. At the early stages of the pandemic, she wants to work on a project to develop a vaccine for covid19. She wants to work with a group of skilled and hardworking scientists to develop a vaccine as fast as possible. For this purpose she can use PaperLayer. Because on PaperLayer you can find other scientists to collaborate on your project or research. This way, she and other scientists can share their knowledge and work together for the same purpose. She searched for a platform to find other colleagues and found Paperlayer.
+### Preconditions
+1. She is a registered user
+2. She already downloaded the PaperLayer app to his phone
+
+### Steps Shown in Demo
+1. She logins to PaperLayer app
+2. She views his profile page
+3. She views and edits his profile page
+4. She opens project creation page
+5. She enters project name, project description and requirements
+6. She chooses to create public project
+7. Since she needs another researchers, she selects project state as seeking for collaborators
+8. She picks a due date for the research project
+9. She creates a Covid19 research project
+10. After that she checks her projects page to make sure project is created
+11. She clicked details of project to check other descriptions
 
 # Assessment of the customer presentation
 

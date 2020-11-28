@@ -294,7 +294,7 @@ After that, we needed the task-definition.json file in our repository. It consis
 | Registration and Sign In   | 1.1.2.2           | Users should be able to sign up with their Google accounts.                                                                                                                                                    | 12.01.2021 | 19.01.2021 | Yunus              | Adil              | Yahya             |                       |
 | Annotation                 | -                 |                                                                                                                                                                                                                | 12.01.2021 | 19.01.2021 | All                | All               | All               | Annotation Research   |
 | Presentation               | -                 | Prepare milestone presentation                                                                                                                                                                                 | 12.01.2021 | 19.01.2021 | All                | All               | All               |                       |
-# User Scenerios
+# User Scenarios
 ## Web Scenario
 ### Background
 **Umut Cihat Kabasarı** is a master's student. He has no prior research experience and he is working

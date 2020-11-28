@@ -12,7 +12,6 @@
 - API documentation
 - [Project plan](#project-plan)
 - [User scenarios](#User-Scenarios)
-- User scenarios
 - Code Structure Documentation
 - Evaluation of Tools
 - Evaluation of Managing

@@ -47,7 +47,7 @@ We've prepared two user scenarios for the milestone 1 presentation. These scenar
 |-------------------|--------------------|
 | Mahir Efe KAYA      | [Android]Register page UI <br/> [Android] Register Page Functionality <br/> [Android] Register's Connection to Backend <br/> [Android] Register Error Checking <br/> Merging the individual parts of the milestone <br/> [Android] Searching for the implementation of the dagger and session manager principle in kotlin|
 | Ahmet Emir Kocağa | Task |
-| Yahya Bedirhan Pak      | Task           |
+| Yahya Bedirhan Pak      | [Android] Implementing profile view and edit pages. <br/> Connecting profile view and edit pages with backend. <br/> Creating an initial retrofit and moshi configurations for API requests. <br/> Adding initial dependency injection structure to the project with dagger2. <br/> [Backend] Configuring poetry <br/> Creating Dockerfile and docker-compose <br/> Creating GitHub Actions for backend continuous integration. <br/> Helping Furkan for continuous delivery of the backend and frontend. <br/> [Frontend] Helping Barış with the continuous integration of the frontend.|
 | Furkan Cansever    | Task           |
 | Buse Giledereli   | Creating issue template <br/> Researching and creating a document about MySQL Database <br/> Creating Milestone model <br/> Creating Tag model <br/> Adding DjangoFilterBackend to the project <br/> Updating project plan |
 

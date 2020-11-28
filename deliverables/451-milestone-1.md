@@ -68,33 +68,43 @@ In terms of the first milestone, we believe that we are in a good situation but 
 
 
 **1- Wiki Page**
+
 We've updated our personal wiki pages, wiki home page and we share our meeting notes occasionally.
 
 **2- Issues/Pull Requests**
+
 We open issues and pull request for each requested feature implementation, bug fix, documentation. We also attach them with Projects so that we can track our progress on a board. 
 
 **3- Requirements**
+
 We've updated requirements according to the feedback from our new members and customer.
 
 **4- Design Documents**
+
 We've updated our class diagrams according to the changes in the implementation.
 
 **5- Project Plan**
+
 We've planned our tasks according to which milestone will include which requirement. It also includes due date and which person is responsible for that task.
 
 **6- User scenarios** 
+
 We've prepared two user scenarios for the milestone 1 presentation. These scenarios show the current functionality of the application.
 
 **7- API Documentation**
+
 We're generating our API documentation automatically with swagger.
 
 **8- Frontend Project**
+
 We're still implementing the frontend project. You can see the source files in /front-end directory.
 
 **9- Backend Project** 
+
 We're still implementing the backebd project. You can see the source files in /backend directory.
 
 **9- Android Project** 
+
 We're still implementing the android project. You can see the source files in /android directory.
 
 

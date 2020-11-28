@@ -17,6 +17,38 @@
 - [Evaluation of Managing](#evaluation-of-managing)
 - [Assessment of the customer presentation](#assessment-of-the-customer-presentation)
 
+# Executive Summary
+
+## Project Description
+
+Paperlayer is an online collaboration platform for academics, in which people can create new projects and write papers, while collaborating with other users and scholars. Moreover, in PaperLayer people can access public projects and keep track of the trends in their academic research area, search for co-authors for their research and follow upcoming events in academia such as conferences or journals. Projects can also be made public/private depending on the user’s wishes. Users can invite others to projects in order to collaborate and search for an optimal collaborator for their project. Also users can rate other users, comment on their profiles and send each other messages. To sum up, it’s a great platform for collaboration for academics.
+
+## Project Status
+
+After Cmpe352, we have lost 3 members and 6 new members have joined us. So, we had an adaptation process but this process was very useful for us to review what we did in Cmpe352. We started the semester by reviewing our requirements and project plan with the contribution of the different perspectives of our new members. As a result of this review and adaptation process, we made necessary changes and we made sure that all members in the team are on the same line. 
+
+After the completion of these first steps, we divided into 3 subgroups, namely Backend, Frontend and Android. Firstly, we decided the technologies that we will be using and CI/CD workflow in order to avoid any problems that we could face during the implementation. 
+
+So far, we have managed to deploy our first MVP (Minimum Viable Product) for the Milestone 1.
+
+- Our web project dockerized and deployed at http://paperlayer.tech/
+- Our backend api documentation can be found at http://ec2co-ecsel-1egsefcb8a7i3-34132836.us-east-2.elb.amazonaws.com/swagger/
+- We demonstrated a demo of our Android Application at our representation.
+
+First weeks were challenging since our team was not experienced in web development, we struggled learning new technologies and new design patterns. Also constructing a “team” means great effort: Getting used to each other, welcoming new members, getting used to each other’s way of working. Beyond that, we had to work hard in order to define a workflow that will ease our future implementations and deployments.
+
+Within the context of our first Milestone, we managed to keep our wiki up to date, define a convenient workflow and stick to our project plan.
+
+## Moving Forward
+
+Until the first Milestone, we have faced many challenges and naturally made some mistakes. We learned from our mistakes and realized that we can do better with some issues.
+
+Firstly, we saw that the Backend team had to make some changes in API regarding requests from Frontend and Android teams. So, we decided to make weekly inter-team meetings in order to pre-define API endpoints’ details together. We hope that these meetings will improve our efficiency. 
+
+Secondly, we noticed at our pre-milestone meeting that the opinions of the members of other subteams were very useful for progress. So, we decided that we should make inter-team reviews in order to recognize shortcomings earlier and take actions.
+
+In terms of the first milestone, we believe that we are in a good situation but we could achieve more. Lessons learned from our mistakes will hopefully help us move forward faster.
+
 # Deliverables
 
 | Deliverable       | Status             |

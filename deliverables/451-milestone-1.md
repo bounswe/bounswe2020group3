@@ -30,7 +30,7 @@
 # Work Done By Each Member
 | Name       | Task             |
 |-------------------|--------------------|
-| Mahir Efe KAYA      | [Android]Register page UI <br/> [Android] Register Page Functionality <br/> [Android] Register's Connection to Backend <br/> [Android] Register Error Checking <br/> Merging the individual parts of the milestone <br/> Searching for the implementation of the dagger and session manager principle in kotlin|
+| Mahir Efe KAYA      | [Android]Register page UI <br/> [Android] Register Page Functionality <br/> [Android] Register's Connection to Backend <br/> [Android] Register Error Checking <br/> Merging the individual parts of the milestone <br/> [Android] Searching for the implementation of the dagger and session manager principle in kotlin|
 | Ahmet Emir Kocağa | Task |
 | Yahya Bedirhan Pak      | Task           |
 | Furkan Cansever    | Task           |

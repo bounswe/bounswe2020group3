@@ -5,8 +5,8 @@
   - [Project Status](#project-status)
   - [Moving Forward](#moving-forward)
 - [Deliverables](#deliverables)
-- [Work Done by Each Team Member](#Work-Done-By-Each-Member)
-- [Challenges Met During DevOps](#Challenges-Met-During-DevOps)
+- [Work Done by Each Team Member](#work-done-by-each-member)
+- [Challenges Met During DevOps](#challenges-met-during-devops)
 - [Requirements](#requirements)
 - Design documents
 - API documentation
@@ -114,7 +114,7 @@ We're still implementing the android project. You can see the source files in /a
 |-------------------|--------------------|
 | Mahir Efe KAYA      | [Android]Register page UI <br/> [Android] Register Page Functionality <br/> [Android] Register's Connection to Backend <br/> [Android] Register Error Checking <br/> Merging the individual parts of the milestone <br/> Searching for the implementation of the dagger and session manager principle in kotlin|
 | Ramazan Koç     | [Android] Implementing project main page, project page and login page. <br/> Connecting project main page,project page and login page with backend. <br/> Preparing the main scenario that used in android presentation.  <br/> Searched retrofit,dagger,rxjava,materialui. |
-| Ahmet Emir Kocağa | Task |
+| Ahmet Emir Kocağa | - Created first empty version of the Django Project. <br/> - Researched about Static Code Analysis and CI. <br/> - Set up gitignore file for backend. <br/> - Implemented "Profile" model and created CRUD endpoints. <br/> - Implemented "Project" model and created CRUD endpoints. <br/> - Created the permission check mechanism for these objects so that only the owner can edit. <br/> - Created Backend, Frontend, Andorid and General Projects in GitHub Projects section. <br/> - Prepared Milestone 1 presentation. <br/> - Reviewed work done by other subteams. <br/> - Wrote the Executive Summary of Milestone Report 1. |
 | Yahya Bedirhan Pak      | [Android] Implementing profile view and edit pages. <br/> Connecting profile view and edit pages with backend. <br/> Creating an initial retrofit and moshi configurations for API requests. <br/> Adding initial dependency injection structure to the project with dagger2. <br/> [Backend] Configuring poetry <br/> Creating Dockerfile and docker-compose <br/> Creating GitHub Actions for backend continuous integration. <br/> Helping Furkan for continuous delivery of the backend and frontend. <br/> [Frontend] Helping Barış with the continuous integration of the frontend. |
 | Furkan Cansever    |  Implemented a script file compatible with Linux and macOS (no longer needed after using [poetry](https://python-poetry.org/)) <br/> Implemented configurations for deployment to Heroku <br/> Handled CD process to Amazon ECS for backend and fronted <br/> Reviewed work is done by backend team members. <br/> Implemented Swagger UI for API documentation.|
 | Buse Giledereli   | Creating issue template <br/> Researching and creating a document about MySQL Database <br/> Creating Milestone model <br/> Creating Tag model <br/> Adding DjangoFilterBackend to the project <br/> Updating project plan |

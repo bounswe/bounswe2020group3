@@ -12,7 +12,6 @@
 - API documentation
 - [Project plan](#project-plan)
 - [User scenarios](#User-Scenarios)
-- Code Structure Documentation
 - [Evaluation of Tools](#evaluation-of-tools)
   - [Backend Tools](#backend-tools)
   - [Frontend Tools](#frontend-tools)

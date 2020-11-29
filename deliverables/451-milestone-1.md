@@ -1,3 +1,5 @@
+# Boğaziçi University CMPE451 Group 3 Milestone 1 Report
+
 # Table of Contents
 
 - [Executive Summary](#executive-summary)
@@ -395,6 +397,8 @@ We've also exported it after the milestone 1 presentation. Since it's a long doc
 | Registration and Sign In   | 1.1.2.2           | Users should be able to sign up with their Google accounts.                                                                                                                                                    | 12.01.2021 | 19.01.2021 | Yunus              | Adil              | Yahya             |                       |
 | Annotation                 | -                 |                                                                                                                                                                                                                | 12.01.2021 | 19.01.2021 | All                | All               | All               | Annotation Research   |
 | Presentation               | -                 | Prepare milestone presentation                                                                                                                                                                                 | 12.01.2021 | 19.01.2021 | All                | All               | All               |                       |
+
+
 # User Scenarios
 ## Web Scenario
 ### Background

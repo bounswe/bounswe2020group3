@@ -1,3 +1,5 @@
+# Boğaziçi University CMPE451 Group 3 Milestone 1 Report
+
 # Table of Contents
 
 - [Executive Summary](#executive-summary)
@@ -8,8 +10,8 @@
 - [Work Done by Each Team Member](#work-done-by-each-member)
 - [Challenges Met During DevOps](#challenges-met-during-devops)
 - [Requirements](#requirements)
-- Design documents
-- API documentation
+- [Design documents](#design-documents)
+- [API documentation](#api-documentation)
 - [Project plan](#project-plan)
 - [User scenarios](#User-Scenarios)
 - [Evaluation of Tools](#evaluation-of-tools)
@@ -139,6 +141,9 @@ After that, we needed the task-definition.json file in our repository. It consis
 
 
 # Requirements
+
+We've updated our requirements according to the feedback from our customer and new team members. You can see updated glossary terms and requirements as highlighted.
+
 ## <a name="Glossary"></a> Glossary
 * **Guest User** : The user who is only able to view the profiles that are public
 * **Registered User** : The user who is registered to the system. **User** in the rest of glossary and requirements imply registered user.
@@ -297,6 +302,22 @@ After that, we needed the task-definition.json file in our repository. It consis
    * **2.5.3.** There shall be a web platform and a native Android application that supports the same functionalities.
    * **2.5.4.** The color designs of the platform will be made to improve the experience of color-blind people.
 
+# Design Documents
+
+We haven't changed our mockups. You can see them here: [https://github.com/bounswe/bounswe2020group3/wiki/Mockups](https://github.com/bounswe/bounswe2020group3/wiki/Mockups)
+
+We haven't changed our use-case diagrams. You can see it here: [https://github.com/bounswe/bounswe2020group3/wiki/Use-Case-Diagram](https://github.com/bounswe/bounswe2020group3/wiki/Use-Case-Diagram)
+
+We've updated our class diagram and uploaded to the wiki page. Since it's a huge image and hard to read without zoom in, we don't include the image here. Red text shows updated fields and methods. We've updated them according to the needs of the updated requirements and feedback from the customer. Here you can see the latest version of the class diagram: [https://github.com/bounswe/bounswe2020group3/wiki/Class-Diagram](https://github.com/bounswe/bounswe2020group3/wiki/Class-Diagram)
+
+We haven't changed our sequence diagrams. You can see it here: [https://github.com/bounswe/bounswe2020group3/wiki/Sequence-Diagrams](https://github.com/bounswe/bounswe2020group3/wiki/Sequence-Diagrams)
+
+# API documentation
+
+We generated our API documentation automatically with swagger. You can check the latest version by using this link: [http://ec2co-ecsel-1egsefcb8a7i3-34132836.us-east-2.elb.amazonaws.com/swagger/](http://ec2co-ecsel-1egsefcb8a7i3-34132836.us-east-2.elb.amazonaws.com/swagger/)
+
+We've also exported it after the milestone 1 presentation. Since it's a long document, we placed it at the end of this file. You can check it at [Appendix](#appendix)
+
 # Project Plan
 
 | Task                       | Requirement       | Details                                                                                                                                                                                                        | Start Date | Deadline   | Assignee(Frontend) | Assignee(Backend) | Assignee(Android) | Predecessor           |
@@ -377,6 +398,8 @@ After that, we needed the task-definition.json file in our repository. It consis
 | Registration and Sign In   | 1.1.2.2           | Users should be able to sign up with their Google accounts.                                                                                                                                                    | 12.01.2021 | 19.01.2021 | Yunus              | Adil              | Yahya             |                       |
 | Annotation                 | -                 |                                                                                                                                                                                                                | 12.01.2021 | 19.01.2021 | All                | All               | All               | Annotation Research   |
 | Presentation               | -                 | Prepare milestone presentation                                                                                                                                                                                 | 12.01.2021 | 19.01.2021 | All                | All               | All               |                       |
+
+
 # User Scenarios
 ## Web Scenario
 ### Background
@@ -496,4 +519,6 @@ Developers have their own branches for implementing, improving or debugging a fe
 Backend team follows pep-8 coding standards for a more structured, readable and understandable code. They use a tool called flake8 to test and ensure our code is up to those standards. Poetry and pytest are the other tools they use.
 Frontend team uses Eslint for a cleaner code. They make sure every pull request has explanatory comments so that reviewers have an easier time to review. They used material-ui themes and components for minimizing disorders in CSS code.
 Android team uses MVP (model-view-presenter) pattern to organize the presentation layer in the application. They require at least a reviewer for a pull request like the other teams. 
+
+# Appendix
 

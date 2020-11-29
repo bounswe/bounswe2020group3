@@ -138,6 +138,9 @@ After that, we needed the task-definition.json file in our repository. It consis
 
 
 # Requirements
+
+We've updated our requirements according to the feedback from our customer and new team members. You can see updated glossary terms and requirements as highlighted.
+
 ## <a name="Glossary"></a> Glossary
 * **Guest User** : The user who is only able to view the profiles that are public
 * **Registered User** : The user who is registered to the system. **User** in the rest of glossary and requirements imply registered user.

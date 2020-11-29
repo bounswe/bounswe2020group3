@@ -422,6 +422,10 @@ a journal.
 
 **Docker:** It keeps all required dependecies for the project such as python, python modules, binary files(Postgresql, OpenSSL etc.) in one place. So each team member can have the same development environment in their machines. Without Docker, installing dependencies one by one and making sure that everyone has the same version would be hard to accomplish.
 
+**Swagger:** Swagger is a great tool for us to create endpoint documentation automatically. The endpoints we create in Django end-up in Swagger documentation with its input and output.
+
+**Django REST Framework:** Django REST framework is a powerful and flexible toolkit for building Web APIs. We utilized it for every endpoint and it made the development process easier.
+
 **VS Code:** VS code is a great user friendly code editor. It allow us to work more efficiently.
 
 **Github Desktop:** It makes everything about Github easier and understandable with its easy-to-use UI.

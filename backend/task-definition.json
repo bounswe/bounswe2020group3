@@ -55,6 +55,10 @@
         {
           "valueFrom": "arn:aws:secretsmanager:us-east-2:190425834924:secret:EnvironmentVars-tJG4Jy:DJANGO_ENV::",
           "name": "DJANGO_ENV"
+        },
+        {
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:190425834924:secret:EnvironmentVars-tJG4Jy:EMAIL_HOST_PASSWORD::",
+          "name": "EMAIL_HOST_PASSWORD"
         }
       ],
       "dockerSecurityOptions": null,

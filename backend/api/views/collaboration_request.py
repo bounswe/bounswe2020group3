@@ -26,20 +26,29 @@ class CollaborationRequestViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(from_user=self.request.user)
 
-    @action(detail=True, methods=['POST'], name='accept_collaboration_request')
+    @action(detail=True, methods=['POST'], name='accept_collaboration_request',
+            serializer_class=None)
     def accept_collaboration(self, request, pk=None):
-
         collaboration_request = get_object_or_404(
             CollaborationRequest, pk=pk)
-        collaboration_request.accept()
+        if collaboration_request.to_user == self.request.user:
+            collaboration_request.accept()
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(data={
+                'error': 'Unauthorized'
+            }, status=status.HTTP_401_UNAUTHORIZED)
 
-        return Response(status=status.HTTP_201_CREATED)
-
-    @action(detail=True, methods=['POST'], name='reject_collaboration_request')
+    @action(detail=True, methods=['POST'], name='reject_collaboration_request',
+            serializer_class=None)
     def reject_collaboration(self, request, pk=None):
 
         collaboration_request = get_object_or_404(
             CollaborationRequest, pk=pk)
-        collaboration_request.reject()
-
-        return Response(status=status.HTTP_201_CREATED)
+        if collaboration_request.to_user == self.request.user:
+            collaboration_request.reject()
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(data={
+                'error': 'Unauthorized'
+            }, status=status.HTTP_401_UNAUTHORIZED)

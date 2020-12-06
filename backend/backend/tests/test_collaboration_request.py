@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.test import APITestCase
 from api.models.project import Project
-from django.test.utils import setup_test_environment
 import json
 
 
@@ -41,8 +40,6 @@ class CollaborationRequestTests(APITestCase):
                                     {'to_project': self.project.id},
                                     format='json')
         self.assertEqual(response.status_code, 201)
-        #response = self.client.get('/api/projects/1/')
-        #self.assertEqual(response.content, 201)
 
         response = self.client.get(
             '/api/collaboration_requests/', {'to_user__id': self.owner.id})

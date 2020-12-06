@@ -21,7 +21,8 @@ class Project(models.Model):
     is_public = models.BooleanField(default=False)
     owner = models.ForeignKey(
         'auth.User', related_name='owner', on_delete=models.CASCADE)
-    members = models.ManyToManyField('auth.User', related_name='members')
+    members = models.ManyToManyField('auth.User', related_name='members',
+                                     blank=True)
     state = models.CharField(choices=STATE_CHOICES,
                              default="seeking for collaborators",
                              max_length=100)

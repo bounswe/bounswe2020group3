@@ -64,3 +64,19 @@ class IsFileMemberOrReadOnly(permissions.BasePermission):
         # Write permissions are only allowed to the members of the project.
         return request.user in obj.project.members.all() or \
             request.user == obj.project.owner
+
+
+class CollaborationPermissions(permissions.BasePermission):
+    """
+    Custom permission to only allow members of an object to edit it.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        if view.action in ['retrieve', 'list']:
+            return request.user == obj.to_user or request.user == obj.from_user
+        elif view.action == 'accept_collaboration_request' or \
+                view.action == 'reject_collaboration_request':
+            return request.user == obj.to_user
+        elif view.action in ['update', 'partial_update', 'destroy']:
+            return request.user == obj.from_user
+        return True

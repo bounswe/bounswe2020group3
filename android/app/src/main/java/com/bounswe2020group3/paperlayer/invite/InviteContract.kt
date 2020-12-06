@@ -4,11 +4,13 @@ import com.bounswe2020group3.paperlayer.project.ProjectCard
 import com.bounswe2020group3.paperlayer.login.LoginContract
 import com.bounswe2020group3.paperlayer.login.data.AuthToken
 import com.bounswe2020group3.paperlayer.mvp.Mvp
+import com.bounswe2020group3.paperlayer.profile.data.User
 import com.bounswe2020group3.paperlayer.project.data.Project
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 interface InviteContract {
@@ -24,25 +26,25 @@ interface InviteContract {
     interface View: Mvp.View{
         fun getLayout(): android.view.View
         fun showToast(message: String)
-        fun writeLogMessage(type:String ,tag: String,message: String)
 
         fun resetUserCardlist()
         fun submitUserCardList()
-        fun addUserCard(name: String,expertise: String,later: String,UserId: Int)
+        fun addUserCard(username: String,name : String,expertise: String,photoURL: String)
     }
 
     interface Model {
         //fun getProject(projectId: Int): Single<Project>
-        fun getAllUsers(ownerId: Int): Observable<List<Project>>
+        fun getAllUsers(): Observable<List<User>>?
         fun getAuthToken(): BehaviorSubject<AuthToken>
     }
 
     interface UserService {
-        @GET("/api/projects/{projectId}/")
-        fun getProject(@Path("projectId") projectId: Int): Single<Project>
+        @POST("/api/projects/{projectId}/")
+        fun inviteUsers(@Path("projectId") projectId: Int): Observable<List<User>>
 
-        @GET("/api/projects/")
-        fun getUsers(@Query("owner__id") ownerId: Int): Observable<List<Project>>
+
+        @GET("/api/users/")
+        fun getUsers(): Observable<List<User>>
     }
 
 }

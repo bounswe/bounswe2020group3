@@ -1,5 +1,6 @@
 package com.bounswe2020group3.paperlayer.dagger
 
+import com.bounswe2020group3.paperlayer.invite.InviteFragment
 import com.bounswe2020group3.paperlayer.login.LoginFragment
 import com.bounswe2020group3.paperlayer.profile.ProfileFragment
 import com.bounswe2020group3.paperlayer.profile.edit.ProfileEditFragment
@@ -18,4 +19,5 @@ interface AppComponent {
     fun inject(fragment: ProjectMainFragment)
     fun inject(fragment: ProjectFragment)
     fun inject(fragment: ProjectCreateFragment)
+    fun inject(ınviteFragment: InviteFragment)
 }

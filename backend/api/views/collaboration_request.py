@@ -38,7 +38,8 @@ class CollaborationRequestViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['POST'], name='reject_collaboration_request')
     def reject_collaboration(self, request, pk=None):
 
-        collaboration_request = CollaborationRequest.objects.filter(id=pk)
+        collaboration_request = get_object_or_404(
+            CollaborationRequest, pk=pk)
         collaboration_request.reject()
 
         return Response(status=status.HTTP_201_CREATED)

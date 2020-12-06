@@ -1,6 +1,7 @@
 from django.db import models
 import datetime
 from .event import Event
+from .tag import Tag
 
 STATES = ["seeking for collaborators",
           "open for collaborators", "in progress", "done"]
@@ -27,7 +28,9 @@ class Project(models.Model):
     project_type = models.CharField(choices=TYPE_CHOICES,
                                     default="conference", max_length=100)
     due_date = models.DateField(default=datetime.date.today)
-    events = models.ManyToManyField(Event, blank=True)
+    event = models.ForeignKey(
+        Event, blank=True, on_delete=models.SET_NULL, null=True)
+    tags = models.ManyToManyField(Tag, blank=True)
 
     class Meta:
         ordering = ['created']

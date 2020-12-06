@@ -8,6 +8,7 @@ class FileTests(APITestCase):
     """
     Tests for the file model.
     """
+
     def setUp(self):
         self.username = 'john_doe'
         self.password = 'foobar'
@@ -21,21 +22,19 @@ class FileTests(APITestCase):
 
     def test_can_create_and_retrieve_file(self):
         user_id = self.user.id
-        user_url = f"http://127.0.0.1:8000/api/users/{user_id}/"
         project_response = self.client.post('/api/projects/',
                                             {"name": "aaa",
-                                             "members": [user_url],
+                                             "members": [user_id],
                                              },
                                             format='json')
         project_id = project_response.data["id"]
-        project_url = f"http://127.0.0.1:8000/api/projects/{project_id}/"
         test_file = SimpleUploadedFile("test_file.txt",
                                        b"file_content",
                                        content_type="text/txt")
         response = self.client.post('/api/files/',
                                     {'file': test_file,
                                      'remark': 'test_file',
-                                     'project': project_url},
+                                     'project': project_id},
                                     format='multipart')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         file_id = response.data["id"]

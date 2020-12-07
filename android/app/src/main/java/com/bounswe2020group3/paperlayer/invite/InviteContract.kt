@@ -26,6 +26,7 @@ interface InviteContract {
     interface View: Mvp.View{
         fun getLayout(): android.view.View
         fun showToast(message: String)
+        fun writeLogMessage(type:String ,tag: String,message: String)
 
         fun resetUserCardlist()
         fun submitUserCardList()

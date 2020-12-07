@@ -72,6 +72,9 @@
             android:name="projectID"
             app:argType="integer"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/navigateToInviteFromProject"
+            app:destination="@id/inviteFragment" />
     </fragment>
 
     <fragment
@@ -93,5 +96,9 @@
             android:id="@+id/navigateToProjectCreate"
             app:destination="@id/projectCreateFragment" />
     </fragment>
-    
+    <fragment
+        android:id="@+id/inviteFragment"
+        android:name="com.bounswe2020group3.paperlayer.invite.InviteFragment"
+        android:label="InviteFragment" />
+
 </navigation>

@@ -57,11 +57,11 @@
                         android:textColor="@color/colorBlack" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/buttonFollow"
+                        android:id="@+id/buttonInvite"
                         style="?attr/borderlessButtonStyle"
                         android:layout_width="102dp"
                         android:layout_height="wrap_content"
-                        android:text="VIEW" />
+                        android:text="INVITE" />
                 </LinearLayout>
 
             </LinearLayout>

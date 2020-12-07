@@ -8,9 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.project.data.Project
+import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.fragment_project.*
 import kotlinx.android.synthetic.main.fragment_project.view.*
 import javax.inject.Inject
 
@@ -74,6 +77,13 @@ class ProjectFragment : Fragment(),ProjectContract.View {
             "d"-> Log.d(tag,message) //debug
             "v"-> Log.v(tag,message) //verbose
             else->Log.e(tag,"Type is not defined")
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        inviteUser.setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToInviteFromProject)
         }
     }
 

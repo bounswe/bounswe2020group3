@@ -14,10 +14,10 @@ abstract class InviteModule {
 
 
     @Binds
-    abstract fun bindProjectPresenter(presenter: InvitePresenter): InviteContract.Presenter
+    abstract fun bindInvitePresenter(presenter: InvitePresenter): InviteContract.Presenter
 
 
     @Binds
     @Singleton
-    abstract fun bindProjectModel(model: InviteModel): InviteContract.Model
+    abstract fun bindInviteModel(model: InviteModel): InviteContract.Model
 }

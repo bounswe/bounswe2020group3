@@ -5,6 +5,9 @@ import com.bounswe2020group3.paperlayer.project.ProjectMainContract
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
+private const val TAG = "InvitePresenter"
+
+
 class InvitePresenter @Inject constructor(private var model: InviteContract.Model) : BasePresenter<InviteContract.View>(), InviteContract.Presenter {
 
     private var disposable = CompositeDisposable()
@@ -21,23 +24,29 @@ class InvitePresenter @Inject constructor(private var model: InviteContract.Mode
         val userProfileSub = model.getAuthToken().subscribe { token ->
             fetchAllUsers(token.id)
         }
-        disposable.add(userProfileSub)    }
+        disposable.add(userProfileSub)
+    }
 
     override fun fetchAllUsers(ownerId: Int) {
         val getUsersObservable = model.getAllUsers()?.subscribe(
             { userlist ->
                 for (user in userlist){
-                    user.profile.get(0).photoUrl?.let {
-                        user.profile.get(0).expertise?.let { it1 ->
-                            this.view?.addUserCard(user.username,user.profile.get(0).name + user.profile.get(0).lastName,
-                                    it1, it)
-                        }
-                    }
+
+                    if (user.profile.size >0)
+                        this.view?.addUserCard(user.username,user.profile.get(0).name + user.profile.get(0).lastName,
+                            "", "it")
+                    else
+                        this.view?.addUserCard(user.username,"",
+                                "", "it")
+                    this.view?.writeLogMessage("i", TAG,user.username + " addUserCard is Called")
+
                 }
                 this.view?.submitUserCardList()
+                this.view?.writeLogMessage("i", TAG," submit fun is Called")
+
             },
             { error ->
-                showMessage("Fetching failed")
+                this.view?.writeLogMessage("e", TAG, "fetching failed")
             }
         )
         if (getUsersObservable != null) {
@@ -47,6 +56,8 @@ class InvitePresenter @Inject constructor(private var model: InviteContract.Mode
 
     override fun bind(view: InviteContract.View) {
         super.bind(view)
+        this.view?.writeLogMessage("i", TAG,"Invite Presenter Created")
+
         subscribeAuthToken()
 
     }

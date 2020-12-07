@@ -12,6 +12,14 @@ import axios from 'axios';
 import config from '../config';
 import UserNavbar from '../Components/TopBar/UserNavbar';
 
+const titleStyle = {
+  textAlign: "left"
+}
+const textStyle = {
+  textAlign: "left",
+  minHeight: "100px",
+  padding: "2px 12px"
+}
 const Container = styled(Box)({
   background: "#f9f9eb",
   border: 0,
@@ -19,18 +27,17 @@ const Container = styled(Box)({
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
   color: 'white',
   height: "calc(98vh - 64px)",
-  // width: "100%",
-  paddingBottom:"60px",
-  top:"0",
-  bottom:"0",
-  left:"0",
-  right:"0",
+  paddingBottom: "60px",
+  top: "0",
+  bottom: "0",
+  left: "0",
+  right: "0",
   margin: "auto",
   '& .MuiTextField-root': {
-      margin: "10px",
-      width: "30%",
-      minWidth: "250px"
-    }
+    margin: "10px",
+    width: "30%",
+    minWidth: "250px"
+  }
 });
 
 export default class HomePage extends Component {
@@ -79,46 +86,50 @@ export default class HomePage extends Component {
           goHome={() => { this.props.history.push(config.Homepage_Path) }}
         />
         <Typography variant="h4" color="primary">Profile Page</Typography>
-        <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin:'auto'}} />
-          <br />
-          <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
-              <Typography>{this.state.name + " " + this.state.last_name}</Typography>
-            </Paper>
+        <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto' }} />
+        <br />
+        <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
+          <Typography>{this.state.name + " " + this.state.middle_name} <br/> 
+          {this.state.last_name.toUpperCase()}</Typography>
+        </Paper>
         <Grid container direction="row" justify="center" alignItems="center" >
-          
-        
-        <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">
-          <Grid item sm={3}>
-            Projects
-            </Grid>
-          <Grid container spacing={2} item sm={6}>
-            
-            <Grid item sm={6} >
-              <Typography variant="h5" color="primary" style={{textAlign:"left"}}>Biography</Typography>
-              <Paper elevation={6} style={{ minHeight: "100px" }}>
-                <p>{this.state.bio}</p>
-              </Paper>
 
-            </Grid>
-            <Grid item sm={6} >
-              <Typography variant="h5" color="primary">Biography</Typography>
-              <Paper elevation={6} style={{ minHeight: "100px" }}>
-                <p>{this.state.bio}</p>
-              </Paper>
 
+          <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">
+            <Grid item sm={3}>
+              Projects
             </Grid>
-            {/* <Typography variant="h5" color="primary">Contact</Typography>
-            <Paper elevation={6}>
-              <p>{this.state.email}</p>
-            </Paper>
-            <Button variant="contained" color="primary" className="">Edit Profile</Button> */}
-          </Grid>
-          <Grid item sm={3}>
-            <Typography variant="h5" color="primary">Research Areas</Typography>
-            <Paper elevation={6} style={{ minHeight: "100px" }}>
-              <p>{this.state.interests}</p>
-            </Paper>
-          </Grid>
+            <Grid container spacing={2} item sm={6}>
+
+              <Grid item sm={6} >
+                <Typography variant="h5" color="primary" style={titleStyle}>Biography</Typography>
+                <Paper elevation={6} style={textStyle}>
+                  <p>{this.state.bio}</p>
+                </Paper>
+
+                <Typography variant="h5" color="primary" style={titleStyle}>Contact Info</Typography>
+                <Paper elevation={6} style={textStyle}>
+                  <p>{"Email : " + this.state.email}</p>
+                </Paper>
+
+              </Grid>
+              <Grid item sm={6} >
+                <Typography variant="h5" color="primary" style={titleStyle}>Interests</Typography>
+                <Paper elevation={6} style={textStyle}>
+                  <p>{this.state.expertise} <br />
+                    {this.state.interests}
+                  We are expecting tags here</p>
+                </Paper>
+
+                <Typography variant="h5" color="primary" style={titleStyle}>Personal Information</Typography>
+                <Paper elevation={6} style={textStyle}>
+                  <p>{"Age : " + this.state.age} <br /> {"Gender : " + this.state.gender}</p>
+                </Paper>
+              </Grid>
+            </Grid>
+            <Grid item sm={3}>
+              {/*  SAĞDAKİ RELEVANT ŞEYLER BURAYA GELECEK  */}
+            </Grid>
           </Grid>
         </Grid>
 

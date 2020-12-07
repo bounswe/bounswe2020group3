@@ -12,8 +12,9 @@ import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class RegisterModel: RegisterContract.Model {
+class RegisterModel @Inject constructor():RegisterContract.Model {
 
     private var registerService: RegisterContract.RegisterService = RetrofitProvider.instance.create(RegisterContract.RegisterService::class.java)
 

@@ -40,7 +40,8 @@ export default class HomePage extends Component {
             message: "",
             messageType: "",
             projects:[],
-            events:[]
+            events:[],
+            milestones:[]
         }
     };
 
@@ -77,6 +78,10 @@ export default class HomePage extends Component {
         .then(res => {
           this.setState({ events:res.data });
         });
+      axios.get(`${config.API_URL}${config.Milestone_url}`, { headers:{'Content-Type':'Application/json'}})
+        .then(res => {
+          this.setState({ milestones:res.data });
+        });
       axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers:{'Content-Type':'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
         .then(res => {
           let name = res.data.profile[0].name;
@@ -100,17 +105,30 @@ export default class HomePage extends Component {
         </Typography>
         </Paper>)});
   };
+                          
+    renderMilestones(){
+      var milestones = this.state.milestones;
+      return milestones.map((item) => {return (
+      <Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Typography>
+        <Typography noWrap style={{textAlign:"left", color:"black"}}>
+          {item.description}
+        </Typography>
+        </Paper>)
+         });
+    };
     renderFeed(){
       var news = [];
       return news.map((item) => {return (<p>{item}</p>)});
     };
     renderEvents(){
       var events = this.state.events;
-      console.log("events is:",events);
-      return events.map((item) => {return (<Box style={{padding:"10px"}} borderColor="primary" border={1}>
-        <Button variant="contained" color="primary" style={{width:"100%"}} onClick={()=> this.goToEvent(item.id)}>{item.title}</Button>
-        <Typography style={{textAlign:"left"}}>{item.description}</Typography>
-        </Box>)});
+      return events.map((item) => {return (<Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.this.goToEvent(item.id)}>{item.title}</Typography>
+        <Typography noWrap style={{textAlign:"left", color:"black"}}>
+          {item.description}
+        </Typography>
+        </Paper>)});
     };
 
     render() {
@@ -136,21 +154,17 @@ export default class HomePage extends Component {
              <Grid item sm={9} style={{ maxHeight:"88vh"}}>
                <Typography variant="h3" color="primary">Home</Typography>
                {this.renderProject()}
-              
-              {/* {this.renderFeed()} */}
-               
-                  {/* <Paper> */}
-
-              {/* </Paper>  */}
              </Grid> 
             <Grid item sm={3} >
-              <Grid style={{ maxHeight: "75vh", overflowY: "scroll" }} item sm={12}>
+              <Grid style={{ maxHeight: "40vh", overflowY: "scroll" }} item sm={12}>
                 <Typography variant="h5" color="primary">Upcoming Events</Typography>
-                <Paper style={{ minHeight: "250px" }} elevation={6}>
-                  {this.renderEvents()}
-                </Paper>
+                {this.renderEvents()}
               </Grid>
-              {/* <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEventCreation}>Create an Event</Button> */}
+              <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEventCreation}>Create an Event</Button>
+              <Typography variant="h5" color="primary">Milestones</Typography>
+              <Grid style={{maxHeight:"40vh", overflowY:"scroll"}} item sm={12}>
+                {this.renderMilestones()}
+              </Grid>
             </Grid>
           </Grid>
           <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>

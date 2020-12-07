@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { styled } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
-// import Button from '@material-ui/core/Button';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -94,8 +93,6 @@ export default class HomePage extends Component {
             {this.state.last_name.toUpperCase()}</Typography>
         </Paper>
         <Grid container direction="row" justify="center" alignItems="center" >
-
-
           <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">
             <Grid item sm={3}>
               Projects
@@ -143,7 +140,6 @@ export default class HomePage extends Component {
             </Grid>
           </Grid>
         </Grid>
-
         <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
       </Container>);
   }
@@ -157,7 +153,6 @@ export default class HomePage extends Component {
       return false;
     else
       return true;
-
   }
   validAge = () => {
     const { age } = this.state;
@@ -165,6 +160,5 @@ export default class HomePage extends Component {
       return false;
     else
       return true;
-
   }
 }

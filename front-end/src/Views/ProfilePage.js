@@ -11,9 +11,10 @@ import { getUserId } from '../Components/Auth/Authenticate';
 import axios from 'axios';
 import config from '../config';
 import UserNavbar from '../Components/TopBar/UserNavbar';
-
+const privateGender = "do not want to share";
 const titleStyle = {
-  textAlign: "left"
+  textAlign: "left",
+  marginTop: "10px"
 }
 const textStyle = {
   textAlign: "left",
@@ -89,8 +90,8 @@ export default class HomePage extends Component {
         <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto' }} />
         <br />
         <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
-          <Typography>{this.state.name + " " + this.state.middle_name} <br/> 
-          {this.state.last_name.toUpperCase()}</Typography>
+          <Typography>{this.state.name + " " + this.state.middle_name} <br />
+            {this.state.last_name.toUpperCase()}</Typography>
         </Paper>
         <Grid container direction="row" justify="center" alignItems="center" >
 
@@ -111,20 +112,30 @@ export default class HomePage extends Component {
                 <Paper elevation={6} style={textStyle}>
                   <p>{"Email : " + this.state.email}</p>
                 </Paper>
-
+                {(this.validPersonalInfo() ?
+                  <>
+                    <Typography variant="h5" color="primary" style={titleStyle}>Personal Information</Typography>
+                    <Paper elevation={6} style={textStyle}>
+                      <p>{(this.state.age ? "Age : " + this.state.age : "")} <br />
+                        {(this.state.gender !== privateGender ? "Gender : " + this.state.gender : "")}</p>
+                    </Paper>
+                  </>
+                  :
+                  <></>
+                )}
               </Grid>
               <Grid item sm={6} >
+                <Typography variant="h5" color="primary" style={titleStyle}>Expertise</Typography>
+                <Paper elevation={6} style={textStyle}>
+                  <p>{this.state.expertise}
+                  We are expecting tags here</p>
+                </Paper>
                 <Typography variant="h5" color="primary" style={titleStyle}>Interests</Typography>
                 <Paper elevation={6} style={textStyle}>
-                  <p>{this.state.expertise} <br />
-                    {this.state.interests}
+                  <p>{this.state.interests}
                   We are expecting tags here</p>
                 </Paper>
 
-                <Typography variant="h5" color="primary" style={titleStyle}>Personal Information</Typography>
-                <Paper elevation={6} style={textStyle}>
-                  <p>{"Age : " + this.state.age} <br /> {"Gender : " + this.state.gender}</p>
-                </Paper>
               </Grid>
             </Grid>
             <Grid item sm={3}>
@@ -136,5 +147,24 @@ export default class HomePage extends Component {
         <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
       </Container>);
   }
+  validPersonalInfo = () => {
+    return this.validAge() && this.validGender();
+  }
 
+  validGender = () => {
+    const { gender } = this.state;
+    if (gender === privateGender)
+      return false;
+    else
+      return true;
+
+  }
+  validAge = () => {
+    const { age } = this.state;
+    if (age < 15)
+      return false;
+    else
+      return true;
+
+  }
 }

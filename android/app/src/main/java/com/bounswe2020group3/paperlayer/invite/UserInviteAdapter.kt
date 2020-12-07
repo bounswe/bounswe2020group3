@@ -47,9 +47,9 @@ class UserInviteAdapter(var clickListener: OnCardClickListener) : RecyclerView.A
             itemView: View
     ): RecyclerView.ViewHolder(itemView) {
 
-        var name: TextView =itemView.findViewById(R.id.nameTextView)
-        var secondary: TextView=itemView.findViewById(R.id.secondaryTextView)
-        var support: TextView=itemView.findViewById(R.id.supportTextView)
+        var name: TextView =itemView.nameTextView
+        var secondary: TextView=itemView.secondaryTextView
+        var support: TextView=itemView.supportTextView
 
         fun bind(invitecard : InviteCard, action:OnCardClickListener){
             name.setText(invitecard.Name )

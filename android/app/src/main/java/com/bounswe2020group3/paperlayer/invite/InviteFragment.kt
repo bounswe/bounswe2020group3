@@ -98,7 +98,7 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
     }
 
 
-    override fun onViewButtonClick(item: InviteCard, position: Int) {
+    override fun onInviteButtonClick(item: InviteCard, position: Int) {
         TODO("Not yet implemented")
     }
 

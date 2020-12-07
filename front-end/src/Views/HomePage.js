@@ -8,16 +8,19 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import UserNavbar from '../Components/TopBar/UserNavbar';
-import homeImage from "../paper-plane.png";
-
+import Profilebar from '../Components/ProfileBar/Profilebar';
+import { getUserId, getAccessToken, setPhotoCookie } from "../Components/Auth/Authenticate";
 const Container = styled(Box)({
-    background: "white",
+    background: "#f9f9eb",
     border: 0,
     borderRadius: 3,
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
     color: 'white',
-    height: "100vh",
-    width: "100%",
+    paddingBottom:"60px",
+    top:"0",
+    bottom:"0",
+    left:"0",
+    right:"0",
     margin: "auto",
     '& .MuiTextField-root': {
         margin: "10px",
@@ -26,11 +29,14 @@ const Container = styled(Box)({
       }
   });
 
+
 export default class HomePage extends Component {
     constructor(props) {
         super(props);
         this.SnackbarRef = React.createRef();
         this.state = {
+            name:"",
+            lastName:"",
             message: "",
             messageType: "",
             projects:[],
@@ -61,7 +67,7 @@ export default class HomePage extends Component {
     };
 
     componentDidMount() {
-      axios.get(`${config.API_URL}${config.Create_Project_Url}`, { headers:{'Content-Type':'Application/json'}})
+      axios.get(`${config.API_URL}${config.Create_Project_Url}`, { headers:{ 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
         .then(res => {
           const projects = res.data;
           console.log(projects);
@@ -71,17 +77,29 @@ export default class HomePage extends Component {
         .then(res => {
           this.setState({ events:res.data });
         });
+      axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers:{'Content-Type':'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
+        .then(res => {
+          let name = res.data.profile[0].name;
+          let mname = res.data.profile[0].middle_name;
+          let lastname = res.data.profile[0].last_name;
+          name = name + " " + mname;
+          let photoUrl = (res.data.profile[0].photo_url)
+          setPhotoCookie(photoUrl)
+          this.setState({ name:name , lastName: lastname, photoUrl:photoUrl });
+        });
     }
 
     renderProject(){
       var projects = this.state.projects;
-      return projects.map((item) => {return (<Box style={{padding:"10px"}} borderColor="primary" border={1}>
-        <Button variant="contained" color="primary" style={{width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Button>
-        <Typography style={{textAlign:"left"}}>
+      return projects.map((item) => {return (
+      <Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Typography>
+        <Typography  style={{textAlign:"left", color:"black"}}>TAGS HERE</Typography>
+        <Typography  style={{textAlign:"left", color:"black"}}>
           {item.description}
         </Typography>
-        </Box>)});
-    };
+        </Paper>)});
+  };
     renderFeed(){
       var news = [];
       return news.map((item) => {return (<p>{item}</p>)});
@@ -103,37 +121,40 @@ export default class HomePage extends Component {
             pushProfile={() => { this.props.history.push("/profile") }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
           />
-          {/* <Typography variant="h4" color="primary">Home Page</Typography> */}
-          <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline">
-            <Grid item sm={4} >
-              <Grid style={{ maxHeight: "75vh", overflowY: "scroll" }} item sm={12}>
-                <Typography variant="h5" color="primary">Projects</Typography>
-                <Paper style={{ minHeight: "250px" }} elevation={6}>
-                  {this.renderProject()}
-                </Paper>
-              </Grid>
-              <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToProjectCreation}>Create a Project</Button>
-            </Grid>
-             <Grid item sm={4} >
+          <Box style={{marginTop:"8px"}}>
+
+            <Profilebar 
+              name={this.state.name}
+              lastName={this.state.lastName}
+              photoUrl={this.state.photoUrl}
+              goToProjectCreation={this.goToProjectCreation}
+              goToProfile={() => { this.props.history.push("/profile"); }}
+            />
+
+          <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{overflowY:"scroll", marginLeft:"200px", width:`calc(100% - 200px)`}}>
+            
+             <Grid item sm={9} style={{ maxHeight:"88vh"}}>
                <Typography variant="h3" color="primary">Home</Typography>
+               {this.renderProject()}
               
               {/* {this.renderFeed()} */}
                
                   {/* <Paper> */}
-                <img src={homeImage} alt="" style={{ width: "80%", marginTop:"50px" }} />
+
               {/* </Paper>  */}
              </Grid> 
-            <Grid item sm={4} >
+            <Grid item sm={3} >
               <Grid style={{ maxHeight: "75vh", overflowY: "scroll" }} item sm={12}>
                 <Typography variant="h5" color="primary">Upcoming Events</Typography>
                 <Paper style={{ minHeight: "250px" }} elevation={6}>
                   {this.renderEvents()}
                 </Paper>
               </Grid>
-              <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEventCreation}>Create an Event</Button>
+              {/* <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEventCreation}>Create an Event</Button> */}
             </Grid>
           </Grid>
           <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>
+          </Box>
         </Container>);
     }
 }

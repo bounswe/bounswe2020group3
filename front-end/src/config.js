@@ -1,5 +1,5 @@
 const config = {
-  API_URL: process.env.REACT_APP_API_URL,
+  API_URL: "http://paperlayer.herokuapp.com",
   Login_Path : "/login",
   Register_Path: "/register",
   Login_Url : "/api/auth/",

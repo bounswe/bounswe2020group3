@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 # comment to check pylint
 
 from pathlib import Path
-import django_heroku
+#import django_heroku
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -171,6 +171,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'bounswe2020group3@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+
 
 django_heroku.settings(locals())
 

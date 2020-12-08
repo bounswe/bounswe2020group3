@@ -5,6 +5,7 @@ from rest_framework.routers import DefaultRouter
 from .models.example import Example
 from .serializers.example import ExampleModelSerializer
 from .views.example import ExampleGenericAPIView, ExampleDetailGenericAPIView
+from .views.following import FollowingViewSet
 from .views.profile import ProfileViewSet
 from .views.auth import RegisterGenericAPIView, LogoutGenericAPIView, AuthView
 from .views.project import ProjectViewSet
@@ -23,6 +24,7 @@ router.register(r'milestones', MilestoneViewSet)
 router.register(r'tags', TagViewSet)
 router.register(r'events', EventViewSet)
 router.register(r'files', FileViewSet)
+router.register(r'follow', FollowingViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

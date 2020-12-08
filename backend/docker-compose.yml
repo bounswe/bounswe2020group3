@@ -4,6 +4,8 @@ services:
   paperlayer_backend:
     build: .
     command: ./docker/run-local.sh
+    volumes:
+      - ".:/app"
     environment:
       - BACKEND_DEBUG=True
       - BACKEND_ENVIRONMENT=development

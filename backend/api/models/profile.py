@@ -13,7 +13,7 @@ class Profile(models.Model):
     middle_name = models.CharField(max_length=100, blank=True, default='')
     last_name = models.CharField(max_length=100, blank=False, default='')
     bio = models.CharField(max_length=1000, blank=True, default='')
-    profile_picture = models.ImageField(null=True, blank=True)
+    profile_picture = models.ImageField(null=True, blank=True, upload_to='pp/')
     age = models.IntegerField(default=0)
     share_age = models.BooleanField(default=True)
     expertise = models.TextField(default='', blank=True)

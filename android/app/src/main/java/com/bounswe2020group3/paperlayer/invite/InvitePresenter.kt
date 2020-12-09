@@ -68,4 +68,7 @@ class InvitePresenter @Inject constructor(private var model: InviteContract.Mode
 
     }
 
+    override fun OnInviteButtonClicked(Item: InviteCard, position: Int) {
+        TODO("Not yet implemented")
+    }
 }

@@ -85,6 +85,12 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
         inviteAdapter.notifyDataSetChanged() //notify to update recyclerview
         }
     override fun submitUserCardList() {
+        var message : String =""
+        for (invite in inviteCardList){
+            message += invite.username + ", "
+        }
+        writeLogMessage("i", TAG,message)
+
         inviteAdapter.submitList(this.inviteCardList)
         inviteAdapter.notifyDataSetChanged() //notify to update recyclerview
     }
@@ -99,7 +105,7 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
 
 
     override fun onInviteButtonClick(item: InviteCard, position: Int) {
-        TODO("Not yet implemented")
+        this.presenter.OnInviteButtonClicked(item,position)
     }
 
 
@@ -112,7 +118,5 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
                  photoURL)
         )
     }
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
+
 }

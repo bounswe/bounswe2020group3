@@ -20,7 +20,7 @@ interface InviteContract {
 
         fun subscribeAuthToken()
         fun fetchAllUsers(ownerId: Int)
-
+        fun OnInviteButtonClicked(Item : InviteCard,position : Int)
     }
 
     interface View: Mvp.View{

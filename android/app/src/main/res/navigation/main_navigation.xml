@@ -28,6 +28,9 @@
         <action
             android:id="@+id/navigateToProjectMainFromLogin"
             app:destination="@id/projectMainFragment" />
+        <action
+            android:id="@+id/test"
+            app:destination="@id/inviteFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"

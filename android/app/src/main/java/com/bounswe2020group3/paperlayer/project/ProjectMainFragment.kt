@@ -108,11 +108,11 @@ class ProjectMainFragment : Fragment(),ProjectMainContract.View, OnCardClickList
         writeLogMessage("i",TAG,"Project Card List Updated! " + projectCardList.size)
     }
 
-    override fun addProjectCard(projectName: String, projectBody: String, projectOwner: String, projectId: Int) {
+    override fun addProjectCard(projectName: String, projectBody: String, projectOwner: String, projectId: Int,projectType: String) {
         projectCardList.add(
                 ProjectCard(projectName,
                         projectBody,
-                        projectOwner,projectId))
+                        projectOwner,projectId,projectType))
         writeLogMessage("i",TAG,"Project Card Added $projectName ")
     }
 
@@ -122,13 +122,13 @@ class ProjectMainFragment : Fragment(),ProjectMainContract.View, OnCardClickList
         projectCardList.add(
                 ProjectCard("Covid19 Search",
                         "We are so close to developing vaccine for covid19",
-                        "crazyDoctor",1))
+                        "crazyDoctor",1,"journal"))
         projectCardList.add(ProjectCard("Embedded System Class Research",
                 "How to improve cmpe443 class before students make a riot",
-                "crazyProf",2))
+                "crazyProf",2,"Conference"))
         projectCardList.add(ProjectCard("Eating Fruits affects performance in coding",
                 "Research about how eating fruits while coding affects performance of programmers",
-                "crazyCoder",3))
+                "crazyCoder",3,"journal"))
         projectAdapter.submitList(projectCardList)
     }
 

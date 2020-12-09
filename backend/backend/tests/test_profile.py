@@ -18,7 +18,7 @@ class ProfileTests(APITestCase):
     def test_can_create_profile(self):
         response = self.client.post('/api/profiles/',
                                     {'bio': 'very important person',
-                                     'gender': 'male'}, format='json')
+                                     'gender': 'male'}, format='multipart')
         self.assertEqual(response.status_code, 201)
 
     def test_can_read_profile_list(self):

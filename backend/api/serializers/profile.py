@@ -12,6 +12,6 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Profile
         fields = ['id', 'name', 'middle_name', 'last_name', 'owner', 'email',
-                  'bio', 'photo_url', 'age', 'share_age', 'expertise',
-                  'gender', 'interests', 'share_bio', 'share_gender',
-                  'share_affiliations']
+                  'bio', 'profile_picture', 'age', 'share_age', 'expertise',
+                  'gender', 'interests', 'affiliations', 'share_bio',
+                  'share_gender', 'share_affiliations']

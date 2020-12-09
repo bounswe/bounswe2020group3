@@ -18,6 +18,12 @@ class CollaborationInviteTests(APITestCase):
         self.project = Project.objects.create(
             name='Academic Project',
             description='This is an academic project.',
+            state='open for collaborators',
+            owner=self.owner, due_date="2020-12-15")
+        self.draft_project = Project.objects.create(
+            name='Draft Project',
+            description='I just started this project',
+            state='draft',
             owner=self.owner, due_date="2020-12-15")
 
     def test_can_create_collaboration_invite(self):
@@ -26,8 +32,7 @@ class CollaborationInviteTests(APITestCase):
                                     {'to_project': self.project.id,
                                      'to_user': self.invited_user.id},
                                     format='json')
-        self.assertEqual(response.status_code, 201)
-
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.client.force_authenticate(user=self.invited_user)
         response = self.client.get(
             '/api/collaboration_invites/',
@@ -41,9 +46,25 @@ class CollaborationInviteTests(APITestCase):
         response = self.client.post(url,
                                     {'to_project': self.project.id},
                                     format='json')
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         response = self.client.get(
             '/api/collaboration_invites/',
             {'to_user__id': self.invited_user.id})
         self.assertEqual(response.content.decode('utf-8'), '[]')
+
+    def test_can_not_invite_self(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.post('/api/collaboration_invites/',
+                                    {'to_project': self.project.id,
+                                     'to_user': self.owner.id},
+                                    format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_can_not_invite_to_draft(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.post('/api/collaboration_invites/',
+                                    {'to_project': self.draft_project.id,
+                                     'to_user': self.invited_user.id},
+                                    format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

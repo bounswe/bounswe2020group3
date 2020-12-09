@@ -18,6 +18,12 @@ class CollaborationRequestTests(APITestCase):
         self.project = Project.objects.create(
             name='Academic Project',
             description='This is an academic project.',
+            state='open for collaborators',
+            owner=self.owner, due_date="2020-12-15")
+        self.private_project = Project.objects.create(
+            name='Private Project',
+            description='I just started this project',
+            state='inviting collaborators',
             owner=self.owner, due_date="2020-12-15")
 
     def test_can_create_collaboration_request(self):
@@ -25,7 +31,7 @@ class CollaborationRequestTests(APITestCase):
         response = self.client.post('/api/collaboration_requests/',
                                     {'to_project': self.project.id},
                                     format='json')
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.client.force_authenticate(user=self.owner)
         response = self.client.get(
@@ -39,8 +45,22 @@ class CollaborationRequestTests(APITestCase):
         response = self.client.post(url,
                                     {'to_project': self.project.id},
                                     format='json')
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         response = self.client.get(
             '/api/collaboration_requests/', {'to_user__id': self.owner.id})
         self.assertEqual(response.content.decode('utf-8'), '[]')
+
+    def test_can_not_request_to_self(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.post('/api/collaboration_requests/',
+                                    {'to_project': self.project.id},
+                                    format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_can_not_request_if_not_open(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.post('/api/collaboration_requests/',
+                                    {'to_project': self.private_project.id},
+                                    format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

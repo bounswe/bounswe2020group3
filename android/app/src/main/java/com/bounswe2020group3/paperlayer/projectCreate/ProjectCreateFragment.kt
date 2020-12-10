@@ -29,14 +29,14 @@ class ProjectCreateFragment : Fragment(), ProjectCreateContract.View {
         super.onAttach(context)
         (context as MainActivity).getAppComponent().inject(this)
     }
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         presenter.bind(this)
-        val view = inflater.inflate(R.layout.fragment_project_create, container, false)
 
-        return view
+        return inflater.inflate(R.layout.fragment_project_create, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,26 +53,26 @@ class ProjectCreateFragment : Fragment(), ProjectCreateContract.View {
 
 
         val projectStates = arrayOf(
-            ProjectState.SEEKING.value,
-            ProjectState.OPEN.value,
-            ProjectState.IN_PROGRESS.value,
-            ProjectState.DONE.value
+                ProjectState.SEEKING.value,
+                ProjectState.OPEN.value,
+                ProjectState.IN_PROGRESS.value,
+                ProjectState.DONE.value
         )
         val projectStateAdapter =
-            ArrayAdapter(requireContext(), R.layout.spinner_item, projectStates)
+                ArrayAdapter(requireContext(), R.layout.spinner_item, projectStates)
         projectStateAdapter.setDropDownViewResource(R.layout.spinner_item)
         spinnerProjectState.adapter = projectStateAdapter
 
 
         spinnerProjectState.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
             ) {
                 projectState =
-                    parent?.getItemAtPosition(position).toString().toLowerCase(Locale.ROOT)
+                        parent?.getItemAtPosition(position).toString().toLowerCase(Locale.ROOT)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -81,9 +81,9 @@ class ProjectCreateFragment : Fragment(), ProjectCreateContract.View {
         }
 
         val projectTypes = arrayOf(
-            ProjectType.CONFERENCE.value,
-            ProjectType.INSTITUTION.value,
-            ProjectType.JOURNAL.value
+                ProjectType.CONFERENCE.value,
+                ProjectType.INSTITUTION.value,
+                ProjectType.JOURNAL.value
         )
         val projectTypeAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, projectTypes)
         projectTypeAdapter.setDropDownViewResource(R.layout.spinner_item)
@@ -91,13 +91,13 @@ class ProjectCreateFragment : Fragment(), ProjectCreateContract.View {
 
         spinnerProjectType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
             ) {
                 projectType =
-                    parent?.getItemAtPosition(position).toString().toLowerCase(Locale.ROOT)
+                        parent?.getItemAtPosition(position).toString().toLowerCase(Locale.ROOT)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -121,15 +121,18 @@ class ProjectCreateFragment : Fragment(), ProjectCreateContract.View {
 
         buttonCreateProject.setOnClickListener {
             presenter.createProject(
-                ProjectCreateRequest(
-                    name = editTextProjectName.text.toString(),
-                    description = editTextDescription.text.toString(),
-                    requirements = editTextRequirements.text.toString(),
-                    is_public = isPublic,
-                    state = projectState,
-                    project_type = projectType,
-                    due_date = textViewDate.text.toString()
-                )
+                    ProjectCreateRequest(
+                            name = editTextProjectName.text.toString(),
+                            description = editTextDescription.text.toString(),
+                            requirements = editTextRequirements.text.toString(),
+                            members = null,
+                            is_public = isPublic,
+                            state = projectState,
+                            project_type = projectType,
+                            due_date = textViewDate.text.toString(),
+                            events = null,
+                            tags = null,
+                    )
             )
         }
 
@@ -168,7 +171,7 @@ class ProjectCreateFragment : Fragment(), ProjectCreateContract.View {
     override fun displayTime(calendar: Calendar, selectedDate: Long): String {
         calendar.time = Date(selectedDate)
         return calendar.get(Calendar.YEAR).toString() + "-" + calendar.get(Calendar.MONTH)
-            .toString() + "-" + calendar.get(Calendar.DAY_OF_MONTH).toString()
+                .toString() + "-" + calendar.get(Calendar.DAY_OF_MONTH).toString()
     }
 
     override fun showToast(message: String) {

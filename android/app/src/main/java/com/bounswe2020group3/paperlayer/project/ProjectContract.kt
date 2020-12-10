@@ -6,10 +6,9 @@ import io.reactivex.Single
 
 interface ProjectContract {
 
-    interface Presenter :Mvp.Presenter<View>{
+    interface Presenter : Mvp.Presenter<View>{
         fun setView(view: View)
         fun showMessage(message: String)
-
         fun fetchProject(projectId: Int)
     }
 
@@ -17,7 +16,6 @@ interface ProjectContract {
         fun getLayout(): android.view.View
         fun showToast(message: String)
         fun writeLogMessage(type:String ,tag: String,message: String)
-
         fun resetProjectUI()
         fun updateProjectUI(project:Project)
     }

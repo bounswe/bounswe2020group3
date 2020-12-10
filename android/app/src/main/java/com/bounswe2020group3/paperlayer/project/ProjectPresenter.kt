@@ -1,5 +1,8 @@
 package com.bounswe2020group3.paperlayer.project
 
+import android.view.View
+import androidx.navigation.Navigation
+import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject

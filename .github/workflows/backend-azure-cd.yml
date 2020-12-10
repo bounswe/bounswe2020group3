@@ -1,0 +1,39 @@
+on:
+  release:
+    types: [created]
+
+name: Deploy backend to Azure Container Registery
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Login to Azure Container Registery
+      uses: azure/docker-login@v1
+      with:
+        login-server: paperlayer.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    - name: Build, tag, and push image to Azure Container Repository
+      id: build-image
+      env:
+        AZURE_REGISTERY: paperlayer.azurecr.io
+        BACKEND_REPOSITORY: paperlayer-backend
+      run: |
+        # Build backend image and
+        # push it to Azure Container Repository.
+        docker build backend -t $AZURE_REGISTERY/$BACKEND_REPOSITORY:${{ github.sha }}
+        docker push $AZURE_REGISTERY/$BACKEND_REPOSITORY:${{ github.sha }}
+
+build-args: |
+            DJANGO_ENV=production
+            DB_ADDRESS={{ secrets.DB_ADDRESS }}
+            DB_NAME={{ secrets.DB_NAME }}
+            DB_USER={{ secrets.DB_USER }}
+            DB_PASSWORD={{ secrets.DB_PASSWORD }}

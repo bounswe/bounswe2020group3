@@ -1,0 +1,32 @@
+on:
+  release:
+    types: [created]
+
+name: Deploy frontend to Azure Container Registery
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Login to Azure Container Registery
+      uses: azure/docker-login@v1
+      with:
+        login-server: paperlayer.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    - name: Build, tag, and push image to Azure Container Repository
+      id: build-image
+      env:
+        AZURE_REGISTERY: paperlayer.azurecr.io
+        FRONTEND_REPOSITORY: paperlayer-frontend
+      run: |
+        # Build frontend image and
+        # push it to Azure Container Repository.
+        docker build front-end -t $AZURE_REGISTERY/$FRONTEND_REPOSITORY:${{ github.sha }} --build-arg REACT_APP_API_URL=${{ secrets.BACKEND_API_URL }}
+        docker push $AZURE_REGISTERY/$FRONTEND_REPOSITORY:${{ github.sha }}

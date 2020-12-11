@@ -3,6 +3,7 @@ package com.bounswe2020group3.paperlayer.register
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import com.bounswe2020group3.paperlayer.profile.ProfileContract
 import com.bounswe2020group3.paperlayer.profile.ProfileModel
 import com.bounswe2020group3.paperlayer.register.RegisterContract
@@ -13,17 +14,20 @@ import retrofit2.Callback
 import retrofit2.Call
 import retrofit2.Response
 import timber.log.Timber
+import javax.inject.Inject
 
-class RegisterPresenter(view: RegisterContract.View)
-    : RegisterContract.Presenter {
-    private var view: RegisterContract.View? = view
-    private var model: RegisterContract.Model = RegisterModel()
-    private var disposable = CompositeDisposable()
-    override fun onDestroy() {
-        this.view = null
-        disposable.clear()
+class RegisterPresenter @Inject constructor(private var model: RegisterContract.Model)  : BasePresenter<RegisterContract.View>(), RegisterContract.Presenter {
 
+    override fun bind(view: RegisterContract.View) {
+        super.bind(view)
     }
+
+    override fun unbind() {
+        super.unbind()
+        disposable.clear()
+    }
+    private var disposable = CompositeDisposable()
+
     override fun onViewCreated() {
         Timber.d("onViewCreated")
     }

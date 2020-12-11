@@ -2,7 +2,7 @@ from rest_framework import serializers
 from api.models.milestone import Milestone
 
 
-class MilestoneSerializer(serializers.HyperlinkedModelSerializer):
+class MilestoneSerializer(serializers.ModelSerializer):
     """
     Milestone serializer
     """

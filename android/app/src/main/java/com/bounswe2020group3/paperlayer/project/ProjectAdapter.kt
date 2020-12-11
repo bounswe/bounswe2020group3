@@ -3,6 +3,7 @@ package com.bounswe2020group3.paperlayer.project
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.R
@@ -48,11 +49,22 @@ class ProjectAdapter(var clickListener: OnCardClickListener) : RecyclerView.Adap
         var projectTitle: TextView =itemView.textViewProjectTitle
         var projectDescription: TextView=itemView.textViewProjectDescription
         var projectCreator: TextView=itemView.textViewProjectCreator
+        var projectIcon: ImageView =itemView.imageViewProjectIcon
 
         fun bind(projectCard: ProjectCard,action:OnCardClickListener){
             projectTitle.setText(projectCard.projectTitle)
             projectDescription.setText(projectCard.projectBody)
             projectCreator.setText("@"+projectCard.projectCreator)
+
+            when(projectCard.projectType){
+                "conference" -> projectIcon.setImageResource(R.drawable.ic_conference)
+                "instutution" -> projectIcon.setImageResource(R.drawable.ic_institution)
+                "journal" -> projectIcon.setImageResource(R.drawable.ic_journal)
+                else -> {
+                   projectIcon.setImageResource(R.drawable.ic_project)
+                }
+
+            }
 
             //Listeners for each project cards
             itemView.buttonView.setOnClickListener {

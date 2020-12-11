@@ -13,6 +13,7 @@ const config = {
   Projectpage_url: "/api/projects/",
   Profilepage_url: "/api/profiles/",
   User_Path: "/api/users/",
-  Event_Path: "/events"
+  Event_Path: "/events",
+  Milestone_url:"/api/milestones/"
 }
 export default config;

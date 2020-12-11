@@ -4,7 +4,8 @@ data class ProjectCard(
     var projectTitle: String,
     var projectBody: String,
     var projectCreator: String,
-    var projectId: Int
+    var projectId: Int,
+    var projectType: String
 ) {
 
 

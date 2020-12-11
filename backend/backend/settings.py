@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_yasg',
     'password_reset',
+    'notifications',
 ]
 
 MIDDLEWARE = [

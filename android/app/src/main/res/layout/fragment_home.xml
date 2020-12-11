@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".invite.InviteFragment">
+    tools:context=".home.HomeFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewInviteUsers"
+        android:id="@+id/recyclerViewEvents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -16,7 +16,7 @@
         app:layout_constraintRight_toRightOf="parent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/buttonInviteUsers"
+        android:id="@+id/buttonAddProject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_add_project"

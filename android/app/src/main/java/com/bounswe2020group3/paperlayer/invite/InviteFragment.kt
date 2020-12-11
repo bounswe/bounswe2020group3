@@ -42,7 +42,8 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
             "d"-> Log.d(tag,message) //debug
             "v"-> Log.v(tag,message) //verbose
             else-> Log.e(tag,"Type is not defined")
-        }    }
+        }
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

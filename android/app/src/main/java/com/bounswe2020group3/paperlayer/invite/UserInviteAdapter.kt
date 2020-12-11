@@ -52,14 +52,14 @@ class UserInviteAdapter(var clickListener: OnCardClickListener) : RecyclerView.A
         var support: TextView=itemView.supportTextView
 
         fun bind(invitecard : InviteCard, action:OnCardClickListener){
-            name.setText(invitecard.Name )
-            secondary.setText(invitecard.username)
-            support.setText(invitecard.Expertise)
+            name.setText(invitecard.username )
+            secondary.setText(invitecard.name)
+            support.setText(invitecard.expertise)
 
             //Listeners for each project cards
-            itemView.buttonInvite.setOnClickListener {
+            /*itemView.buttonInvite.setOnClickListener {
                 action.onInviteButtonClick(invitecard,adapterPosition)
-            }
+            }*/
 
 
         }

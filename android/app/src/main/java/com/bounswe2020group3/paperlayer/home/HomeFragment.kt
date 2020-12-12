@@ -29,7 +29,7 @@ class HomeFragment : Fragment(), HomeContract.View {
     private lateinit var viewAdapter: EventAdaptor
     private lateinit var viewManager: RecyclerView.LayoutManager
 
-    private lateinit var eventCardsList : ArrayList<EventCard>
+    private val eventCardsList = ArrayList<EventCard>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
@@ -55,6 +55,7 @@ class HomeFragment : Fragment(), HomeContract.View {
             layoutManager = viewManager
             adapter = viewAdapter
         }
+
         test()
 
     }
@@ -70,18 +71,18 @@ class HomeFragment : Fragment(), HomeContract.View {
         }
     }
 
-    fun addEventCard(card : EventCard){
+    override fun addEventCard(card : EventCard){
         eventCardsList.add(card)
         writeLogMessage("i", TAG,"Project Card Added ${card.title} ")
 
     }
-    fun resetEventCardList() {
+    override fun resetEventCardList() {
         eventCardsList.clear()
         viewAdapter.submitList(this.eventCardsList)
         viewAdapter.notifyDataSetChanged() //notify to update recyclerview
     }
 
-    fun submitEventCardList() {
+    override fun submitEventCardList() {
         viewAdapter.submitList(this.eventCardsList)
         viewAdapter.notifyDataSetChanged() //notify to update recyclerview
         writeLogMessage("i", TAG,"Project Card List Updated! " + eventCardsList.size)
@@ -90,7 +91,7 @@ class HomeFragment : Fragment(), HomeContract.View {
         addEventCard(EventCard("a","a","a","a","a","a"))
         addEventCard(EventCard("b","b","b","b","b","b"))
         addEventCard(EventCard("c","c","c","c","c","c"))
-        viewAdapter.submitList(eventCardsList)
+        submitEventCardList()
 
     }
     override fun getLayout(): View {

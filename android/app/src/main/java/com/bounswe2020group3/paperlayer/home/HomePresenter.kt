@@ -41,6 +41,7 @@ class HomePresenter @Inject constructor(private var model: HomeContract.Model) :
                 { eventslist ->
 
                     for (event in eventslist) {
+                        //this.view?.addEventCard()
                         this.view?.writeLogMessage("i", TAG,event.title + " addUserCard is Called")
                     }
 

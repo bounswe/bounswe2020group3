@@ -1,6 +1,7 @@
 package com.bounswe2020group3.paperlayer.home
 
 
+import com.bounswe2020group3.paperlayer.home.cards.EventCard
 import com.bounswe2020group3.paperlayer.home.data.Event
 import com.bounswe2020group3.paperlayer.invite.InviteContract
 import com.bounswe2020group3.paperlayer.login.data.AuthToken
@@ -21,6 +22,10 @@ interface HomeContract {
         fun getLayout(): android.view.View
         fun showToast(message: String)
         fun writeLogMessage(type:String ,tag: String,message: String)
+
+        fun resetEventCardList()
+        fun submitEventCardList()
+        fun addEventCard(card : EventCard)
 
     }
     interface Model{

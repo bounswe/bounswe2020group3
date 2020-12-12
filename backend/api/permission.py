@@ -28,7 +28,8 @@ class IsMemberOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the members of the snippet.
-        return request.user in obj.members.all() or request.user == obj.owner
+        return request.user in obj.members.all() \
+               or request.user == obj.owner
 
 
 class IsRequestSenderOrReadOnly(permissions.BasePermission):
@@ -40,7 +41,8 @@ class IsRequestSenderOrReadOnly(permissions.BasePermission):
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
         if request.method in permissions.SAFE_METHODS:
-            return request.user.id == obj.req_from_user.id or request.user.id == obj.req_to_user.id
+            return request.user.id == obj.req_from_user.id \
+                   or request.user.id == obj.req_to_user.id
 
         # Write permissions are only allowed to the members of the snippet.
         return request.user.id == obj.req_from_user
@@ -88,7 +90,8 @@ class CollaborationPermissions(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if view.action in ['retrieve', 'list']:
-            return request.user == obj.req_to_user or request.user == obj.req_from_user
+            return request.user == obj.req_to_user or\
+                   request.user == obj.req_from_user
         elif view.action in ['update', 'partial_update', 'destroy']:
             return request.user == obj.req_from_user
         return True

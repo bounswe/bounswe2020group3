@@ -23,7 +23,8 @@ class FollowRequestViewSet(viewsets.ModelViewSet):
     ViewSet for follow request.
     """
 
-    permission_classes = (IsAuthenticatedOrReadOnly,IsRequestSenderOrReadOnly)
+    permission_classes = (IsAuthenticatedOrReadOnly,
+                          IsRequestSenderOrReadOnly)
     serializer_class = FollowSerializer
     queryset = Following.objects.all()
     filter_backends = [DjangoFilterBackend]

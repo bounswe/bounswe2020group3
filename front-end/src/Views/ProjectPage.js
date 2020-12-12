@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from 'axios';
 import config from '../config';
-import { styled } from '@material-ui/core';
+import { styled, Chip } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import UserNavbar from '../Components/TopBar/UserNavbar';
@@ -42,7 +42,8 @@ export default class HomePage extends Component {
             stat:"",
             type:"",
             due:"",
-            events:[]
+            events:[],
+            tags:[]
         }
     };
 
@@ -52,30 +53,60 @@ export default class HomePage extends Component {
     goToLogin = () => {
         this.props.history.push("/login");
     };
+    goToProfile = () => {
+        this.props.history.push("/profile");
+    };
+    goToEvent = (eid) => {
+      this.props.history.push(config.Event_Path+"/"+eid);
+    };
     componentDidMount() {
       var project_id =this.props.location.pathname.split('/')[2];
       axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}`, { headers:{'Content-Type':'Application/json'}})
         .then(res => {
           const prof = res.data;
           const temp_members = prof.members;
-          this.setState({name:prof.name, desc:prof.description, reqs:prof.requirements,  stat:prof.state, age:prof.age, type:prof.project_type, due:prof.due_date, events:prof.events});
-          temp_members.forEach((item) => {axios.get(`${item}`,{ headers:{'Content-Type':'Application/json'}})
-          .then(ress=>{
+          this.setState({name:prof.name, desc:prof.description, reqs:prof.requirements,  stat:prof.state, age:prof.age, type:prof.project_type, due:prof.due_date, tags:prof.tags});
+          if(prof.event == null){
+            this.setState({events:[]});
+          }else{
+            this.setState({events:[prof.event]});
+          }
+          this.setState({tags:[{name:"alpha",color:"#F8C471"}]});
+          temp_members.forEach(item =>{
             var last_members = this.state.members;
-            const member = ress.data.profile[0];
+            const member = item.profile[0];
             last_members.push(member.name+" "+member.last_name);
             this.setState({members:last_members});
-          })})
+          } );
+
         })
     };
 
     renderContributor(){
       var mems = this.state.members;
-      return mems.map((item) => {return (<p>{item}</p>)});
+      return mems.map((item) => {return (<Paper elevation={6}  style={{padding:"15px", width:"100%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}>{item}</Typography>
+        </Paper>)});
     };
     renderEvents(){
       var events = this.state.events;
-      return events.map((item) => {return (<Paper>{item}</Paper>)});
+      return events.map((item) => {return (<Paper elevation={6}  style={{padding:"15px", width:"100%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"center"}} onClick={()=> this.goToEvent(item.id)}>{item.title}</Typography>
+        </Paper>)});
+    };
+    renderDeadlines(){
+      const deadlines = JSON.parse(JSON.stringify(this.state.events));
+      deadlines.push({"deadline": this.state.due});
+      deadlines.sort();
+      return deadlines.map((item) => {return (<Paper elevation={6}  style={{padding:"15px", width:"100%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"center"}}>{item.deadline}</Typography>
+        </Paper>)});
+    };
+    renderTags(){
+      var tags = this.state.tags;
+      return tags.map((item) => {return (
+      <Chip style={{background:item.color}} label={item.name}/>)
+      });
     };
 
     render() {
@@ -85,7 +116,8 @@ export default class HomePage extends Component {
             logout={() => { this.props.history.push(config.Login_Path) }}
             pushProfile={() => { this.props.history.push("/profile") }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
-          />          <Typography variant="h4" color="primary">Project Page</Typography>
+          />
+          <Typography variant="h4" color="primary">Project Page</Typography>
           <Grid container direction="row" justify="space-evenly" alignItems="baseline">
             <Grid item sm={1}/>
             <Grid item sm={6}>
@@ -98,6 +130,11 @@ export default class HomePage extends Component {
               <Paper elevation={6} style={{minHeight: "100px"}}>
               <p>{this.state.reqs}</p>
               </Paper>
+              <Paper elevation={6} style={{minHeight: "100px"}}>
+                <p></p>
+                {this.renderTags()}
+              </Paper>
+              <p></p>
               <Grid container direction="row" justify="space-evenly" alignItems="baseline">
                 <Grid item sm={5}>
                   <Typography variant="h5" color="primary">Recommended Users</Typography>
@@ -130,6 +167,7 @@ export default class HomePage extends Component {
               </Grid>
               <Grid item sm={9} style={{ maxHeight:"40vh",minHeight: "20vh"}}>
                 <Typography variant="h5" color="primary">Upcoming Deadlines</Typography>
+                {this.renderDeadlines()}
               </Grid>
             </Grid>
             </Grid>

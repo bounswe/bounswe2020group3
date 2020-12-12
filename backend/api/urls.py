@@ -1,5 +1,5 @@
 from django.urls import path
-from django.conf.urls import include
+from django.conf.urls import include, url
 from rest_framework.routers import DefaultRouter
 
 from .views.profile import ProfileViewSet
@@ -12,7 +12,9 @@ from .views.event import EventViewSet
 from .views.file import FileViewSet
 from .views.collaboration_request import CollaborationRequestViewSet
 from .views.collaboration_invite import CollaborationInviteViewSet
+from .views.notifications import NotificationViewSet
 from django.contrib.auth import views as auth_views
+import notifications.urls
 
 router = DefaultRouter()
 router.register(r'profiles', ProfileViewSet)
@@ -24,6 +26,8 @@ router.register(r'events', EventViewSet)
 router.register(r'files', FileViewSet)
 router.register(r'collaboration_requests', CollaborationRequestViewSet)
 router.register(r'collaboration_invites', CollaborationInviteViewSet)
+router.register(r'notifications', NotificationViewSet, basename='notification')
+
 
 urlpatterns = [
     path('', include(router.urls)),

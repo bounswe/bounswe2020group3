@@ -52,4 +52,3 @@ class FollowRequest(models.Model):
     def reject(self):
         self.delete()
         # TODO add notification signal2
-

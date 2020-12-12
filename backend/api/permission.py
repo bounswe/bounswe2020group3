@@ -61,7 +61,7 @@ class IsMilestoneMemberOrReadOnly(permissions.BasePermission):
 
         # Write permissions are only allowed to the members of the project.
         return request.user in obj.project.members.all() or \
-               request.user == obj.project.owner
+            request.user == obj.project.owner
 
 
 class IsFileMemberOrReadOnly(permissions.BasePermission):
@@ -80,7 +80,7 @@ class IsFileMemberOrReadOnly(permissions.BasePermission):
 
         # Write permissions are only allowed to the members of the project.
         return request.user in obj.project.members.all() or \
-               request.user == obj.project.owner
+            request.user == obj.project.owner
 
 
 class CollaborationPermissions(permissions.BasePermission):

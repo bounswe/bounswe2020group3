@@ -29,7 +29,7 @@ class IsMemberOrReadOnly(permissions.BasePermission):
 
         # Write permissions are only allowed to the members of the snippet.
         return request.user in obj.members.all() \
-               or request.user == obj.owner
+            or request.user == obj.owner
 
 
 class IsRequestSenderOrReadOnly(permissions.BasePermission):
@@ -61,7 +61,7 @@ class IsMilestoneMemberOrReadOnly(permissions.BasePermission):
 
         # Write permissions are only allowed to the members of the project.
         return request.user in obj.project.members.all() or \
-            request.user == obj.project.owner
+               request.user == obj.project.owner
 
 
 class IsFileMemberOrReadOnly(permissions.BasePermission):
@@ -80,7 +80,7 @@ class IsFileMemberOrReadOnly(permissions.BasePermission):
 
         # Write permissions are only allowed to the members of the project.
         return request.user in obj.project.members.all() or \
-            request.user == obj.project.owner
+               request.user == obj.project.owner
 
 
 class CollaborationPermissions(permissions.BasePermission):
@@ -90,7 +90,7 @@ class CollaborationPermissions(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if view.action in ['retrieve', 'list']:
-            return request.user == obj.req_to_user or\
+            return request.user == obj.req_to_user or \
                    request.user == obj.req_from_user
         elif view.action in ['update', 'partial_update', 'destroy']:
             return request.user == obj.req_from_user

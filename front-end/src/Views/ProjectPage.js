@@ -9,6 +9,8 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import Typography from "@material-ui/core/Typography";
+import Profilebar from '../Components/ProfileBar/Profilebar';
+import { getUserId, getAccessToken, setPhotoCookie } from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
   background: "#f9f9eb",
@@ -43,7 +45,10 @@ export default class HomePage extends Component {
             type:"",
             due:"",
             events:[],
-            tags:[]
+            tags:[],
+            username:"",
+            userlastname:"",
+            photoUrl:""
         }
     };
 
@@ -59,6 +64,10 @@ export default class HomePage extends Component {
     goToEvent = (eid) => {
       this.props.history.push(config.Event_Path+"/"+eid);
     };
+    goToProjectCreation = () => {
+      this.props.history.push(config.Create_Project_Path);
+    };
+    
     componentDidMount() {
       var project_id =this.props.location.pathname.split('/')[2];
       axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}`, { headers:{'Content-Type':'Application/json'}})
@@ -79,7 +88,17 @@ export default class HomePage extends Component {
             this.setState({members:last_members});
           } );
 
-        })
+        });
+      axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers:{'Content-Type':'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
+        .then(res => {
+          let name = res.data.profile[0].name;
+          let mname = res.data.profile[0].middle_name;
+          let lastname = res.data.profile[0].last_name;
+          name = name + " " + mname;
+          let photoUrl = (res.data.profile[0].photo_url)
+          setPhotoCookie(photoUrl)
+          this.setState({ username:name , userlastname: lastname, photoUrl:photoUrl });
+        });
     };
 
     renderContributor(){
@@ -117,10 +136,16 @@ export default class HomePage extends Component {
             pushProfile={() => { this.props.history.push("/profile") }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
           />
-          <Typography variant="h4" color="primary">Project Page</Typography>
+            <Profilebar
+              name={this.state.username}
+              lastName={this.state.userlastname}
+              photoUrl={this.state.photoUrl}
+              goToProjectCreation={this.goToProjectCreation}
+              goToProfile={() => { this.props.history.push("/profile"); }}
+            />
+            <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{marginLeft:"225px",marginTop:"10px", width:`calc(100% - 225px)`}}>
           <Grid container direction="row" justify="space-evenly" alignItems="baseline">
-            <Grid item sm={1}/>
-            <Grid item sm={6}>
+            <Grid item sm={7}>
               <Typography variant="h5" color="primary">{this.state.name}</Typography>
               <Typography variant="h5" color="primary">Brief Description</Typography>
               <Paper elevation={6}style={{minHeight: "100px"}}>
@@ -150,7 +175,7 @@ export default class HomePage extends Component {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item sm={3}>
+            <Grid item sm={4}>
               <Grid item sm={9}>
                 <Paper elevation={6} style={{padding:"5", width:"100%", background:"white", margin:"auto", marginBottom:"10px"}}>
                 <SvgIcon><svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></SvgIcon>
@@ -172,6 +197,7 @@ export default class HomePage extends Component {
             </Grid>
             </Grid>
           <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>
+          </Grid>
         </Container>);
     }
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models.following import Following
+from api.models.following import Following, FollowRequest
 
 
 class FollowingSerializer(serializers.HyperlinkedModelSerializer):
@@ -50,5 +50,5 @@ class FollowRequestSerializer(serializers.HyperlinkedModelSerializer):
     req_to_user = serializers.IntegerField(source='req_to_user.id')
 
     class Meta:
-        model = Following
+        model = FollowRequest
         fields = ("req_from_user", "req_to_user", "created")

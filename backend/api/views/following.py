@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from api.models.following import Following
 from api.permission import IsRequestSenderOrReadOnly
-from api.serializers.following import FollowSerializer
+from api.serializers.following import FollowSerializer, FollowRequestSerializer
 
 
 class FollowingViewSet(viewsets.ModelViewSet):
@@ -25,7 +25,7 @@ class FollowRequestViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsAuthenticatedOrReadOnly,
                           IsRequestSenderOrReadOnly)
-    serializer_class = FollowSerializer
+    serializer_class = FollowRequestSerializer
     queryset = Following.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['req_from_user__id', 'req_to_user__id']

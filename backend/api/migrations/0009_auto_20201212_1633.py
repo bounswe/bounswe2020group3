@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddConstraint(
             model_name='followrequest',
-            constraint=models.UniqueConstraint(fields=('from_user', 'to_user'), name='unique_request'),
+            constraint=models.UniqueConstraint(fields=('req_from_user', 'req_to_user'), name='unique_request'),
         ),
         migrations.AddConstraint(
             model_name='following',

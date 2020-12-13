@@ -44,8 +44,8 @@ class FollowRequest(models.Model):
                                  to_user=self.req_to_user).save()
         self.delete()
         FollowRequest.objects.filter(
-            from_user=self.req_to_user,
-            to_user=self.req_from_user
+            req_from_user=self.req_to_user,
+            req_to_user=self.req_from_user
         ).delete()
         # TODO add notification signal
 

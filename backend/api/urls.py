@@ -12,9 +12,8 @@ from .views.event import EventViewSet
 from .views.file import FileViewSet
 from .views.collaboration_request import CollaborationRequestViewSet
 from .views.collaboration_invite import CollaborationInviteViewSet
-from .views.notifications import NotificationViewSet
+from .views.notification import NotificationViewSet
 from django.contrib.auth import views as auth_views
-import notifications.urls
 
 router = DefaultRouter()
 router.register(r'profiles', ProfileViewSet)

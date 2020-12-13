@@ -5,17 +5,17 @@ import com.bounswe2020group3.paperlayer.home.data.Event
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
-private const val TAG = "HomePresenter"
+private const val TAG = "EventPresenter"
 
-class HomePresenter @Inject constructor(private var model: HomeContract.Model) : BasePresenter<HomeContract.View>(),HomeContract.Presenter   {
+class EventPresenter @Inject constructor(private var model: HomeContract.Model) : BasePresenter<HomeContract.EventView>(), HomeContract.EventPresenter {
 
     private var disposable = CompositeDisposable()
 
-    override fun bind(view: HomeContract.View) {
-        this.view?.writeLogMessage("i", TAG,"Invite Presenter Created")
+    override fun bind(eventView: HomeContract.EventView) {
+        this.view?.writeLogMessage("i", TAG,"Event Presenter Created")
 
         subscribeAuthToken()
-        super.bind(view)
+        super.bind(eventView)
     }
 
     override fun unbind() {
@@ -23,8 +23,8 @@ class HomePresenter @Inject constructor(private var model: HomeContract.Model) :
         super.unbind()
     }
 
-    override fun setView(view: HomeContract.View) {
-        this.view =view
+    override fun setView(eventView: HomeContract.EventView) {
+        this.view =eventView
     }
 
     override fun showMessage(message: String) {

@@ -15,12 +15,12 @@ import com.bounswe2020group3.paperlayer.home.adaptors.EventAdaptor
 import com.bounswe2020group3.paperlayer.home.cards.EventCard
 import javax.inject.Inject
 
-private const val TAG = "HomeFragment"
+private const val TAG = "EventFragment"
 
-class HomeFragment : Fragment(), HomeContract.View {
+class EventFragment : Fragment(), HomeContract.EventView {
 
     @Inject
-    lateinit var presenter : HomePresenter
+    lateinit var presenter : EventPresenter
 
     lateinit var fragment_view : View
     private lateinit var mContext: Context
@@ -36,7 +36,7 @@ class HomeFragment : Fragment(), HomeContract.View {
         fragment_view = view
         initRecycler()
         this.presenter.bind(this)
-        writeLogMessage("i",TAG,"home fragment has been created.")
+        writeLogMessage("i",TAG,"event fragment has been created.")
         return view
     }
     fun initRecycler(){

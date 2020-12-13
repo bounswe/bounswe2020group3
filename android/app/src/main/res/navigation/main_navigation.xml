@@ -34,6 +34,9 @@
         <action
             android:id="@+id/test2"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/test3"
+            app:destination="@id/milestoneFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -108,8 +111,12 @@
         android:label="InviteFragment" />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.bounswe2020group3.paperlayer.home.HomeFragment"
+        android:name="com.bounswe2020group3.paperlayer.home.EventFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/milestoneFragment"
+        android:name="com.bounswe2020group3.paperlayer.home.MilestoneFragment"
+        android:label="MilestoneFragment" />
 
 </navigation>

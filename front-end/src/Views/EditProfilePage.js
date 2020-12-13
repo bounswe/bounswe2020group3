@@ -126,7 +126,7 @@ export default class EditProfilePage extends Component {
           middle_name: middle_name,
           last_name: last_name,
           email: email,
-          //img: img,
+          img: img,
           bio: bio,
           age: age,
           expertise: expertise,

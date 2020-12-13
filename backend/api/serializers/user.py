@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from api.serializers.following import FollowerSerializer, IncomingFollowRequestSerializer
+from api.serializers.following import FollowerSerializer,\
+    IncomingFollowRequestSerializer
 from api.serializers.following import FollowingSerializer
 from api.serializers.profile import ProfileSerializer
 

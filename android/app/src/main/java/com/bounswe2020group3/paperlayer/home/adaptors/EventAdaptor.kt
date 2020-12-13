@@ -32,7 +32,10 @@ class EventAdaptor() : RecyclerView.Adapter<EventAdaptor.eventViewHolder>(){
         holder.deadline.text = events[position].deadline
         holder.date.text = events[position].date
         holder.event_type.text = events[position].event_type
-
+        /*if(position%2 == 1)
+            holder.layout.setBackgroundResource(R.color.secondaryColor)
+        else
+            holder.layout.setBackgroundResource(R.color.primaryLightColor)*/
     }
     fun submitList(eventCardsList: List<EventCard>){
         events=eventCardsList

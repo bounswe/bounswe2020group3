@@ -23,9 +23,9 @@ interface HomeContract {
         fun showToast(message: String)
         fun writeLogMessage(type:String ,tag: String,message: String)
 
-        fun resetEventCardList()
-        fun submitEventCardList()
-        fun addEventCard(card : EventCard)
+        fun resetCardList()
+        fun submitCardList()
+        fun addCard(card : EventCard)
 
     }
     interface Model{

@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_with_corner_radius"
     android:clickable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/Block"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title"
             android:layout_width="325dp"
-            android:layout_height="18dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
+            android:background="@drawable/border_with_corner_radius"
             android:text="TextView"
+            android:textSize="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,21 +29,26 @@
             android:id="@+id/event_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginEnd="96dp"
             android:text="TextView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textColor="@color/colorGray"
+            android:textSize="12dp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="32dp"
             android:text="TextView"
+            android:textColor="@color/colorGray"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@+id/event_type"
+            app:layout_constraintHorizontal_bias="0.09"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/description" />
+            app:layout_constraintTop_toBottomOf="@+id/title" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/deadline"
@@ -47,6 +56,7 @@
             android:layout_height="19dp"
             android:layout_marginStart="276dp"
             android:layout_marginTop="8dp"
+            android:background="@drawable/border_with_corner_radius"
             android:text="TextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/description" />
@@ -54,12 +64,22 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/description"
             android:layout_width="351dp"
-            android:layout_height="103dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:background="@drawable/border_with_corner_radius"
             android:text="TextView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/event_type" />
+            app:layout_constraintTop_toBottomOf="@+id/date" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="2dp"
+            android:text="Deadline:   "
+            app:layout_constraintEnd_toStartOf="@+id/deadline"
+            app:layout_constraintTop_toBottomOf="@+id/description" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

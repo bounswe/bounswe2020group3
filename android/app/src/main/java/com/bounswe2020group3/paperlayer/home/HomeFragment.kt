@@ -13,7 +13,6 @@ import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.home.adaptors.EventAdaptor
 import com.bounswe2020group3.paperlayer.home.cards.EventCard
-import dagger.Binds
 import javax.inject.Inject
 
 private const val TAG = "HomeFragment"
@@ -22,6 +21,7 @@ class HomeFragment : Fragment(), HomeContract.View {
 
     @Inject
     lateinit var presenter : HomePresenter
+
     lateinit var fragment_view : View
     private lateinit var mContext: Context
 
@@ -32,9 +32,10 @@ class HomeFragment : Fragment(), HomeContract.View {
     private val eventCardsList = ArrayList<EventCard>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        val view = inflater.inflate(R.layout.fragment_events, container, false)
         fragment_view = view
         initRecycler()
+        this.presenter.bind(this)
         writeLogMessage("i",TAG,"home fragment has been created.")
         return view
     }
@@ -56,7 +57,7 @@ class HomeFragment : Fragment(), HomeContract.View {
             adapter = viewAdapter
         }
 
-        test()
+        //test()
 
     }
 
@@ -71,27 +72,27 @@ class HomeFragment : Fragment(), HomeContract.View {
         }
     }
 
-    override fun addEventCard(card : EventCard){
+    override fun addCard(card : EventCard){
         eventCardsList.add(card)
         writeLogMessage("i", TAG,"Project Card Added ${card.title} ")
 
     }
-    override fun resetEventCardList() {
+    override fun resetCardList() {
         eventCardsList.clear()
         viewAdapter.submitList(this.eventCardsList)
         viewAdapter.notifyDataSetChanged() //notify to update recyclerview
     }
 
-    override fun submitEventCardList() {
+    override fun submitCardList() {
         viewAdapter.submitList(this.eventCardsList)
         viewAdapter.notifyDataSetChanged() //notify to update recyclerview
         writeLogMessage("i", TAG,"Project Card List Updated! " + eventCardsList.size)
     }
     fun test(){
-        addEventCard(EventCard("a","a","a","a","a","a"))
-        addEventCard(EventCard("b","b","b","b","b","b"))
-        addEventCard(EventCard("c","c","c","c","c","c"))
-        submitEventCardList()
+        addCard(EventCard("a","a","a","a","a","a"))
+        addCard(EventCard("b","b","b","b","b","b"))
+        addCard(EventCard("c","c","c","c","c","c"))
+        submitCardList()
 
     }
     override fun getLayout(): View {
@@ -109,6 +110,8 @@ class HomeFragment : Fragment(), HomeContract.View {
     }
     override fun onDestroy() {
         super.onDestroy()
+        resetCardList()
+        this.presenter.unbind()
 
     }
 }

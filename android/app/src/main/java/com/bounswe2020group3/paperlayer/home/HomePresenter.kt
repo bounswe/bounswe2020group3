@@ -1,8 +1,9 @@
 package com.bounswe2020group3.paperlayer.home
 
+import com.bounswe2020group3.paperlayer.home.cards.EventCard
+import com.bounswe2020group3.paperlayer.home.data.Event
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import io.reactivex.disposables.CompositeDisposable
-import java.util.zip.ZipEntry
 import javax.inject.Inject
 private const val TAG = "HomePresenter"
 
@@ -32,19 +33,25 @@ class HomePresenter @Inject constructor(private var model: HomeContract.Model) :
 
     override fun subscribeAuthToken() {
         val userProfileSub = model.getAuthToken().subscribe { token ->
+            this.view?.writeLogMessage("i", TAG, "fetching auth")
+
             fetchEvents(token.id)
         }
         disposable.add(userProfileSub)
+    }
+    fun dataToCard(event : Event) : EventCard{
+        return EventCard(event.title,event.description,event.deadline,event.date,event.event_type,event.url)
     }
     override fun fetchEvents(ownerId : Int) {
         val getEventsObservable = model.getAllEvents()?.subscribe(
                 { eventslist ->
 
                     for (event in eventslist) {
-                        //this.view?.addEventCard()
-                        this.view?.writeLogMessage("i", TAG,event.title + " addUserCard is Called")
-                    }
+                        this.view?.addCard(dataToCard(event))
+                        this.view?.writeLogMessage("i", TAG,event.title + " eventcard is add")
 
+                    }
+                    this.view?.submitCardList()
                 },
 
                 { error ->

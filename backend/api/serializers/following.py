@@ -52,3 +52,17 @@ class FollowRequestSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = FollowRequest
         fields = ("req_from_user", "req_to_user", "created")
+
+
+class IncomingFollowRequestSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Follow request serializer.
+    """
+    from_user = serializers.IntegerField(source='req_from_user.id')
+
+    class Meta:
+        model = FollowRequest
+        fields = ("id", "from_user", "created")
+
+    def to_native(self, value):
+        return self.parent.to_native(value)

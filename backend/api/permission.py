@@ -32,7 +32,7 @@ class IsMemberOrReadOnly(permissions.BasePermission):
             or request.user == obj.owner
 
 
-class IsRequestSenderOrReadOnly(permissions.BasePermission):
+class IsRequestSenderOrReceiver(permissions.BasePermission):
     """
     Custom permission to only allow users to send request.
     """

@@ -27,7 +27,7 @@ class FollowRequest(models.Model):
                                       related_name="sent_requests",
                                       on_delete=models.CASCADE)
     req_to_user = models.ForeignKey('auth.User',
-                                    related_name="incoming_requests",
+                                    related_name="follow_requests",
                                     on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
 

@@ -12,6 +12,7 @@ const config = {
   Projectpage_Path: "/project",
   Projectpage_url: "/api/projects/",
   Profilepage_url: "/api/profiles/",
+  Edit_Profile_Url :"/api/profiles/",
   User_Path: "/api/users/",
   Event_Path: "/events",
   Milestone_url:"/api/milestones/"

@@ -126,7 +126,7 @@ export default class EditProfilePage extends Component {
           middle_name: middle_name,
           last_name: last_name,
           email: email,
-          img: img,
+          //img: img,
           bio: bio,
           age: age,
           expertise: expertise,
@@ -189,7 +189,51 @@ export default class EditProfilePage extends Component {
                     helperText="Last Name"
                     style={width}
                     variant="filled" />
-                </div>                   
+                </div>
+                <div>
+                  <TextField
+                    type="text"
+                    error=""
+                    label="email"
+                    onChange={this.handleEmailEdit}
+                    defaultValue=""
+                    helperText="E-mail"
+                    style={width}
+                    variant="filled" />
+                </div>
+                <div>
+                  <TextField
+                    type="text"
+                    error=""
+                    label="Bio"
+                    onChange={this.handleBioEdit}
+                    defaultValue=""
+                    helperText="Bio"
+                    style={width}
+                    variant="filled" />
+                </div> 
+                <div>
+                  <TextField
+                    type="text"
+                    error=""
+                    label="Age"
+                    onChange={this.handleAgeEdit}
+                    defaultValue=""
+                    helperText="Age"
+                    style={width}
+                    variant="filled" />
+                </div> 
+                <div>
+                  <TextField
+                    type="text"
+                    error=""
+                    label="Interests"
+                    onChange={this.handleInterestsEdit}
+                    defaultValue=""
+                    helperText="Interests"
+                    style={width}
+                    variant="filled" />
+                </div>                    
                 <div style={{ marginBottom: "10px" }}>
                   <FormControl>
                     <InputLabel style={{ marginLeft: "12px" }} id="gender">Gender</InputLabel>

@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.profile.data.User
@@ -20,7 +23,7 @@ private const val ARG_PEOPLE_LIST = "people-list"
 /**
  * A fragment representing a list of [User].
  */
-class UserListFragment : Fragment(), UserListContract.View {
+class UserListFragment : Fragment(), UserListContract.View, OnUserClickListener {
 
     @Inject
     lateinit var presenter: UserListContract.Presenter
@@ -46,7 +49,7 @@ class UserListFragment : Fragment(), UserListContract.View {
 
         this.presenter.bind(this)
 
-        userListAdapter = UserListAdapter(userList)
+        userListAdapter = UserListAdapter(userList, this)
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -81,4 +84,10 @@ class UserListFragment : Fragment(), UserListContract.View {
     override fun navigateToUser() {
 
     }
+
+    override fun onUserClick(user: User) {
+        val bundle = bundleOf("userID" to user.id )
+        Navigation.findNavController(requireView()).navigate(R.id.navigateToUserFromUserList, bundle)
+    }
+
 }

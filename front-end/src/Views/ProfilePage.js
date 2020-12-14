@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { styled } from '@material-ui/core';
+import { Button, styled } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
@@ -76,6 +76,9 @@ export default class HomePage extends Component {
   goToLogin = () => {
     this.props.history.push("/login");
   };
+  goToEditProfilePage = () => {
+    this.props.history.push("/edit-profile");
+  };
 
   render() {
     return (
@@ -125,12 +128,12 @@ export default class HomePage extends Component {
                 <Typography variant="h5" color="primary" style={titleStyle}>Expertise</Typography>
                 <Paper elevation={6} style={textStyle}>
                   <p>{this.state.expertise}
-                  We are expecting tags here</p>
+                  #machinelearning #deeplearning #supercomputing #parallelprogramming</p>
                 </Paper>
                 <Typography variant="h5" color="primary" style={titleStyle}>Interests</Typography>
                 <Paper elevation={6} style={textStyle}>
-                  <p>{this.state.interests}
-                  We are expecting tags here</p>
+                  #blockchain #IoT<p>{this.state.interests}
+                  </p>
                 </Paper>
 
               </Grid>
@@ -138,6 +141,7 @@ export default class HomePage extends Component {
             <Grid item sm={3}>
               {/*  SAĞDAKİ RELEVANT ŞEYLER BURAYA GELECEK  */}
             </Grid>
+            <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
           </Grid>
         </Grid>
         <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />

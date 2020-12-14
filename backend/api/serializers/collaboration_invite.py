@@ -1,8 +1,8 @@
-from api.models.collaboration_request import CollaborationRequest
+from api.models.collaboration_invite import CollaborationInvite
 from rest_framework import serializers
 
 
-class CollaborationRequestSerializer(serializers.ModelSerializer):
+class CollaborationInviteSerializer(serializers.ModelSerializer):
     """
     Collaboration serializer
     """
@@ -10,14 +10,15 @@ class CollaborationRequestSerializer(serializers.ModelSerializer):
     from_user = serializers.ReadOnlyField(source='from_user.id')
 
     class Meta:
-        model = CollaborationRequest
+        model = CollaborationInvite
         fields = '__all__'
 
 
-class CollaborationRequestPOSTSerializer(serializers.ModelSerializer):
+class CollaborationInvitePOSTSerializer(serializers.ModelSerializer):
     """
     Post serializer, includes only user
     """
+
     class Meta:
-        model = CollaborationRequest
-        fields = ['to_project', 'message']
+        model = CollaborationInvite
+        fields = ['to_user', 'to_project', 'message']

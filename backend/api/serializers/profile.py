@@ -59,3 +59,4 @@ class ProfilePrivateSerializer(serializers.HyperlinkedModelSerializer):
         model = Profile
         fields = ['id', 'name', 'middle_name', 'last_name',
                   'owner', 'profile_picture', 'is_public']
+

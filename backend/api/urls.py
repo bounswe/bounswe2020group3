@@ -14,6 +14,7 @@ from .views.user import UserViewSet
 from .views.event import EventViewSet
 from .views.file import FileViewSet
 from .views.collaboration_request import CollaborationRequestViewSet
+from .views.collaboration_invite import CollaborationInviteViewSet
 from django.contrib.auth import views as auth_views
 
 router = DefaultRouter()
@@ -25,6 +26,7 @@ router.register(r'tags', TagViewSet)
 router.register(r'events', EventViewSet)
 router.register(r'files', FileViewSet)
 router.register(r'collaboration_requests', CollaborationRequestViewSet)
+router.register(r'collaboration_invites', CollaborationInviteViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

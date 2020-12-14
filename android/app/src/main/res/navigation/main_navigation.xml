@@ -100,10 +100,18 @@
         android:id="@+id/userListFragment"
         android:name="com.bounswe2020group3.paperlayer.profile.list.UserListFragment"
         android:label="User List"
-        tools:layout="@layout/fragment_user_list" />
+        tools:layout="@layout/fragment_user_list" >
+        <action
+            android:id="@+id/navigateToUserFromUserList"
+            app:destination="@id/userFragment" />
+    </fragment>
     <fragment
-        android:id="@+id/otherProfile"
+        android:id="@+id/userFragment"
         android:name="com.bounswe2020group3.paperlayer.profile.user.UserFragment"
-        android:label="OtherProfile" />
+        android:label="User" >
+        <argument
+            android:name="userID"
+            app:argType="integer" />
+    </fragment>
 
 </navigation>

@@ -10,6 +10,8 @@ from rest_framework.decorators import action
 from django.http import FileResponse
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
+from rest_framework import status
+import os
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
@@ -53,9 +55,28 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['delete'])
     def remove_profile_picture(self, request, pk=None):
-        Profile.objects.filter(id=self.get_object().id).update(
-                                            profile_picture=None)
-        return Response("Profile picture is removed.")
+        if self.get_object().profile_picture:
+            self.get_object().profile_picture.delete()
+            return Response("Profile picture is removed.", status.HTTP_200_OK)
+        else:
+            return Response("Profile picture is not found.",
+                            status.HTTP_404_NOT_FOUND)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data,
+                                         partial=partial)
+        serializer.is_valid(raise_exception=True)
+
+        if 'profile_picture' in request.data:
+            if instance.profile_picture:
+                if instance.profile_picture != request.data['profile_picture']:
+                    if os.path.isfile(instance.profile_picture.path):
+                        os.remove(instance.profile_picture.path)
+
+        self.perform_update(serializer)
+        return Response(serializer.data)

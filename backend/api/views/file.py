@@ -12,7 +12,6 @@ from django.db.models import Q
 import os
 
 
-
 class FileViewSet(viewsets.ModelViewSet):
 
     parser_classes = (MultiPartParser, FormParser)
@@ -47,7 +46,7 @@ class FileViewSet(viewsets.ModelViewSet):
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
-        
+
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()

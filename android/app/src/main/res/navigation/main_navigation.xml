@@ -57,7 +57,7 @@
             app:destination="@id/loginFragment" />
         <action
             android:id="@+id/navigateToUserListFromProfile"
-            app:destination="@id/peopleFragment" />
+            app:destination="@id/userListFragment" />
     </fragment>
 
     <fragment
@@ -97,9 +97,9 @@
             app:destination="@id/projectCreateFragment" />
     </fragment>
     <fragment
-        android:id="@+id/peopleFragment"
+        android:id="@+id/userListFragment"
         android:name="com.bounswe2020group3.paperlayer.profile.list.UserListFragment"
-        android:label="fragment_user_list"
+        android:label="User List"
         tools:layout="@layout/fragment_user_list" />
     <fragment
         android:id="@+id/otherProfile"

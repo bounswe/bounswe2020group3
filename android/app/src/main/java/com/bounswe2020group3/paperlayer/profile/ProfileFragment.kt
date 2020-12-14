@@ -41,6 +41,14 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         imageButtonSettings.setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToProfileEditFromProfile)
         }
+
+        linearLayoutFollowers.setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToUserListFromProfile)
+        }
+
+        linearLayoutFollowings.setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToUserListFromProfile)
+        }
     }
 
     override fun onResume() {

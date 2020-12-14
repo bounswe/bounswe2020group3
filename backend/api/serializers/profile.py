@@ -48,7 +48,6 @@ class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
 
         return ret
 
-
 class ProfilePrivateSerializer(serializers.HyperlinkedModelSerializer):
     """
     Private profile serializer.

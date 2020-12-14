@@ -26,6 +26,7 @@ class Profile(models.Model):
     share_bio = models.BooleanField(default=True)
     share_gender = models.BooleanField(default=True)
     share_affiliations = models.BooleanField(default=True)
+    is_public = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['created']

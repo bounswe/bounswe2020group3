@@ -12,9 +12,10 @@ class ProfileFullSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Profile
         fields = ['id', 'name', 'middle_name', 'last_name', 'owner', 'email',
-                  'bio', 'profile_picture', 'birthday', 'share_birthday', 'expertise',
-                  'gender', 'interests', 'affiliations', 'share_bio',
-                  'share_gender', 'share_affiliations', 'is_public']
+                  'bio', 'profile_picture', 'birthday', 'share_birthday',
+                  'expertise', 'gender', 'interests', 'affiliations',
+                  'share_bio', 'share_gender', 'share_affiliations',
+                  'is_public']
 
 
 class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
@@ -27,7 +28,8 @@ class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Profile
         fields = ['id', 'name', 'middle_name', 'last_name', 'owner', 'email',
-                  'bio', 'profile_picture', 'birthday', 'share_birthday', 'expertise',
+                  'bio', 'profile_picture', 'birthday', 'share_birthday',
+                  'expertise',
                   'gender', 'interests', 'affiliations', 'share_bio',
                   'share_gender',
                   'share_affiliations', 'is_public']

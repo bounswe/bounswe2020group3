@@ -14,8 +14,8 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=100, blank=False, default='')
     bio = models.CharField(max_length=1000, blank=True, default='')
     profile_picture = models.ImageField(null=True, blank=True, upload_to='pp/')
-    age = models.IntegerField(default=0)
-    share_age = models.BooleanField(default=True)
+    birthday = models.DateField(blank=True, null=True)
+    share_birthday = models.BooleanField(default=True)
     expertise = models.TextField(default='', blank=True)
     gender = models.CharField(choices=GENDER_CHOICES,
                               default="do not want to share", max_length=100)

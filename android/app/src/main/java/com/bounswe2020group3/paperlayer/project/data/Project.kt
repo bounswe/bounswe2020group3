@@ -15,7 +15,7 @@ data class Project (
         @field:Json(name = "owner")
         var owner: String,
         @field:Json(name = "members")
-        var members: List<String>,
+        var members: List<User>,
         @field:Json(name = "is_public")
         var is_public: Boolean,
         @field:Json(name = "state")
@@ -23,5 +23,11 @@ data class Project (
         @field:Json(name = "project_type")
         var project_type: String,
         @field:Json(name = "due_date")
-        var due_date: String
+        var due_date: String,
+        @field:Json(name = "event")
+        var event: Event,
+        @field:Json(name = "tags")
+        var tags: List<Tag>,
+        @field:Json(name = "milestones")
+        var milestones: List<Milestone>
 )

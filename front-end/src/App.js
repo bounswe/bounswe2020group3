@@ -11,6 +11,7 @@ import { theme } from "./Common/ColorTheme";
 import CreateEventPage from "./Views/CreateEventPage";
 import history from "./history";
 import ProfilePage from "./Views/ProfilePage";
+import EditProfilePage from "./Views/EditProfilePage";
 import ProjectPage from "./Views/ProjectPage";
 import EventPage from "./Views/EventPage";
 
@@ -29,6 +30,7 @@ function App() {
             <AuthenticatedRoute path="/project/:projectId" component={ProjectPage} />
             <AuthenticatedRoute path="/events/:eventId" component={EventPage} />
             <AuthenticatedRoute path="/profile" component={ProfilePage} />
+            <AuthenticatedRoute path="/edit-profile" component={EditProfilePage} />
           </Switch>
         </BrowserRouter>
       </ThemeProvider>

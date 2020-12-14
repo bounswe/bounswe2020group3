@@ -3,6 +3,7 @@ package com.bounswe2020group3.paperlayer.profile
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.profile.data.Profile
 import com.bounswe2020group3.paperlayer.profile.data.User
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import retrofit2.http.*
@@ -27,6 +28,8 @@ interface ProfileContract {
 
         fun fetchUser(): Single<User>
         fun getUser(): BehaviorSubject<User>
+
+        fun getUserList(): Observable<List<User>>
     }
 
     interface Service {
@@ -38,5 +41,8 @@ interface ProfileContract {
 
         @GET("/api/users/{userId}/")
         fun getUser(@Path("userId") userId: Int): Single<User>
+
+        @GET("/api/users/")
+        fun getUserList(): Observable<List<User>>
     }
 }

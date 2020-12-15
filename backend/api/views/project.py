@@ -2,8 +2,11 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from api.models.project import Project
 from api.permission import IsMemberOrReadOnly
-from api.serializers.project import ProjectSerializer, ProjectGETSerializer
+from api.serializers.project import ProjectPublicSerializer
+from api.serializers.project import ProjectGETPublicSerializer
+from api.serializers.project import ProjectPrivateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.response import Response
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -12,7 +15,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     `update` and `destroy` actions.
     """
     queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
+    serializer_class = ProjectPublicSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsMemberOrReadOnly]
     filter_backends = [DjangoFilterBackend]
@@ -21,8 +24,26 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-    def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return ProjectGETSerializer
+    def retrieve(self, request, *args, **kwargs):
+        self.accessed_project = self.get_object()
+        serializer = self.get_serializer(self.accessed_project)
+        return Response(serializer.data)
 
-        return super().get_serializer_class()
+    def get_serializer_class(self):
+        this_user = self.request.user
+        is_get = self.action == 'retrieve'
+        is_list = self.action == 'list'
+        if this_user.is_staff:
+            return ProjectGETPublicSerializer
+        elif is_get and self.accessed_project.owner == this_user:
+            return ProjectGETPublicSerializer
+        elif is_get and this_user in self.accessed_project.members.all():
+            return ProjectGETPublicSerializer
+        elif is_get and self.accessed_project.is_public:
+            return ProjectGETPublicSerializer
+        elif is_get and not self.accessed_project.is_public:
+            return ProjectPrivateSerializer
+        elif is_list:
+            return ProjectPrivateSerializer
+        else:
+            return ProjectPublicSerializer

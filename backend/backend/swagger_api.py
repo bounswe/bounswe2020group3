@@ -10,9 +10,8 @@ schema_view = get_schema_view(
         title="PaperLayer API",
         default_version='v1',
         description="API documentation of PaperLayer",
+
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
-    # authentication_classes=(SessionAuthentication,),
-
 )

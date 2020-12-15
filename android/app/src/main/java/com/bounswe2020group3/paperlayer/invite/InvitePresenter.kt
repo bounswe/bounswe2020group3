@@ -62,7 +62,7 @@ class InvitePresenter @Inject constructor(private var model: InviteContract.Mode
     }
     override fun OnInviteButtonClicked(item: InviteCard, position: Int) {
         view?.writeLogMessage("i",TAG,"invite button pressed, ${item.id}, ${projectId}")
-        val inviteUserObservable =  model.inviteUsers(InviteRequest(item.id.toString(),projectId.toString(),"Come")).subscribe({
+        val inviteUserObservable =  model.inviteUsers(InviteRequest(item.id,projectId,"Come")).subscribe({
                 view?.writeLogMessage("i",TAG,"invite sent")
                 disposable.clear()
 

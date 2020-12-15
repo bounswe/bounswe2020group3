@@ -33,7 +33,7 @@ class EventFragment : Fragment(), HomeContract.EventView {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_events, container, false)
-        fragment_view = view
+        this.fragment_view = view
         initRecycler()
         this.presenter.bind(this)
         writeLogMessage("i",TAG,"event fragment has been created.")

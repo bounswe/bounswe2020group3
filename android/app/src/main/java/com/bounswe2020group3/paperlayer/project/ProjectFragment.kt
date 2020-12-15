@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
@@ -83,7 +84,10 @@ class ProjectFragment : Fragment(),ProjectContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         inviteUser.setOnClickListener{
-            Navigation.findNavController(view).navigate(R.id.navigateToInviteFromProject)
+            val bundle = bundleOf("projectID" to arguments?.getInt("projectID") )
+            writeLogMessage("i",TAG,"projectID : ${arguments?.getInt("projectID") }")
+
+            Navigation.findNavController(view).navigate(R.id.navigateToInviteFromProject,bundle)
         }
     }
 

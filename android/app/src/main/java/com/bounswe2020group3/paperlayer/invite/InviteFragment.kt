@@ -21,19 +21,20 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
 
     @Inject
     lateinit var presenter: InvitePresenter
-
     //View object
-    private lateinit var fragmentView: View
-
-    //Adapter Object
-    private lateinit var inviteAdapter: UserInviteAdapter
+    private lateinit var fragment_view: View
 
     // Declare Context variable at class level in Fragment
     private lateinit var mContext: Context
-    private lateinit var recyclerView: RecyclerView
 
-    //Project Card List
+    private lateinit var inviteAdapter: UserInviteAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewManager: RecyclerView.LayoutManager
+
     private val inviteCardList=ArrayList<InviteCard>()
+    private val invitedCardList = setOf<Int>()
+    override var projectId : Int = -1;
+
     override fun writeLogMessage(type: String, tag: String, message: String) {
         when(type){
             "e"-> Log.e(tag,message) //error
@@ -59,23 +60,24 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
     }
 
     override fun getLayout(): View {
-        return this.fragmentView
+        return this.fragment_view
     }
 
     override fun showToast(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 
-    override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
+        projectId = arguments?.getInt("projectID")!!
+
         val view = inflater.inflate(R.layout.fragment_invite, container, false)
-        this.fragmentView=view
+        this.fragment_view=view
         initRecyclerView()
-        resetUserCardlist()
         this.presenter.bind(this)
+        //if (projectId != null && projectId != -1) {
+        //    this.presenter.fetchAllInvited(projectId) //fetch project and update ui
+        //}
         return view
     }
 
@@ -96,11 +98,19 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
         inviteAdapter.notifyDataSetChanged() //notify to update recyclerview
     }
     private fun initRecyclerView(){
+        viewManager = LinearLayoutManager(this.context)
+        inviteAdapter= UserInviteAdapter(this)
+        recyclerView = fragment_view.findViewById<RecyclerView>(R.id.recyclerViewInvites).apply{
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = inviteAdapter
+        }
+        /*
         this.recyclerView= fragmentView.findViewById(R.id.recyclerViewInviteUsers)!!
         this.recyclerView.layoutManager= LinearLayoutManager(this.context)
         this.inviteAdapter= UserInviteAdapter(this)
         this.recyclerView.adapter=inviteAdapter
-
+        */
 
     }
 
@@ -110,13 +120,16 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
     }
 
 
+    override fun addInvited(id: Int) {
+        TODO("Not yet implemented")
+    }
 
-    override fun addUserCard(username: String, name : String, expertise: String, photoURL : String) {
+    override fun addUserCard(username: String, name : String, expertise: String, photoURL : String, id : Int) {
         inviteCardList.add(
             InviteCard(
                 username,name,
                 expertise,
-                 photoURL)
+                 photoURL,id)
         )
     }
 

@@ -93,11 +93,6 @@ class ProjectFragment : Fragment(),ProjectContract.View {
 
     //Update project UI
     override fun updateProjectUI(project: Project) {
-        val tab = this.fragmentView.tabLayoutProject.getTabAt(1)
-        val badge=tab?.orCreateBadge
-        badge?.maxCharacterCount=2
-        badge?.number=10
-
         this.fragmentView.projectTitle.text=project.name
         this.fragmentView.projectDescription.text=project.description
         this.fragmentView.projectOwner.text=project.owner

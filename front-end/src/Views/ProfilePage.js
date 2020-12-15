@@ -157,13 +157,11 @@ export default class HomePage extends Component {
               <Grid item sm={6} >
                 <Typography variant="h5" color="primary" style={titleStyle}>Expertise</Typography>
                 <Paper elevation={6} style={textStyle}>
-                  <p>{this.state.expertise}
-                  #machinelearning #deeplearning #supercomputing #parallelprogramming</p>
+                  <p>{this.state.expertise}</p>
                 </Paper>
                 <Typography variant="h5" color="primary" style={titleStyle}>Interests</Typography>
                 <Paper elevation={6} style={textStyle}>
-                  #blockchain #IoT<p>{this.state.interests}
-                  </p>
+                  <p>{this.state.interests}</p>
                 </Paper>
                 {(this.showAffiliations() ?
                   <>

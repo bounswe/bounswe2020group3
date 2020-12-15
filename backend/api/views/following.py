@@ -21,6 +21,20 @@ class FollowingViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['from_user__id', 'to_user__id']
 
+    @action(detail=True, methods=['POST'], name='unfollow',
+            serializer_class=None)
+    def unfollow(self, request, pk=None):
+
+        following = get_object_or_404(
+            Following, pk=pk)
+        if following.to_user == self.request.user:
+            following.unfollow()
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(data={
+                'error': 'Unauthorized'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+
 
 class FollowRequestViewSet(viewsets.ModelViewSet):
     """

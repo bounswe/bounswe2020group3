@@ -21,6 +21,13 @@ class Following(models.Model):
         ]
         ordering = ['created']
 
+    def unfollow(self):
+        self.delete()
+        Following.objects.filter(
+            from_user=self.to_user,
+            to_user=self.from_user
+        ).delete()
+
 
 class FollowRequest(models.Model):
     req_from_user = models.ForeignKey('auth.User',
@@ -51,4 +58,8 @@ class FollowRequest(models.Model):
 
     def reject(self):
         self.delete()
+        FollowRequest.objects.filter(
+            req_from_user=self.req_to_user,
+            req_to_user=self.req_from_user
+        ).delete()
         # TODO add notification signal2

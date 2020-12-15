@@ -13,6 +13,7 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.0",
     "date-fns": "^2.16.1",
+    "form-data": "^3.0.0",
     "history": "^5.0.0",
     "isomorphic-unfetch": "^3.1.0",
     "js-cookie": "^2.2.1",

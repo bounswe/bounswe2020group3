@@ -31,14 +31,15 @@ class FileViewSet(viewsets.ModelViewSet):
     Non-admin users will not be able to see files of a project that is
     private and they are not the owner or a member.
     '''
+
     def list(self, request, *args, **kwargs):
         user = request.user
         queryset = self.filter_queryset(self.get_queryset())
 
         if not user.is_staff:
             queryset = queryset.filter(Q(project__is_public__exact=True) |
-                                       Q(project__owner__exact=user) |
-                                       Q(project__members__exact=user))
+                                       Q(project__owner__exact=user.id) |
+                                       Q(project__members__exact=user.id))
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -46,6 +47,7 @@ class FileViewSet(viewsets.ModelViewSet):
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)

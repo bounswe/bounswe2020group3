@@ -47,7 +47,7 @@ class IsMilestoneMemberOrReadOnly(permissions.BasePermission):
             request.user == obj.project.owner
 
 
-class IsFileMemberOrReadOnly(permissions.BasePermission):
+class IsFileMember(permissions.BasePermission):
     """
     Custom permission to only allow members of an object to edit it.
     """
@@ -55,10 +55,10 @@ class IsFileMemberOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
-        c1 = request.method in permissions.SAFE_METHODS
-        c2 = obj.project.is_public
+        safe_method = request.method in permissions.SAFE_METHODS
+        public = obj.project.is_public
 
-        if c1 and c2:
+        if safe_method and public:
             return True
 
         # Write permissions are only allowed to the members of the project.

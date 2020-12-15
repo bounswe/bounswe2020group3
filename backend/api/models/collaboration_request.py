@@ -1,6 +1,7 @@
 from django.db import models
 from .project import Project
 from django.utils import timezone
+from api.models.collaboration_invite import CollaborationInvite
 
 
 class CollaborationRequest(models.Model):
@@ -29,7 +30,7 @@ class CollaborationRequest(models.Model):
     def accept(self):
         self.to_project.members.add(self.from_user)
         self.delete()
-        CollaborationRequest.objects.filter(
+        CollaborationInvite.objects.filter(
             from_user=self.to_user,
             to_user=self.from_user,
             to_project=self.to_project

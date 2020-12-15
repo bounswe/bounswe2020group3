@@ -31,7 +31,7 @@ interface ProjectMainContract {
 
         fun resetProjectCardList()
         fun submitProjectCardList()
-        fun addProjectCard(projectName: String,projectBody: String,projectOwner: String,projectId: Int)
+        fun addProjectCard(projectName: String,projectBody: String,projectOwner: String,projectId: Int,projectType: String)
     }
 
     interface Model {

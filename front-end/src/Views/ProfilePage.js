@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { styled } from '@material-ui/core';
+import { Button, styled } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
@@ -33,6 +33,7 @@ const Container = styled(Box)({
   left: "0",
   right: "0",
   margin: "auto",
+  overflow: "scroll",
   '& .MuiTextField-root': {
     margin: "10px",
     width: "30%",
@@ -45,6 +46,7 @@ export default class HomePage extends Component {
     super(props);
     this.SnackbarRef = React.createRef();
     this.state = {
+      profileId: "",
       name: "",
       middle_name: "",
       last_name: "",
@@ -54,7 +56,13 @@ export default class HomePage extends Component {
       age: "",
       expertise: "",
       gender: "",
-      interests: ""
+      interests: "",
+      affiliations: "",
+      shareBio: false,
+      shareGender: false,
+      shareAffiliations: false,
+      shareAge: false,
+      self: false
     }
   };
 
@@ -62,7 +70,23 @@ export default class HomePage extends Component {
     axios.get(`${config.API_URL}${config.Profilepage_url}?owner__id=${getUserId()}`, { headers: { 'Content-Type': 'Application/json' } })
       .then(res => {
         const prof = res.data[0];
-        this.setState({ name: prof.name, middle_name: prof.middle_name, last_name: prof.last_name, bio: prof.bio, img: prof.photo_url, age: prof.age, expertise: prof.expertise, gender: prof.gender, interests: prof.interests });
+        this.setState({
+          profileId: prof.id,
+          name: prof.name,
+          middle_name: prof.middle_name,
+          last_name: prof.last_name,
+          bio: prof.bio,
+          img: prof.photo_url,
+          age: prof.age, expertise: prof.expertise,
+          gender: prof.gender,
+          interests: prof.interests,
+          affiliations: prof.affiliations,
+          shareBio: prof.share_bio,
+          shareGender: prof.share_gender,
+          shareAffiliations: prof.share_affiliations,
+          shareAge: prof.share_age,
+          self: prof.id === getUserId()
+        });
       })
     axios.get(`${config.API_URL}${config.User_Path}${getUserId()}`, { headers: { 'Content-Type': 'Application/json' } })
       .then(res => {
@@ -76,6 +100,9 @@ export default class HomePage extends Component {
   goToLogin = () => {
     this.props.history.push("/login");
   };
+  goToEditProfilePage = () => {
+    this.props.history.push("/edit-profile");
+  };
 
   render() {
     return (
@@ -85,8 +112,8 @@ export default class HomePage extends Component {
           pushProfile={() => { this.props.history.push("/profile") }}
           goHome={() => { this.props.history.push(config.Homepage_Path) }}
         />
-        <Typography variant="h4" color="primary">Profile Page</Typography>
-        <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto' }} />
+        {/* <Typography variant="h4" color="primary">Profile Page</Typography> */}
+        <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
         <br />
         <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
           <Typography>{this.state.name + " " + this.state.middle_name} <br />
@@ -100,20 +127,26 @@ export default class HomePage extends Component {
             <Grid container spacing={2} item sm={6}>
 
               <Grid item sm={6} >
-                <Typography variant="h5" color="primary" style={titleStyle}>Biography</Typography>
-                <Paper elevation={6} style={textStyle}>
-                  <p>{this.state.bio}</p>
-                </Paper>
+                {this.showBio()
+                  ? <>
+                    <Typography variant="h5" color="primary" style={titleStyle}>Biography</Typography>
+                    <Paper elevation={6} style={textStyle}>
+                      <p>{this.state.bio}</p>
+                    </Paper>
+                  </>
+                  :
+                  <></>
+                }
 
                 <Typography variant="h5" color="primary" style={titleStyle}>Contact Info</Typography>
                 <Paper elevation={6} style={textStyle}>
                   <p>{"Email : " + this.state.email}</p>
                 </Paper>
-                {(this.validPersonalInfo() ?
+                {(this.showPersonalInfo() ?
                   <>
                     <Typography variant="h5" color="primary" style={titleStyle}>Personal Information</Typography>
                     <Paper elevation={6} style={textStyle}>
-                      <p>{(this.state.age ? "Age : " + this.state.age : "")} <br />
+                      <p>{"Age : " + this.state.age} <br />
                         {(this.state.gender !== privateGender ? "Gender : " + this.state.gender : "")}</p>
                     </Paper>
                   </>
@@ -124,41 +157,66 @@ export default class HomePage extends Component {
               <Grid item sm={6} >
                 <Typography variant="h5" color="primary" style={titleStyle}>Expertise</Typography>
                 <Paper elevation={6} style={textStyle}>
-                  <p>{this.state.expertise}
-                  We are expecting tags here</p>
+                  <p>{this.state.expertise}</p>
                 </Paper>
                 <Typography variant="h5" color="primary" style={titleStyle}>Interests</Typography>
                 <Paper elevation={6} style={textStyle}>
-                  <p>{this.state.interests}
-                  We are expecting tags here</p>
+                  <p>{this.state.interests}</p>
                 </Paper>
-
+                {(this.showAffiliations() ?
+                  <>
+                    <Typography variant="h5" color="primary" style={titleStyle}>Affiliations</Typography>
+                    <Paper elevation={6} style={textStyle}>
+                      <p>{this.state.affiliations === "" ? "None" : this.state.affiliations}</p>
+                    </Paper>
+                  </>
+                  :
+                  <></>
+                )}
               </Grid>
             </Grid>
             <Grid item sm={3}>
               {/*  SAĞDAKİ RELEVANT ŞEYLER BURAYA GELECEK  */}
             </Grid>
+            <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
           </Grid>
         </Grid>
         <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
       </Container>);
   }
-  validPersonalInfo = () => {
-    return this.validAge() && this.validGender();
+  showPersonalInfo = () => {
+    return this.showGender() && this.showAge();
   }
 
-  validGender = () => {
-    const { gender } = this.state;
-    if (gender === privateGender)
-      return false;
-    else
+
+  showGender = () => {
+    const { shareGender } = this.state;
+    if (shareGender)
       return true;
-  }
-  validAge = () => {
-    const { age } = this.state;
-    if (age < 15)
-      return false;
     else
-      return true;
+      return false;
   }
+  showAge = () => {
+    const { shareAge } = this.state;
+    if (shareAge)
+      return true;
+    else
+      return false;
+  }
+  showBio = () => {
+    const { shareBio } = this.state;
+    if (shareBio)
+      return true;
+    else
+      return false;
+  }
+  showAffiliations = () => {
+    const { shareAffiliations } = this.state;
+    if (shareAffiliations)
+      return true;
+    else
+      return false;
+  }
+
+
 }

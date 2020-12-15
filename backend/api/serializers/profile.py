@@ -12,9 +12,10 @@ class ProfileFullSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Profile
         fields = ['id', 'name', 'middle_name', 'last_name', 'owner', 'email',
-                  'bio', 'profile_picture', 'age', 'share_age', 'expertise',
-                  'gender', 'interests', 'affiliations', 'share_bio',
-                  'share_gender', 'share_affiliations', 'is_public']
+                  'bio', 'profile_picture', 'birthday', 'share_birthday',
+                  'expertise', 'gender', 'interests', 'affiliations',
+                  'share_bio', 'share_gender', 'share_affiliations',
+                  'is_public']
 
 
 class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
@@ -27,15 +28,16 @@ class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Profile
         fields = ['id', 'name', 'middle_name', 'last_name', 'owner', 'email',
-                  'bio', 'profile_picture', 'age', 'share_age', 'expertise',
+                  'bio', 'profile_picture', 'birthday', 'share_birthday',
+                  'expertise',
                   'gender', 'interests', 'affiliations', 'share_bio',
                   'share_gender',
                   'share_affiliations', 'is_public']
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        if not ret['share_age']:
-            ret['age'] = -1
+        if not ret['share_birthday']:
+            ret['birthday'] = -1
 
         if not ret['share_gender']:
             ret['gender'] = ""
@@ -47,6 +49,7 @@ class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
             ret['affiliations'] = ""
 
         return ret
+
 
 class ProfilePrivateSerializer(serializers.HyperlinkedModelSerializer):
     """

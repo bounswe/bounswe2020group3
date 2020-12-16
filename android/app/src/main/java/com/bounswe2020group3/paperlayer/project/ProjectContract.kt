@@ -10,6 +10,9 @@ interface ProjectContract {
         fun setView(view: View)
         fun showMessage(message: String)
         fun fetchProject(projectId: Int)
+        fun setProject(project: Project)
+        fun getProject(): Project?
+        fun navigateToEditProject()
     }
 
     interface View: Mvp.View{

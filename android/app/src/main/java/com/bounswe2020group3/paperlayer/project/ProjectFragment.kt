@@ -14,6 +14,7 @@ import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.project.data.Project
 import kotlinx.android.synthetic.main.fragment_project.*
 import kotlinx.android.synthetic.main.fragment_project.view.*
+import java.io.Serializable
 import javax.inject.Inject
 
 private const val TAG = "ProjectFragment"
@@ -82,7 +83,7 @@ class ProjectFragment : Fragment(),ProjectContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         buttonEditProject.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.navigateToProjectEditFromProjectFragment)
+            presenter.navigateToEditProject()
         }
     }
 

@@ -52,17 +52,11 @@ class ProjectCreateFragment : Fragment(), ProjectCreateContract.View {
         }
 
 
-        val projectStates = arrayOf(
-                ProjectState.SEEKING.value,
-                ProjectState.OPEN.value,
-                ProjectState.IN_PROGRESS.value,
-                ProjectState.DONE.value
-        )
+        val projectStates = ProjectState.toList()
         val projectStateAdapter =
                 ArrayAdapter(requireContext(), R.layout.spinner_item, projectStates)
         projectStateAdapter.setDropDownViewResource(R.layout.spinner_item)
         spinnerProjectState.adapter = projectStateAdapter
-
 
         spinnerProjectState.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -80,11 +74,8 @@ class ProjectCreateFragment : Fragment(), ProjectCreateContract.View {
             }
         }
 
-        val projectTypes = arrayOf(
-                ProjectType.CONFERENCE.value,
-                ProjectType.INSTITUTION.value,
-                ProjectType.JOURNAL.value
-        )
+        val projectTypes = ProjectType.toList()
+
         val projectTypeAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, projectTypes)
         projectTypeAdapter.setDropDownViewResource(R.layout.spinner_item)
         spinnerProjectType.adapter = projectTypeAdapter
@@ -103,7 +94,6 @@ class ProjectCreateFragment : Fragment(), ProjectCreateContract.View {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 Timber.d("Nothing selected")
             }
-
         }
 
         val builder = MaterialDatePicker.Builder.datePicker()

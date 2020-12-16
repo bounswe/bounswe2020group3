@@ -1,7 +1,10 @@
 package com.bounswe2020group3.paperlayer.project.data
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Event (
         @field:Json(name = "id")
         var id: Int,
@@ -17,4 +20,4 @@ data class Event (
         var eventType: String,
         @field:Json(name = "url")
         var url: String
-)
+) : Parcelable

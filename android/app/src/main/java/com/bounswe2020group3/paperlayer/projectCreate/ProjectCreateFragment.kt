@@ -160,7 +160,7 @@ class ProjectCreateFragment : Fragment(), ProjectCreateContract.View {
 
     override fun displayTime(calendar: Calendar, selectedDate: Long): String {
         calendar.time = Date(selectedDate)
-        return calendar.get(Calendar.YEAR).toString() + "-" + calendar.get(Calendar.MONTH)
+        return calendar.get(Calendar.YEAR).toString() + "-" + (calendar.get(Calendar.MONTH)+1)
                 .toString() + "-" + calendar.get(Calendar.DAY_OF_MONTH).toString()
     }
 

@@ -9,7 +9,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.project.data.Project
@@ -21,6 +23,8 @@ import kotlinx.android.synthetic.main.fragment_project_edit.buttonDatePicker
 import kotlinx.android.synthetic.main.fragment_project_edit.editTextDescription
 import kotlinx.android.synthetic.main.fragment_project_edit.editTextProjectName
 import kotlinx.android.synthetic.main.fragment_project_edit.editTextRequirements
+import kotlinx.android.synthetic.main.fragment_project_edit.layoutSuccess
+import kotlinx.android.synthetic.main.fragment_project_edit.progressBar
 import kotlinx.android.synthetic.main.fragment_project_edit.radioButtonNo
 import kotlinx.android.synthetic.main.fragment_project_edit.radioButtonYes
 import kotlinx.android.synthetic.main.fragment_project_edit.radioGroupIsPublic
@@ -148,6 +152,7 @@ class ProjectEditFragment : Fragment(), ProjectEditContract.View {
         }
 
         buttonEditProject.setOnClickListener {
+            it.hideKeyboard()
             val projectEditRequest = ProjectEditRequest(
                     name = editTextProjectName.text.toString(),
                     description = editTextDescription.text.toString(),
@@ -165,8 +170,20 @@ class ProjectEditFragment : Fragment(), ProjectEditContract.View {
             }
 
         }
+        buttonDone.setOnClickListener {
+            presenter.navigateToProjectDetail(project?.id)
+        }
 
     }
+
+    override fun showSuccess() {
+        progressBar.visibility = View.GONE
+        buttonEditProject.visibility = View.GONE
+        layoutEditProject.visibility = View.GONE
+        layoutSuccess.visibility = View.VISIBLE
+    }
+
+
 
     override fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -174,8 +191,8 @@ class ProjectEditFragment : Fragment(), ProjectEditContract.View {
 
     override fun displayTime(calendar: Calendar, selectedDate: Long): String {
         calendar.time = Date(selectedDate)
-        return calendar.get(Calendar.YEAR).toString() + "-" + calendar.get(Calendar.MONTH)
-                .toString() + "-" + calendar.get(Calendar.DAY_OF_MONTH).toString()
+        return calendar.get(Calendar.YEAR).toString() + "-" + (calendar.get(Calendar.MONTH)+1).
+        toString() + "-" + calendar.get(Calendar.DAY_OF_MONTH).toString()
     }
 
     private fun View.hideKeyboard() {

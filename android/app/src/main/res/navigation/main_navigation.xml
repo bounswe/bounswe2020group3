@@ -88,8 +88,12 @@
         android:id="@+id/projectEditFragment"
         android:name="com.bounswe2020group3.paperlayer.projectEdit.ProjectEditFragment"
         android:label="Project Edit"
-        tools:layout="@layout/fragment_project_edit"
-        />
+        tools:layout="@layout/fragment_project_edit">
+        <action
+            android:id="@+id/navigateToProjectFragmentFromProjectEditFragment"
+            app:destination="@id/projectFragment"
+            />
+    </fragment>
 
     <fragment
         android:id="@+id/projectMainFragment"

@@ -4,9 +4,8 @@ package com.bounswe2020group3.paperlayer.home
 import com.bounswe2020group3.paperlayer.home.cards.EventCard
 import com.bounswe2020group3.paperlayer.home.cards.MilestoneCard
 import com.bounswe2020group3.paperlayer.home.data.Event
-import com.bounswe2020group3.paperlayer.login.data.AuthToken
+import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
 import com.bounswe2020group3.paperlayer.mvp.Mvp
-import com.bounswe2020group3.paperlayer.project.data.Milestone
 import com.bounswe2020group3.paperlayer.project.data.Project
 import io.reactivex.Observable
 import io.reactivex.Single

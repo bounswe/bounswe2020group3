@@ -28,6 +28,9 @@
         <action
             android:id="@+id/navigateToProjectMainFromLogin"
             app:destination="@id/projectMainFragment" />
+        <action
+            android:id="@+id/test1"
+            app:destination="@id/inviteFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -108,5 +111,10 @@
             android:id="@+id/navigateToProjectCreateFromProjectMainFragment"
             app:destination="@id/projectCreateFragment" />
     </fragment>
-    
+    <fragment
+        android:id="@+id/inviteFragment"
+        android:name="com.bounswe2020group3.paperlayer.invite.InviteFragment"
+        android:label="fragment_invite"
+        tools:layout="@layout/fragment_invite" />
+
 </navigation>

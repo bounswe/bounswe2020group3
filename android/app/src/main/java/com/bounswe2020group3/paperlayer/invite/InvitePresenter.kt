@@ -1,12 +1,8 @@
 package com.bounswe2020group3.paperlayer.invite
 
 import com.bounswe2020group3.paperlayer.invite.data.InviteRequest
-import com.bounswe2020group3.paperlayer.invite.data.InviteResponse
-import com.bounswe2020group3.paperlayer.invite.data.InvitedUserResponse
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
-import com.bounswe2020group3.paperlayer.project.ProjectMainContract
 import io.reactivex.disposables.CompositeDisposable
-import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
@@ -34,31 +30,58 @@ class InvitePresenter @Inject constructor(private var model: InviteContract.Mode
         disposable.add(userProfileSub)
     }
 
+    fun fetchAllInvited() : ArrayList<String>{
+
+        var ids : ArrayList<String>  = ArrayList()
+        var message : String = "invitedalready"
+        view?.writeLogMessage("i", TAG,message)
+
+        val getUsersObservable = model.getInvited(36)?.subscribe(
+                { invitelist ->
+                    for( user in invitelist) {
+                        ids.add(user.to_user)
+                        message = message + ", " + user.to_user
+                    }
+                },
+                {error ->
+                    this.view?.writeLogMessage("e", TAG, "invited fetching failed")
+                })
+        view?.writeLogMessage("i", TAG,message)
+        if (getUsersObservable != null) {
+            disposable.add(getUsersObservable)
+        }
+        return ids
+    }
     override fun fetchAllUsers(ownerId: Int) {
+        var ids : ArrayList<String>  = ArrayList()
+        var message : String = "invitedalready"
+
         val getUsersObservable = model.getAllUsers()?.subscribe(
             { userlist ->
-                var ids : ArrayList<String>  = ArrayList()
-                var message : String = "invitedalready"
-                model.getInvited(36)?.subscribe(
-                    { invitelist ->
-                        for( user in invitelist) {
-                            ids.add(user.to_user)
-                            message = message + ", " + user.to_user
-                        }
-                    },
-                    {error ->
-                        this.view?.writeLogMessage("e", TAG, "invited fetching failed")
-                    })
                 view?.writeLogMessage("i", TAG,message)
+
+                val getUsersObservable = model.getInvited(36)?.subscribe(
+                        { invitelist ->
+                            for( user in invitelist) {
+                                ids.add(user.to_user)
+                                message = message + ", " + user.to_user
+                            }
+                        },
+                        {error ->
+                            this.view?.writeLogMessage("e", TAG, "invited fetching failed")
+                        })
+                view?.writeLogMessage("i", TAG,message)
+                if (getUsersObservable != null) {
+                    disposable.add(getUsersObservable)
+                }
                 for (user in userlist){
-                    var called : Boolean = user.id.toString() in ids
                     if (user.profile.size >0)
-                        this.view?.addUserCard(user.username,user.profile.get(0).name + user.profile.get(0).lastName,
-                            "", "it",user.id,called)
+                        this.view?.addUserCard(user.username,"user.profile.get(0).name + user.profile.get(0).lastName",
+                            "", "it",user.id,false)
                     else
                         this.view?.addUserCard(user.username,"asd",
-                                "asd", "it",user.id,called)
-                    this.view?.writeLogMessage("i", TAG,user.username + " addUserCard is Called" + called)
+                                "asd", "it",user.id,true)
+                    this.view?.writeLogMessage("i", TAG,user.username + " addUserCard is Called" )
 
                 }
 

@@ -69,8 +69,8 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        projectId = arguments?.getInt("projectID")!!
-
+        //projectId = arguments?.getInt("projectID")!!
+        projectId = 36;
         val view = inflater.inflate(R.layout.fragment_invite, container, false)
         this.fragment_view=view
         initRecyclerView()

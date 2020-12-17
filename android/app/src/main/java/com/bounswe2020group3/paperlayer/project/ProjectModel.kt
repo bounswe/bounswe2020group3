@@ -1,7 +1,7 @@
 package com.bounswe2020group3.paperlayer.project
 
 
-import com.bounswe2020group3.paperlayer.login.data.AuthToken
+import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.util.Session
 import io.reactivex.Observable

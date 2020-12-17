@@ -1,5 +1,8 @@
 package com.bounswe2020group3.paperlayer.dagger
 
+import com.bounswe2020group3.paperlayer.home.EventFragment
+import com.bounswe2020group3.paperlayer.home.MilestoneFragment
+import com.bounswe2020group3.paperlayer.invite.InviteFragment
 import com.bounswe2020group3.paperlayer.login.LoginFragment
 import com.bounswe2020group3.paperlayer.profile.ProfileFragment
 import com.bounswe2020group3.paperlayer.profile.edit.ProfileEditFragment
@@ -12,6 +15,8 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Component(modules = [
+    HomeModule::class,
+    InviteModule::class,
     RegisterModule::class,
     NetworkModule::class,
     ProfileModule::class,
@@ -31,5 +36,8 @@ interface AppComponent {
     fun inject(fragment: ProjectCreateFragment)
     fun inject(fragment: ProjectEditFragment)
     fun inject(fragment: RegisterFragment)
+    fun inject(fragment: InviteFragment)
+    fun inject(fragment: EventFragment)
+    fun inject(fragment: MilestoneFragment)
 
 }

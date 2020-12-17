@@ -1,10 +1,9 @@
 package com.bounswe2020group3.paperlayer.login
 
 
-import android.util.Log
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.login.data.UserCredentials
+import com.bounswe2020group3.paperlayer.profile.data.data.UserCredentials
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -57,7 +56,7 @@ class LoginPresenter @Inject constructor(private var model: LoginContract.Model)
                     this.view?.writeLogMessage("i", TAG, "Authentication Successful.")
                     this.view?.writeLogMessage("i", TAG, "Token: " + token.token)
                     //Navigation must be changed to profile page after profile page created
-                    this.view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.test3) }
+                    this.view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.test1) }
                 },
                 { error ->
                     this.view?.writeLogMessage("e", TAG, "Error in authentication")

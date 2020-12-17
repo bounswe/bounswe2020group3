@@ -95,3 +95,18 @@ class CollaborationPermissions(permissions.BasePermission):
         elif view.action in ['update', 'partial_update', 'destroy']:
             return request.user == obj.req_from_user
         return True
+
+
+class CommentPermission(permissions.BasePermission):
+    """
+    Custom permission to only allow owner of an object to edit it.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        if view.action in ['destroy']:
+            return request.user == obj.to_user or \
+                   request.user == obj.from_user
+        elif view.action in ['update', 'partial_update']:
+            return request.user == obj.from_user
+
+        return True

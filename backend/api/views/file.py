@@ -35,8 +35,9 @@ class FileViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         user = request.user
         queryset = self.filter_queryset(self.get_queryset())
-
-        if not user.is_staff:
+        if user.is_anonymous:
+            queryset = queryset.filter(project__is_public__exact=True)
+        elif not user.is_staff:
             queryset = queryset.filter(Q(project__is_public__exact=True) |
                                        Q(project__owner__exact=user.id) |
                                        Q(project__members__exact=user.id))

@@ -7,6 +7,7 @@ from .models.profile import Profile
 from .models.project import Project
 from .models.event import Event
 from .models.file import File
+from .models.comment import Comment
 
 admin.site.register(Example)
 admin.site.register(Profile)
@@ -15,3 +16,4 @@ admin.site.register(Event)
 admin.site.register(File)
 admin.site.register(Following)
 admin.site.register(FollowRequest)
+admin.site.register(Comment)

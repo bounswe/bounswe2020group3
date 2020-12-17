@@ -33,7 +33,7 @@ class InviteModel @Inject constructor(private var sessionManager: Session, retro
         return sessionManager.getToken()
     }
 
-    override fun getInvited(projectId: Int): Single<InvitedUserResponse> {
+    override fun getInvited(projectId: Int):  Observable<List<InvitedUserResponse>> {
         return userService.getInvited(projectId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

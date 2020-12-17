@@ -124,12 +124,12 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
         TODO("Not yet implemented")
     }
 
-    override fun addUserCard(username: String, name : String, expertise: String, photoURL : String, id : Int) {
+    override fun addUserCard(username: String, name : String, expertise: String, photoURL : String, id : Int, invited : Boolean) {
         inviteCardList.add(
             InviteCard(
                 username,name,
                 expertise,
-                 photoURL,id)
+                 photoURL,id,invited)
         )
     }
 

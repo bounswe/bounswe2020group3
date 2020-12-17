@@ -30,7 +30,7 @@ interface InviteContract {
 
         fun resetUserCardlist()
         fun submitUserCardList()
-        fun addUserCard(username: String,name : String,expertise: String,photoURL: String,id : Int)
+        fun addUserCard(username: String,name : String,expertise: String,photoURL: String,id : Int,invited : Boolean)
         fun addInvited(id : Int)
     }
 
@@ -39,7 +39,7 @@ interface InviteContract {
         fun getAllUsers(): Observable<List<User>>?
         fun getAuthToken(): BehaviorSubject<AuthToken>
         fun inviteUsers(inviteRequest: InviteRequest) : Single<InviteResponse>
-        fun getInvited(projectId : Int ) : Single<InvitedUserResponse>
+        fun getInvited(projectId : Int ) :  Observable<List<InvitedUserResponse>>
     }
 
     interface UserService {
@@ -47,7 +47,7 @@ interface InviteContract {
         fun inviteUsers(@Header("Authorization") authorization: String, @Body inviteRequest: InviteRequest) : Single<InviteResponse>
 
         @GET("/api/collaboration_invites/")
-        fun getInvited(@Query("to_project_id") projectId : Int ) : Single<InvitedUserResponse>
+        fun getInvited(@Query("to_project__id") projectId : Int ) : Observable<List<InvitedUserResponse>>
 
         @GET("/api/users/")
         fun getUsers(): Observable<List<User>>

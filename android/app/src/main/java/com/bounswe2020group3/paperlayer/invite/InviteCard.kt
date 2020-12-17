@@ -5,7 +5,8 @@ data class InviteCard(
         var name: String,
         var expertise: String,
         var photo_url: String,
-        var id : Int
+        var id : Int,
+        var called : Boolean
 ) {
 
 

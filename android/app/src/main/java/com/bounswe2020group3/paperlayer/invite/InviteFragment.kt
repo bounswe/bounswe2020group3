@@ -70,13 +70,13 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         //projectId = arguments?.getInt("projectID")!!
-        projectId = 36;
+        projectId =2;
         val view = inflater.inflate(R.layout.fragment_invite, container, false)
         this.fragment_view=view
         initRecyclerView()
         this.presenter.bind(this)
         //if (projectId != null && projectId != -1) {
-        //    this.presenter.fetchAllInvited(projectId) //fetch project and update ui
+            this.presenter.fetchAllInvited(projectId) //fetch project and update ui
         //}
         return view
     }

@@ -2,7 +2,7 @@ package com.bounswe2020group3.paperlayer.invite
 
 import com.bounswe2020group3.paperlayer.invite.data.InviteRequest
 import com.bounswe2020group3.paperlayer.invite.data.InviteResponse
-import com.bounswe2020group3.paperlayer.invite.data.InvitedUserResponse
+import com.bounswe2020group3.paperlayer.invite.data.CollaborationInvite
 import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.profile.data.User
@@ -39,7 +39,7 @@ interface InviteContract {
         fun getAllUsers(): Observable<List<User>>?
         fun getAuthToken(): BehaviorSubject<AuthToken>
         fun inviteUsers(inviteRequest: InviteRequest) : Single<InviteResponse>
-        fun getInvited(projectId : Int ) :  Observable<List<InvitedUserResponse>>
+        fun getInvited(projectId : Int ) :  Observable<List<CollaborationInvite>>
     }
 
     interface UserService {
@@ -47,7 +47,7 @@ interface InviteContract {
         fun inviteUsers(@Header("Authorization") authorization: String, @Body inviteRequest: InviteRequest) : Single<InviteResponse>
 
         @GET("/api/collaboration_invites/")
-        fun getInvited() : Observable<List<InvitedUserResponse>>
+        fun getInvited() : Observable<List<CollaborationInvite>>
 
         @GET("/api/users/")
         fun getUsers(): Observable<List<User>>

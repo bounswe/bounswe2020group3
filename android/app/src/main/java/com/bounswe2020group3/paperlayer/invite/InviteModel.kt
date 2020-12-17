@@ -2,7 +2,7 @@ package com.bounswe2020group3.paperlayer.invite
 
 import com.bounswe2020group3.paperlayer.invite.data.InviteRequest
 import com.bounswe2020group3.paperlayer.invite.data.InviteResponse
-import com.bounswe2020group3.paperlayer.invite.data.InvitedUserResponse
+import com.bounswe2020group3.paperlayer.invite.data.CollaborationInvite
 import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
 import com.bounswe2020group3.paperlayer.profile.data.User
 import com.bounswe2020group3.paperlayer.util.Session
@@ -33,7 +33,7 @@ class InviteModel @Inject constructor(private var sessionManager: Session, retro
         return sessionManager.getToken()
     }
 
-    override fun getInvited(projectId: Int):  Observable<List<InvitedUserResponse>> {
+    override fun getInvited(projectId: Int):  Observable<List<CollaborationInvite>> {
         return userService.getInvited()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

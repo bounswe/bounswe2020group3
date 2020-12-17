@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from django.contrib.auth.models import User
 from api.models.profile import Profile
+from api.models.following import Following
 from api.serializers.user import UserFullSerializer
 from api.serializers.user import UserBasicSerializer
 from api.serializers.user import UserPrivateSerializer
@@ -26,9 +27,16 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
             return UserFullSerializer
         elif is_get:
             is_public = Profile.objects.get(owner=self.accessed_user).is_public
+            if this_user.is_anonymous:
+                is_following = False
+            else:
+                is_following = \
+                    Following.objects. \
+                    filter(from_user=this_user,
+                           to_user=self.accessed_user).exists()
             if self.accessed_user == this_user:
                 return UserFullSerializer
-            elif is_public:
+            elif is_public or is_following:
                 return UserBasicSerializer
             else:
                 return UserPrivateSerializer

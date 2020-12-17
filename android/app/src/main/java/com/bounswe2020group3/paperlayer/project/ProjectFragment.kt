@@ -8,14 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.project.data.Project
-import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_project.*
 import kotlinx.android.synthetic.main.fragment_project.view.*
+import java.io.Serializable
 import javax.inject.Inject
 
 private const val TAG = "ProjectFragment"
@@ -83,16 +82,18 @@ class ProjectFragment : Fragment(),ProjectContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        inviteUser.setOnClickListener{
-            val bundle = bundleOf("projectID" to arguments?.getInt("projectID") )
-            writeLogMessage("i",TAG,"projectID : ${arguments?.getInt("projectID") }")
-
-            Navigation.findNavController(view).navigate(R.id.navigateToInviteFromProject,bundle)
+        buttonEditProject.setOnClickListener {
+            presenter.navigateToEditProject()
         }
     }
 
     //Update project UI
     override fun updateProjectUI(project: Project) {
+        val tab = this.fragmentView.tabLayoutProject.getTabAt(1)
+        val badge=tab?.orCreateBadge
+        badge?.maxCharacterCount=2
+        badge?.number=10
+
         this.fragmentView.projectTitle.text=project.name
         this.fragmentView.projectDescription.text=project.description
         this.fragmentView.projectOwner.text=project.owner

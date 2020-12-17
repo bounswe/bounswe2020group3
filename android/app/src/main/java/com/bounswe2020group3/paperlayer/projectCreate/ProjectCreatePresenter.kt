@@ -8,9 +8,6 @@ import javax.inject.Inject
 class ProjectCreatePresenter @Inject constructor(private var model: ProjectCreateContract.Model) : BasePresenter<ProjectCreateContract.View>(), ProjectCreateContract.Presenter {
 
     private var disposable = CompositeDisposable()
-    override fun onViewCreated() {
-
-    }
 
     override fun createProject(projectCreateRequest: ProjectCreateRequest) {
         view?.showProgress(true)

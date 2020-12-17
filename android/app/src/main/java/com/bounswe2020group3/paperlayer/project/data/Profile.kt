@@ -1,7 +1,10 @@
 package com.bounswe2020group3.paperlayer.project.data
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Profile (
         @field:Json(name = "id")
         var id: Int,
@@ -35,4 +38,4 @@ data class Profile (
         var shareGender: Boolean?,
         @field:Json(name = "share_affiliations")
         var shareAffiliations: Boolean?
-)
+) : Parcelable

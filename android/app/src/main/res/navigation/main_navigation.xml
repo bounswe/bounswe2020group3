@@ -28,15 +28,6 @@
         <action
             android:id="@+id/navigateToProjectMainFromLogin"
             app:destination="@id/projectMainFragment" />
-        <action
-            android:id="@+id/test"
-            app:destination="@id/inviteFragment" />
-        <action
-            android:id="@+id/test2"
-            app:destination="@id/homeFragment" />
-        <action
-            android:id="@+id/test3"
-            app:destination="@id/milestoneFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -82,8 +73,9 @@
             app:argType="integer"
             android:defaultValue="0" />
         <action
-            android:id="@+id/navigateToInviteFromProject"
-            app:destination="@id/inviteFragment" />
+            android:id="@+id/navigateToProjectEditFromProjectFragment"
+            app:destination="@+id/projectEditFragment"
+            />
     </fragment>
 
     <fragment
@@ -91,6 +83,17 @@
         android:name="com.bounswe2020group3.paperlayer.projectCreate.ProjectCreateFragment"
         android:label="Project Create"
         tools:layout="@layout/fragment_project_create" />
+
+    <fragment
+        android:id="@+id/projectEditFragment"
+        android:name="com.bounswe2020group3.paperlayer.projectEdit.ProjectEditFragment"
+        android:label="Project Edit"
+        tools:layout="@layout/fragment_project_edit">
+        <action
+            android:id="@+id/navigateToProjectFragmentFromProjectEditFragment"
+            app:destination="@id/projectFragment"
+            />
+    </fragment>
 
     <fragment
         android:id="@+id/projectMainFragment"
@@ -102,21 +105,8 @@
             app:destination="@id/projectFragment"
             />
         <action
-            android:id="@+id/navigateToProjectCreate"
+            android:id="@+id/navigateToProjectCreateFromProjectMainFragment"
             app:destination="@id/projectCreateFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/inviteFragment"
-        android:name="com.bounswe2020group3.paperlayer.invite.InviteFragment"
-        android:label="InviteFragment" />
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.bounswe2020group3.paperlayer.home.EventFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
-    <fragment
-        android:id="@+id/milestoneFragment"
-        android:name="com.bounswe2020group3.paperlayer.home.MilestoneFragment"
-        android:label="MilestoneFragment" />
-
+    
 </navigation>

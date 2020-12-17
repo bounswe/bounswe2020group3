@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework import permissions
 from api.models.profile import Profile
-from api.permission import IsOwnerOrReadOnly
+from api.permission import IsOwnerOrReadOnly, ProfileDeletion
 from api.serializers.profile import ProfileFullSerializer
 from api.serializers.profile import ProfileBasicSerializer
 from api.serializers.profile import ProfilePrivateSerializer
@@ -22,7 +22,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     queryset = Profile.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly]
+                          IsOwnerOrReadOnly, ProfileDeletion]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['owner__id']
 

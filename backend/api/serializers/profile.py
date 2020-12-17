@@ -37,7 +37,7 @@ class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         if not ret['share_birthday']:
-            ret['birthday'] = -1
+            ret['birthday'] = ""
 
         if not ret['share_gender']:
             ret['gender'] = ""

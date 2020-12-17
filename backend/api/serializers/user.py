@@ -29,25 +29,20 @@ class UserBasicSerializer(serializers.ModelSerializer):
     """
     following = FollowerSerializer(many=True)
     followers = FollowingSerializer(many=True)
-    follow_requests = IncomingFollowRequestSerializer(many=True)
     profile = ProfileBasicSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
         fields = ['id', 'username', 'profile',
-                  'following', 'followers', 'follow_requests']
+                  'following', 'followers']
 
 
 class UserPrivateSerializer(serializers.ModelSerializer):
     """
     User serializer for users.
     """
-    following = FollowerSerializer(many=True)
-    followers = FollowingSerializer(many=True)
-    follow_requests = IncomingFollowRequestSerializer(many=True)
     profile = ProfilePrivateSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'profile',
-                  'following', 'followers', 'follow_requests']
+        fields = ['id', 'username', 'profile']

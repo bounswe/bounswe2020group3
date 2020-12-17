@@ -9,7 +9,6 @@ import java.util.*
 
 interface ProjectCreateContract {
     interface Presenter: Mvp.Presenter<View> {
-        fun onViewCreated()
         fun createProject(projectCreateRequest: ProjectCreateRequest)
     }
 

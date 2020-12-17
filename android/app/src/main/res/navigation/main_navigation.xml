@@ -72,6 +72,10 @@
             android:name="projectID"
             app:argType="integer"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/navigateToProjectEditFromProjectFragment"
+            app:destination="@+id/projectEditFragment"
+            />
     </fragment>
 
     <fragment
@@ -79,6 +83,17 @@
         android:name="com.bounswe2020group3.paperlayer.projectCreate.ProjectCreateFragment"
         android:label="Project Create"
         tools:layout="@layout/fragment_project_create" />
+
+    <fragment
+        android:id="@+id/projectEditFragment"
+        android:name="com.bounswe2020group3.paperlayer.projectEdit.ProjectEditFragment"
+        android:label="Project Edit"
+        tools:layout="@layout/fragment_project_edit">
+        <action
+            android:id="@+id/navigateToProjectFragmentFromProjectEditFragment"
+            app:destination="@id/projectFragment"
+            />
+    </fragment>
 
     <fragment
         android:id="@+id/projectMainFragment"
@@ -90,7 +105,7 @@
             app:destination="@id/projectFragment"
             />
         <action
-            android:id="@+id/navigateToProjectCreate"
+            android:id="@+id/navigateToProjectCreateFromProjectMainFragment"
             app:destination="@id/projectCreateFragment" />
     </fragment>
     

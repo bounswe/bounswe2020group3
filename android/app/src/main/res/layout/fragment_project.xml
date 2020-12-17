@@ -67,7 +67,7 @@
                     android:textAppearance="?attr/textAppearanceHeadline5"
                     />
                 <ImageButton
-                    android:id="@+id/imageButtonSettings"
+                    android:id="@+id/buttonEditProject"
                     android:background="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -231,8 +231,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
-
-
 
 
 </LinearLayout>

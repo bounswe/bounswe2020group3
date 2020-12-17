@@ -11,7 +11,7 @@ class UserFullSerializer(serializers.ModelSerializer):
     """
     User serializer for admins.
     """
-    profile = ProfileFullSerializer(many=True, read_only=True)
+    profile = ProfileFullSerializer(many=False, read_only=True)
     following = FollowerSerializer(many=True)
     followers = FollowingSerializer(many=True)
     follow_requests = IncomingFollowRequestSerializer(many=True)
@@ -29,6 +29,7 @@ class UserBasicSerializer(serializers.ModelSerializer):
     following = FollowerSerializer(many=True)
     followers = FollowingSerializer(many=True)
     follow_requests = IncomingFollowRequestSerializer(many=True)
+    profile = ProfileFullSerializer(many=False, read_only=True)
 
     class Meta:
         model = User

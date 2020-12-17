@@ -42,7 +42,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.validated_data['to_user'] = to_user
 
         is_public = Profile.objects.get(owner=to_user).is_public
-        
+
         is_following = Following.objects. \
             filter(from_user=self.request.user,
                    to_user=to_user).exists()
@@ -59,11 +59,11 @@ class CommentViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         self.accessed_comment = self.get_object()
         serializer = self.get_serializer(self.accessed_comment)
-        
+
         to_user = self.accessed_comment.to_user
         is_public = Profile.objects.get(owner=to_user).is_public
         if self.request.user.is_anonymous:
-                is_following = False
+            is_following = False
         else:
             is_following = Following.objects. \
                 filter(from_user=self.request.user,
@@ -83,9 +83,10 @@ class CommentViewSet(viewsets.ModelViewSet):
         if user.is_anonymous:
             queryset = queryset.filter(to_user__profile__is_public__exact=True)
         elif not user.is_staff:
-            queryset = queryset.filter(Q(to_user__profile__is_public__exact=True) |
-                                       Q(to_user__exact=user.id) |
-                                       Q(to_user__followers__exact=user.id))
+            queryset = queryset. \
+                       filter(Q(to_user__profile__is_public__exact=True) |
+                              Q(to_user__exact=user.id) |
+                              Q(to_user__followers__exact=user.id))
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -93,4 +94,4 @@ class CommentViewSet(viewsets.ModelViewSet):
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)    
+        return Response(serializer.data)

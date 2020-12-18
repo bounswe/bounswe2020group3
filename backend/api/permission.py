@@ -95,3 +95,18 @@ class CollaborationPermissions(permissions.BasePermission):
         elif view.action in ['update', 'partial_update', 'destroy']:
             return request.user == obj.req_from_user
         return True
+
+
+class ProfileDeletion(permissions.BasePermission):
+    """
+    Custom permission to only allow members of an object to edit it.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        if view.action in ['destroy']:
+            if request.user.is_staff:
+                return True
+            else:
+                return False
+
+        return True

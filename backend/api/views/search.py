@@ -12,6 +12,7 @@ from api.serializers.project import ProjectPrivateSerializer
 from api.serializers.profile import ProfileBasicSerializer
 from api.serializers.profile import ProfilePrivateSerializer
 from datamuse import datamuse
+from api.models.following import Following
 
 
 class SearchGenericAPIView(generics.GenericAPIView):
@@ -34,12 +35,16 @@ class SearchGenericAPIView(generics.GenericAPIView):
 
         query_events = []
         query_profiles = []
+        query_followed_profiles = []
+        query_private_profiles = []
         query_projects = []
         query_private_projects = []
-        query_private_profiles = []
+
+        query_following = list(map(lambda following: following.to_user,
+                                   Following.objects.
+                                   filter(from_user=request.user)))
 
         for keyword in keywords:
-
             query_events += Event.objects.filter(
                 Q(title__icontains=keyword) |
                 Q(description__icontains=keyword)
@@ -47,39 +52,52 @@ class SearchGenericAPIView(generics.GenericAPIView):
 
             query_projects += Project.objects.filter(
                 (Q(is_public=True) | Q(members__id=request.user.id)) &
-                Q(name__icontains=keyword) |
-                Q(description__icontains=keyword) |
-                Q(project_type__icontains=keyword) |
-                Q(event__title__icontains=keyword) |
-                Q(event__description__icontains=keyword)
+                (Q(name__icontains=keyword) |
+                 Q(description__icontains=keyword) |
+                 Q(project_type__icontains=keyword) |
+                 Q(event__title__icontains=keyword) |
+                 Q(event__description__icontains=keyword))
             )
             query_private_projects += Project.objects.filter(
                 (Q(is_public=False) & ~Q(members__id=request.user.id)) &
-                Q(name__icontains=keyword) |
-                Q(description__icontains=keyword)
+                (Q(name__icontains=keyword) |
+                 Q(description__icontains=keyword))
             )
 
             query_profiles += Profile.objects.filter(
                 Q(is_public=True) &
-                Q(name__icontains=keyword) |
-                Q(middle_name__icontains=keyword) |
-                Q(last_name__icontains=keyword) |
-                Q(expertise__icontains=keyword) |
-                Q(interests__icontains=keyword) |
-                Q(share_bio=True) & Q(bio__icontains=keyword) |
-                Q(share_affiliations=True) & Q(affiliations__icontains=keyword)
+                (Q(name__icontains=keyword) |
+                 Q(middle_name__icontains=keyword) |
+                 Q(last_name__icontains=keyword) |
+                 Q(expertise__icontains=keyword) |
+                 Q(interests__icontains=keyword) |
+                 (Q(share_bio=True) & Q(bio__icontains=keyword)) |
+                 (Q(share_affiliations=True) &
+                  Q(affiliations__icontains=keyword)))
+            )
+            query_followed_profiles += Profile.objects.filter(
+                (Q(is_public=False) & Q(owner__in=query_following)) &
+                (Q(name__icontains=keyword) |
+                 Q(middle_name__icontains=keyword) |
+                 Q(last_name__icontains=keyword) |
+                 Q(expertise__icontains=keyword) |
+                 Q(interests__icontains=keyword) |
+                 (Q(share_bio=True) & Q(bio__icontains=keyword)) |
+                 (Q(share_affiliations=True) &
+                  Q(affiliations__icontains=keyword)))
             )
             query_private_profiles += Profile.objects.filter(
-                Q(is_public=False) &
-                Q(name__icontains=keyword) |
-                Q(middle_name__icontains=keyword) |
-                Q(last_name__icontains=keyword)
+                (Q(is_public=False) & ~Q(owner__in=query_following)) &
+                (Q(name__icontains=keyword) |
+                 Q(middle_name__icontains=keyword) |
+                 Q(last_name__icontains=keyword))
             )
 
         query_events = list(set(query_events))
         query_profiles = list(set(query_profiles))
-        query_projects = list(set(query_projects))
+        query_followed_profiles = list(set(query_followed_profiles))
         query_private_profiles = list(set(query_private_profiles))
+        query_projects = list(set(query_projects))
         query_private_projects = list(set(query_private_projects))
 
         event_serializer = EventSerializer(query_events, many=True)
@@ -90,6 +108,8 @@ class SearchGenericAPIView(generics.GenericAPIView):
             query_private_projects, many=True)
 
         profile_serializer = ProfileBasicSerializer(query_profiles, many=True)
+        followed_profile_serializer = ProfileBasicSerializer(
+            query_followed_profiles, many=True)
         private_profile_serializer = ProfilePrivateSerializer(
             query_private_profiles, many=True)
 
@@ -97,6 +117,6 @@ class SearchGenericAPIView(generics.GenericAPIView):
         res['projects'] = project_serializer.data + \
             private_project_serializer.data
         res['profiles'] = profile_serializer.data + \
-            private_profile_serializer.data
+            followed_profile_serializer.data + private_profile_serializer.data
 
         return Response(data=res)

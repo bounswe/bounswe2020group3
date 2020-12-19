@@ -10,7 +10,7 @@ class Comment(models.Model):
                                   on_delete=models.CASCADE,
                                   )
     to_user = models.ForeignKey('auth.User',
-                                related_name="comments_recieved",
+                                related_name="comments_received",
                                 on_delete=models.CASCADE,
                                 )
     created = models.DateTimeField(auto_now_add=True)

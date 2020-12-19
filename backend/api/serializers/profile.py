@@ -31,8 +31,8 @@ class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
                   'bio', 'profile_picture', 'birthday', 'share_birthday',
                   'expertise',
                   'gender', 'interests', 'affiliations', 'share_bio',
-                  'share_gender',
-                  'share_affiliations', 'is_public']
+                  'share_gender', 'share_affiliations',
+                  'is_public']
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)

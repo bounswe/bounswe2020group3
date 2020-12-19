@@ -17,6 +17,7 @@ from .views.file import FileViewSet
 from .views.collaboration_request import CollaborationRequestViewSet
 from .views.collaboration_invite import CollaborationInviteViewSet
 from .views.comment import CommentViewSet
+from .views.rating import RatingViewSet
 from django.contrib.auth import views as auth_views
 
 router = DefaultRouter()
@@ -32,6 +33,7 @@ router.register(r'follow_request', FollowRequestViewSet)
 router.register(r'collaboration_requests', CollaborationRequestViewSet)
 router.register(r'collaboration_invites', CollaborationInviteViewSet)
 router.register(r'comments', CommentViewSet)
+router.register(r'ratings', RatingViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

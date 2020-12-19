@@ -176,6 +176,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'bounswe2020group3@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 
+
 django_heroku.settings(locals())
 
 # Cors settings

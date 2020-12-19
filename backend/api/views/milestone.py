@@ -20,8 +20,8 @@ class MilestoneViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsMilestoneMemberOrReadOnly]
 
-    @action(detail=False, methods=['GET'], url_name='get_user_milestone')
-    def get_user_milestone(self, request):
+    @action(detail=False, methods=['GET'], url_name='get_user_milestones')
+    def get_user_milestones(self, request):
         username = self.request.user.username
         list_of_milestones = []
         if username:

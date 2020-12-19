@@ -56,7 +56,7 @@ class MilestoneTests(APITestCase):
                           "date": "2020-12-25",
                           "project": self.project2.id},
                          format='json')
-        response = self.client.get('/api/milestones/get_user_milestone/',
+        response = self.client.get('/api/milestones/get_user_milestones/',
                                    format='json')
         result = response.data['result']
         self.assertEqual(len(result), 2)

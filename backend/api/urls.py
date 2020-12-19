@@ -16,7 +16,7 @@ from .views.event import EventViewSet
 from .views.file import FileViewSet
 from .views.collaboration_request import CollaborationRequestViewSet
 from .views.collaboration_invite import CollaborationInviteViewSet
-from .views.search import search
+from .views.search import SearchGenericAPIView
 from django.contrib.auth import views as auth_views
 
 router = DefaultRouter()
@@ -58,6 +58,7 @@ urlpatterns = [
          auth_views.PasswordResetCompleteView.as_view(),
          name="password_reset_complete"),
 
-    path('search/', search, name='search'),
+    path('search/', SearchGenericAPIView.as_view(), name='search'),
+
 
 ]

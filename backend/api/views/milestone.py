@@ -3,13 +3,11 @@ from rest_framework import permissions
 from api.models.milestone import Milestone
 from api.models.project import Project
 from api.serializers.project import ProjectGETPublicSerializer
-from rest_framework import generics
 from api.serializers.milestone import MilestoneSerializer
 from api.permission import IsMilestoneMemberOrReadOnly
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
-from django.http import JsonResponse
 
 
 class MilestoneViewSet(viewsets.ModelViewSet):

@@ -78,9 +78,9 @@ export default class HomePage extends Component {
         .then(res => {
           this.setState({ events:res.data });
         });
-      axios.get(`${config.API_URL}${config.Milestone_url}`, { headers:{'Content-Type':'Application/json'}})
+        axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
         .then(res => {
-          this.setState({ milestones:res.data });
+          this.setState({ milestones: res.data.result });
         });
       axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers:{'Content-Type':'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
         .then(res => {

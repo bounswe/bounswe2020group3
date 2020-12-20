@@ -124,7 +124,7 @@ export default class HomePage extends Component {
     renderEvents(){
       var events = this.state.events;
       return events.map((item) => {return (<Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
-        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.this.goToEvent(item.id)}>{item.title}</Typography>
+        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToEvent(item.id)}>{item.title}</Typography>
         <Typography noWrap style={{textAlign:"left", color:"black"}}>
           {item.description}
         </Typography>

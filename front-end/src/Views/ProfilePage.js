@@ -62,7 +62,8 @@ export default class HomePage extends Component {
       shareGender: false,
       shareAffiliations: false,
       shareAge: false,
-      self: false
+      self: false,
+      milestones: []
     }
   };
 
@@ -87,13 +88,17 @@ export default class HomePage extends Component {
           shareGender: prof.share_gender,
           shareAffiliations: prof.share_affiliations,
           shareAge: prof.share_age,
-          self: prof.id == getUserId()
+          self: prof.id === getUserId()
         });
       })
-    axios.get(`${config.API_URL}${config.User_Path}${profileId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      axios.get(`${config.API_URL}${config.User_Path}${profileId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         this.setState({ email: res.data.email, self: res.data.id === getUserId() });
       });
+      // axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      // .then(res => {
+      //   this.setState({ milestones: res.data });
+      // });
   };
 
   handleSnackbarOpen = () => {
@@ -105,6 +110,29 @@ export default class HomePage extends Component {
   goToEditProfilePage = () => {
     this.props.history.push("/edit-profile");
   };
+  renderMilestones(){
+    const { milestones } = this.state;
+    return milestones.map((item) => {
+      return (
+        <Paper elevation={6} 
+          style={{ padding: "15px", maxHeight:"160px", width: "80%",
+           background: "white", margin: "auto", marginBottom: "10px", textAlign:"left", overflow:"clip"  }} 
+          borderColor="primary" border={1}>
+          <Typography variant="h6" color="primary"  
+            style={{ cursor: "pointer", width: "50%", textAlign: "left" }}
+          >{item.date}</Typography>
+          <Typography variant="h6" color="primary" 
+            style={{ cursor: "pointer", width: "50%", textAlign: "left", paddingBottom: "5px" }}
+          >{item.project}</Typography> 
+            <hr/>
+          <Typography nowrap variant="body2" style={{ textAlign: "left", color: "black" }}>
+            {item.description.substr(0, 120)}
+            {/*May need more fine tuning as a future work.*/} 
+          </Typography>
+        </Paper>)
+    });
+  };
+
 
   render() {
     return (
@@ -124,8 +152,8 @@ export default class HomePage extends Component {
         <Grid container direction="row" justify="center" alignItems="center" >
           <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">
             <Grid item sm={3}>
-            <Typography variant="h5" color="primary" style={titleStyle}>Milestones</Typography>
-                    
+              <Typography variant="h5" color="primary" style={titleStyle}>Milestones</Typography>
+              {this.renderMilestones()}
             </Grid>
             <Grid container spacing={2} item sm={6}>
 

@@ -14,7 +14,7 @@ import ProfilePage from "./Views/ProfilePage";
 import EditProfilePage from "./Views/EditProfilePage";
 import ProjectPage from "./Views/ProjectPage";
 import EventPage from "./Views/EventPage";
-
+import IssueMilestonePage from "./Views/IssueMilestonePage";
 
 function App() {
   return (
@@ -27,10 +27,11 @@ function App() {
             <Route exact path={config.Register_Path} component={RegistrationPage} />
             <AuthenticatedRoute exact path={config.Create_Project_Path} component={CreateProjectPage} />
             <AuthenticatedRoute exact path={config.Event_Creation_Path} component={CreateEventPage} />
-            <AuthenticatedRoute path="/project/:projectId" component={ProjectPage} />
-            <AuthenticatedRoute path="/events/:eventId" component={EventPage} />
-            <AuthenticatedRoute path="/profile/:profileId" component={ProfilePage} />
-            <AuthenticatedRoute path="/edit-profile" component={EditProfilePage} />
+            <AuthenticatedRoute exact path="/project/:projectId" component={ProjectPage} />
+            <AuthenticatedRoute exact path="/events/:eventId" component={EventPage} />
+            <AuthenticatedRoute exact path="/profile/:profileId" component={ProfilePage} />
+            <AuthenticatedRoute exact path="/edit-profile" component={EditProfilePage} />
+            <AuthenticatedRoute exact path={config.Issue_Milestone_Path} component={IssueMilestonePage} />
           </Switch>
         </BrowserRouter>
       </ThemeProvider>

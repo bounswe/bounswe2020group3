@@ -1,5 +1,6 @@
 package com.bounswe2020group3.paperlayer.invite
 
+import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.invite.data.InviteRequest
 import com.bounswe2020group3.paperlayer.invite.data.InviteResponse
 import com.bounswe2020group3.paperlayer.invite.data.CollaborationInvite
@@ -24,10 +25,13 @@ interface InviteContract {
 
     interface View: Mvp.View{
         var projectId : Int
+        var recyclerView : RecyclerView
         fun getLayout(): android.view.View
         fun showToast(message: String)
         fun writeLogMessage(type:String ,tag: String,message: String)
 
+        fun cardInviteCheck(id : Int,position : Int)
+        fun cardUnInviteCheck(id : Int,position : Int)
         fun resetUserCardlist()
         fun submitUserCardList()
         fun addUserCard(username: String,name : String,expertise: String,photoURL: String,id : Int,invited : Boolean)
@@ -40,6 +44,7 @@ interface InviteContract {
         fun getAuthToken(): BehaviorSubject<AuthToken>
         fun inviteUsers(inviteRequest: InviteRequest) : Single<InviteResponse>
         fun getInvited(projectId : Int ) :  Observable<List<CollaborationInvite>>
+        fun uninvite(invite_id : Int) : Single<InviteResponse>
     }
 
     interface UserService {
@@ -47,10 +52,13 @@ interface InviteContract {
         fun inviteUsers(@Header("Authorization") authorization: String, @Body inviteRequest: InviteRequest) : Single<InviteResponse>
 
         @GET("/api/collaboration_invites/")
-        fun getInvited() : Observable<List<CollaborationInvite>>
+        fun getInvited(@Query("to_project__id") projectId: Int) : Observable<List<CollaborationInvite>>
 
         @GET("/api/users/")
         fun getUsers(): Observable<List<User>>
+
+        @DELETE("api/collaboration_invites/{id}/")
+        fun deleteInvite(@Header("Authorization") authorization: String,@Path("id") invite_id : Int ) : Single<InviteResponse>
     }
 
 

@@ -34,8 +34,15 @@ class InviteModel @Inject constructor(private var sessionManager: Session, retro
     }
 
     override fun getInvited(projectId: Int):  Observable<List<CollaborationInvite>> {
-        return userService.getInvited()
+        return userService.getInvited(projectId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
+
+    override fun uninvite(invite_id: Int) : Single<InviteResponse> {
+        val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
+
+        return userService.deleteInvite(authToken,invite_id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())    }
 }

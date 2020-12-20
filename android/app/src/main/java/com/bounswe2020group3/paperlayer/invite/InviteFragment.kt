@@ -28,7 +28,7 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
     private lateinit var mContext: Context
 
     private lateinit var inviteAdapter: UserInviteAdapter
-    private lateinit var recyclerView: RecyclerView
+    override lateinit var recyclerView: RecyclerView
     private lateinit var viewManager: RecyclerView.LayoutManager
 
     private val inviteCardList=ArrayList<InviteCard>()
@@ -76,7 +76,7 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
         initRecyclerView()
         this.presenter.bind(this)
         //if (projectId != null && projectId != -1) {
-            this.presenter.fetchAllInvited(projectId) //fetch project and update ui
+            //this.presenter.fetchAllInvited(projectId) //fetch project and update ui
         //}
         return view
     }
@@ -97,6 +97,24 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
         inviteAdapter.submitList(this.inviteCardList)
         inviteAdapter.notifyDataSetChanged() //notify to update recyclerview
     }
+
+    override fun cardInviteCheck(id: Int,position : Int) {
+
+        inviteCardList[position].called = true
+
+
+        submitUserCardList()
+        inviteAdapter.notifyDataSetChanged()
+    }
+
+    override fun cardUnInviteCheck(id: Int ,position : Int) {
+
+        inviteCardList[position].called = false
+
+        submitUserCardList()
+        inviteAdapter.notifyDataSetChanged()
+    }
+
     private fun initRecyclerView(){
         viewManager = LinearLayoutManager(this.context)
         inviteAdapter= UserInviteAdapter(this)

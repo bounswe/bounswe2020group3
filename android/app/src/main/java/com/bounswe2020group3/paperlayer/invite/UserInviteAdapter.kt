@@ -40,6 +40,7 @@ class UserInviteAdapter(var clickListener: OnCardClickListener) : RecyclerView.A
         return users.size
     }
 
+
     fun submitList(inviteCardList: List<InviteCard>){
         users=inviteCardList
     }
@@ -61,7 +62,7 @@ class UserInviteAdapter(var clickListener: OnCardClickListener) : RecyclerView.A
                 action.onInviteButtonClick(invitecard,adapterPosition)
             }
             if (invitecard.called)
-            buttonInvite.setText("Uninvite")
+                buttonInvite.setText("Uninvite")
 
 
         }

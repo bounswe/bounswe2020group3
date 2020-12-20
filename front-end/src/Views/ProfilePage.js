@@ -94,7 +94,6 @@ export default class HomePage extends Component {
           shareAge: prof.share_age,
           self: prof.id === getUserId()
         });
-        setPhotoCookie(prof.photo_url);
       })
     axios.get(`${config.API_URL}${config.User_Path}${profileId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {

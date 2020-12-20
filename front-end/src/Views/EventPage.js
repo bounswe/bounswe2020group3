@@ -11,6 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import Profilebar from "../Components/ProfileBar/Profilebar";
 import {getAccessToken, getUserId, setPhotoCookie} from "../Components/Auth/Authenticate";
 
+
 const Container = styled(Box)({
     background: "#f9f9eb",
     border: 0,
@@ -79,7 +80,7 @@ export default class HomePage extends Component {
         <Container>
           <UserNavbar
             logout={() => { this.props.history.push(config.Login_Path) }}
-            pushProfile={() => { this.props.history.push("/profile") }}
+            pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
           />
             <Box style={{marginTop:"8px"}}>

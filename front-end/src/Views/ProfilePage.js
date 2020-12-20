@@ -6,7 +6,7 @@ import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
-import { getUserId, getAccessToken, setPhotoCookie } from '../Components/Auth/Authenticate';
+import { getUserId, getAccessToken } from '../Components/Auth/Authenticate';
 import axios from 'axios';
 import config from '../config';
 import UserNavbar from '../Components/TopBar/UserNavbar';

@@ -6,7 +6,7 @@ import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
-import { getUserId, getAccessToken } from '../Components/Auth/Authenticate';
+import { getUserId, getAccessToken, getPhoto } from '../Components/Auth/Authenticate';
 import axios from 'axios';
 import config from '../config';
 import UserNavbar from '../Components/TopBar/UserNavbar';
@@ -32,7 +32,7 @@ const SelfContainer = styled(Box)({
   borderRadius: 3,
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
   color: 'white',
-  height: "calc(98vh - 64px)",
+  height: "calc(100vh - 60px)",
   paddingBottom: "60px",
   top: "0",
   bottom: "0",
@@ -57,6 +57,7 @@ const Container = styled(Box)({
   bottom: "0",
   left: "0",
   right: "0",
+  height:"calc(98vh - 60px)",
   margin: "auto",
   '& .MuiTextField-root': {
     margin: "10px",
@@ -87,7 +88,9 @@ export default class HomePage extends Component {
       shareAffiliations: false,
       shareBirthday: false,
       self: false,
-      milestones: []
+      milestones: [],
+      selfName: "",
+      selfLastName: ""
     }
   };
 
@@ -135,6 +138,12 @@ export default class HomePage extends Component {
     axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         this.setState({ milestones: res.data.result });
+      });
+    axios.get(`${config.API_URL}${config.User_Path}${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        this.setState({ selfName: res.data.profile[0].name + res.data.profile[0].middle_name,
+          selfLastName: res.data.profile[0].last_name
+        });
       });
   };
 
@@ -310,14 +319,17 @@ export default class HomePage extends Component {
         goHome={() => { this.props.history.push(config.Homepage_Path) }}
       />
       <Box>
+        {this.state.self ?  // So that re-render doesn't cause any glitch-like graphics.
         <Profilebar
-          name={this.state.name}
-          lastName={this.state.lastName}
-          photoUrl={this.state.photoUrl}
+          name={this.state.selfName}
+          lastName={this.state.selfLastName}
+          photoUrl={getPhoto()}
           goToProjectCreation={this.goToProjectCreation}
           goToProfile={() => { this.props.history.push("/profile/" + getUserId()); }}
         />
-
+        :
+        <></>
+        }
         <Grid container direction="row" justify="center" alignItems="center" >
           <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">
 

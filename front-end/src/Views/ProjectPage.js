@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from 'axios';
 import config from '../config';
-import { styled, Chip } from '@material-ui/core';
+import { styled, Chip, Button } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import UserNavbar from '../Components/TopBar/UserNavbar';
@@ -48,7 +48,8 @@ export default class HomePage extends Component {
             tags:[],
             username:"",
             userlastname:"",
-            photoUrl:""
+            photoUrl:"",
+            projectId: ""
         }
     };
 
@@ -70,6 +71,7 @@ export default class HomePage extends Component {
     
     componentDidMount() {
       var project_id =this.props.location.pathname.split('/')[2];
+      this.setState({projectId: project_id});
       axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}`, { headers:{'Content-Type':'Application/json'}})
         .then(res => {
           const prof = res.data;
@@ -194,6 +196,11 @@ export default class HomePage extends Component {
                 <Typography variant="h5" color="primary">Upcoming Deadlines</Typography>
                 {this.renderDeadlines()}
               </Grid>
+              <Grid item sm={9} style={{ maxHeight:"40vh",minHeight: "20vh"}}>
+                <Button variant="contained" color="primary" 
+                onClick={() => { this.props.history.push("/issue-milestone", {projectId: this.state.projectId }); } }>Set New Milestone</Button>
+              </Grid>
+              
             </Grid>
             </Grid>
           <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>

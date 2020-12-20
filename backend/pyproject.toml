@@ -5,7 +5,7 @@ description = ""
 authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
-python = "3.9"
+python = "^3.9"
 Django = "^3.1.3"
 bandit = "^1.6.2"
 djangorestframework = "^3.12.2"
@@ -17,6 +17,7 @@ django-filter = "^2.4.0"
 django-cors-headers = "^3.5.0"
 Pillow = "^8.0.1"
 django-notifications-hq = "^1.6.0"
+python-datamuse = "^1.3.0"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.4"

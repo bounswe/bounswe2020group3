@@ -13,9 +13,9 @@ class Profile(models.Model):
     middle_name = models.CharField(max_length=100, blank=True, default='')
     last_name = models.CharField(max_length=100, blank=False, default='')
     bio = models.CharField(max_length=1000, blank=True, default='')
-    profile_picture = models.ImageField(null=True, blank=True)
-    age = models.IntegerField(default=0)
-    share_age = models.BooleanField(default=True)
+    profile_picture = models.ImageField(null=True, blank=True, upload_to='pp/')
+    birthday = models.DateField(blank=True, null=True)
+    share_birthday = models.BooleanField(default=True)
     expertise = models.TextField(default='', blank=True)
     gender = models.CharField(choices=GENDER_CHOICES,
                               default="do not want to share", max_length=100)
@@ -26,6 +26,7 @@ class Profile(models.Model):
     share_bio = models.BooleanField(default=True)
     share_gender = models.BooleanField(default=True)
     share_affiliations = models.BooleanField(default=True)
+    is_public = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['created']

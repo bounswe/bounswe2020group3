@@ -124,7 +124,7 @@ export default class HomePage extends Component {
     renderEvents(){
       var events = this.state.events;
       return events.map((item) => {return (<Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
-        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.this.goToEvent(item.id)}>{item.title}</Typography>
+        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToEvent(item.id)}>{item.title}</Typography>
         <Typography noWrap style={{textAlign:"left", color:"black"}}>
           {item.description}
         </Typography>
@@ -136,7 +136,7 @@ export default class HomePage extends Component {
         <Container>
         <UserNavbar
             logout={() => { this.props.history.push(config.Login_Path) }}
-            pushProfile={() => { this.props.history.push("/profile") }}
+            pushProfile={() => { this.props.history.push( "/profile/" + getUserId() ) }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
           />
           <Box style={{marginTop:"8px"}}>
@@ -146,7 +146,7 @@ export default class HomePage extends Component {
               lastName={this.state.lastName}
               photoUrl={this.state.photoUrl}
               goToProjectCreation={this.goToProjectCreation}
-              goToProfile={() => { this.props.history.push("/profile"); }}
+              goToProfile={() => { this.props.history.push( "/profile/" + getUserId() ); }}
             />
 
           <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{overflowY:"scroll", marginLeft:"200px", width:`calc(100% - 200px)`}}>

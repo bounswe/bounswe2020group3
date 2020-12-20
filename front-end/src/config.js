@@ -15,6 +15,7 @@ const config = {
   Edit_Profile_Url :"/api/profiles/",
   User_Path: "/api/users/",
   Event_Path: "/events",
-  Milestone_url:"/api/milestones/"
+  Milestone_url:"/api/milestones/",
+  OwnMilestoneUrl : "/api/milestones/get_user_milestones/"
 }
 export default config;

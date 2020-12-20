@@ -67,6 +67,9 @@ export default class HomePage extends Component {
       shareAffiliations: false,
       shareAge: false,
       self: false,
+      follow_reqs:[],
+      followers:[],
+      following:[],
       milestones: []
     }
   };
@@ -74,31 +77,34 @@ export default class HomePage extends Component {
   componentDidMount() {
     var profileId = this.props.location.pathname.split('/')[2];
     this.setState({ profileId: profileId })
-    axios.get(`${config.API_URL}${config.Profilepage_url}?owner__id=${profileId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-      .then(res => {
-        const prof = res.data[0];
-        this.setState({
-          profileId: prof.id,
-          name: prof.name,
-          middle_name: prof.middle_name,
-          last_name: prof.last_name,
-          bio: prof.bio,
-          img: prof.photo_url,
-          age: prof.age, expertise: prof.expertise,
-          gender: prof.gender,
-          interests: prof.interests,
-          affiliations: prof.affiliations,
-          shareBio: prof.share_bio,
-          shareGender: prof.share_gender,
-          shareAffiliations: prof.share_affiliations,
-          shareAge: prof.share_age,
-          self: prof.id === getUserId()
+    axios.get(`${config.API_URL}${config.User_Path}${profileId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}`} })
+        .then(res => {
+          const user = res.data;
+          console.log(user);
+          console.log(user.followers);
+          const prof = user.profile[0];
+          this.setState({
+            profileId: prof.id,
+            name: prof.name,
+            middle_name: prof.middle_name,
+            last_name: prof.last_name,
+            bio: prof.bio,
+            img: prof.photo_url,
+            age: prof.age, expertise: prof.expertise,
+            gender: prof.gender,
+            interests: prof.interests,
+            affiliations: prof.affiliations,
+            shareBio: prof.share_bio,
+            shareGender: prof.share_gender,
+            shareAffiliations: prof.share_affiliations,
+            shareAge: prof.share_age,
+            self: user.id === getUserId(),
+            email: user.email,
+            follow_reqs:user.follow_requests,
+            followers:user.followers,
+            following:user.following
+          });
         });
-      })
-    axios.get(`${config.API_URL}${config.User_Path}${profileId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-      .then(res => {
-        this.setState({ email: res.data.email, self: res.data.id === getUserId() });
-      });
     axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
     .then(res => {
       this.setState({ milestones: res.data.result });
@@ -158,7 +164,16 @@ export default class HomePage extends Component {
       </Box>)
 
   };
-
+renderGraph(){
+    return (
+        <Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+          <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.follow_reqs.length:0}</b> following request</Typography>
+          <hr />
+          <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.following.length:0}</b> followings</Typography>
+          <hr />
+          <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.followers.length:0}</b> followers</Typography>
+        </Paper>);
+  };
 
   render() {
     return (
@@ -239,7 +254,7 @@ export default class HomePage extends Component {
               </Grid>
             </Grid>
             <Grid item sm={3}>
-              {/*  SAĞDAKİ RELEVANT ŞEYLER BURAYA GELECEK  */}
+              {this.renderGraph()}
             </Grid>
             <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
           </Grid>

@@ -99,10 +99,10 @@ export default class HomePage extends Component {
       .then(res => {
         this.setState({ email: res.data.email, self: res.data.id === getUserId() });
       });
-    // axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-    // .then(res => {
-    //   this.setState({ milestones: res.data });
-    // });
+    axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    .then(res => {
+      this.setState({ milestones: res.data.result });
+    });
   };
 
   handleSnackbarOpen = () => {

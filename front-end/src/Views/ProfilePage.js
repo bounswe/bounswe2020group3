@@ -88,18 +88,23 @@ export default class HomePage extends Component {
       shareAffiliations: false,
       shareBirthday: false,
       self: false,
-      milestones: [],
       selfName: "",
-      selfLastName: ""
+      selfLastName: "",
+      follow_reqs:[],
+      followers:[],
+      following:[],
+      milestones: []
     }
   };
 
   componentDidMount() {
+
     var userId = this.props.location.pathname.split('/')[2];
     axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         this.setState({ email: res.data.email, self: res.data.id === parseInt(getUserId()), });
         const prof = res.data.profile[0];
+        const user = res.data;
         let windowUserId = res.data.id;
         if (windowUserId === parseInt(getUserId()) || res.data.profile[0].is_public) {
           this.setState({
@@ -118,7 +123,10 @@ export default class HomePage extends Component {
             shareGender: prof.share_gender,
             shareAffiliations: prof.share_affiliations,
             shareBirthday: prof.share_birthday,
-            self: windowUserId === parseInt(getUserId())
+            self: windowUserId === parseInt(getUserId()),
+            follow_reqs:user.follow_requests,
+            followers:user.followers,
+            following:user.following
           });
         }
         else if (prof.is_public === false) {
@@ -134,6 +142,7 @@ export default class HomePage extends Component {
         }
 
       });
+
 
     axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
@@ -262,6 +271,16 @@ export default class HomePage extends Component {
     </Grid>
     );
   }
+  renderGraph(){
+    return (
+        <Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+          <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.follow_reqs.length:0}</b> following request</Typography>
+          <hr />
+          <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.following.length:0}</b> followings</Typography>
+          <hr />
+          <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.followers.length:0}</b> followers</Typography>
+        </Paper>);
+  };
   renderSelfProfile() {
     return (<SelfContainer>
       <UserNavbar
@@ -299,6 +318,8 @@ export default class HomePage extends Component {
           </Grid>
           <Grid item sm={3}>
             {/*  SAĞDAKİ RELEVANT ŞEYLER BURAYA GELECEK  */}
+            {this.renderGraph()}
+
           </Grid>
           {
             this.state.self ?
@@ -351,7 +372,7 @@ export default class HomePage extends Component {
 
             </Grid>
             <Grid item sm={3}>
-              {/*  SAĞDAKİ RELEVANT ŞEYLER BURAYA GELECEK  */}
+{ /* Buraya bir seyler gelecek - recommendation vb. */ }
             </Grid>
             {
               this.state.self ?

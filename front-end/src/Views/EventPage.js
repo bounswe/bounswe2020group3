@@ -8,6 +8,7 @@ import UserNavbar from '../Components/TopBar/UserNavbar';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
+import { getUserId } from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
     background: "white",
@@ -61,7 +62,7 @@ export default class HomePage extends Component {
         <Container>
           <UserNavbar
             logout={() => { this.props.history.push(config.Login_Path) }}
-            pushProfile={() => { this.props.history.push("/profile") }}
+            pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
           />
           <Typography variant="h4" color="primary">Event Page</Typography>

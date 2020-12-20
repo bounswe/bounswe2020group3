@@ -93,7 +93,8 @@ export default class HomePage extends Component {
       follow_reqs:[],
       followers:[],
       following:[],
-      milestones: []
+      milestones: [],
+      projects: []
     }
   };
 
@@ -148,12 +149,17 @@ export default class HomePage extends Component {
       .then(res => {
         this.setState({ milestones: res.data.result });
       });
-    axios.get(`${config.API_URL}${config.User_Path}${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      axios.get(`${config.API_URL}${config.User_Path}${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         this.setState({ selfName: res.data.profile[0].name + res.data.profile[0].middle_name,
           selfLastName: res.data.profile[0].last_name
         });
       });
+      axios.get(`${config.API_URL}${config.Projectpage_url}?owner__id=${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        this.setState({ projects:res.data });
+      });
+    
   };
 
   handleSnackbarOpen = () => {
@@ -167,6 +173,40 @@ export default class HomePage extends Component {
   };
   goToProjectCreation = () => {
     this.props.history.push(config.Create_Project_Path);
+  };
+  renderProjects() {
+    const { projects } = this.state;
+    return (
+      <Box style={{ overflowY: "scroll", maxHeight: "500px", paddingTop: "10px", paddingBottom: "10px" }}>
+
+        {projects.length !== 0
+          ?
+          projects.map((item) => {
+            return (
+              <Paper elevation={6}
+                style={{
+                  padding: "15px", maxHeight: "160px", width: "80%",
+                  background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+                }}
+                borderColor="primary" border={1}>
+                <Typography variant="h6" color="primary"
+                  style={{ cursor: "pointer", width: "50%", textAlign: "left" }}
+                  onClick={()=>{    this.props.history.push("/project/" + item.id);}}
+                >{item.name}</Typography>
+              </Paper>
+            )
+          })
+          :
+          <Paper elevation={6}
+            style={{
+              padding: "15px", maxHeight: "160px", width: "80%",
+              background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+            }}
+            borderColor="primary" border={1}>
+            <Typography variant="h6" color="textPrimary" style={{ "textAlign": 'center' }}>No Projects Found</Typography>
+          </Paper>
+        }
+      </Box>)
   };
   renderMilestones() {
     const { milestones } = this.state;
@@ -297,6 +337,8 @@ export default class HomePage extends Component {
               <>
                 <Typography variant="h5" color="primary" style={titleStyleCenter}>Upcoming Milestones</Typography>
                 {this.renderMilestones()}
+                <Typography variant="h5" color="primary" style={titleStyleCenter}>Projects</Typography>
+                {this.renderProjects()}
               </>
               :
               <></>

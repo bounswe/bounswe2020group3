@@ -6,7 +6,7 @@ import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
-import { getUserId } from '../Components/Auth/Authenticate';
+import { getUserId, getAccessToken } from '../Components/Auth/Authenticate';
 import axios from 'axios';
 import config from '../config';
 import UserNavbar from '../Components/TopBar/UserNavbar';
@@ -20,7 +20,7 @@ const textStyle = {
   minHeight: "100px",
   padding: "2px 12px"
 }
-const Container = styled(Box)({
+const SelfContainer = styled(Box)({
   background: "#f9f9eb",
   border: 0,
   borderRadius: 3,
@@ -67,7 +67,9 @@ export default class HomePage extends Component {
   };
 
   componentDidMount() {
-    axios.get(`${config.API_URL}${config.Profilepage_url}?owner__id=${getUserId()}`, { headers: { 'Content-Type': 'Application/json' } })
+    var profileId =this.props.location.pathname.split('/')[2];
+    this.setState({profileId : profileId})
+    axios.get(`${config.API_URL}${config.Profilepage_url}?owner__id=${profileId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         const prof = res.data[0];
         this.setState({
@@ -85,13 +87,13 @@ export default class HomePage extends Component {
           shareGender: prof.share_gender,
           shareAffiliations: prof.share_affiliations,
           shareAge: prof.share_age,
-          self: prof.id === getUserId()
+          self: prof.id == getUserId()
         });
       })
-    axios.get(`${config.API_URL}${config.User_Path}${getUserId()}`, { headers: { 'Content-Type': 'Application/json' } })
+    axios.get(`${config.API_URL}${config.User_Path}${profileId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
-        this.setState({ email: res.data.email });
-      })
+        this.setState({ email: res.data.email, self: res.data.id === getUserId() });
+      });
   };
 
   handleSnackbarOpen = () => {
@@ -106,7 +108,7 @@ export default class HomePage extends Component {
 
   render() {
     return (
-      <Container>
+      <SelfContainer>
         <UserNavbar
           logout={() => { this.props.history.push(config.Login_Path) }}
           pushProfile={() => { this.props.history.push("/profile") }}
@@ -122,7 +124,8 @@ export default class HomePage extends Component {
         <Grid container direction="row" justify="center" alignItems="center" >
           <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">
             <Grid item sm={3}>
-              Projects
+            <Typography variant="h5" color="primary" style={titleStyle}>Milestones</Typography>
+                    
             </Grid>
             <Grid container spacing={2} item sm={6}>
 
@@ -135,7 +138,10 @@ export default class HomePage extends Component {
                     </Paper>
                   </>
                   :
-                  <></>
+                  <><Typography variant="h5" color="primary" style={titleStyle}>Biography</Typography>
+                  <Paper elevation={6} style={textStyle}>
+                    <p>{this.state.bio}</p>
+                  </Paper></>
                 }
 
                 <Typography variant="h5" color="primary" style={titleStyle}>Contact Info</Typography>
@@ -182,12 +188,12 @@ export default class HomePage extends Component {
           </Grid>
         </Grid>
         <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
-      </Container>);
+      </SelfContainer>);
+
   }
   showPersonalInfo = () => {
     return this.showGender() && this.showAge();
   }
-
 
   showGender = () => {
     const { shareGender } = this.state;

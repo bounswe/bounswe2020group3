@@ -136,7 +136,7 @@ export default class HomePage extends Component {
         <Container>
         <UserNavbar
             logout={() => { this.props.history.push(config.Login_Path) }}
-            pushProfile={() => { this.props.history.push("/profile") }}
+            pushProfile={() => { this.props.history.push( "/profile/" + getUserId() ) }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
           />
           <Box style={{marginTop:"8px"}}>
@@ -146,7 +146,7 @@ export default class HomePage extends Component {
               lastName={this.state.lastName}
               photoUrl={this.state.photoUrl}
               goToProjectCreation={this.goToProjectCreation}
-              goToProfile={() => { this.props.history.push("/profile"); }}
+              goToProfile={() => { this.props.history.push( "/profile/" + getUserId() ); }}
             />
 
           <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{overflowY:"scroll", marginLeft:"200px", width:`calc(100% - 200px)`}}>

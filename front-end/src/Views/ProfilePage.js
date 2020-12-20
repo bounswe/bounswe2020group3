@@ -15,6 +15,10 @@ const titleStyle = {
   textAlign: "left",
   marginTop: "10px"
 }
+const titleStyleCenter = {
+  textAlign: "center",
+  marginTop: "10px"
+}
 const textStyle = {
   textAlign: "left",
   minHeight: "100px",
@@ -112,12 +116,16 @@ export default class HomePage extends Component {
   };
   renderMilestones(){
     const { milestones } = this.state;
-    return milestones.map((item) => {
+    return(
+    <Paper elevation={6} 
+    style={{ padding: "15px", maxHeight:"160px", width: "80%",
+     background: "white", margin: "auto", marginBottom: "10px", textAlign:"left", overflow:"clip"  }} 
+    borderColor="primary" border={1}>
+    {milestones.length != 0
+    ?
+    milestones.map((item) => {
       return (
-        <Paper elevation={6} 
-          style={{ padding: "15px", maxHeight:"160px", width: "80%",
-           background: "white", margin: "auto", marginBottom: "10px", textAlign:"left", overflow:"clip"  }} 
-          borderColor="primary" border={1}>
+       <>
           <Typography variant="h6" color="primary"  
             style={{ cursor: "pointer", width: "50%", textAlign: "left" }}
           >{item.date}</Typography>
@@ -129,8 +137,15 @@ export default class HomePage extends Component {
             {item.description.substr(0, 120)}
             {/*May need more fine tuning as a future work.*/} 
           </Typography>
-        </Paper>)
-    });
+          </>
+        )
+    })
+  :
+  <Typography variant="h6" color="textPrimary" style={{"textAlign":'center'}}>No Upcoming Milestones</Typography>
+  }
+    
+    </Paper>)
+
   };
 
 
@@ -152,7 +167,7 @@ export default class HomePage extends Component {
         <Grid container direction="row" justify="center" alignItems="center" >
           <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">
             <Grid item sm={3}>
-              <Typography variant="h5" color="primary" style={titleStyle}>Milestones</Typography>
+              <Typography variant="h5" color="primary" style={titleStyleCenter}>Upcoming Milestones</Typography>
               {this.renderMilestones()}
             </Grid>
             <Grid container spacing={2} item sm={6}>

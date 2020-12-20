@@ -16,6 +16,7 @@ from .views.event import EventViewSet
 from .views.file import FileViewSet
 from .views.collaboration_request import CollaborationRequestViewSet
 from .views.collaboration_invite import CollaborationInviteViewSet
+from .views.publication import PublicationViewSet
 from .views.search import SearchGenericAPIView
 from django.contrib.auth import views as auth_views
 
@@ -31,6 +32,7 @@ router.register(r'follow', FollowingViewSet)
 router.register(r'follow_request', FollowRequestViewSet)
 router.register(r'collaboration_requests', CollaborationRequestViewSet)
 router.register(r'collaboration_invites', CollaborationInviteViewSet)
+router.register(r'publications', PublicationViewSet)
 
 
 urlpatterns = [

@@ -11,7 +11,6 @@ import Typography from "@material-ui/core/Typography";
 import Profilebar from "../Components/ProfileBar/Profilebar";
 import {getAccessToken, getUserId, setPhotoCookie} from "../Components/Auth/Authenticate";
 
-
 const Container = styled(Box)({
     background: "#f9f9eb",
     border: 0,

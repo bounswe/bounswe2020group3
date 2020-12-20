@@ -3,7 +3,9 @@ package com.bounswe2020group3.paperlayer.home
 
 import com.bounswe2020group3.paperlayer.home.cards.EventCard
 import com.bounswe2020group3.paperlayer.home.cards.MilestoneCard
+import com.bounswe2020group3.paperlayer.home.cards.ProjectUpdateCard
 import com.bounswe2020group3.paperlayer.home.data.Event
+import com.bounswe2020group3.paperlayer.invite.InviteCard
 import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.project.data.Project
@@ -47,6 +49,24 @@ interface HomeContract {
         fun fetchMilestones(ownerId : Int)
         fun subscribeAuthToken()
     }
+    interface RecentProjectsView: Mvp.View{
+        fun getLayout(): android.view.View
+        fun showToast(message: String)
+        fun writeLogMessage(type:String ,tag: String,message: String)
+
+        fun resetCardList()
+        fun submitCardList()
+        fun addCard(card : ProjectUpdateCard)
+
+    }
+    interface RecentProjectsPresenter : Mvp.Presenter<RecentProjectsView> {
+        fun setView(view: HomeContract.RecentProjectsView)
+        fun showMessage(message: String)
+        fun fetchProjects(ownerId : Int)
+        fun subscribeAuthToken()
+        fun OnInviteButtonClicked(Item : ProjectUpdateCard, position : Int)
+
+    }
 
 
     interface HomeView: Mvp.View{
@@ -65,11 +85,9 @@ interface HomeContract {
         fun getEvents(): Observable<List<Event>>
     }
     interface ProjectService {
-        @GET("/api/projects/{projectId}/")
-        fun getProject(@Path("projectId") projectId: Int): Single<Project>
 
         @GET("/api/projects/")
-        fun getAllProjectsOfOwner(@Query("owner__id") ownerId: Int): Observable<List<Project>>
+        fun getAllProjects(): Observable<List<Project>>
     }
 
 

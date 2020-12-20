@@ -7,12 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.home.adaptors.EventAdaptor
 import com.bounswe2020group3.paperlayer.home.cards.EventCard
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import javax.inject.Inject
 
 private const val TAG = "EventFragment"
@@ -37,6 +39,16 @@ class EventFragment : Fragment(), HomeContract.EventView {
         initRecycler()
         this.presenter.bind(this)
         writeLogMessage("i",TAG,"event fragment has been created.")
+        view.findViewById<BottomNavigationView>(R.id.bottomNavigationView).setOnNavigationItemSelectedListener { item ->
+            when(item.itemId){
+                R.id.eventFragment ->{}
+                R.id.projectUpdateFragment ->{
+                    Navigation.findNavController(view).navigate(R.id.navigateToProjectUpdatesFromEvents)}
+                R.id.milestoneFragment ->{Navigation.findNavController(view).navigate(R.id.navigateToMilestonesFromEvents)}
+
+            }
+            true
+        }
         return view
     }
     fun initRecycler(){

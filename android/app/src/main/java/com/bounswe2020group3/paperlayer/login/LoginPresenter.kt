@@ -56,10 +56,10 @@ class LoginPresenter @Inject constructor(private var model: LoginContract.Model)
                     this.view?.writeLogMessage("i", TAG, "Authentication Successful.")
                     this.view?.writeLogMessage("i", TAG, "Token: " + token.token)
                     //Navigation must be changed to profile page after profile page created
-                    this.view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.test1) }
+                    this.view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToHomepageFromLogin) }
                 },
                 { error ->
-                    this.view?.writeLogMessage("e", TAG, "Error in authentication")
+                    this.view?.writeLogMessage("e", TAG, "Error in authentication $error")
                     this.view?.showToast("Wrong username or password!")
                 }
         )

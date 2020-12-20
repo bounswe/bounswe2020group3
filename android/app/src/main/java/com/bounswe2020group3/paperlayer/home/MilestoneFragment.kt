@@ -7,14 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.home.adaptors.EventAdaptor
 import com.bounswe2020group3.paperlayer.home.adaptors.MilestoneAdaptor
-import com.bounswe2020group3.paperlayer.home.cards.EventCard
 import com.bounswe2020group3.paperlayer.home.cards.MilestoneCard
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import javax.inject.Inject
 private const val TAG = "MilestoneFragment"
 
@@ -39,6 +39,16 @@ class MilestoneFragment : Fragment(), HomeContract.MileStoneView  {
         initRecycler()
         this.presenter.bind(this)
         writeLogMessage("i",TAG,"event fragment has been created.")
+        view.findViewById<BottomNavigationView>(R.id.bottomNavigationView).setOnNavigationItemSelectedListener { item ->
+            when(item.itemId){
+                R.id.eventFragment ->{        Navigation.findNavController(view).navigate(R.id.navigateToEventsFromMilestones)
+                }
+                R.id.projectUpdateFragment ->{Navigation.findNavController(view).navigate(R.id.navigateToProjectUpdatesFromMilestones)}
+                R.id.milestoneFragment ->{}
+
+            }
+            true
+        }
         return view
     }
     fun initRecycler(){

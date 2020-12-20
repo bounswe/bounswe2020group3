@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/EventFragment"
+        android:id="@+id/eventFragment"
         android:title="Events" />
     <item
         android:id="@+id/projectUpdateFragment"

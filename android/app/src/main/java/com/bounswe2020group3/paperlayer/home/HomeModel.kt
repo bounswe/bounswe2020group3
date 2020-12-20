@@ -26,7 +26,7 @@ class HomeModel @Inject constructor(private var sessionManager: Session, retrofi
     }
 
     override fun getallprojectsOfTheOwner(ownerId:Int): Observable<List<Project>> {
-        return projectService.getAllProjectsOfOwner(ownerId)
+        return projectService.getAllProjects()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }

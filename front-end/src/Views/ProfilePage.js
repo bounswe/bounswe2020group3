@@ -10,6 +10,8 @@ import { getUserId, getAccessToken } from '../Components/Auth/Authenticate';
 import axios from 'axios';
 import config from '../config';
 import UserNavbar from '../Components/TopBar/UserNavbar';
+import Profilebar from '../Components/ProfileBar/Profilebar';
+
 const privateGender = "do not want to share";
 const titleStyle = {
   textAlign: "left",
@@ -38,6 +40,24 @@ const SelfContainer = styled(Box)({
   right: "0",
   margin: "auto",
   overflow: "scroll",
+  '& .MuiTextField-root': {
+    margin: "10px",
+    width: "30%",
+    minWidth: "250px"
+  }
+});
+const Container = styled(Box)({
+  background: "#f9f9eb",
+  border: 0,
+  borderRadius: 3,
+  boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+  color: 'white',
+  paddingBottom: "60px",
+  top: "0",
+  bottom: "0",
+  left: "0",
+  right: "0",
+  margin: "auto",
   '& .MuiTextField-root': {
     margin: "10px",
     width: "30%",
@@ -75,34 +95,34 @@ export default class HomePage extends Component {
     var userId = this.props.location.pathname.split('/')[2];
     axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
-        this.setState({ email: res.data.email, self: res.data.id === parseInt(getUserId()),  });
+        this.setState({ email: res.data.email, self: res.data.id === parseInt(getUserId()), });
         const prof = res.data.profile[0];
         let windowUserId = res.data.id;
-        if(windowUserId === parseInt(getUserId()) || res.data.profile[0].is_public ){
-        this.setState({
-          isPublic:prof.is_public,
-          profileId: prof.id,
-          name: prof.name,
-          middle_name: prof.middle_name,
-          last_name: prof.last_name,
-          bio: prof.bio,
-          img: prof.photo_url,
-          age: prof.age, expertise: prof.expertise,
-          gender: prof.gender,
-          interests: prof.interests,
-          affiliations: prof.affiliations,
-          shareBio: prof.share_bio,
-          shareGender: prof.share_gender,
-          shareAffiliations: prof.share_affiliations,
-          shareBirthday: prof.share_birthday,
-          self: windowUserId === parseInt(getUserId())
-        });
-        }
-        else if(prof.is_public === false){
+        if (windowUserId === parseInt(getUserId()) || res.data.profile[0].is_public) {
           this.setState({
-            self:false,
-            isPublic:prof.is_public,
-            profileId : prof.id,
+            isPublic: prof.is_public,
+            profileId: prof.id,
+            name: prof.name,
+            middle_name: prof.middle_name,
+            last_name: prof.last_name,
+            bio: prof.bio,
+            img: prof.photo_url,
+            age: prof.age, expertise: prof.expertise,
+            gender: prof.gender,
+            interests: prof.interests,
+            affiliations: prof.affiliations,
+            shareBio: prof.share_bio,
+            shareGender: prof.share_gender,
+            shareAffiliations: prof.share_affiliations,
+            shareBirthday: prof.share_birthday,
+            self: windowUserId === parseInt(getUserId())
+          });
+        }
+        else if (prof.is_public === false) {
+          this.setState({
+            self: false,
+            isPublic: prof.is_public,
+            profileId: prof.id,
             name: prof.name,
             middle_name: prof.middle_name,
             last_name: prof.last_name,
@@ -111,18 +131,11 @@ export default class HomePage extends Component {
         }
 
       });
-    // axios.get(`${config.API_URL}${config.Profilepage_url}?owner__id=${profileId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-    //   .then(res => {
-    //     // const prof = res.data[0];
-    //     this.setState({
-          
-    //     });
-    //   })
-    
+
     axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-    .then(res => {
-      this.setState({ milestones: res.data.result });
-    });
+      .then(res => {
+        this.setState({ milestones: res.data.result });
+      });
   };
 
   handleSnackbarOpen = () => {
@@ -133,6 +146,9 @@ export default class HomePage extends Component {
   };
   goToEditProfilePage = () => {
     this.props.history.push("/edit-profile");
+  };
+  goToProjectCreation = () => {
+    this.props.history.push(config.Create_Project_Path);
   };
   renderMilestones() {
     const { milestones } = this.state;
@@ -178,31 +194,31 @@ export default class HomePage extends Component {
       </Box>)
 
   };
-  renderMidRightColumn(){
-    return(
+  renderMidRightColumn() {
+    return (
       <Grid item sm={6} >
-                <Typography variant="h5" color="primary" style={titleStyle}>Expertise</Typography>
-                <Paper elevation={6} style={textStyle}>
-                  <p>{this.state.expertise}</p>
-                </Paper>
-                <Typography variant="h5" color="primary" style={titleStyle}>Interests</Typography>
-                <Paper elevation={6} style={textStyle}>
-                  <p>{this.state.interests}</p>
-                </Paper>
-                {(this.showAffiliations() ?
-                  <>
-                    <Typography variant="h5" color="primary" style={titleStyle}>Affiliations</Typography>
-                    <Paper elevation={6} style={textStyle}>
-                      <p>{this.state.affiliations === "" ? "None" : this.state.affiliations}</p>
-                    </Paper>
-                  </>
-                  :
-                  <></>
-                )}
-              </Grid>
+        <Typography variant="h5" color="primary" style={titleStyle}>Expertise</Typography>
+        <Paper elevation={6} style={textStyle}>
+          <p>{this.state.expertise}</p>
+        </Paper>
+        <Typography variant="h5" color="primary" style={titleStyle}>Interests</Typography>
+        <Paper elevation={6} style={textStyle}>
+          <p>{this.state.interests}</p>
+        </Paper>
+        {(this.showAffiliations() ?
+          <>
+            <Typography variant="h5" color="primary" style={titleStyle}>Affiliations</Typography>
+            <Paper elevation={6} style={textStyle}>
+              <p>{this.state.affiliations === "" ? "None" : this.state.affiliations}</p>
+            </Paper>
+          </>
+          :
+          <></>
+        )}
+      </Grid>
     );
   }
-  renderMidLeftColumn(){
+  renderMidLeftColumn() {
     return (<Grid item sm={6} >
 
       {this.showBio()
@@ -237,29 +253,78 @@ export default class HomePage extends Component {
     </Grid>
     );
   }
-  render() {
-    return (
-      <SelfContainer>
-        <UserNavbar
-          logout={() => { this.props.history.push(config.Login_Path) }}
-          pushProfile={() => { this.props.history.push("/profile/" + getUserId() )}}
-          goHome={() => { this.props.history.push(config.Homepage_Path) }}
+  renderSelfProfile() {
+    return (<SelfContainer>
+      <UserNavbar
+        logout={() => { this.props.history.push(config.Login_Path) }}
+        pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
+        goHome={() => { this.props.history.push(config.Homepage_Path) }}
+      />
+
+      <Grid container direction="row" justify="center" alignItems="center" >
+        <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">
+
+          <Grid item sm={3}>
+            {this.state.self ?
+              <>
+                <Typography variant="h5" color="primary" style={titleStyleCenter}>Upcoming Milestones</Typography>
+                {this.renderMilestones()}
+              </>
+              :
+              <></>
+            }
+          </Grid>
+
+          <Grid container spacing={2} item sm={6}>
+            <Grid item sm={12} >
+              <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
+              <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
+                <Typography>{this.state.name + " " + this.state.middle_name} <br />
+                  {this.state.last_name.toUpperCase()}</Typography>
+              </Paper>
+            </Grid>
+
+            {(this.state.self || this.state.isPublic) ? this.renderMidLeftColumn() : <></>}
+            {(this.state.self || this.state.isPublic) ? this.renderMidRightColumn() : <></>}
+
+          </Grid>
+          <Grid item sm={3}>
+            {/*  SAĞDAKİ RELEVANT ŞEYLER BURAYA GELECEK  */}
+          </Grid>
+          {
+            this.state.self ?
+              <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
+              :
+              <Typography variant="h5" color="error"> This Profile is Private </Typography>
+          }
+        </Grid>
+      </Grid>
+      <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
+    </SelfContainer>);
+  }
+  renderOtherProfile() {
+    return (<Container>
+      <UserNavbar
+        logout={() => { this.props.history.push(config.Login_Path) }}
+        pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
+        goHome={() => { this.props.history.push(config.Homepage_Path) }}
+      />
+      <Box>
+        <Profilebar
+          name={this.state.name}
+          lastName={this.state.lastName}
+          photoUrl={this.state.photoUrl}
+          goToProjectCreation={this.goToProjectCreation}
+          goToProfile={() => { this.props.history.push("/profile/" + getUserId()); }}
         />
 
         <Grid container direction="row" justify="center" alignItems="center" >
           <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">
-          
+
             <Grid item sm={3}>
-          {this.state.self ? 
-              <>
-              <Typography variant="h5" color="primary" style={titleStyleCenter}>Upcoming Milestones</Typography>
-              {this.renderMilestones()}
-              </>
-              :
-              <></>
-          }
-              </Grid>
-          
+{/* Burasi bos kalacak */}
+            </Grid>
+
             <Grid container spacing={2} item sm={6}>
               <Grid item sm={12} >
                 <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
@@ -268,24 +333,32 @@ export default class HomePage extends Component {
                     {this.state.last_name.toUpperCase()}</Typography>
                 </Paper>
               </Grid>
-              
+
               {(this.state.self || this.state.isPublic) ? this.renderMidLeftColumn() : <></>}
-              {(this.state.self || this.state.isPublic) ?this.renderMidRightColumn() : <></>}
-              
-               </Grid>
+              {(this.state.self || this.state.isPublic) ? this.renderMidRightColumn() : <></>}
+
+            </Grid>
             <Grid item sm={3}>
               {/*  SAĞDAKİ RELEVANT ŞEYLER BURAYA GELECEK  */}
             </Grid>
             {
-            this.state.self ? 
-            <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
-            :
-            <Typography variant="h5" color="error"> This Profile is Private </Typography>
+              this.state.self ?
+                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
+                :
+                <Typography variant="h5" color="error"> This Profile is Private </Typography>
             }
-            </Grid>
+          </Grid>
         </Grid>
         <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
-      </SelfContainer>);
+      </Box>
+    </Container>);
+  }
+  render() {
+    if (this.state.self)
+      return (<>{this.renderSelfProfile()}</>);
+    else {
+      return (<>{this.renderOtherProfile()}</>)
+    }
 
   }
   showPersonalInfo = () => {

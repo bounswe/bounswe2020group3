@@ -72,8 +72,8 @@ export default class HomePage extends Component {
   };
 
   componentDidMount() {
-    var profileId =this.props.location.pathname.split('/')[2];
-    this.setState({profileId : profileId})
+    var profileId = this.props.location.pathname.split('/')[2];
+    this.setState({ profileId: profileId })
     axios.get(`${config.API_URL}${config.Profilepage_url}?owner__id=${profileId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         const prof = res.data[0];
@@ -95,14 +95,14 @@ export default class HomePage extends Component {
           self: prof.id === getUserId()
         });
       })
-      axios.get(`${config.API_URL}${config.User_Path}${profileId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}${config.User_Path}${profileId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         this.setState({ email: res.data.email, self: res.data.id === getUserId() });
       });
-      // axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-      // .then(res => {
-      //   this.setState({ milestones: res.data });
-      // });
+    // axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    // .then(res => {
+    //   this.setState({ milestones: res.data });
+    // });
   };
 
   handleSnackbarOpen = () => {
@@ -114,37 +114,48 @@ export default class HomePage extends Component {
   goToEditProfilePage = () => {
     this.props.history.push("/edit-profile");
   };
-  renderMilestones(){
+  renderMilestones() {
     const { milestones } = this.state;
-    return(
-    <Paper elevation={6} 
-    style={{ padding: "15px", maxHeight:"160px", width: "80%",
-     background: "white", margin: "auto", marginBottom: "10px", textAlign:"left", overflow:"clip"  }} 
-    borderColor="primary" border={1}>
-    {milestones.length != 0
-    ?
-    milestones.map((item) => {
-      return (
-       <>
-          <Typography variant="h6" color="primary"  
-            style={{ cursor: "pointer", width: "50%", textAlign: "left" }}
-          >{item.date}</Typography>
-          <Typography variant="h6" color="primary" 
-            style={{ cursor: "pointer", width: "50%", textAlign: "left", paddingBottom: "5px" }}
-          >{item.project}</Typography> 
-            <hr/>
-          <Typography nowrap variant="body2" style={{ textAlign: "left", color: "black" }}>
-            {item.description.substr(0, 120)}
-            {/*May need more fine tuning as a future work.*/} 
-          </Typography>
-          </>
-        )
-    })
-  :
-  <Typography variant="h6" color="textPrimary" style={{"textAlign":'center'}}>No Upcoming Milestones</Typography>
-  }
-    
-    </Paper>)
+    return (
+      <Box style={{ overflowY: "scroll", maxHeight: "500px", paddingTop: "10px", paddingBottom: "10px" }}>
+
+        {milestones.length !== 0
+          ?
+          milestones.map((item) => {
+            return (
+              <Paper elevation={6}
+                style={{
+                  padding: "15px", maxHeight: "160px", width: "80%",
+                  background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+                }}
+                borderColor="primary" border={1}>
+                <Typography variant="h6" color="primary"
+                  style={{ cursor: "pointer", width: "50%", textAlign: "left" }}
+                >{item.date}</Typography>
+                <Typography variant="h6" color="primary"
+                  style={{ cursor: "pointer", width: "50%", textAlign: "left", paddingBottom: "5px" }}
+                >{item.project}</Typography>
+                <hr />
+                <Typography nowrap variant="body2" style={{ textAlign: "left", color: "black" }}>
+                  {item.description.substr(0, 120)}
+                  {/*May need more fine tuning as a future work.*/}
+                </Typography>
+              </Paper>
+            )
+          })
+          :
+          <Paper elevation={6}
+            style={{
+              padding: "15px", maxHeight: "160px", width: "80%",
+              background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+            }}
+            borderColor="primary" border={1}>
+            <Typography variant="h6" color="textPrimary" style={{ "textAlign": 'center' }}>No Upcoming Milestones</Typography>
+          </Paper>
+        }
+
+
+      </Box>)
 
   };
 
@@ -157,22 +168,25 @@ export default class HomePage extends Component {
           pushProfile={() => { this.props.history.push("/profile") }}
           goHome={() => { this.props.history.push(config.Homepage_Path) }}
         />
-        {/* <Typography variant="h4" color="primary">Profile Page</Typography> */}
-        <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
-        <br />
-        <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
-          <Typography>{this.state.name + " " + this.state.middle_name} <br />
-            {this.state.last_name.toUpperCase()}</Typography>
-        </Paper>
+
         <Grid container direction="row" justify="center" alignItems="center" >
           <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">
+
             <Grid item sm={3}>
               <Typography variant="h5" color="primary" style={titleStyleCenter}>Upcoming Milestones</Typography>
               {this.renderMilestones()}
             </Grid>
             <Grid container spacing={2} item sm={6}>
+              <Grid item sm={12} >
+                <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
+                <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
+                  <Typography>{this.state.name + " " + this.state.middle_name} <br />
+                    {this.state.last_name.toUpperCase()}</Typography>
+                </Paper>
+              </Grid>
 
               <Grid item sm={6} >
+
                 {this.showBio()
                   ? <>
                     <Typography variant="h5" color="primary" style={titleStyle}>Biography</Typography>
@@ -182,9 +196,9 @@ export default class HomePage extends Component {
                   </>
                   :
                   <><Typography variant="h5" color="primary" style={titleStyle}>Biography</Typography>
-                  <Paper elevation={6} style={textStyle}>
-                    <p>{this.state.bio}</p>
-                  </Paper></>
+                    <Paper elevation={6} style={textStyle}>
+                      <p>{this.state.bio}</p>
+                    </Paper></>
                 }
 
                 <Typography variant="h5" color="primary" style={titleStyle}>Contact Info</Typography>
@@ -266,6 +280,4 @@ export default class HomePage extends Component {
     else
       return false;
   }
-
-
 }

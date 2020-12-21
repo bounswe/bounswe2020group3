@@ -8,9 +8,11 @@ import UserNavbar from '../Components/TopBar/UserNavbar';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
+import Profilebar from "../Components/ProfileBar/Profilebar";
+import {getAccessToken, getUserId, setPhotoCookie} from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
-    background: "white",
+    background: "#f9f9eb",
     border: 0,
     borderRadius: 3,
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
@@ -36,6 +38,9 @@ export default class HomePage extends Component {
             date:"",
             type:"",
             url:"",
+            username:"",
+            userlastname:"",
+            photoUrl:""
         }
     };
 
@@ -45,7 +50,10 @@ export default class HomePage extends Component {
     goToLogin = () => {
         this.props.history.push("/login");
     };
-    
+    goToProjectCreation = () => {
+        this.props.history.push(config.Create_Project_Path);
+    };
+
     componentDidMount() {
       var event_id =this.props.location.pathname.split('/')[2];
       axios.get(`${config.API_URL}${config.Event_Creation_Url}${event_id}`, { headers:{'Content-Type':'Application/json'}})
@@ -53,7 +61,17 @@ export default class HomePage extends Component {
           const prof = res.data;
           this.setState({name:prof.title, desc:prof.description, deadline:prof.deadline,  date:prof.date, type:prof.event_type});
 
-        })
+        });
+      axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers:{'Content-Type':'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
+        .then(res => {
+            let name = res.data.profile[0].name;
+            let mname = res.data.profile[0].middle_name;
+            let lastname = res.data.profile[0].last_name;
+            name = name + " " + mname;
+            let photoUrl = (res.data.profile[0].photo_url)
+            setPhotoCookie(photoUrl)
+            this.setState({ username:name , userlastname: lastname, photoUrl:photoUrl });
+        });
     };
 
     render() {
@@ -61,34 +79,43 @@ export default class HomePage extends Component {
         <Container>
           <UserNavbar
             logout={() => { this.props.history.push(config.Login_Path) }}
-            pushProfile={() => { this.props.history.push("/profile") }}
+            pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
           />
-          <Typography variant="h4" color="primary">Event Page</Typography>
-          <Grid container direction="row" justify="space-evenly" alignItems="baseline">
-            <Grid item sm={1}/>
-            <Grid item sm={6}>
+            <Box style={{marginTop:"8px"}}>
+            <Profilebar
+                name={this.state.username}
+                lastName={this.state.userlastname}
+                photoUrl={this.state.photoUrl}
+                goToProjectCreation={this.goToProjectCreation}
+                goToProfile={() => { this.props.history.push("/profile"); }}
+            />
+          <Grid container direction="row" justify="space-evenly" alignItems="baseline" style={{marginLeft:"200px", width:`calc(100% - 200px)`}}>
+            <Grid item sm={8}>
               <Typography variant="h5" color="primary">{this.state.name}</Typography>
               <Typography variant="h5" color="primary">Brief Description</Typography>
               <Paper elevation={6} style={{minHeight: "100px"}}>
-              <p>{this.state.desc}</p>
+                  <Typography variant="body1">{this.state.desc}</Typography>
               </Paper>
             </Grid>
-            <Grid item sm={3}>
-              <Typography variant="h5" color="primary">Dates</Typography>
-              <Paper elevation={6} style={{minHeight: "100px"}}>
-              <p>Event Date is: {this.state.date}</p>
-              <p>Deadline of Event: {this.state.deadline}</p>
+            <Grid item sm={3} >
+              <Typography variant="h5" color="primary">Important Dates</Typography>
+              <Paper elevation={6} style={{minHeight: "100px", marginBottom:"10px"}}>
+                  <Typography variant="body1" color="secondary">Event Date is:</Typography>
+                  <Typography variant="body1">{this.state.date}</Typography>
+                  <Typography variant="body1" color="secondary">Deadline of Event:</Typography>
+                  <Typography variant="body1">{this.state.deadline}</Typography>
               </Paper>
               <Typography variant="h5" color="primary">Event Details</Typography>
-              <Paper elevation={6} style={{minHeight: "100px"}}>
-              <p>{this.state.type}</p>
-              <Link href={this.state.url}>{this.state.name}</Link>
+              <Paper elevation={6} style={{minHeight: "100px", marginBottom:"10px"}}>
+                <Typography variant="body1" color="secondary">{this.state.type.toUpperCase()}</Typography>
+                <Link href={this.state.url}>{this.state.name}</Link>
               </Paper>
             </Grid>
             </Grid>
           <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>
-        </Container>);
+            </Box>
+            </Container>);
     }
 
 }

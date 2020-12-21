@@ -54,7 +54,6 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
                     profileData.lastName = editTextLastName.text.toString()
                     profileData.expertise = editTextExpertise.text.toString()
                     profileData.interests = editTextInterests.text.toString()
-                    profileData.age = editTextAge.text.toString().toInt()
                     profileData.bio = editTextBio.text.toString()
                     profileData.gender = selectedGender
                     presenter.updateProfile(profileData)
@@ -114,14 +113,14 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
         editTextLastName.setText(profile.lastName)
         editTextExpertise.setText(profile.expertise)
         editTextInterests.setText(profile.interests)
-        editTextAge.setText(profile.age.toString())
+        editTextAge.setText(profile.birthday.toString())
         editTextBio.setText(profile.bio)
 
         val genderText = "Gender: ${profile.gender}"
         buttonGenderSelect.text = genderText
         selectedGender = profile.gender
 
-        val imageUrl = profile.photoUrl
+        val imageUrl = profile.profile_picture
         if(imageUrl != null && imageUrl.contains("http")) {
             Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
         }

@@ -8,6 +8,7 @@ import com.bounswe2020group3.paperlayer.project.ProjectMainFragment
 import com.bounswe2020group3.paperlayer.projectCreate.ProjectCreateFragment
 import com.bounswe2020group3.paperlayer.projectEdit.ProjectEditFragment
 import com.bounswe2020group3.paperlayer.register.RegisterFragment
+import com.bounswe2020group3.paperlayer.search.SearchFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -19,7 +20,8 @@ import javax.inject.Singleton
     ProjectModule::class,
     SessionModule::class,
     ProjectCreateModule::class,
-    ProjectEditModule::class
+    ProjectEditModule::class,
+    SearchModule::class
     ])
 @Singleton
 interface AppComponent {
@@ -31,5 +33,5 @@ interface AppComponent {
     fun inject(fragment: ProjectCreateFragment)
     fun inject(fragment: ProjectEditFragment)
     fun inject(fragment: RegisterFragment)
-
+    fun inject(fragment: SearchFragment)
 }

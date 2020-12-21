@@ -3,8 +3,10 @@ from rest_framework import serializers
 from api.serializers.project import Project, ProjectPrivateSerializer
 from api.serializers.profile import Profile, ProfilePrivateSerializer
 from api.serializers.user import User, UserPrivateSerializer
-from api.serializers.collaboration_request import CollaborationRequest, CollaborationRequestSerializer
-from api.serializers.collaboration_invite import CollaborationInvite, CollaborationInviteSerializer
+from api.serializers.collaboration_request import CollaborationRequest, \
+    CollaborationRequestSerializer
+from api.serializers.collaboration_invite import CollaborationInvite, \
+    CollaborationInviteSerializer
 from api.serializers.event import Event, EventSerializer
 from api.serializers.file import File, FileSerializer
 from api.serializers.milestone import Milestone, MilestoneSerializer
@@ -94,7 +96,3 @@ class NotificationProjectSerializer(serializers.ModelSerializer):
                   'recipient', 'project',
                   'unread', 'verb', 'timestamp']
 
-
-'''
-    Notification will be consist of invite,follow,rating,updates on your projects(member, milestones, event, description)
-'''

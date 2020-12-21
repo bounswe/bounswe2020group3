@@ -39,12 +39,13 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
         if (project.state == 'open for collaborators' or
             project.state == 'inviting collaborators') and \
                 self.request.user.id != to_user.id:
-            invite = CollaborationInvite.objects.create(**serializer.validated_data)
+            invite = CollaborationInvite.objects.\
+                create(**serializer.validated_data)
 
             ''' Invite Notification '''
             ''' Target --> Invite '''
             notify.send(sender=self.request.user,
-                        verb="invited you to the Project \"{}\"".format(project.name),
+                        verb="invited you to the Project {}".format(project.name),
                         recipient=to_user,
                         target=invite,
                         description="Invite"
@@ -66,9 +67,11 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
 
             ''' Accept Invite Notification '''
             ''' Target --> Project'''
-            project = Project.objects.get(id=collaboration_invite.to_project_id)
+            project = Project.objects.get(
+                id=collaboration_invite.to_project_id)
             notify.send(sender=self.request.user,
-                        verb="accepted your invitation to Project \"{}\"".format(project.name),
+                        verb="accepted your invitation to Project {}"
+                        .format(project.name),
                         recipient=collaboration_invite.from_user,
                         target=project,
                         description="Project"
@@ -90,9 +93,11 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
 
             ''' Reject Invite Notification '''
             ''' Target --> Project'''
-            project = Project.objects.get(id=collaboration_invite.to_project_id)
+            project = Project.objects.get(
+                id=collaboration_invite.to_project_id)
             notify.send(sender=self.request.user,
-                        verb="rejected your invitation to Project {}".format(project.name),
+                        verb="rejected your invitation to Project {}"
+                        .format(project.name),
                         recipient=collaboration_invite.from_user,
                         target=project,
                         description="Project"

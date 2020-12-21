@@ -39,13 +39,15 @@ class CollaborationRequestViewSet(viewsets.ModelViewSet):
         serializer.validated_data['to_project'] = project
         if project.state == 'open for collaborators' and \
                 self.request.user.id != project.owner.id:
-            request = CollaborationRequest.objects.create(**serializer.validated_data)
+            request = CollaborationRequest.objects.\
+                create(**serializer.validated_data)
 
             ''' Request Notification '''
             ''' Target --> Request '''
             user = User.objects.get(username=project.owner)
             notify.send(sender=self.request.user,
-                        verb="wants to join your Project {}".format(project.name),
+                        verb="wants to join your Project {}".
+                        format(project.name),
                         recipient=user,
                         target=request,
                         description="Request"
@@ -66,9 +68,11 @@ class CollaborationRequestViewSet(viewsets.ModelViewSet):
 
             ''' Accept Request Notification '''
             ''' target --> Project '''
-            project = Project.objects.get(id=collaboration_request.to_project_id)
+            project = Project.objects.get(
+                id=collaboration_request.to_project_id)
             notify.send(sender=self.request.user,
-                        verb="accepted your request for Project {}".format(project.name),
+                        verb="accepted your request for Project {}"
+                        .format(project.name),
                         recipient=collaboration_request.from_user,
                         target=project,
                         description="Project"
@@ -90,9 +94,11 @@ class CollaborationRequestViewSet(viewsets.ModelViewSet):
 
             ''' Accept Request Notification '''
             ''' Target --> Project'''
-            project = Project.objects.get(id=collaboration_request.to_project_id)
+            project = Project.objects.get(
+                id=collaboration_request.to_project_id)
             notify.send(sender=self.request.user,
-                        verb="rejected your request for Project {}".format(project.name),
+                        verb="rejected your request for Project {}"
+                        .format(project.name),
                         recipient=collaboration_request.from_user,
                         target=project,
                         description="Project"

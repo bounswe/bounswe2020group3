@@ -1,5 +1,5 @@
 from django.urls import path
-from django.conf.urls import include, url
+from django.conf.urls import include
 from rest_framework.routers import DefaultRouter
 
 from .views.following import FollowingViewSet, FollowRequestViewSet

@@ -5,7 +5,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from api.models.following import Following, FollowRequest
 from api.permission import IsRequestSenderOrReceiver
-from api.serializers.following import FollowSerializer, FollowRequestSerializer, FollowPostSerializer, \
+from api.serializers.following import FollowSerializer,\
+    FollowRequestSerializer, FollowPostSerializer, \
     FollowRequestPostSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
@@ -35,7 +36,6 @@ class FollowingViewSet(viewsets.ModelViewSet):
         serializer.validated_data['to_user'] = to_user
         Following.objects.create(**serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
 
     @action(detail=True, methods=['POST'], name='unfollow',
             serializer_class=None)

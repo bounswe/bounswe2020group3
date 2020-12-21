@@ -110,3 +110,28 @@ class ProfileDeletion(permissions.BasePermission):
                 return False
 
         return True
+
+
+class CommentPermission(permissions.BasePermission):
+    """
+    Custom permission to only allow owner of a comment edit it.
+    Commented user can also delete the comment.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        if view.action in ['destroy']:
+            return request.user == obj.to_user or \
+                   request.user == obj.from_user
+        elif view.action in ['update', 'partial_update']:
+            return request.user == obj.from_user
+
+        return True
+
+
+class RatingPermission(permissions.BasePermission):
+    """
+    Custom permission to only allow owner of an object to edit it.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        return request.user == obj.from_user

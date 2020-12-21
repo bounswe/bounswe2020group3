@@ -6,6 +6,7 @@ from api.serializers.following import FollowingSerializer
 
 from api.serializers.profile import ProfileFullSerializer, \
     ProfileBasicSerializer, ProfilePrivateSerializer
+from api.serializers.comment import CommentSerializer
 
 
 class UserFullSerializer(serializers.ModelSerializer):
@@ -16,11 +17,13 @@ class UserFullSerializer(serializers.ModelSerializer):
     following = FollowerSerializer(many=True)
     followers = FollowingSerializer(many=True)
     follow_requests = IncomingFollowRequestSerializer(many=True)
+    comments_received = CommentSerializer(many=True)
 
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'profile',
-                  'following', 'followers', 'follow_requests']
+                  'following', 'followers', 'follow_requests',
+                  'comments_received']
 
 
 class UserBasicSerializer(serializers.ModelSerializer):
@@ -30,11 +33,12 @@ class UserBasicSerializer(serializers.ModelSerializer):
     following = FollowerSerializer(many=True)
     followers = FollowingSerializer(many=True)
     profile = ProfileBasicSerializer(many=True, read_only=True)
+    comments_received = CommentSerializer(many=True)
 
     class Meta:
         model = User
         fields = ['id', 'username', 'profile',
-                  'following', 'followers']
+                  'following', 'followers', 'comments_received']
 
 
 class UserPrivateSerializer(serializers.ModelSerializer):

@@ -19,11 +19,11 @@ class NotificationViewSet(viewsets.GenericViewSet,
     permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        invite_queryset = self.request.user.notifications.\
+        invite_queryset = self.request.user.notifications. \
             filter(description='Invite')
-        request_queryset = self.request.user.notifications.\
+        request_queryset = self.request.user.notifications. \
             filter(description='Request')
-        project_queryset = self.request.user.notifications.\
+        project_queryset = self.request.user.notifications. \
             filter(description='Project')
         invite_serializer = NotificationInviteSerializer(invite_queryset,
                                                          many=True)

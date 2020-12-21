@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from django_filters.rest_framework import DjangoFilterBackend
 
 author_param = openapi.Parameter(
     'author_id', openapi.IN_QUERY, description="Google Scholar id of author",
@@ -24,6 +25,8 @@ class PublicationViewSet(viewsets.ModelViewSet):
     queryset = Publication.objects.all()
     serializer_class = PublicationSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['profile__id']
 
     @swagger_auto_schema(
         method='post', manual_parameters=[author_param, profile_param]
@@ -33,6 +36,10 @@ class PublicationViewSet(viewsets.ModelViewSet):
     def add_publications(self, request):
         profile_id = request.GET.get('profile_id', None)
         profile = get_object_or_404(Profile, pk=profile_id)
+        if self.request.user != profile.owner:
+            return Response(data={
+                'error': 'Unauthorized'
+            }, status=status.HTTP_401_UNAUTHORIZED)
         Publication.objects.filter(
             profile=profile
         ).delete()

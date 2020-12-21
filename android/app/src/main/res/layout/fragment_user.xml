@@ -9,7 +9,7 @@
     tools:context=".profile.ProfileFragment">
 
     <ProgressBar
-        android:id="@+id/progressBarProfile"
+        android:id="@+id/progressBarUser"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/layoutProfileDetail"
+        android:id="@+id/layoutUserDetail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"

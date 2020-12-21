@@ -27,7 +27,7 @@ interface ProfileContract {
         fun updateAuthUserProfile(updatedProfile: Profile): Single<Profile>
         fun fetchAuthUser(): Single<User>
         fun getAuthUser(): BehaviorSubject<User>
-
+        fun getUser(userId: Int): Single<User>
         fun getUserList(): Observable<List<User>>
     }
 

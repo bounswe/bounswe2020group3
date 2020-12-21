@@ -47,6 +47,12 @@ class ProfileModel @Inject constructor(private var sessionManager: Session) : Pr
                 .doAfterSuccess() { u -> authUser.onNext(u) }
     }
 
+    override fun getUser(userId: Int): Single<User> {
+        return profileService.getUser(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
     override fun getUserList(): Observable<List<User>> {
         return profileService.getUserList()
                 .subscribeOn(Schedulers.io())

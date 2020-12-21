@@ -22,7 +22,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     filterset_fields = ['owner__id']
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save(owner=self.request.user, members=[self.request.user])
 
     def retrieve(self, request, *args, **kwargs):
         self.accessed_project = self.get_object()

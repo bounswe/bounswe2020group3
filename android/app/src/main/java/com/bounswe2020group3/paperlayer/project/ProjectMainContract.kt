@@ -4,6 +4,7 @@ import com.bounswe2020group3.paperlayer.login.LoginContract
 import com.bounswe2020group3.paperlayer.login.data.AuthToken
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.project.data.Project
+import com.bounswe2020group3.paperlayer.project.data.ProjectShort
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
@@ -36,7 +37,7 @@ interface ProjectMainContract {
 
     interface Model {
         //fun getProject(projectId: Int): Single<Project>
-        fun getAllProjectsOfOwner(ownerId: Int): Observable<List<Project>>
+        fun getAllProjectsOfOwner(ownerId: Int): Observable<List<ProjectShort>>
         fun getAuthToken(): BehaviorSubject<AuthToken>
     }
 
@@ -45,7 +46,7 @@ interface ProjectMainContract {
         fun getProject(@Path("projectId") projectId: Int): Single<Project>
 
         @GET("/api/projects/")
-        fun getAllProjectsOfOwner(@Query("owner__id") ownerId: Int): Observable<List<Project>>
+        fun getAllProjectsOfOwner(@Query("owner__id") ownerId: Int): Observable<List<ProjectShort>>
     }
 
 }

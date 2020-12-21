@@ -108,5 +108,10 @@
             android:id="@+id/navigateToProjectCreateFromProjectMainFragment"
             app:destination="@id/projectCreateFragment" />
     </fragment>
-    
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.bounswe2020group3.paperlayer.search.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+
 </navigation>

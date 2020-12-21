@@ -97,6 +97,21 @@ class CollaborationPermissions(permissions.BasePermission):
         return True
 
 
+class ProfileDeletion(permissions.BasePermission):
+    """
+    Custom permission to only allow members of an object to edit it.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        if view.action in ['destroy']:
+            if request.user.is_staff:
+                return True
+            else:
+                return False
+
+        return True
+
+
 class CommentPermission(permissions.BasePermission):
     """
     Custom permission to only allow owner of a comment edit it.

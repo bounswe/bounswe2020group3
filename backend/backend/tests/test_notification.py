@@ -1,7 +1,6 @@
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
 from api.models.project import Project
-from notifications.signals import notify
 from rest_framework import status
 
 
@@ -44,4 +43,3 @@ class NotificationTests(APITestCase):
         self.assertEqual(recipient['username'], self.invited_user.username)
         self.assertEqual(verb, "invited you to the Project {}".
                          format(self.project.name))
-

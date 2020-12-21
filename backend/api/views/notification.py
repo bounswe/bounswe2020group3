@@ -56,7 +56,8 @@ class NotificationViewSet(viewsets.GenericViewSet,
         serializer = NotificationSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    @action(detail=False, methods=['POST'], name='mark all notifications as read',
+    @action(detail=False, methods=['POST'],
+            name='mark all notifications as read',
             serializer_class=None)
     def mark_all_as_read(self, request):
         self.request.user.notifications.mark_all_as_read()
@@ -86,7 +87,8 @@ class NotificationViewSet(viewsets.GenericViewSet,
         notification.mark_as_unread()
         return Response(status=status.HTTP_200_OK)
 
-    @action(detail=False, methods=['GET'], name='count of unread notifications',
+    @action(detail=False, methods=['GET'],
+            name='count of unread notifications',
             serializer_class=None)
     def unread_count(self, request):
         return Response(data={
@@ -99,7 +101,6 @@ class NotificationViewSet(viewsets.GenericViewSet,
         return Response(data={
             'all_count': self.request.user.notifications.count(),
         }, status=status.HTTP_200_OK)
-
 
 
 

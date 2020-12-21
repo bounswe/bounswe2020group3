@@ -45,7 +45,8 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
             ''' Invite Notification '''
             ''' Target --> Invite '''
             notify.send(sender=self.request.user,
-                        verb="invited you to the Project {}".format(project.name),
+                        verb="invited you to the Project {}"
+                        .format(project.name),
                         recipient=to_user,
                         target=invite,
                         description="Invite"

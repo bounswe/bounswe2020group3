@@ -95,4 +95,3 @@ class NotificationProjectSerializer(serializers.ModelSerializer):
         fields = ['id', 'actor', 'description',
                   'recipient', 'project',
                   'unread', 'verb', 'timestamp']
-

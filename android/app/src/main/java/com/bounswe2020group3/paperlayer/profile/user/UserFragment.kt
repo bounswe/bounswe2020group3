@@ -24,13 +24,13 @@ import kotlinx.android.synthetic.main.fragment_user.textViewGender
 import kotlinx.android.synthetic.main.fragment_user.textViewInterests
 import javax.inject.Inject
 
-private const val ARG_USER_ID = "user-id"
+private const val ARG_USER_ID = "userID"
 
 class UserFragment : Fragment(), UserContract.View {
 
     @Inject lateinit var presenter: UserContract.Presenter
 
-    private var userID: String? = null
+    private var userID: Int? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -40,7 +40,7 @@ class UserFragment : Fragment(), UserContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            userID = it.getString(ARG_USER_ID)
+            userID = it.getInt(ARG_USER_ID)
         }
     }
 
@@ -67,10 +67,10 @@ class UserFragment : Fragment(), UserContract.View {
     companion object {
 
         @JvmStatic
-        fun newInstance(userId: String) =
+        fun newInstance(userId: Int) =
             UserFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_USER_ID, userId)
+                    putInt(ARG_USER_ID, userId)
                 }
             }
     }

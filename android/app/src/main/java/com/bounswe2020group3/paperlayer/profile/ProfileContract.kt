@@ -10,8 +10,8 @@ import retrofit2.http.*
 
 interface ProfileContract {
     interface Presenter: Mvp.Presenter<View> {
-        fun subscribeUser()
-        fun loadUser()
+        fun subscribeAuthUser()
+        fun loadAuthUser()
     }
 
     interface View: Mvp.View{
@@ -24,10 +24,9 @@ interface ProfileContract {
     }
 
     interface Model {
-        fun updateUserProfile(updatedProfile: Profile): Single<Profile>
-
-        fun fetchUser(): Single<User>
-        fun getUser(): BehaviorSubject<User>
+        fun updateAuthUserProfile(updatedProfile: Profile): Single<Profile>
+        fun fetchAuthUser(): Single<User>
+        fun getAuthUser(): BehaviorSubject<User>
 
         fun getUserList(): Observable<List<User>>
     }

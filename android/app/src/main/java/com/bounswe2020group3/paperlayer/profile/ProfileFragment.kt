@@ -36,7 +36,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter.subscribeUser()
+        presenter.subscribeAuthUser()
 
         imageButtonSettings.setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToProfileEditFromProfile)
@@ -53,7 +53,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override fun onResume() {
         super.onResume()
-        presenter.loadUser()
+        presenter.loadAuthUser()
     }
 
     override fun onDestroy() {

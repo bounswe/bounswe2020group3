@@ -1,6 +1,5 @@
 package com.bounswe2020group3.paperlayer.profile
 
-import android.util.Log
 import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
 import com.bounswe2020group3.paperlayer.network.RetrofitProvider
 import com.bounswe2020group3.paperlayer.profile.data.Profile
@@ -18,40 +17,40 @@ class ProfileModel @Inject constructor(private var sessionManager: Session) : Pr
 
     private var profileService: ProfileContract.Service = RetrofitProvider.instance.create(ProfileContract.Service::class.java)
 
-    private var userProfile: BehaviorSubject<Profile> = BehaviorSubject.create()
-    private var user: BehaviorSubject<User> = BehaviorSubject.create()
+    private var authUserProfile: BehaviorSubject<Profile> = BehaviorSubject.create()
+    private var authUser: BehaviorSubject<User> = BehaviorSubject.create()
 
     private fun getAuthToken(): AuthToken {
         return sessionManager.getToken().value ?: throw Exception("No user found")
     }
 
-    override fun getUser(): BehaviorSubject<User> {
-        return user
+    override fun getAuthUser(): BehaviorSubject<User> {
+        return authUser
     }
 
-    override fun updateUserProfile(updatedProfile: Profile): Single<Profile> {
+    override fun updateAuthUserProfile(updatedProfile: Profile): Single<Profile> {
         val userId = getAuthToken().id
         val authorization = "Token ${getAuthToken().token}"
-        return profileService.updateProfile(authorization, updatedProfile.id!!, updatedProfile)
+        return profileService.updateProfile(authorization, updatedProfile.id, updatedProfile)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doAfterSuccess() { profile ->
-                    userProfile.onNext(profile)
+                    authUserProfile.onNext(profile)
                 }
     }
 
-    override fun fetchUser(): Single<User> {
+    override fun fetchAuthUser(): Single<User> {
         val userId = getAuthToken().id
         return profileService.getUser(userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doAfterSuccess() { u -> user.onNext(u) }
+                .doAfterSuccess() { u -> authUser.onNext(u) }
     }
 
     override fun getUserList(): Observable<List<User>> {
         return profileService.getUserList()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .flatMap { userList -> Observable.fromArray(userList.subList(1, userList.size - 1)) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap { userList -> Observable.fromArray(userList.subList(1, userList.size - 1)) }
     }
 }

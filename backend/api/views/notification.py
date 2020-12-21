@@ -101,7 +101,3 @@ class NotificationViewSet(viewsets.GenericViewSet,
         return Response(data={
             'all_count': self.request.user.notifications.count(),
         }, status=status.HTTP_200_OK)
-
-
-
-

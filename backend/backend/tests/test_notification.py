@@ -25,10 +25,10 @@ class NotificationTests(APITestCase):
         self.client.force_authenticate(user=self.owner)
 
         self.client.post('/api/collaboration_invites/', {
-                "to_user": self.invited_user.id,
-                "to_project": self.project.id,
-                "message": "Come and join our project"
-            }, format='json')
+            "to_user": self.invited_user.id,
+            "to_project": self.project.id,
+            "message": "Come and join our project"
+        }, format='json')
 
     def test_can_get_own_notifications(self):
         self.client.force_authenticate(user=self.invited_user)

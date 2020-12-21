@@ -9,7 +9,7 @@
     tools:context=".profile.ProfileFragment">
 
     <ProgressBar
-        android:id="@+id/progressBarProfile"
+        android:id="@+id/progressBarUser"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/layoutProfileDetail"
+        android:id="@+id/layoutUserDetail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -104,7 +104,6 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/linearLayoutFollowers"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
@@ -125,7 +124,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayoutFollowings"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
@@ -347,15 +345,15 @@
 
     </LinearLayout>
 
-    <ImageButton
+    <Button
         android:id="@+id/imageButtonSettings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_md"
         android:layout_marginVertical="@dimen/margin_md"
-        android:background="@color/colorTransparent"
+        android:textSize="12sp"
+        android:text="@string/follow"
         android:contentDescription="@string/profile_settings_description"
-        android:src="@drawable/ic_baseline_settings_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

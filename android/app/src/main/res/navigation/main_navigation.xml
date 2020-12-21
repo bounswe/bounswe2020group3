@@ -61,6 +61,9 @@
         <action
             android:id="@+id/navigateToLoginFromProfile"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/navigateToUserListFromProfile"
+            app:destination="@id/userListFragment" />
     </fragment>
 
     <fragment
@@ -113,6 +116,23 @@
         <action
             android:id="@+id/navigateToProjectCreateFromProjectMainFragment"
             app:destination="@id/projectCreateFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userListFragment"
+        android:name="com.bounswe2020group3.paperlayer.profile.list.UserListFragment"
+        android:label="User List"
+        tools:layout="@layout/fragment_user_list" >
+        <action
+            android:id="@+id/navigateToUserFromUserList"
+            app:destination="@id/userFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.bounswe2020group3.paperlayer.profile.user.UserFragment"
+        android:label="User" >
+        <argument
+            android:name="userID"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/inviteFragment"

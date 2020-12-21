@@ -68,12 +68,12 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         textViewEmail.text = user.email
         textViewFullName.text = fullName
         textViewBio.text = profile.bio
-        textViewAge.text = profile.age.toString()
+        textViewAge.text = profile.birthday.toString()
         textViewGender.text = profile.gender
         textViewInterests.text = profile.interests
         textViewExpertise.text = profile.expertise
 
-        val imageUrl = profile.photoUrl
+        val imageUrl = profile.profile_picture
         if(imageUrl != null && imageUrl.contains("http")) {
             Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
         }

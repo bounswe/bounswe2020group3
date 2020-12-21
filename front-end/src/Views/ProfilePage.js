@@ -6,13 +6,19 @@ import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
-import { getUserId } from '../Components/Auth/Authenticate';
+import { getUserId, getAccessToken, getPhoto } from '../Components/Auth/Authenticate';
 import axios from 'axios';
 import config from '../config';
 import UserNavbar from '../Components/TopBar/UserNavbar';
+import Profilebar from '../Components/ProfileBar/Profilebar';
+
 const privateGender = "do not want to share";
 const titleStyle = {
   textAlign: "left",
+  marginTop: "10px"
+}
+const titleStyleCenter = {
+  textAlign: "center",
   marginTop: "10px"
 }
 const textStyle = {
@@ -20,18 +26,38 @@ const textStyle = {
   minHeight: "100px",
   padding: "2px 12px"
 }
+const SelfContainer = styled(Box)({
+  background: "#f9f9eb",
+  border: 0,
+  borderRadius: 3,
+  boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+  color: 'white',
+  height: "calc(100vh - 60px)",
+  paddingBottom: "60px",
+  top: "0",
+  bottom: "0",
+  left: "0",
+  right: "0",
+  margin: "auto",
+  overflow: "scroll",
+  '& .MuiTextField-root': {
+    margin: "10px",
+    width: "30%",
+    minWidth: "250px"
+  }
+});
 const Container = styled(Box)({
   background: "#f9f9eb",
   border: 0,
   borderRadius: 3,
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
   color: 'white',
-  height: "calc(98vh - 64px)",
   paddingBottom: "60px",
   top: "0",
   bottom: "0",
   left: "0",
   right: "0",
+  height:"calc(98vh - 60px)",
   margin: "auto",
   '& .MuiTextField-root': {
     margin: "10px",
@@ -45,6 +71,7 @@ export default class HomePage extends Component {
     super(props);
     this.SnackbarRef = React.createRef();
     this.state = {
+      profileId: "",
       name: "",
       middle_name: "",
       last_name: "",
@@ -54,20 +81,85 @@ export default class HomePage extends Component {
       age: "",
       expertise: "",
       gender: "",
-      interests: ""
+      interests: "",
+      affiliations: "",
+      shareBio: false,
+      shareGender: false,
+      shareAffiliations: false,
+      shareBirthday: false,
+      self: false,
+      selfName: "",
+      selfLastName: "",
+      follow_reqs:[],
+      followers:[],
+      following:[],
+      milestones: [],
+      projects: []
     }
   };
 
   componentDidMount() {
-    axios.get(`${config.API_URL}${config.Profilepage_url}?owner__id=${getUserId()}`, { headers: { 'Content-Type': 'Application/json' } })
+
+    var userId = this.props.location.pathname.split('/')[2];
+    axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
-        const prof = res.data[0];
-        this.setState({ name: prof.name, middle_name: prof.middle_name, last_name: prof.last_name, bio: prof.bio, img: prof.photo_url, age: prof.age, expertise: prof.expertise, gender: prof.gender, interests: prof.interests });
-      })
-    axios.get(`${config.API_URL}${config.User_Path}${getUserId()}`, { headers: { 'Content-Type': 'Application/json' } })
+        this.setState({ email: res.data.email, self: res.data.id === parseInt(getUserId()), });
+        const prof = res.data.profile[0];
+        const user = res.data;
+        let windowUserId = res.data.id;
+        if (windowUserId === parseInt(getUserId()) || res.data.profile[0].is_public) {
+          this.setState({
+            isPublic: prof.is_public,
+            profileId: prof.id,
+            name: prof.name,
+            middle_name: prof.middle_name,
+            last_name: prof.last_name,
+            bio: prof.bio,
+            img: prof.photo_url,
+            age: prof.age, expertise: prof.expertise,
+            gender: prof.gender,
+            interests: prof.interests,
+            affiliations: prof.affiliations,
+            shareBio: prof.share_bio,
+            shareGender: prof.share_gender,
+            shareAffiliations: prof.share_affiliations,
+            shareBirthday: prof.share_birthday,
+            self: windowUserId === parseInt(getUserId()),
+            follow_reqs:user.follow_requests,
+            followers:user.followers,
+            following:user.following
+          });
+        }
+        else if (prof.is_public === false) {
+          this.setState({
+            self: false,
+            isPublic: prof.is_public,
+            profileId: prof.id,
+            name: prof.name,
+            middle_name: prof.middle_name,
+            last_name: prof.last_name,
+            img: prof.photo_url
+          })
+        }
+
+      });
+
+
+    axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
-        this.setState({ email: res.data.email });
-      })
+        this.setState({ milestones: res.data.result });
+      });
+      axios.get(`${config.API_URL}${config.User_Path}${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        this.setState({ selfName: res.data.profile[0].name + res.data.profile[0].middle_name,
+          selfLastName: res.data.profile[0].last_name
+        });
+      });
+      axios.get(`${config.API_URL}${config.Projectpage_url}?owner__id=${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        this.setState({ projects:res.data });
+      });
+    
   };
 
   handleSnackbarOpen = () => {
@@ -79,90 +171,301 @@ export default class HomePage extends Component {
   goToEditProfilePage = () => {
     this.props.history.push("/edit-profile");
   };
-
-  render() {
+  goToProjectCreation = () => {
+    this.props.history.push(config.Create_Project_Path);
+  };
+  renderProjects() {
+    const { projects } = this.state;
     return (
-      <Container>
-        <UserNavbar
-          logout={() => { this.props.history.push(config.Login_Path) }}
-          pushProfile={() => { this.props.history.push("/profile") }}
-          goHome={() => { this.props.history.push(config.Homepage_Path) }}
-        />
-        <Typography variant="h4" color="primary">Profile Page</Typography>
-        <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto' }} />
-        <br />
-        <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
-          <Typography>{this.state.name + " " + this.state.middle_name} <br />
-            {this.state.last_name.toUpperCase()}</Typography>
+      <Box style={{ overflowY: "scroll", maxHeight: "500px", paddingTop: "10px", paddingBottom: "10px" }}>
+
+        {projects.length !== 0
+          ?
+          projects.map((item) => {
+            return (
+              <Paper elevation={6}
+                style={{
+                  padding: "15px", maxHeight: "160px", width: "80%",
+                  background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+                }}
+                borderColor="primary" border={1}>
+                <Typography variant="h6" color="primary"
+                  style={{ cursor: "pointer", width: "50%", textAlign: "left" }}
+                  onClick={()=>{    this.props.history.push("/project/" + item.id);}}
+                >{item.name}</Typography>
+              </Paper>
+            )
+          })
+          :
+          <Paper elevation={6}
+            style={{
+              padding: "15px", maxHeight: "160px", width: "80%",
+              background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+            }}
+            borderColor="primary" border={1}>
+            <Typography variant="h6" color="textPrimary" style={{ "textAlign": 'center' }}>No Projects Found</Typography>
+          </Paper>
+        }
+      </Box>)
+  };
+  renderMilestones() {
+    const { milestones } = this.state;
+    return (
+      <Box style={{ overflowY: "scroll", maxHeight: "500px", paddingTop: "10px", paddingBottom: "10px" }}>
+
+        {milestones.length !== 0
+          ?
+          milestones.map((item) => {
+            return (
+              <Paper elevation={6}
+                style={{
+                  padding: "15px", maxHeight: "160px", width: "80%",
+                  background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+                }}
+                borderColor="primary" border={1}>
+                <Typography variant="h6" color="primary"
+                  style={{ cursor: "pointer", width: "50%", textAlign: "left" }}
+                >{item.date}</Typography>
+                <Typography variant="h6" color="primary"
+                  style={{ cursor: "pointer", width: "50%", textAlign: "left", paddingBottom: "5px" }}
+                >{item.project}</Typography>
+                <hr />
+                <Typography nowrap variant="body2" style={{ textAlign: "left", color: "black" }}>
+                  {item.description.substr(0, 120)}
+                  {/*May need more fine tuning as a future work.*/}
+                </Typography>
+              </Paper>
+            )
+          })
+          :
+          <Paper elevation={6}
+            style={{
+              padding: "15px", maxHeight: "160px", width: "80%",
+              background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+            }}
+            borderColor="primary" border={1}>
+            <Typography variant="h6" color="textPrimary" style={{ "textAlign": 'center' }}>No Upcoming Milestones</Typography>
+          </Paper>
+        }
+
+
+      </Box>)
+
+  };
+  renderMidRightColumn() {
+    return (
+      <Grid item sm={6} >
+        <Typography variant="h5" color="primary" style={titleStyle}>Expertise</Typography>
+        <Paper elevation={6} style={textStyle}>
+          <p>{this.state.expertise}</p>
         </Paper>
+        <Typography variant="h5" color="primary" style={titleStyle}>Interests</Typography>
+        <Paper elevation={6} style={textStyle}>
+          <p>{this.state.interests}</p>
+        </Paper>
+        {(this.showAffiliations() ?
+          <>
+            <Typography variant="h5" color="primary" style={titleStyle}>Affiliations</Typography>
+            <Paper elevation={6} style={textStyle}>
+              <p>{this.state.affiliations === "" ? "None" : this.state.affiliations}</p>
+            </Paper>
+          </>
+          :
+          <></>
+        )}
+      </Grid>
+    );
+  }
+  renderMidLeftColumn() {
+    return (<Grid item sm={6} >
+
+      {this.showBio()
+        ? <>
+          <Typography variant="h5" color="primary" style={titleStyle}>Biography</Typography>
+          <Paper elevation={6} style={textStyle}>
+            <p>{this.state.bio}</p>
+          </Paper>
+        </>
+        :
+        <><Typography variant="h5" color="primary" style={titleStyle}>Biography</Typography>
+          <Paper elevation={6} style={textStyle}>
+            <p>{this.state.bio}</p>
+          </Paper></>
+      }
+
+      <Typography variant="h5" color="primary" style={titleStyle}>Contact Info</Typography>
+      <Paper elevation={6} style={textStyle}>
+        <p>{"Email : " + this.state.email}</p>
+      </Paper>
+      {(this.showPersonalInfo() ?
+        <>
+          <Typography variant="h5" color="primary" style={titleStyle}>Personal Information</Typography>
+          <Paper elevation={6} style={textStyle}>
+            <p>{"Age : " + this.state.age} <br />
+              {(this.state.gender !== privateGender ? "Gender : " + this.state.gender : "")}</p>
+          </Paper>
+        </>
+        :
+        <></>
+      )}
+    </Grid>
+    );
+  }
+  renderGraph(){
+    return (
+        <Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+          <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.follow_reqs.length:0}</b> following request</Typography>
+          <hr />
+          <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.following.length:0}</b> followings</Typography>
+          <hr />
+          <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.followers.length:0}</b> followers</Typography>
+        </Paper>);
+  };
+  renderSelfProfile() {
+    return (<SelfContainer>
+      <UserNavbar
+        logout={() => { this.props.history.push(config.Login_Path) }}
+        pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
+        goHome={() => { this.props.history.push(config.Homepage_Path) }}
+      />
+
+      <Grid container direction="row" justify="center" alignItems="center" >
+        <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">
+
+          <Grid item sm={3}>
+            {this.state.self ?
+              <>
+                <Typography variant="h5" color="primary" style={titleStyleCenter}>Upcoming Milestones</Typography>
+                {this.renderMilestones()}
+                <Typography variant="h5" color="primary" style={titleStyleCenter}>Projects</Typography>
+                {this.renderProjects()}
+              </>
+              :
+              <></>
+            }
+          </Grid>
+
+          <Grid container spacing={2} item sm={6}>
+            <Grid item sm={12} >
+              <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
+              <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
+                <Typography>{this.state.name + " " + this.state.middle_name} <br />
+                  {this.state.last_name.toUpperCase()}</Typography>
+              </Paper>
+            </Grid>
+
+            {(this.state.self || this.state.isPublic) ? this.renderMidLeftColumn() : <></>}
+            {(this.state.self || this.state.isPublic) ? this.renderMidRightColumn() : <></>}
+
+          </Grid>
+          <Grid item sm={3}>
+            {/*  SAĞDAKİ RELEVANT ŞEYLER BURAYA GELECEK  */}
+            {this.renderGraph()}
+
+          </Grid>
+          {
+            this.state.self ?
+              <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
+              :
+              <Typography variant="h5" color="error"> This Profile is Private </Typography>
+          }
+        </Grid>
+      </Grid>
+      <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
+    </SelfContainer>);
+  }
+  renderOtherProfile() {
+    return (<Container>
+      <UserNavbar
+        logout={() => { this.props.history.push(config.Login_Path) }}
+        pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
+        goHome={() => { this.props.history.push(config.Homepage_Path) }}
+      />
+      <Box>
+        {this.state.self ?  // So that re-render doesn't cause any glitch-like graphics.
+        <Profilebar
+          name={this.state.selfName}
+          lastName={this.state.selfLastName}
+          photoUrl={getPhoto()}
+          goToProjectCreation={this.goToProjectCreation}
+          goToProfile={() => { this.props.history.push("/profile/" + getUserId()); }}
+        />
+        :
+        <></>
+        }
         <Grid container direction="row" justify="center" alignItems="center" >
           <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">
+
             <Grid item sm={3}>
-              Projects
+{/* Burasi bos kalacak */}
             </Grid>
+
             <Grid container spacing={2} item sm={6}>
-
-              <Grid item sm={6} >
-                <Typography variant="h5" color="primary" style={titleStyle}>Biography</Typography>
-                <Paper elevation={6} style={textStyle}>
-                  <p>{this.state.bio}</p>
+              <Grid item sm={12} >
+                <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
+                <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
+                  <Typography>{this.state.name + " " + this.state.middle_name} <br />
+                    {this.state.last_name.toUpperCase()}</Typography>
                 </Paper>
-
-                <Typography variant="h5" color="primary" style={titleStyle}>Contact Info</Typography>
-                <Paper elevation={6} style={textStyle}>
-                  <p>{"Email : " + this.state.email}</p>
-                </Paper>
-                {(this.validPersonalInfo() ?
-                  <>
-                    <Typography variant="h5" color="primary" style={titleStyle}>Personal Information</Typography>
-                    <Paper elevation={6} style={textStyle}>
-                      <p>{(this.state.age ? "Age : " + this.state.age : "")} <br />
-                        {(this.state.gender !== privateGender ? "Gender : " + this.state.gender : "")}</p>
-                    </Paper>
-                  </>
-                  :
-                  <></>
-                )}
               </Grid>
-              <Grid item sm={6} >
-                <Typography variant="h5" color="primary" style={titleStyle}>Expertise</Typography>
-                <Paper elevation={6} style={textStyle}>
-                  <p>{this.state.expertise}
-                  #machinelearning #deeplearning #supercomputing #parallelprogramming</p>
-                </Paper>
-                <Typography variant="h5" color="primary" style={titleStyle}>Interests</Typography>
-                <Paper elevation={6} style={textStyle}>
-                  #blockchain #IoT<p>{this.state.interests}
-                  </p>
-                </Paper>
 
-              </Grid>
+              {(this.state.self || this.state.isPublic) ? this.renderMidLeftColumn() : <></>}
+              {(this.state.self || this.state.isPublic) ? this.renderMidRightColumn() : <></>}
+
             </Grid>
             <Grid item sm={3}>
-              {/*  SAĞDAKİ RELEVANT ŞEYLER BURAYA GELECEK  */}
+{ /* Buraya bir seyler gelecek - recommendation vb. */ }
             </Grid>
-            <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
+            {
+              this.state.self ?
+                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
+                :
+                <Typography variant="h5" color="error"> This Profile is Private </Typography>
+            }
           </Grid>
         </Grid>
         <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
-      </Container>);
+      </Box>
+    </Container>);
   }
-  validPersonalInfo = () => {
-    return this.validAge() && this.validGender();
+  render() {
+    if (this.state.self)
+      return (<>{this.renderSelfProfile()}</>);
+    else {
+      return (<>{this.renderOtherProfile()}</>)
+    }
+
+  }
+  showPersonalInfo = () => {
+    return this.showGender() && this.showAge();
   }
 
-  validGender = () => {
-    const { gender } = this.state;
-    if (gender === privateGender)
-      return false;
-    else
+  showGender = () => {
+    const { shareGender } = this.state;
+    if (shareGender)
       return true;
+    else
+      return false;
   }
-  validAge = () => {
-    const { age } = this.state;
-    if (age < 15)
-      return false;
-    else
+  showAge = () => {
+    const { shareBirthday } = this.state;
+    if (shareBirthday)
       return true;
+    else
+      return false;
+  }
+  showBio = () => {
+    const { shareBio } = this.state;
+    if (shareBio)
+      return true;
+    else
+      return false;
+  }
+  showAffiliations = () => {
+    const { shareAffiliations } = this.state;
+    if (shareAffiliations)
+      return true;
+    else
+      return false;
   }
 }

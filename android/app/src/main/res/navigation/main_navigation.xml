@@ -28,6 +28,12 @@
         <action
             android:id="@+id/navigateToProjectMainFromLogin"
             app:destination="@id/projectMainFragment" />
+        <action
+            android:id="@+id/test1"
+            app:destination="@id/inviteFragment" />
+        <action
+            android:id="@+id/navigateToHomepageFromLogin"
+            app:destination="@id/eventFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -75,6 +81,10 @@
             android:name="projectID"
             app:argType="integer"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/navigateToProjectEditFromProjectFragment"
+            app:destination="@+id/projectEditFragment"
+            />
     </fragment>
 
     <fragment
@@ -82,6 +92,17 @@
         android:name="com.bounswe2020group3.paperlayer.projectCreate.ProjectCreateFragment"
         android:label="Project Create"
         tools:layout="@layout/fragment_project_create" />
+
+    <fragment
+        android:id="@+id/projectEditFragment"
+        android:name="com.bounswe2020group3.paperlayer.projectEdit.ProjectEditFragment"
+        android:label="Project Edit"
+        tools:layout="@layout/fragment_project_edit">
+        <action
+            android:id="@+id/navigateToProjectFragmentFromProjectEditFragment"
+            app:destination="@id/projectFragment"
+            />
+    </fragment>
 
     <fragment
         android:id="@+id/projectMainFragment"
@@ -93,7 +114,7 @@
             app:destination="@id/projectFragment"
             />
         <action
-            android:id="@+id/navigateToProjectCreate"
+            android:id="@+id/navigateToProjectCreateFromProjectMainFragment"
             app:destination="@id/projectCreateFragment" />
     </fragment>
     <fragment
@@ -112,6 +133,45 @@
         <argument
             android:name="userID"
             app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/inviteFragment"
+        android:name="com.bounswe2020group3.paperlayer.invite.InviteFragment"
+        android:label="fragment_invite"
+        tools:layout="@layout/fragment_invite" />
+    <fragment
+        android:id="@+id/eventFragment"
+        android:name="com.bounswe2020group3.paperlayer.home.EventFragment"
+        android:label="fragment_events"
+        tools:layout="@layout/fragment_events" >
+        <action
+            android:id="@+id/navigateToProjectUpdatesFromEvents"
+            app:destination="@id/recentProjectsFragment" />
+        <action
+            android:id="@+id/navigateToMilestonesFromEvents"
+            app:destination="@id/milestoneFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/milestoneFragment2"
+        android:name="com.bounswe2020group3.paperlayer.home.MilestoneFragment"
+        android:label="MilestoneFragment" >
+        <action
+            android:id="@+id/navigateToEventsFromMilestones"
+            app:destination="@id/eventFragment" />
+        <action
+            android:id="@+id/navigateToProjectUpdatesFromMilestones"
+            app:destination="@id/recentProjectsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recentProjectsFragment"
+        android:name="com.bounswe2020group3.paperlayer.home.RecentProjectsFragment"
+        android:label="RecentProjectsFragment" >
+        <action
+            android:id="@+id/navigateToMilestonesFromProjectUpdates"
+            app:destination="@id/milestoneFragment2" />
+        <action
+            android:id="@+id/navigateToEventsFromProjectUpdates"
+            app:destination="@id/eventFragment" />
     </fragment>
 
 </navigation>

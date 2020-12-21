@@ -57,7 +57,7 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectMainCon
                     this.view?.submitProjectCardList()
                 },
                 { error ->
-                    this.view?.writeLogMessage("e",TAG,"Error in fetching all projects of owner $ownerId")
+                    this.view?.writeLogMessage("e",TAG,"Error in fetching all projects of owner $ownerId $error")
                 }
         )
         disposable.add(getProjectObservable)
@@ -77,7 +77,7 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectMainCon
     }
 
     override fun onNewProjectButtonClicked() {
-        view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectCreate) }
+        view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectCreateFromProjectMainFragment) }
     }
 
 }

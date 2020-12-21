@@ -17,7 +17,7 @@ class ProjectCreatePresenter @Inject constructor(private var model: ProjectCreat
         }, {
             view?.showProgress(false)
             disposable.clear()
-            view?.showToast("Error while creating project")
+            view?.showToast("Error while creating project" + it)
         })
         disposable.add(createProjectObservable)
 

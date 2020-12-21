@@ -1,5 +1,7 @@
 from api.models.profile import Profile
 from rest_framework import serializers
+from api.models.rating import Rating
+from django.db.models import Avg
 
 
 class ProfileFullSerializer(serializers.HyperlinkedModelSerializer):
@@ -8,6 +10,7 @@ class ProfileFullSerializer(serializers.HyperlinkedModelSerializer):
     """
     owner = serializers.ReadOnlyField(source='owner.username')
     email = serializers.ReadOnlyField(source='owner.email')
+    rating = serializers.SerializerMethodField('get_rating')
 
     class Meta:
         model = Profile
@@ -15,7 +18,12 @@ class ProfileFullSerializer(serializers.HyperlinkedModelSerializer):
                   'bio', 'profile_picture', 'birthday', 'share_birthday',
                   'expertise', 'gender', 'interests', 'affiliations',
                   'share_bio', 'share_gender', 'share_affiliations',
-                  'is_public']
+                  'is_public', 'rating']
+
+    def get_rating(self, obj):
+        ratings = Rating.objects.filter(to_user__exact=obj.owner)
+        rating = ratings.aggregate(Avg('rating'))
+        return rating['rating__avg']
 
 
 class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
@@ -24,6 +32,7 @@ class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
     """
     owner = serializers.ReadOnlyField(source='owner.username')
     email = serializers.ReadOnlyField(source='owner.email')
+    rating = serializers.SerializerMethodField('get_rating')
 
     class Meta:
         model = Profile
@@ -32,7 +41,12 @@ class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
                   'expertise',
                   'gender', 'interests', 'affiliations', 'share_bio',
                   'share_gender', 'share_affiliations',
-                  'is_public']
+                  'is_public', 'rating']
+
+    def get_rating(self, obj):
+        ratings = Rating.objects.filter(to_user__exact=obj.owner)
+        rating = ratings.aggregate(Avg('rating'))
+        return rating['rating__avg']
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)

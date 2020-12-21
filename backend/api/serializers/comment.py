@@ -6,6 +6,8 @@ class CommentSerializer(serializers.ModelSerializer):
     """
     Comment serializer
     """
+    created = serializers.DateTimeField(read_only=True)
+
     class Meta:
         model = Comment
         fields = '__all__'

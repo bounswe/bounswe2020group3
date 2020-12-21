@@ -22,7 +22,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           CommentPermission]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['to_user']
+    filterset_fields = ['to_user', 'from_user']
 
     def get_serializer_class(self):
         if self.action in ['update', 'partial_update']:
@@ -86,7 +86,8 @@ class CommentViewSet(viewsets.ModelViewSet):
             queryset = queryset. \
                        filter(Q(to_user__profile__is_public__exact=True) |
                               Q(to_user__exact=user.id) |
-                              Q(to_user__followers__exact=user.id))
+                              Q(to_user__followers__exact=user.id) |
+                              Q(from_user__exact=user.id))
 
         page = self.paginate_queryset(queryset)
         if page is not None:

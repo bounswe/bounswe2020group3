@@ -1,8 +1,6 @@
 from rest_framework import viewsets
 from rest_framework import permissions
 from api.models.profile import Profile
-from api.models.rating import Rating
-from api.models.following import Following
 from api.permission import IsOwnerOrReadOnly
 from api.serializers.profile import ProfileFullSerializer
 from api.serializers.profile import ProfileBasicSerializer
@@ -13,7 +11,6 @@ from django.http import FileResponse
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
-from django.db.models import Avg
 import os
 
 
@@ -83,24 +80,3 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
         self.perform_update(serializer)
         return Response(serializer.data)
-
-    @action(detail=True, methods=['get'])
-    def retrieve_rating(self, request, pk=None):
-        to_profile = self.get_object()
-        is_public = to_profile.is_public
-        if self.request.user.is_anonymous:
-            is_following = False
-        else:
-            is_following = Following.objects. \
-                filter(from_user=self.request.user,
-                       to_user=to_profile.owner).exists()
-
-        if is_public or is_following or \
-                self.request.user.id == to_profile.owner.id:
-            ratings = Rating.objects.filter(to_user__exact=to_profile.owner)
-            rating = ratings.aggregate(Avg('rating'))
-            return Response(rating)
-        else:
-            return Response(data={
-                'error': 'Unauthorized'
-            }, status=status.HTTP_401_UNAUTHORIZED)

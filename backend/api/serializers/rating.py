@@ -6,6 +6,8 @@ class RatingSerializer(serializers.ModelSerializer):
     """
     Rating serializer
     """
+    created = serializers.DateTimeField(read_only=True)
+
     class Meta:
         model = Rating
         fields = '__all__'

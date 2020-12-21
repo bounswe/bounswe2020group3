@@ -119,7 +119,4 @@ class RatingPermission(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        if view.action in ['destroy', 'update', 'partial_update']:
-            return request.user == obj.from_user
-
-        return True
+        return request.user == obj.from_user

@@ -9,13 +9,12 @@ from api.serializers.rating import RatingSerializer, RatingUpdateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework import status
-from django.db.models import Q
 
 
 class RatingViewSet(viewsets.ModelViewSet):
     """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
+    Users can read, update, partial_update or delete only the
+    ratings that themselves created.
     """
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
@@ -34,6 +33,9 @@ class RatingViewSet(viewsets.ModelViewSet):
         serializer.save(from_user=self.request.user)
 
     def create(self, request, *args, **kwargs):
+        '''
+        The from_user field is automatically the requesting user.
+        '''
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.validated_data['from_user'] = self.request.user
@@ -57,37 +59,17 @@ class RatingViewSet(viewsets.ModelViewSet):
                 'error': 'Unauthorized'
             }, status=status.HTTP_401_UNAUTHORIZED)
 
-    def retrieve(self, request, *args, **kwargs):
-        self.accessed_rating = self.get_object()
-        serializer = self.get_serializer(self.accessed_rating)
-
-        to_user = self.accessed_rating.to_user
-        is_public = Profile.objects.get(owner=to_user).is_public
-        if self.request.user.is_anonymous:
-            is_following = False
-        else:
-            is_following = Following.objects. \
-                filter(from_user=self.request.user,
-                       to_user=to_user).exists()
-
-        if is_public or is_following or \
-                self.request.user.id == to_user.id:
-            return Response(serializer.data)
-        else:
-            return Response(data={
-                'error': 'Unauthorized'
-            }, status=status.HTTP_401_UNAUTHORIZED)
-
     def list(self, request, *args, **kwargs):
+        '''
+        Users can only see the ratings they created.
+        '''
         user = request.user
         queryset = self.filter_queryset(self.get_queryset())
         if user.is_anonymous:
-            queryset = queryset.filter(to_user__profile__is_public__exact=True)
+            queryset = []
         elif not user.is_staff:
             queryset = queryset. \
-                       filter(Q(to_user__profile__is_public__exact=True) |
-                              Q(to_user__exact=user.id) |
-                              Q(to_user__followers__exact=user.id))
+                       filter(from_user__exact=user.id)
 
         page = self.paginate_queryset(queryset)
         if page is not None:

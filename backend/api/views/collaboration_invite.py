@@ -11,6 +11,7 @@ from api.permission import CollaborationPermissions
 from django.shortcuts import get_object_or_404
 from api.models.project import Project
 from django.contrib.auth.models import User
+from notifications.signals import notify
 
 
 class CollaborationInviteViewSet(viewsets.ModelViewSet):
@@ -38,7 +39,17 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
         if (project.state == 'open for collaborators' or
             project.state == 'inviting collaborators') and \
                 self.request.user.id != to_user.id:
-            CollaborationInvite.objects.create(**serializer.validated_data)
+            invite = CollaborationInvite.objects.create(**serializer.validated_data)
+
+            ''' Invite Notification '''
+            ''' Target --> Invite '''
+            notify.send(sender=self.request.user,
+                        verb="invited you to the Project \"{}\"".format(project.name),
+                        recipient=to_user,
+                        target=invite,
+                        description="Invite"
+                        )
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(data={
@@ -52,6 +63,16 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
             CollaborationInvite, pk=pk)
         if collaboration_invite.to_user == self.request.user:
             collaboration_invite.accept()
+
+            ''' Accept Invite Notification '''
+            ''' Target --> Project'''
+            project = Project.objects.get(id=collaboration_invite.to_project_id)
+            notify.send(sender=self.request.user,
+                        verb="accepted your invitation to Project \"{}\"".format(project.name),
+                        recipient=collaboration_invite.from_user,
+                        target=project,
+                        description="Project"
+                        )
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data={
@@ -66,6 +87,16 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
             CollaborationInvite, pk=pk)
         if collaboration_invite.to_user == self.request.user:
             collaboration_invite.reject()
+
+            ''' Reject Invite Notification '''
+            ''' Target --> Project'''
+            project = Project.objects.get(id=collaboration_invite.to_project_id)
+            notify.send(sender=self.request.user,
+                        verb="rejected your invitation to Project {}".format(project.name),
+                        recipient=collaboration_invite.from_user,
+                        target=project,
+                        description="Project"
+                        )
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data={

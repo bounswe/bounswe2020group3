@@ -10,6 +10,8 @@ from rest_framework import status
 from api.permission import CollaborationPermissions
 from django.shortcuts import get_object_or_404
 from api.models.project import Project
+from django.contrib.auth.models import User
+from notifications.signals import notify
 
 
 class CollaborationRequestViewSet(viewsets.ModelViewSet):
@@ -37,7 +39,17 @@ class CollaborationRequestViewSet(viewsets.ModelViewSet):
         serializer.validated_data['to_project'] = project
         if project.state == 'open for collaborators' and \
                 self.request.user.id != project.owner.id:
-            CollaborationRequest.objects.create(**serializer.validated_data)
+            request = CollaborationRequest.objects.create(**serializer.validated_data)
+
+            ''' Request Notification '''
+            ''' Target --> Request '''
+            user = User.objects.get(username=project.owner)
+            notify.send(sender=self.request.user,
+                        verb="wants to join your Project {}".format(project.name),
+                        recipient=user,
+                        target=request,
+                        description="Request"
+                        )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(data={
@@ -51,6 +63,17 @@ class CollaborationRequestViewSet(viewsets.ModelViewSet):
             CollaborationRequest, pk=pk)
         if collaboration_request.to_user == self.request.user:
             collaboration_request.accept()
+
+            ''' Accept Request Notification '''
+            ''' target --> Project '''
+            project = Project.objects.get(id=collaboration_request.to_project_id)
+            notify.send(sender=self.request.user,
+                        verb="accepted your request for Project {}".format(project.name),
+                        recipient=collaboration_request.from_user,
+                        target=project,
+                        description="Project"
+                        )
+
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data={
@@ -64,6 +87,16 @@ class CollaborationRequestViewSet(viewsets.ModelViewSet):
             CollaborationRequest, pk=pk)
         if collaboration_request.to_user == self.request.user:
             collaboration_request.reject()
+
+            ''' Accept Request Notification '''
+            ''' Target --> Project'''
+            project = Project.objects.get(id=collaboration_request.to_project_id)
+            notify.send(sender=self.request.user,
+                        verb="rejected your request for Project {}".format(project.name),
+                        recipient=collaboration_request.from_user,
+                        target=project,
+                        description="Project"
+                        )
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data={

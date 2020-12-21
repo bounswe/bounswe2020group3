@@ -7,6 +7,11 @@ from api.serializers.project import ProjectGETPublicSerializer
 from api.serializers.project import ProjectPrivateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
+from notifications.signals import notify
+from rest_framework.generics import get_object_or_404
+from api.serializers.user import User, UserBasicSerializer
+from api.models.project import Project
+from rest_framework import status
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -47,3 +52,14 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return ProjectPrivateSerializer
         else:
             return ProjectPublicSerializer
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super().dispatch(request, *args, **kwargs)
+        if self.action == 'create':
+            project = Project.objects.get(id=response.data['id'])
+            notify.send(sender=self.request.user,
+                        verb="created a new Project {}".format(response.data['name']),
+                        recipient=self.request.user,
+                        target=project,
+                        description='Project')
+        return response

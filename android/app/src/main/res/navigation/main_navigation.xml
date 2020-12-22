@@ -118,6 +118,11 @@
             app:destination="@id/projectCreateFragment" />
     </fragment>
     <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.bounswe2020group3.paperlayer.search.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
         android:id="@+id/userListFragment"
         android:name="com.bounswe2020group3.paperlayer.profile.list.UserListFragment"
         android:label="User List"
@@ -173,5 +178,4 @@
             android:id="@+id/navigateToEventsFromProjectUpdates"
             app:destination="@id/eventFragment" />
     </fragment>
-
 </navigation>

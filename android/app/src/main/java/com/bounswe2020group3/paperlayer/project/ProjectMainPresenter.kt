@@ -50,8 +50,8 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectMainCon
         val getProjectObservable = model.getAllProjectsOfOwner(ownerId).subscribe(
                 { projectList ->
                     for (project in projectList){
-                        this.view?.addProjectCard(project.name,project.description,project.owner,project.id,project.project_type)
-                        this.view?.writeLogMessage("i",TAG,"Project Fetched + " + project.project_type)
+                        this.view?.addProjectCard(project.name,project.description,project.owner,project.id,"Project")
+                        this.view?.writeLogMessage("i",TAG,"Project Fetched + " )//+ project.project_type)
                     }
                     this.view?.writeLogMessage("i",TAG,"Fetching finished.")
                     this.view?.submitProjectCardList()

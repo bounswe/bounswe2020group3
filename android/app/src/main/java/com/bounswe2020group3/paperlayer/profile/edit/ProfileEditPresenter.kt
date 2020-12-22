@@ -20,7 +20,7 @@ class ProfileEditPresenter @Inject constructor(private var model: ProfileContrac
     }
 
     override fun subscribeUser() {
-        val userSub = model.getUser().subscribe { user ->
+        val userSub = model.getAuthUser().subscribe { user ->
             view?.updateProfileUI(user)
             this.userData = user
         }
@@ -31,7 +31,7 @@ class ProfileEditPresenter @Inject constructor(private var model: ProfileContrac
         Log.d("Dagger", "Profile Presenter: $model")
         view?.showLoading()
         try {
-            val fetchSub = model.fetchUser().subscribe(
+            val fetchSub = model.fetchAuthUser().subscribe(
                     {
                         view?.hideLoading()
                     },
@@ -53,7 +53,7 @@ class ProfileEditPresenter @Inject constructor(private var model: ProfileContrac
     }
 
     override fun updateProfile(updatedProfile: Profile) {
-        val getProfileObservable = model.updateUserProfile(updatedProfile).subscribe(
+        val getProfileObservable = model.updateAuthUserProfile(updatedProfile).subscribe(
                 { profile ->
                     view?.updateProfileUIWithProfile(profile)
                     view?.navigateBack()

@@ -8,8 +8,9 @@ function DateComponent(props) {
     var currentDate = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
 
     const handleDate = (date) => {
-        
-        let dateString = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
+        let month = (parseInt(date.getMonth())+1).toString()
+        if(month.length === 1){ month = "0"+month; }
+        let dateString = date.getFullYear() + "-" + month + "-" + date.getDate();
         handleDateChange(date);
         props.handleDateChange(dateString);        
     }

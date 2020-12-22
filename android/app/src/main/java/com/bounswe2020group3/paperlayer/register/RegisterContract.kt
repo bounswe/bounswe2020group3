@@ -1,11 +1,8 @@
 package com.bounswe2020group3.paperlayer.register
 
-import com.bounswe2020group3.paperlayer.base.BaseView
 import com.bounswe2020group3.paperlayer.mvp.Mvp
-import com.bounswe2020group3.paperlayer.profile.data.Profile
 import com.bounswe2020group3.paperlayer.register.data.Register
 import io.reactivex.Single
-import retrofit2.Call
 import retrofit2.http.*
 
 interface RegisterContract {

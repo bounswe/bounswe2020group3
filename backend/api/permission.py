@@ -42,7 +42,7 @@ class IsRequestSenderOrReceiver(permissions.BasePermission):
         # so we'll always allow GET, HEAD or OPTIONS requests.
         if request.method in permissions.SAFE_METHODS:
             return request.user.id == obj.req_from_user.id \
-                   or request.user.id == obj.req_to_user.id
+                or request.user.id == obj.req_to_user.id
 
         # Write permissions are only allowed to the members of the snippet.
         return request.user.id == obj.req_from_user
@@ -90,8 +90,23 @@ class CollaborationPermissions(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if view.action in ['retrieve', 'list']:
-            return request.user == obj.req_to_user or \
-                   request.user == obj.req_from_user
+            return request.user == obj.to_user or \
+                request.user == obj.from_user
         elif view.action in ['update', 'partial_update', 'destroy']:
-            return request.user == obj.req_from_user
+            return request.user == obj.from_user
+        return True
+
+
+class ProfileDeletion(permissions.BasePermission):
+    """
+    Custom permission to only allow members of an object to edit it.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        if view.action in ['destroy']:
+            if request.user.is_staff:
+                return True
+            else:
+                return False
+
         return True

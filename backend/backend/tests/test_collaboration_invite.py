@@ -53,6 +53,29 @@ class CollaborationInviteTests(APITestCase):
             {'to_user__id': self.invited_user.id})
         self.assertEqual(response.content.decode('utf-8'), '[]')
 
+    def test_can_delete_collaboration_invite(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.post('/api/collaboration_invites/',
+                                    {'to_project': self.project.id,
+                                     'to_user': self.invited_user.id},
+                                    format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.client.force_authenticate(user=self.invited_user)
+        response = self.client.get(
+            '/api/collaboration_invites/',
+            {'to_user__id': self.invited_user.id})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotEqual(response.content.decode('utf-8'), '[]')
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.delete(
+            '/api/collaboration_invites/1/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.client.force_authenticate(user=self.invited_user)
+        response = self.client.get(
+            '/api/collaboration_invites/',
+            {'to_user__id': self.invited_user.id})
+        self.assertEqual(response.content.decode('utf-8'), '[]')
+
     def test_can_not_invite_self(self):
         self.client.force_authenticate(user=self.owner)
         response = self.client.post('/api/collaboration_invites/',

@@ -1,7 +1,8 @@
 from rest_framework import viewsets
 from rest_framework import permissions
 from api.models.profile import Profile
-from api.permission import IsOwnerOrReadOnly
+from api.models.following import Following
+from api.permission import IsOwnerOrReadOnly, ProfileDeletion
 from api.serializers.profile import ProfileFullSerializer
 from api.serializers.profile import ProfileBasicSerializer
 from api.serializers.profile import ProfilePrivateSerializer
@@ -22,7 +23,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     queryset = Profile.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly]
+                          IsOwnerOrReadOnly, ProfileDeletion]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['owner__id']
 
@@ -37,12 +38,21 @@ class ProfileViewSet(viewsets.ModelViewSet):
         is_list = self.action == 'list'
         if this_user.is_staff:
             return ProfileFullSerializer
-        elif is_get and self.accessed_profile.owner == this_user:
-            return ProfileFullSerializer
-        elif is_get and self.accessed_profile.is_public:
-            return ProfileBasicSerializer
-        elif is_get and not self.accessed_profile.is_public:
-            return ProfilePrivateSerializer
+        elif is_get:
+            is_public = self.accessed_profile.is_public
+            if this_user.is_anonymous:
+                is_following = False
+            else:
+                is_following = \
+                    Following.objects. \
+                    filter(from_user=this_user,
+                           to_user=self.accessed_profile.owner).exists()
+            if self.accessed_profile.owner == this_user:
+                return ProfileFullSerializer
+            elif is_public or is_following:
+                return ProfileBasicSerializer
+            else:
+                return ProfilePrivateSerializer
         elif is_list:
             return ProfilePrivateSerializer
         else:

@@ -4,7 +4,8 @@ from api.serializers.following import FollowerSerializer,\
     IncomingFollowRequestSerializer
 from api.serializers.following import FollowingSerializer
 
-from api.serializers.profile import ProfileFullSerializer
+from api.serializers.profile import ProfileFullSerializer, \
+    ProfileBasicSerializer, ProfilePrivateSerializer
 
 
 class UserFullSerializer(serializers.ModelSerializer):
@@ -28,10 +29,20 @@ class UserBasicSerializer(serializers.ModelSerializer):
     """
     following = FollowerSerializer(many=True)
     followers = FollowingSerializer(many=True)
-    follow_requests = IncomingFollowRequestSerializer(many=True)
-    profile = ProfileFullSerializer(many=True, read_only=True)
+    profile = ProfileBasicSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
         fields = ['id', 'username', 'profile',
-                  'following', 'followers', 'follow_requests']
+                  'following', 'followers']
+
+
+class UserPrivateSerializer(serializers.ModelSerializer):
+    """
+    User serializer for users.
+    """
+    profile = ProfilePrivateSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'profile']

@@ -16,10 +16,10 @@ interface FollowContract {
     }
 
     interface Model {
-        fun sendFollow(userId: Int?, toUserId: Int): Observable<Any>
+        fun sendFollow(toUserId: Int): Observable<Any>
         fun getFollowerList(userId: Int?): Observable<List<Follow>>
         fun getFollowingList(userId: Int?): Observable<List<Follow>>
-        fun sendFollowRequest(userId: Int?, toUserId: Int): Observable<Any>
+        fun sendFollowRequest(toUserId: Int): Observable<Any>
         fun getFollowRequestList(userId: Int?): Observable<List<FollowRequest>>
         fun acceptFollowRequest(followRequestId: Int): Observable<Any>
         fun rejectFollowRequest(followRequestId: Int): Observable<Any>

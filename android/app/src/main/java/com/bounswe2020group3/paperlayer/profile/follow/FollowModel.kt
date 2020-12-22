@@ -32,10 +32,10 @@ class FollowModel @Inject constructor(
         return safeUserId
     }
 
-    override fun sendFollow(userId: Int?, toUserId: Int): Observable<Any> {
-        val safeUserId = getSafeUserId(userId)
+    override fun sendFollow(toUserId: Int): Observable<Any> {
+        val userId = getAuthToken().id
         val followRequestCreate = FollowCreate(
-            fromUser = safeUserId,
+            fromUser = userId,
             toUser = toUserId
         )
         val authorization = "Token ${getAuthToken().token}"
@@ -60,10 +60,10 @@ class FollowModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun sendFollowRequest(userId: Int?, toUserId: Int): Observable<Any> {
-        val safeUserId = getSafeUserId(userId)
+    override fun sendFollowRequest(toUserId: Int): Observable<Any> {
+        val userId = getAuthToken().id
         val followRequestCreate = FollowRequestCreate(
-            requestFromUser = safeUserId,
+            requestFromUser = userId,
             requestToUser = toUserId
         )
         val authorization = "Token ${getAuthToken().token}"

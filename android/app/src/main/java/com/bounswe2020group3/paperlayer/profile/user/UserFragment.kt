@@ -21,7 +21,7 @@ class UserFragment : Fragment(), UserContract.View {
 
     @Inject lateinit var presenter: UserContract.Presenter
 
-    private var userID: Int? = null
+    private var userID: Int? = -1
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -47,8 +47,8 @@ class UserFragment : Fragment(), UserContract.View {
 
     override fun onResume() {
         super.onResume()
-        if(userID != null) {
-            presenter.loadUser(userID!!.toInt())
+        if(userID != null && userID!! > 0) {
+            presenter.loadUser(userID!!)
         } else {
             showErrorToast("User id is invalid. Please try again.")
             navigateBack()

@@ -58,6 +58,9 @@
         <action
             android:id="@+id/navigateToUserListFromProfile"
             app:destination="@id/userListFragment" />
+        <action
+            android:id="@+id/navigateToFollowListFromProfile"
+            app:destination="@id/followListFragment" />
     </fragment>
 
     <fragment
@@ -168,5 +171,13 @@
         <action
             android:id="@+id/navigateToEventsFromProjectUpdates"
             app:destination="@id/eventFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/followListFragment"
+        android:name="com.bounswe2020group3.paperlayer.profile.follow.FollowListFragment"
+        android:label="FollowListFragment" >
+        <action
+            android:id="@+id/navigateToUserFromFollowList"
+            app:destination="@id/userFragment" />
     </fragment>
 </navigation>

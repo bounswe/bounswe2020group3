@@ -61,6 +61,8 @@ class FollowRequestViewSet(viewsets.ModelViewSet):
                           IsRequestSenderOrReceiver)
     serializer_class = FollowRequestSerializer
     queryset = FollowRequest.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['req_to_user']
 
     def perform_create(self, serializer):
         serializer.save(from_user=self.request.user)

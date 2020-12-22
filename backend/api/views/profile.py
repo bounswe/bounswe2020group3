@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework import status
 import os
 from rest_framework.parsers import MultiPartParser, FormParser
-
+from api.utils import get_is_following
 
 class ProfileViewSet(viewsets.ModelViewSet):
     """
@@ -39,13 +39,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
             return ProfileFullSerializer
         elif is_get:
             is_public = self.accessed_profile.is_public
-            if this_user.is_anonymous:
-                is_following = False
-            else:
-                is_following = \
-                    Following.objects. \
-                    filter(from_user=this_user,
-                           to_user=self.accessed_profile.owner).exists()
+            accessed_user = self.accessed_profile.owner
+            is_following = get_is_following(this_user, accessed_user)
             if self.accessed_profile.owner == this_user:
                 return ProfileFullSerializer
             elif is_public or is_following:
@@ -70,7 +65,11 @@ class ProfilePictureViewSet(viewsets.GenericViewSet):
 
     def retrieve(self, request, pk=None):
         picture = self.get_object().profile_picture
-        return FileResponse(picture)
+        if picture:
+            return FileResponse(picture)
+        else:
+            return Response("Profile picture is not found.",
+                            status.HTTP_404_NOT_FOUND)
 
     def update(self, request, pk=None):
         data = {"profile_picture": request.data["profile_picture"]}

@@ -13,6 +13,8 @@ import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.data.user.User
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_user.*
+import kotlinx.android.synthetic.main.fragment_user.imageViewProfileAvatar
+import kotlinx.android.synthetic.main.fragment_user_item.*
 import javax.inject.Inject
 
 private const val ARG_USER_ID = "userID"
@@ -91,14 +93,57 @@ class UserFragment : Fragment(), UserContract.View {
     override fun updateProfileUI(user: User) {
         val profile = user.profile[0]
         val fullName = "${profile.name} ${profile.lastName}"
-
-        textViewEmail.text = user.email
         textViewFullName.text = fullName
-        textViewBio.text = profile.bio
-        textViewBirthday.text = profile.birthday.toString()
-        textViewGender.text = profile.gender
-        textViewInterests.text = profile.interests
-        textViewExpertise.text = profile.expertise
+
+        if(profile.is_public!! || user.isFollowing) {
+            // Public or following profile
+
+            // Layouts
+            layoutUserStatsWrapper.visibility = View.VISIBLE
+            layoutUserInformationWrapper.visibility = View.VISIBLE
+            layoutUserPrivateWrapper.visibility = View.GONE
+
+            // Bio
+            if(profile.bio == null || profile.bio == "") {
+                layoutUserBioWrapper.visibility = View.GONE
+            } else {
+                layoutUserBioWrapper.visibility = View.VISIBLE
+                textViewBio.text = profile.bio
+            }
+
+            // Text Views
+            textViewEmail.text = user.email
+            textViewBirthday.text = profile.birthday.toString()
+            textViewGender.text = profile.gender
+            textViewInterests.text = profile.interests
+            textViewExpertise.text = profile.expertise
+
+            // Buttons
+            buttonUserRequestSent.visibility = View.GONE
+            if(user.isFollowing) {
+                buttonUserFollow.visibility = View.GONE
+                buttonUserUnfollow.visibility = View.VISIBLE
+            } else {
+                buttonUserFollow.visibility = View.VISIBLE
+                buttonUserUnfollow.visibility = View.GONE
+            }
+        } else {
+            // Private Profile
+            layoutUserStatsWrapper.visibility = View.GONE
+            layoutUserBioWrapper.visibility = View.GONE
+            layoutUserInformationWrapper.visibility = View.GONE
+            layoutUserPrivateWrapper.visibility = View.VISIBLE
+
+            // Buttons
+            buttonUserUnfollow.visibility = View.GONE
+            if(user.isFollowRequestSent) {
+                buttonUserRequestSent.visibility = View.VISIBLE
+                buttonUserFollow.visibility = View.GONE
+            } else {
+                buttonUserRequestSent.visibility = View.GONE
+                buttonUserFollow.visibility = View.VISIBLE
+            }
+        }
 
         val imageUrl = profile.profile_picture
         if(imageUrl != null && imageUrl.contains("http")) {

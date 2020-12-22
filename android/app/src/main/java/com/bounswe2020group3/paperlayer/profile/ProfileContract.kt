@@ -39,7 +39,7 @@ interface ProfileContract {
         fun updateProfile(@Header("Authorization") authorization: String, @Path("profileId") profileId: Int, @Body updatedProfile: Profile): Single<Profile>
 
         @GET("/api/users/{userId}/")
-        fun getUser(@Path("userId") userId: Int): Single<User>
+        fun getUser(@Header("Authorization") authorization: String, @Path("userId") userId: Int): Single<User>
 
         @GET("/api/users/")
         fun getUserList(): Observable<List<User>>

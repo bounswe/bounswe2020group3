@@ -2,7 +2,7 @@ package com.bounswe2020group3.paperlayer.profile
 
 import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
 import com.bounswe2020group3.paperlayer.network.RetrofitProvider
-import com.bounswe2020group3.paperlayer.profile.data.Profile
+import com.bounswe2020group3.paperlayer.data.user.Profile
 import com.bounswe2020group3.paperlayer.data.user.User
 import com.bounswe2020group3.paperlayer.util.Session
 import io.reactivex.Observable

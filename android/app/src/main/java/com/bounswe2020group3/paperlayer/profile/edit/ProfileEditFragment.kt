@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.profile.data.Profile
+import com.bounswe2020group3.paperlayer.data.user.Profile
 import com.bounswe2020group3.paperlayer.data.user.User
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.squareup.picasso.Picasso

@@ -1,6 +1,5 @@
 package com.bounswe2020group3.paperlayer.data.user
 
-import com.bounswe2020group3.paperlayer.profile.data.Profile
 import com.squareup.moshi.Json
 
 data class User (

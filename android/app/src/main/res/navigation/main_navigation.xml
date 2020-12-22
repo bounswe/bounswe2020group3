@@ -186,5 +186,8 @@
         <action
             android:id="@+id/navigateToUserFromFollowList"
             app:destination="@id/userFragment" />
+        <action
+            android:id="@+id/navigateToProfileFromFollowList"
+            app:destination="@id/profileFragment" />
     </fragment>
 </navigation>

@@ -99,9 +99,14 @@ class FollowListFragment : Fragment(), FollowContract.View, OnUserClickListener 
     }
 
     override fun onUserClick(user: User) {
-        val bundle = bundleOf("userID" to user.id)
-        Navigation.findNavController(requireView())
-            .navigate(R.id.navigateToUserFromFollowList, bundle)
+        if (presenter.isUserAuthenticatedUser(user.id)) {
+            Navigation.findNavController(requireView())
+                .navigate(R.id.navigateToProfileFromFollowList)
+        } else {
+            val bundle = bundleOf("userID" to user.id)
+            Navigation.findNavController(requireView())
+                .navigate(R.id.navigateToUserFromFollowList, bundle)
+        }
     }
 
 }

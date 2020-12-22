@@ -34,4 +34,8 @@ class FollowListPresenter @Inject constructor(private val followModel: FollowMod
         disposable.add(followListSub)
     }
 
+    override fun isUserAuthenticatedUser(userId: Int): Boolean {
+        return followModel.getAuthToken().id == userId
+    }
+
 }

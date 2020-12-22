@@ -1,6 +1,7 @@
 package com.bounswe2020group3.paperlayer.profile.follow
 
 import com.bounswe2020group3.paperlayer.data.follow.*
+import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import io.reactivex.Observable
 import retrofit2.http.*
@@ -8,6 +9,7 @@ import retrofit2.http.*
 interface FollowContract {
     interface Presenter : Mvp.Presenter<View> {
         fun loadFollowList(userId: Int?, type: FollowType?)
+        fun isUserAuthenticatedUser(userId: Int): Boolean
     }
 
     interface View : Mvp.View {
@@ -16,6 +18,7 @@ interface FollowContract {
     }
 
     interface Model {
+        fun getAuthToken(): AuthToken
         fun sendFollow(toUserId: Int): Observable<Any>
         fun getFollowerList(userId: Int?): Observable<List<Follow>>
         fun getFollowingList(userId: Int?): Observable<List<Follow>>

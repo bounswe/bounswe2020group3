@@ -21,7 +21,7 @@ class FollowModel @Inject constructor(
     private var followService: FollowContract.Service =
         retrofit.create(FollowContract.Service::class.java)
 
-    private fun getAuthToken(): AuthToken {
+    override fun getAuthToken(): AuthToken {
         return sessionManager.getToken().value ?: throw Exception("No user found")
     }
 

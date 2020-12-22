@@ -24,6 +24,7 @@ class UserFragment : Fragment(), UserContract.View {
     @Inject lateinit var presenter: UserContract.Presenter
 
     private var userID: Int? = -1
+    private var isFollowRequest = true
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -47,14 +48,23 @@ class UserFragment : Fragment(), UserContract.View {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        buttonUserFollow.setOnClickListener {
+            if(this.userID != null && this.userID!! > 0) {
+                if(this.isFollowRequest) {
+                    presenter.sendFollowRequest(userID!!)
+                } else {
+                    presenter.sendFollow(userID!!)
+                }
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
-        if(userID != null && userID!! > 0) {
-            presenter.loadUser(userID!!)
-        } else {
-            showErrorToast("User id is invalid. Please try again.")
-            navigateBack()
-        }
+        this.loadUser()
     }
 
     companion object {
@@ -97,6 +107,8 @@ class UserFragment : Fragment(), UserContract.View {
 
         if(profile.is_public!! || user.isFollowing) {
             // Public or following profile
+            // Private Profile
+            this.isFollowRequest = false
 
             // Layouts
             layoutUserStatsWrapper.visibility = View.VISIBLE
@@ -129,6 +141,8 @@ class UserFragment : Fragment(), UserContract.View {
             }
         } else {
             // Private Profile
+            this.isFollowRequest = true
+
             layoutUserStatsWrapper.visibility = View.GONE
             layoutUserBioWrapper.visibility = View.GONE
             layoutUserInformationWrapper.visibility = View.GONE
@@ -148,6 +162,15 @@ class UserFragment : Fragment(), UserContract.View {
         val imageUrl = profile.profile_picture
         if(imageUrl != null && imageUrl.contains("http")) {
             Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
+        }
+    }
+
+    override fun loadUser() {
+        if(userID != null && userID!! > 0) {
+            presenter.loadUser(userID!!)
+        } else {
+            showErrorToast("User id is invalid. Please try again.")
+            navigateBack()
         }
     }
 

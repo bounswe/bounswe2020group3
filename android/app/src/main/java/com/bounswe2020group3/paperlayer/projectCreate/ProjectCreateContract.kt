@@ -1,6 +1,7 @@
 package com.bounswe2020group3.paperlayer.projectCreate
 
 import com.bounswe2020group3.paperlayer.mvp.Mvp
+import com.bounswe2020group3.paperlayer.project.data.Project
 import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -20,11 +21,11 @@ interface ProjectCreateContract {
     }
 
     interface Model {
-        fun createProject(projectCreateRequest: ProjectCreateRequest): Single<ProjectCreateResponse>
+        fun createProject(projectCreateRequest: ProjectCreateRequest): Single<Project>
     }
 
     interface ProjectCreateService {
         @POST("/api/projects/")
-        fun createProject(@Header("Authorization") authorization: String, @Body projectCreateRequest: ProjectCreateRequest): Single<ProjectCreateResponse>
+        fun createProject(@Header("Authorization") authorization: String, @Body projectCreateRequest: ProjectCreateRequest): Single<Project>
     }
 }

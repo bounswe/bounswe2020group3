@@ -11,7 +11,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface       ProjectMainContract {
+interface       ProjectsContract {
 
     interface Presenter: Mvp.Presenter<View> {
         fun setView(view: View)

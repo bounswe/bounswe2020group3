@@ -4,7 +4,6 @@ package com.bounswe2020group3.paperlayer.project
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.login.LoginContract
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -12,12 +11,12 @@ import javax.inject.Inject
 
 private const val TAG = "ProjectMainPresenter"
 
-class ProjectMainPresenter @Inject constructor(private var model: ProjectMainContract.Model) : BasePresenter<ProjectMainContract.View>(),ProjectMainContract.Presenter {
+class ProjectMainPresenter @Inject constructor(private var model: ProjectsContract.Model) : BasePresenter<ProjectsContract.View>(),ProjectsContract.Presenter {
 
     //Disposable
     private var disposable = CompositeDisposable()
 
-    override fun bind(view: ProjectMainContract.View) {
+    override fun bind(view: ProjectsContract.View) {
         super.bind(view)
         this.view?.writeLogMessage("i",TAG,"Project Main Presenter Created")
         subscribeAuthToken()
@@ -29,7 +28,7 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectMainCon
     }
 
     //set project main fragment as a view of main project presenter
-    override fun setView(view: ProjectMainContract.View) {
+    override fun setView(view: ProjectsContract.View) {
         this.view =view
     }
 

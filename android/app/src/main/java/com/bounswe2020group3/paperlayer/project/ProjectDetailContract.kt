@@ -4,7 +4,7 @@ import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.project.data.Project
 import io.reactivex.Single
 
-interface ProjectContract {
+interface ProjectDetailContract {
 
     interface Presenter : Mvp.Presenter<View>{
         fun setView(view: View)

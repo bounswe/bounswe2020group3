@@ -13,9 +13,9 @@ import io.reactivex.subjects.BehaviorSubject
 import retrofit2.Retrofit
 import javax.inject.Inject
 
-class ProjectModel @Inject constructor(private var sessionManager: Session,retrofit: Retrofit):ProjectMainContract.Model,ProjectContract.Model{
+class ProjectModel @Inject constructor(private var sessionManager: Session,retrofit: Retrofit):ProjectsContract.Model,ProjectDetailContract.Model{
 
-    private var projectService: ProjectMainContract.ProjectService = retrofit.create(ProjectMainContract.ProjectService::class.java)
+    private var projectService: ProjectsContract.ProjectService = retrofit.create(ProjectsContract.ProjectService::class.java)
 
     //ProjectContract.Model
     //Get given project

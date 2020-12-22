@@ -54,12 +54,13 @@ class UserListFragment : Fragment(), UserListContract.View, OnUserClickListener 
             view.adapter = userListAdapter
         }
 
+        this.presenter.loadUserList()
+
         return view
     }
 
     override fun onResume() {
         super.onResume()
-        this.presenter.loadUserList()
     }
 
     companion object {
@@ -74,6 +75,7 @@ class UserListFragment : Fragment(), UserListContract.View, OnUserClickListener 
     }
 
     override fun updateUserListUI(userList: List<User>) {
+        this.userList.clear()
         this.userList.addAll(userList)
         userListAdapter.notifyDataSetChanged()
     }

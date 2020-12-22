@@ -89,6 +89,7 @@ class FollowListFragment : Fragment(), FollowContract.View, OnUserClickListener 
     }
 
     override fun updateFollowListUI(followList: List<Follow>) {
+        this.followList.clear()
         this.followList.addAll(followList)
         followListAdapter.notifyDataSetChanged()
     }
@@ -100,7 +101,7 @@ class FollowListFragment : Fragment(), FollowContract.View, OnUserClickListener 
     override fun onUserClick(user: User) {
         val bundle = bundleOf("userID" to user.id)
         Navigation.findNavController(requireView())
-            .navigate(R.id.navigateToUserFromUserList, bundle)
+            .navigate(R.id.navigateToUserFromFollowList, bundle)
     }
 
 }

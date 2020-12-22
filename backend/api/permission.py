@@ -119,10 +119,7 @@ class CommentPermission(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        if view.action in ['destroy']:
-            return request.user == obj.to_user or \
-                   request.user == obj.from_user
-        elif view.action in ['update', 'partial_update']:
+        if view.action in ['destroy', 'update', 'partial_update']:
             return request.user == obj.from_user
 
         return True

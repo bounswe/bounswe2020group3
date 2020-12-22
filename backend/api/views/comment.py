@@ -1,6 +1,7 @@
 from api.models.comment import Comment
 from api.models.profile import Profile
 from api.models.following import Following
+from api.models.project import Project
 from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -47,7 +48,11 @@ class CommentViewSet(viewsets.ModelViewSet):
             filter(from_user=self.request.user,
                    to_user=to_user).exists()
 
-        if (is_public or is_following) and \
+        is_collaborator = Project.objects. \
+            filter(Q(members__exact=self.request.user) &
+                   Q(members__exact=to_user)).exists()
+
+        if (is_public or is_following) and is_collaborator and \
                 self.request.user.id != to_user.id:
             Comment.objects.create(**serializer.validated_data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)

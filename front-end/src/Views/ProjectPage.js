@@ -203,7 +203,8 @@ export default class EditProjectPage extends Component {
               </Grid>
               <Grid item sm={9} style={{ maxHeight:"40vh",minHeight: "20vh"}}>
                 <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.goToEditProjectPage(project_id)}>Edit Project</Button>
-                <Button variant="contained" color="primary" 
+                <br/>
+                <Button variant="contained" color="primary" style={{marginTop:"10px"}}
                 onClick={() => { this.props.history.push("/issue-milestone", {projectId: this.state.projectId }); } }>Set New Milestone</Button>
               </Grid>
               

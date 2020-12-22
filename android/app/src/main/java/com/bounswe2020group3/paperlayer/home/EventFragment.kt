@@ -119,6 +119,7 @@ class EventFragment : Fragment(), HomeContract.EventView {
         super.onAttach(context)
         (context as MainActivity).getAppComponent().inject(this)
         mContext=context
+        context.showBottomNav()
     }
     override fun onDestroy() {
         super.onDestroy()

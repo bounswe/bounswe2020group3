@@ -2,6 +2,7 @@ package com.bounswe2020group3.paperlayer
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity(){
 
         navController = findNavController(R.id.fragment)
         val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.mainFragment, R.id.projectMainFragment, R.id.profileFragment,R.id.searchFragment
+            R.id.eventFragment, R.id.projectMainFragment, R.id.profileFragment,R.id.searchFragment
         ))
         setupActionBarWithNavController(navController, appBarConfiguration)
 
@@ -40,4 +41,12 @@ class MainActivity : AppCompatActivity(){
     }
 
     fun getAppComponent() = appComponent
+
+    fun hideBottomNav() {
+        navigationBarBottom.visibility = View.GONE
+    }
+
+    fun showBottomNav() {
+        navigationBarBottom.visibility = View.VISIBLE
+    }
 }

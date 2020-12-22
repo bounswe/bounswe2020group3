@@ -13,15 +13,6 @@ import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.profile.data.User
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_user.*
-import kotlinx.android.synthetic.main.fragment_user.imageViewProfileAvatar
-import kotlinx.android.synthetic.main.fragment_user.progressBarUser
-import kotlinx.android.synthetic.main.fragment_user.textViewAge
-import kotlinx.android.synthetic.main.fragment_user.textViewBio
-import kotlinx.android.synthetic.main.fragment_user.textViewEmail
-import kotlinx.android.synthetic.main.fragment_user.textViewExpertise
-import kotlinx.android.synthetic.main.fragment_user.textViewFullName
-import kotlinx.android.synthetic.main.fragment_user.textViewGender
-import kotlinx.android.synthetic.main.fragment_user.textViewInterests
 import javax.inject.Inject
 
 private const val ARG_USER_ID = "userID"
@@ -104,7 +95,7 @@ class UserFragment : Fragment(), UserContract.View {
         textViewEmail.text = user.email
         textViewFullName.text = fullName
         textViewBio.text = profile.bio
-        textViewAge.text = profile.birthday.toString()
+        textViewBirthday.text = profile.birthday.toString()
         textViewGender.text = profile.gender
         textViewInterests.text = profile.interests
         textViewExpertise.text = profile.expertise

@@ -41,14 +41,16 @@ class ProfileModel @Inject constructor(private var sessionManager: Session) : Pr
 
     override fun fetchAuthUser(): Single<User> {
         val userId = getAuthToken().id
-        return profileService.getUser(userId)
+        val authorization = "Token ${getAuthToken().token}"
+        return profileService.getUser(authorization, userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doAfterSuccess() { u -> authUser.onNext(u) }
     }
 
     override fun getUser(userId: Int): Single<User> {
-        return profileService.getUser(userId)
+        val authorization = "Token ${getAuthToken().token}"
+        return profileService.getUser(authorization, userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }

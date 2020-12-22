@@ -54,6 +54,7 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
                     profileData.lastName = editTextLastName.text.toString()
                     profileData.expertise = editTextExpertise.text.toString()
                     profileData.interests = editTextInterests.text.toString()
+                    profileData.birthday = editTextBirthday.text.toString()
                     profileData.bio = editTextBio.text.toString()
                     profileData.gender = selectedGender
                     presenter.updateProfile(profileData)
@@ -113,7 +114,7 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
         editTextLastName.setText(profile.lastName)
         editTextExpertise.setText(profile.expertise)
         editTextInterests.setText(profile.interests)
-        editTextAge.setText(profile.birthday.toString())
+        editTextBirthday.setText(profile.birthday.toString())
         editTextBio.setText(profile.bio)
 
         val genderText = "Gender: ${profile.gender}"

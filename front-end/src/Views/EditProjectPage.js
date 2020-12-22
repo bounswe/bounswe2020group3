@@ -11,7 +11,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import "../index.scss";
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
-// import { theme } from "../Common/ColorTheme";
 import AlertTypes from '../Common/AlertTypes.json';
 import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
 import { format } from "date-fns";
@@ -285,11 +284,11 @@ export default class ProjectPage extends Component {
     var project_id =this.props.location.pathname.split('/')[2];
     console.log("project")
     console.log(project)
-    axios.put(`${config.API_URL}${config.Projectpage_url}${project_id}`, project, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.patch(`${config.API_URL}${config.Projectpage_url}${project_id}/`, project, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         console.log("project")
         console.log(res.data)
-        res.setState({ success: true, message: Messages.projectEditSuccess, messageType: AlertTypes.Success }, () => {
+        this.setState({ success: true, message: Messages.projectEditSuccess, messageType: AlertTypes.Success }, () => {
           this.handleSnackbarOpen();
           
           setTimeout(() => { this.props.history.push("/project/" + project_id); }, 5000);

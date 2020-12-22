@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.invite.data.InviteRequest
 import com.bounswe2020group3.paperlayer.invite.data.InviteResponse
 import com.bounswe2020group3.paperlayer.invite.data.CollaborationInvite
-import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
+import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.data.user.User
 import io.reactivex.Observable

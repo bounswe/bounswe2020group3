@@ -5,16 +5,12 @@ import com.bounswe2020group3.paperlayer.home.cards.EventCard
 import com.bounswe2020group3.paperlayer.home.cards.MilestoneCard
 import com.bounswe2020group3.paperlayer.home.cards.ProjectUpdateCard
 import com.bounswe2020group3.paperlayer.home.data.Event
-import com.bounswe2020group3.paperlayer.invite.InviteCard
-import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
+import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.project.data.Project
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface HomeContract {
     interface EventPresenter : Mvp.Presenter<EventView> {

@@ -6,7 +6,7 @@ from .models.example import Example
 from .serializers.example import ExampleModelSerializer
 from .views.example import ExampleGenericAPIView, ExampleDetailGenericAPIView
 from .views.following import FollowingViewSet, FollowRequestViewSet
-from .views.profile import ProfileViewSet
+from .views.profile import ProfileViewSet, ProfilePictureViewSet
 from .views.auth import RegisterGenericAPIView, LogoutGenericAPIView, AuthView
 from .views.project import ProjectViewSet
 from .views.milestone import MilestoneViewSet
@@ -21,6 +21,7 @@ from django.contrib.auth import views as auth_views
 
 router = DefaultRouter()
 router.register(r'profiles', ProfileViewSet)
+router.register(r'profile_picture', ProfilePictureViewSet)
 router.register(r'users', UserViewSet)
 router.register(r'projects', ProjectViewSet)
 router.register(r'milestones', MilestoneViewSet)

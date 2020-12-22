@@ -61,3 +61,12 @@ class ProfilePrivateSerializer(serializers.HyperlinkedModelSerializer):
         model = Profile
         fields = ['id', 'name', 'middle_name', 'last_name',
                   'owner', 'profile_picture', 'is_public']
+
+
+class ProfilePictureSerializer(serializers.ModelSerializer):
+    """
+    Profile serializer for owner and admin.
+    """
+    class Meta:
+        model = Profile
+        fields = ['id', 'profile_picture']

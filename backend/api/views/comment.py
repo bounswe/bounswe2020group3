@@ -1,7 +1,5 @@
 from api.models.comment import Comment
 from api.models.profile import Profile
-from api.models.following import Following
-from api.models.project import Project
 from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -10,6 +8,7 @@ from api.serializers.comment import CommentSerializer, CommentUpdateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework import status
+from api.utils import get_is_following, get_is_collaborator
 from django.db.models import Q
 
 
@@ -42,17 +41,9 @@ class CommentViewSet(viewsets.ModelViewSet):
             id=serializer.validated_data['to_user'].id)
         serializer.validated_data['to_user'] = to_user
 
-        is_public = Profile.objects.get(owner=to_user).is_public
+        is_collaborator = get_is_collaborator(self.request.user, to_user)
 
-        is_following = Following.objects. \
-            filter(from_user=self.request.user,
-                   to_user=to_user).exists()
-
-        is_collaborator = Project.objects. \
-            filter(Q(members__exact=self.request.user) &
-                   Q(members__exact=to_user)).exists()
-
-        if (is_public or is_following) and is_collaborator and \
+        if is_collaborator and \
                 self.request.user.id != to_user.id:
             Comment.objects.create(**serializer.validated_data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -67,13 +58,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
         to_user = self.accessed_comment.to_user
         is_public = Profile.objects.get(owner=to_user).is_public
-        if self.request.user.is_anonymous:
-            is_following = False
-        else:
-            is_following = Following.objects. \
-                filter(from_user=self.request.user,
-                       to_user=to_user).exists()
-
+        is_following = get_is_following(self.request.user, to_user)
         if is_public or is_following or \
                 self.request.user.id == to_user.id:
             return Response(serializer.data)

@@ -19,7 +19,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsMemberOrReadOnly]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['owner__id']
+    filterset_fields = ['owner__id', 'members__id']
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user, members=[self.request.user])

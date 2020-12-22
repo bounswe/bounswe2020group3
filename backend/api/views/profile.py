@@ -8,7 +8,6 @@ from api.serializers.profile import ProfileBasicSerializer
 from api.serializers.profile import ProfilePrivateSerializer
 from api.serializers.profile import ProfilePictureSerializer
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.decorators import action
 from django.http import FileResponse
 from rest_framework.response import Response
 from rest_framework import status
@@ -64,28 +63,27 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
 class ProfilePictureViewSet(viewsets.GenericViewSet):
     queryset = Profile.objects.all()
-    serializer_class=ProfilePictureSerializer
-    parser_classes=(MultiPartParser, FormParser)
+    serializer_class = ProfilePictureSerializer
+    parser_classes = (MultiPartParser, FormParser)
 
     def retrieve(self, request, pk=None):
         picture = self.get_object().profile_picture
         return FileResponse(picture)
 
-
     def update(self, request, pk=None):
         data = {"profile_picture": request.data["profile_picture"]}
-        instance = self.get_object()
-        serializer = ProfilePictureSerializer(instance, data=data, partial=True)
+        profile = self.get_object()
+        serializer = ProfilePictureSerializer(profile, data=data, partial=True)
         if 'profile_picture' in request.data:
-            if instance.profile_picture:
-                if instance.profile_picture != request.data['profile_picture']:
-                    if os.path.isfile(instance.profile_picture.path):
-                        os.remove(instance.profile_picture.path)
+            if profile.profile_picture:
+                if profile.profile_picture != request.data['profile_picture']:
+                    if os.path.isfile(profile.profile_picture.path):
+                        os.remove(profile.profile_picture.path)
 
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
@@ -95,4 +93,3 @@ class ProfilePictureViewSet(viewsets.GenericViewSet):
         else:
             return Response("Profile picture is not found.",
                             status.HTTP_404_NOT_FOUND)
-        

@@ -3,14 +3,15 @@ package com.bounswe2020group3.paperlayer.profile
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.profile.data.Profile
 import com.bounswe2020group3.paperlayer.profile.data.User
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import retrofit2.http.*
 
 interface ProfileContract {
     interface Presenter: Mvp.Presenter<View> {
-        fun subscribeUser()
-        fun loadUser()
+        fun subscribeAuthUser()
+        fun loadAuthUser()
     }
 
     interface View: Mvp.View{
@@ -23,10 +24,11 @@ interface ProfileContract {
     }
 
     interface Model {
-        fun updateUserProfile(updatedProfile: Profile): Single<Profile>
-
-        fun fetchUser(): Single<User>
-        fun getUser(): BehaviorSubject<User>
+        fun updateAuthUserProfile(updatedProfile: Profile): Single<Profile>
+        fun fetchAuthUser(): Single<User>
+        fun getAuthUser(): BehaviorSubject<User>
+        fun getUser(userId: Int): Single<User>
+        fun getUserList(): Observable<List<User>>
     }
 
     interface Service {
@@ -37,6 +39,9 @@ interface ProfileContract {
         fun updateProfile(@Header("Authorization") authorization: String, @Path("profileId") profileId: Int, @Body updatedProfile: Profile): Single<Profile>
 
         @GET("/api/users/{userId}/")
-        fun getUser(@Path("userId") userId: Int): Single<User>
+        fun getUser(@Header("Authorization") authorization: String, @Path("userId") userId: Int): Single<User>
+
+        @GET("/api/users/")
+        fun getUserList(): Observable<List<User>>
     }
 }

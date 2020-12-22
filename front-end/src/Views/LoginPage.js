@@ -81,7 +81,6 @@ export default class LoginPage extends Component {
 
         axios.post(`${config.API_URL}${config.Login_Url}`, user, { headers: { 'Content-Type': 'Application/json' } })
             .then(res => {
-                console.log(res.data.token, "ASD")
                 let token = res.data.token;
                 let user_id = res.data.id;
                 this.setState({ success: true, message: Messages.loginSuccess, messageType: AlertTypes.Success }, () => {
@@ -91,14 +90,12 @@ export default class LoginPage extends Component {
                     axios.get(`${config.API_URL}/api/users/${user_id}/`)
                     .then(res => {
                     let profile = res.data.profile
-                    if (profile && profile.photo_url) setPhotoCookie(profile.photo_url);
+                    if (profile && profile.photo_url) {setPhotoCookie(profile.photo_url)};
                     })
                     setTimeout(() => { this.props.history.push(config.Homepage_Path); }, 1500);
                 }, (error) =>{
                     console.log(error, "while fetching photo");
                 });
-                console.log(res);
-                console.log(res.data);
             }, (error) => {
                 this.setState({ success: false, message: Messages.loginFail, messageType: AlertTypes.Error });
                 this.handleSnackbarOpen();

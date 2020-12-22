@@ -14,7 +14,7 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 // import { theme } from "../Common/ColorTheme";
 import AlertTypes from '../Common/AlertTypes.json';
-import { getAccessToken } from '../Components/Auth/Authenticate';
+import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
 import { format } from "date-fns";
 
 const Messages = {
@@ -160,7 +160,7 @@ export default class CreateEventPage extends Component {
       <Container>
         <UserNavbar 
           logout={() => { this.props.history.push(config.Login_Path) }}
-          pushProfile={() => { this.props.history.push("/profile") }} 
+          pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }} 
           goHome={() => { this.props.history.push(config.Homepage_Path) }}
           />
         <FormWrapper>

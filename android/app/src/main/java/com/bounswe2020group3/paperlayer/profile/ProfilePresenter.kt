@@ -18,22 +18,22 @@ class ProfilePresenter @Inject constructor(private var model: ProfileContract.Mo
         disposable.clear()
     }
 
-    override fun subscribeUser() {
-        val userProfileSub = model.getUser().subscribe(
+    override fun subscribeAuthUser() {
+        val authUserProfileSub = model.getAuthUser().subscribe(
                 { user ->
                     view?.updateProfileUI(user)
                 },
                 {
-                    error -> Log.d("Error", "Some error occured.")
+                    error -> Log.d("Error", "Some error occured.", error)
                 }
         )
-        disposable.add(userProfileSub)
+        disposable.add(authUserProfileSub)
     }
 
-    override fun loadUser() {
+    override fun loadAuthUser() {
         view?.showLoading()
         try {
-            val fetchSub = model.fetchUser().subscribe(
+            val fetchSub = model.fetchAuthUser().subscribe(
                     {
                         view?.hideLoading()
                     },

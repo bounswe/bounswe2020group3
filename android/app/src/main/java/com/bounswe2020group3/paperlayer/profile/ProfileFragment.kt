@@ -36,16 +36,24 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter.subscribeUser()
+        presenter.subscribeAuthUser()
 
         imageButtonSettings.setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToProfileEditFromProfile)
+        }
+
+        linearLayoutFollowers.setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToUserListFromProfile)
+        }
+
+        linearLayoutFollowings.setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToUserListFromProfile)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        presenter.loadUser()
+        presenter.loadAuthUser()
     }
 
     override fun onDestroy() {
@@ -60,12 +68,12 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         textViewEmail.text = user.email
         textViewFullName.text = fullName
         textViewBio.text = profile.bio
-        textViewAge.text = profile.age.toString()
+        textViewBirthday.text = profile.birthday.toString()
         textViewGender.text = profile.gender
         textViewInterests.text = profile.interests
         textViewExpertise.text = profile.expertise
 
-        val imageUrl = profile.photoUrl
+        val imageUrl = profile.profile_picture
         if(imageUrl != null && imageUrl.contains("http")) {
             Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
         }

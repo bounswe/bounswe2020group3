@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from 'axios';
 import config from '../config';
-import { styled, Chip } from '@material-ui/core';
+import { styled, Chip, Button } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import UserNavbar from '../Components/TopBar/UserNavbar';
@@ -11,7 +11,6 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import Typography from "@material-ui/core/Typography";
 import Profilebar from '../Components/ProfileBar/Profilebar';
 import { getUserId, getAccessToken, setPhotoCookie } from "../Components/Auth/Authenticate";
-import { Button } from '@material-ui/core'; 
 
 
 const Container = styled(Box)({
@@ -20,7 +19,7 @@ const Container = styled(Box)({
   borderRadius: 3,
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
   color: 'white',
-  height: "calc(98vh - 64px)",
+  height: "calc(98vh - 60px)",
   paddingBottom: "60px",
   top: "0",
   bottom: "0",
@@ -50,7 +49,8 @@ export default class EditProjectPage extends Component {
             tags:[],
             username:"",
             userlastname:"",
-            photoUrl:""
+            photoUrl:"",
+            projectId: ""
         }
     };
 
@@ -61,7 +61,7 @@ export default class EditProjectPage extends Component {
         this.props.history.push("/login");
     };
     goToProfile = () => {
-        this.props.history.push("/profile");
+        this.props.history.push("/profile/" + getUserId());
     };
     goToEvent = (eid) => {
       this.props.history.push(config.Event_Path+"/"+eid);
@@ -75,6 +75,7 @@ export default class EditProjectPage extends Component {
     
     componentDidMount() {
       var project_id =this.props.location.pathname.split('/')[2];
+      this.setState({projectId: project_id});
       axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}`, { headers:{'Content-Type':'Application/json'}})
         .then(res => {
           const prof = res.data;
@@ -139,7 +140,7 @@ export default class EditProjectPage extends Component {
         <Container>
           <UserNavbar
             logout={() => { this.props.history.push(config.Login_Path) }}
-            pushProfile={() => { this.props.history.push("/profile") }}
+            pushProfile={this.goToProfile}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
           />
             <Profilebar
@@ -147,7 +148,7 @@ export default class EditProjectPage extends Component {
               lastName={this.state.userlastname}
               photoUrl={this.state.photoUrl}
               goToProjectCreation={this.goToProjectCreation}
-              goToProfile={() => { this.props.history.push("/profile"); }}
+              goToProfile={this.goToProfile}
             />
             <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{marginLeft:"225px",marginTop:"10px", width:`calc(100% - 225px)`}}>
           <Grid container direction="row" justify="space-evenly" alignItems="baseline">
@@ -202,7 +203,10 @@ export default class EditProjectPage extends Component {
               </Grid>
               <Grid item sm={9} style={{ maxHeight:"40vh",minHeight: "20vh"}}>
                 <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.goToEditProjectPage(project_id)}>Edit Project</Button>
+                <Button variant="contained" color="primary" 
+                onClick={() => { this.props.history.push("/issue-milestone", {projectId: this.state.projectId }); } }>Set New Milestone</Button>
               </Grid>
+              
             </Grid>
             </Grid>
           <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message}/>

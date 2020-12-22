@@ -28,6 +28,7 @@
     <string name="profile_settings_description">Settings button</string>
     <string name="profile_email">Email</string>
     <string name="profile_age">Age</string>
+    <string name="profile_birthday">Birthday</string>
     <string name="profile_interests">Interests</string>
     <string name="profile_gender">Gender</string>
     <string name="profile_expertise">Expertise</string>
@@ -52,8 +53,9 @@
     <string name="please_select_date">Please select date..</string>
     <string name="date">Date</string>
     <string name="project_successfully_created">Project successfully created!</string>
+    <string name="follow">Follow</string>
     <string name="edit_project">Edit Project</string>
     <string name="text_edit_project">EDIT PROJECT</string>
-    <string name="project_edit_success">Project succesfully edited!</string>
+    <string name="project_edit_success">Project successfully edited!</string>
     <string name="done">DONE</string>
 </resources>

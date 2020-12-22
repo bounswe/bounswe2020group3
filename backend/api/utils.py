@@ -1,4 +1,4 @@
-from api.models.following import Following
+from api.models.following import Following, FollowRequest
 
 
 def get_is_following(this_user, accessed_user):
@@ -27,3 +27,17 @@ def get_is_follower(this_user, accessed_user):
             filter(from_user=accessed_user,
                    to_user=this_user).exists()
     return is_follower
+
+
+def get_is_follow_request_sent(this_user, accessed_user):
+    '''
+        Returns True if "this_user" has sent follow request to "accessed_user"
+    '''
+    if not this_user or this_user.is_anonymous:
+        is_is_follow_request_sent = False
+    else:
+        is_is_follow_request_sent = \
+            FollowRequest.objects. \
+            filter(req_from_user=this_user,
+                   req_to_user=accessed_user).exists()
+    return is_is_follow_request_sent

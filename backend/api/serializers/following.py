@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from api.models.following import Following, FollowRequest
+from api.serializers.user import UserPrivateSerializer
 
 
 class FollowingSerializer(serializers.HyperlinkedModelSerializer):
@@ -34,8 +35,8 @@ class FollowSerializer(serializers.HyperlinkedModelSerializer):
     """
     Follow serializer
     """
-    from_user = serializers.IntegerField(source='from_user.id')
-    to_user = serializers.IntegerField(source='to_user.id')
+    from_user = UserPrivateSerializer(read_only=True)
+    to_user = UserPrivateSerializer(read_only=True)
 
     class Meta:
         model = Following
@@ -57,8 +58,8 @@ class FollowRequestSerializer(serializers.HyperlinkedModelSerializer):
     """
     Follow request serializer.
     """
-    req_from_user = serializers.IntegerField(source='req_from_user.id')
-    req_to_user = serializers.IntegerField(source='req_to_user.id')
+    req_from_user = UserPrivateSerializer(read_only=True)
+    req_to_user = UserPrivateSerializer(read_only=True)
 
     class Meta:
         model = FollowRequest

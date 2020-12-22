@@ -1,13 +1,13 @@
 from rest_framework import viewsets
 from django.contrib.auth.models import User
 from api.models.profile import Profile
-from api.models.following import Following
 from api.serializers.user import UserFullSerializer
 from api.serializers.user import UserBasicSerializer
 from api.serializers.user import UserPrivateSerializer
 from rest_framework.response import Response
 
 from api.utils import get_is_following
+
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """

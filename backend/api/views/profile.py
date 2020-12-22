@@ -1,7 +1,6 @@
 from rest_framework import viewsets
 from rest_framework import permissions
 from api.models.profile import Profile
-from api.models.following import Following
 from api.permission import IsOwnerOrReadOnly, ProfileDeletion
 from api.serializers.profile import ProfileFullSerializer
 from api.serializers.profile import ProfileBasicSerializer
@@ -14,6 +13,7 @@ from rest_framework import status
 import os
 from rest_framework.parsers import MultiPartParser, FormParser
 from api.utils import get_is_following
+
 
 class ProfileViewSet(viewsets.ModelViewSet):
     """

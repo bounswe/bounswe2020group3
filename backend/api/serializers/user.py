@@ -4,7 +4,8 @@ from rest_framework import serializers
 from api.serializers.profile import ProfileFullSerializer, \
     ProfileBasicSerializer, ProfilePrivateSerializer
 
-from api.utils import get_is_following, get_is_follower
+from api.utils import get_is_following, get_is_follower, \
+    get_is_follow_request_sent
 
 
 class UserFullSerializer(serializers.ModelSerializer):
@@ -14,6 +15,7 @@ class UserFullSerializer(serializers.ModelSerializer):
     profile = ProfileFullSerializer(many=True, read_only=True)
     is_follower = serializers.SerializerMethodField(read_only=True)
     is_following = serializers.SerializerMethodField(read_only=True)
+    is_follow_request_sent = serializers.SerializerMethodField(read_only=True)
 
     def get_is_follower(self, obj):
         request = self.context.get("request")
@@ -23,10 +25,15 @@ class UserFullSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         return get_is_following(request.user, obj)
 
+    def get_is_follow_request_sent(self, obj):
+        request = self.context.get("request")
+        return get_is_follow_request_sent(request.user, obj)
+
     class Meta:
         model = User
         fields = ['id', 'username', 'email',
-                  'profile', 'is_follower', 'is_following']
+                  'profile', 'is_follower', 'is_following',
+                  'is_follow_request_sent']
 
 
 class UserBasicSerializer(serializers.ModelSerializer):
@@ -36,6 +43,7 @@ class UserBasicSerializer(serializers.ModelSerializer):
     profile = ProfileBasicSerializer(many=True, read_only=True)
     is_follower = serializers.SerializerMethodField(read_only=True)
     is_following = serializers.SerializerMethodField(read_only=True)
+    is_follow_request_sent = serializers.SerializerMethodField(read_only=True)
 
     def get_is_follower(self, obj):
         request = self.context.get("request")
@@ -45,9 +53,14 @@ class UserBasicSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         return get_is_following(request.user, obj)
 
+    def get_is_follow_request_sent(self, obj):
+        request = self.context.get("request")
+        return get_is_follow_request_sent(request.user, obj)
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'profile', 'is_follower', 'is_following']
+        fields = ['id', 'username', 'profile', 'is_follower',
+                  'is_following', 'is_follow_request_sent']
 
 
 class UserPrivateSerializer(serializers.ModelSerializer):
@@ -57,6 +70,7 @@ class UserPrivateSerializer(serializers.ModelSerializer):
     profile = ProfilePrivateSerializer(many=True, read_only=True)
     is_follower = serializers.SerializerMethodField(read_only=True)
     is_following = serializers.SerializerMethodField(read_only=True)
+    is_follow_request_sent = serializers.SerializerMethodField(read_only=True)
 
     def get_is_follower(self, obj):
         request = self.context.get("request")
@@ -66,6 +80,11 @@ class UserPrivateSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         return get_is_following(request.user, obj)
 
+    def get_is_follow_request_sent(self, obj):
+        request = self.context.get("request")
+        return get_is_follow_request_sent(request.user, obj)
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'profile', 'is_follower', 'is_following']
+        fields = ['id', 'username', 'profile', 'is_follower',
+                  'is_following', 'is_follow_request_sent']

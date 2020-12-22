@@ -16,6 +16,8 @@ import AlertTypes from '../Common/AlertTypes.json';
 import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
 import { format } from "date-fns";
 import UserNavbar from "../Components/TopBar/UserNavbar";
+import { setPhotoCookie } from "../Components/Auth/Authenticate";
+
 
 const Messages = {
   emptyFieldError: "Please Fill All Areas!",
@@ -107,7 +109,7 @@ const Container = styled(Box)({
   }
 });
 
-export default class EditProjectPage extends Component {
+export default class ProjectPage extends Component {
   constructor(props) {
     super(props);
     this.SnackbarRef = React.createRef();
@@ -115,7 +117,7 @@ export default class EditProjectPage extends Component {
       success: null,
       message: "",
       messageType: "",
-      projectTitle: "Title",
+      projectTitle: "",
       projectType: "",
       projectDescription: "",
       projectRequirements: "",
@@ -128,6 +130,41 @@ export default class EditProjectPage extends Component {
       event : ""
     }
   };
+
+  componentDidMount() {
+    var project_id =this.props.location.pathname.split('/')[2];
+    axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}`, { headers:{'Content-Type':'Application/json'}})
+      .then(res => {
+        const prof = res.data;
+        const temp_members = prof.members;
+        this.setState({projectTitle:prof.name, projectDescription:prof.description, projectRequirements:prof.requirements,  projectState:prof.state, age:prof.age, projectType:prof.project_type, dueDate:prof.due_date, tags:prof.tags});
+        if(prof.event == null){
+          this.setState({events:[]});
+        }else{
+          this.setState({events:[prof.event]});
+        }
+        this.setState({tags:[{name:"alpha",color:"#F8C471"}]});
+        temp_members.forEach(item =>{
+          var last_members = this.state.members;
+          const member = item.profile[0];
+          last_members.push(member.name+" "+member.last_name);
+          this.setState({members:last_members});
+        } );
+
+      });
+    axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers:{'Content-Type':'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
+      .then(res => {
+        let name = res.data.profile[0].name;
+        let mname = res.data.profile[0].middle_name;
+        let lastname = res.data.profile[0].last_name;
+        name = name + " " + mname;
+        let photoUrl = (res.data.profile[0].photo_url)
+        setPhotoCookie(photoUrl)
+        this.setState({ username:name , userlastname: lastname, photoUrl:photoUrl });
+      });
+  };
+
+
   handleDateChange = (date) => {
     this.setState({ dueDate: date });
   };
@@ -217,7 +254,7 @@ export default class EditProjectPage extends Component {
     )
   }
 
-  submitProject = () => {
+  editProject = () => {
     const { projectTitle, projectDescription, projectRequirements, collaborators,
       isPublic, projectState, projectType, dueDate, event } = this.state;      /* members [] for now */
     
@@ -245,12 +282,17 @@ export default class EditProjectPage extends Component {
     if (projectState !== "")
       project.state = projectState
 
-    axios.post(`${config.API_URL}${config.Edit_Project_Url}`, project, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    var project_id =this.props.location.pathname.split('/')[2];
+    console.log("project")
+    console.log(project)
+    axios.put(`${config.API_URL}${config.Projectpage_url}${project_id}`, project, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
+        console.log("project")
         console.log(res.data)
-        this.setState({ success: true, message: Messages.projectEditSuccess, messageType: AlertTypes.Success }, () => {
+        res.setState({ success: true, message: Messages.projectEditSuccess, messageType: AlertTypes.Success }, () => {
           this.handleSnackbarOpen();
-          setTimeout(() => { this.props.history.push(config.Homepage_Path); }, 5000);
+          
+          setTimeout(() => { this.props.history.push("/project/" + project_id); }, 5000);
         });
 
       }, (error) => {
@@ -280,7 +322,7 @@ export default class EditProjectPage extends Component {
               <TextField
                 type="text"
                 error=""
-                label="Title"
+                input value={this.state.projectTitle}
                 onChange={this.handleTitleChange}
                 defaultValue=""
                 helperText="Title of the Project"
@@ -292,7 +334,7 @@ export default class EditProjectPage extends Component {
               <TextField
                 type="text"
                 error=""
-                label="Project Description"
+                input value={this.state.projectDescription}
                 onChange={this.handleDescriptionChange}
                 defaultValue=""
                 placeholder="Please describe the project."
@@ -304,6 +346,7 @@ export default class EditProjectPage extends Component {
             </div>
             <div>
               <DateComponent
+                value={this.state.dueDate}
                 handleDateChange={this.handleDateChange}
                 helperText="Due Date"
                 style={width}
@@ -317,7 +360,7 @@ export default class EditProjectPage extends Component {
                 style={width}
                 type="text"
                 error=""
-                label="Project Requirements"
+                input value={this.state.projectRequirements}
                 onChange={this.handleRequirementChange}
                 defaultValue=""
                 placeholder="Please list the requirements for this project."
@@ -372,7 +415,7 @@ export default class EditProjectPage extends Component {
               </FormControl>
               {this.renderEvents()}
             </div>
-            <Button color="primary" variant="contained" style={{ marginTop: "20px" }} onClick={this.submitProject}>Edit Project</Button>
+            <Button color="primary" variant="contained" style={{ marginTop: "20px" }} onClick={this.editProject}>Edit Project</Button>
 
           </div>
 

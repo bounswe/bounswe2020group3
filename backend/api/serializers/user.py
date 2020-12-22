@@ -3,7 +3,6 @@ from rest_framework import serializers
 
 from api.serializers.profile import ProfileFullSerializer, \
     ProfileBasicSerializer, ProfilePrivateSerializer
-from api.serializers.comment import CommentSerializer
 
 from api.utils import get_is_following, get_is_follower, \
     get_is_follow_request_sent

@@ -2,7 +2,7 @@ from api.models.following import Following
 
 
 def get_is_following(this_user, accessed_user):
-    ''' 
+    '''
         Returns True if "this_user" follows "accessed_user"
     '''
     if not this_user or this_user.is_anonymous:
@@ -16,7 +16,7 @@ def get_is_following(this_user, accessed_user):
 
 
 def get_is_follower(this_user, accessed_user):
-    ''' 
+    '''
         Returns True if "accessed_user" follows "this_user"
     '''
     if not this_user or this_user.is_anonymous:

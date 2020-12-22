@@ -68,7 +68,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         textViewEmail.text = user.email
         textViewFullName.text = fullName
         textViewBio.text = profile.bio
-        textViewAge.text = profile.birthday.toString()
+        textViewBirthday.text = profile.birthday.toString()
         textViewGender.text = profile.gender
         textViewInterests.text = profile.interests
         textViewExpertise.text = profile.expertise

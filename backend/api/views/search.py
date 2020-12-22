@@ -13,6 +13,7 @@ from api.serializers.profile import ProfileBasicSerializer
 from api.serializers.profile import ProfilePrivateSerializer
 from datamuse import datamuse
 from api.models.following import Following
+from django.contrib.auth.models import AnonymousUser
 
 
 class SearchGenericAPIView(generics.GenericAPIView):
@@ -40,9 +41,13 @@ class SearchGenericAPIView(generics.GenericAPIView):
         query_projects = []
         query_private_projects = []
 
-        query_following = list(map(lambda following: following.to_user,
-                                   Following.objects.
-                                   filter(from_user=request.user)))
+        isGuest = isinstance(request.user, AnonymousUser)
+
+        query_following = []
+        if not isGuest:
+            query_following = list(map(lambda following: following.to_user,
+                                       Following.objects.
+                                       filter(from_user=request.user)))
 
         for keyword in keywords:
             query_events += Event.objects.filter(
@@ -50,48 +55,80 @@ class SearchGenericAPIView(generics.GenericAPIView):
                 Q(description__icontains=keyword)
             )
 
-            query_projects += Project.objects.filter(
-                (Q(is_public=True) | Q(members__id=request.user.id)) &
-                (Q(name__icontains=keyword) |
-                 Q(description__icontains=keyword) |
-                 Q(project_type__icontains=keyword) |
-                 Q(event__title__icontains=keyword) |
-                 Q(event__description__icontains=keyword))
-            )
-            query_private_projects += Project.objects.filter(
-                (Q(is_public=False) & ~Q(members__id=request.user.id)) &
-                (Q(name__icontains=keyword) |
-                 Q(description__icontains=keyword))
-            )
+            if isGuest:
+                query_projects += Project.objects.filter(
+                    Q(is_public=True) &
+                    (Q(name__icontains=keyword) |
+                     Q(description__icontains=keyword) |
+                        Q(project_type__icontains=keyword) |
+                        Q(event__title__icontains=keyword) |
+                        Q(event__description__icontains=keyword))
+                )
+                query_private_projects += Project.objects.filter(
+                    Q(is_public=False) &
+                    (Q(name__icontains=keyword) |
+                     Q(description__icontains=keyword))
+                )
+                query_profiles += Profile.objects.filter(
+                    Q(is_public=True) &
+                    (Q(name__icontains=keyword) |
+                     Q(middle_name__icontains=keyword) |
+                     Q(last_name__icontains=keyword) |
+                     Q(expertise__icontains=keyword) |
+                     Q(interests__icontains=keyword) |
+                     (Q(share_bio=True) & Q(bio__icontains=keyword)) |
+                     (Q(share_affiliations=True) &
+                      Q(affiliations__icontains=keyword)))
+                )
+                query_private_profiles += Profile.objects.filter(
+                    Q(is_public=False) &
+                    (Q(name__icontains=keyword) |
+                     Q(middle_name__icontains=keyword) |
+                     Q(last_name__icontains=keyword))
+                )
+            else:
+                query_projects += Project.objects.filter(
+                    (Q(is_public=True) | Q(members__id=request.user.id)) &
+                    (Q(name__icontains=keyword) |
+                     Q(description__icontains=keyword) |
+                     Q(project_type__icontains=keyword) |
+                     Q(event__title__icontains=keyword) |
+                     Q(event__description__icontains=keyword))
+                )
+                query_private_projects += Project.objects.filter(
+                    (Q(is_public=False) & ~Q(members__id=request.user.id)) &
+                    (Q(name__icontains=keyword) |
+                     Q(description__icontains=keyword))
+                )
 
-            query_profiles += Profile.objects.filter(
-                Q(is_public=True) &
-                (Q(name__icontains=keyword) |
-                 Q(middle_name__icontains=keyword) |
-                 Q(last_name__icontains=keyword) |
-                 Q(expertise__icontains=keyword) |
-                 Q(interests__icontains=keyword) |
-                 (Q(share_bio=True) & Q(bio__icontains=keyword)) |
-                 (Q(share_affiliations=True) &
-                  Q(affiliations__icontains=keyword)))
-            )
-            query_followed_profiles += Profile.objects.filter(
-                (Q(is_public=False) & Q(owner__in=query_following)) &
-                (Q(name__icontains=keyword) |
-                 Q(middle_name__icontains=keyword) |
-                 Q(last_name__icontains=keyword) |
-                 Q(expertise__icontains=keyword) |
-                 Q(interests__icontains=keyword) |
-                 (Q(share_bio=True) & Q(bio__icontains=keyword)) |
-                 (Q(share_affiliations=True) &
-                  Q(affiliations__icontains=keyword)))
-            )
-            query_private_profiles += Profile.objects.filter(
-                (Q(is_public=False) & ~Q(owner__in=query_following)) &
-                (Q(name__icontains=keyword) |
-                 Q(middle_name__icontains=keyword) |
-                 Q(last_name__icontains=keyword))
-            )
+                query_profiles += Profile.objects.filter(
+                    Q(is_public=True) &
+                    (Q(name__icontains=keyword) |
+                     Q(middle_name__icontains=keyword) |
+                     Q(last_name__icontains=keyword) |
+                     Q(expertise__icontains=keyword) |
+                     Q(interests__icontains=keyword) |
+                     (Q(share_bio=True) & Q(bio__icontains=keyword)) |
+                     (Q(share_affiliations=True) &
+                      Q(affiliations__icontains=keyword)))
+                )
+                query_followed_profiles += Profile.objects.filter(
+                    (Q(is_public=False) & Q(owner__in=query_following)) &
+                    (Q(name__icontains=keyword) |
+                     Q(middle_name__icontains=keyword) |
+                     Q(last_name__icontains=keyword) |
+                     Q(expertise__icontains=keyword) |
+                     Q(interests__icontains=keyword) |
+                     (Q(share_bio=True) & Q(bio__icontains=keyword)) |
+                     (Q(share_affiliations=True) &
+                      Q(affiliations__icontains=keyword)))
+                )
+                query_private_profiles += Profile.objects.filter(
+                    (Q(is_public=False) & ~Q(owner__in=query_following)) &
+                    (Q(name__icontains=keyword) |
+                     Q(middle_name__icontains=keyword) |
+                     Q(last_name__icontains=keyword))
+                )
 
         query_events = list(set(query_events))
         query_profiles = list(set(query_profiles))

@@ -9,7 +9,6 @@ from api.serializers.profile import ProfilePrivateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from django.http import FileResponse
-from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
 import os
@@ -20,7 +19,6 @@ class ProfileViewSet(viewsets.ModelViewSet):
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions.
     """
-    parser_classes = (MultiPartParser, FormParser)
     queryset = Profile.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly, ProfileDeletion]

@@ -4,7 +4,7 @@ import com.bounswe2020group3.paperlayer.invite.data.InviteRequest
 import com.bounswe2020group3.paperlayer.invite.data.InviteResponse
 import com.bounswe2020group3.paperlayer.invite.data.CollaborationInvite
 import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
-import com.bounswe2020group3.paperlayer.profile.data.User
+import com.bounswe2020group3.paperlayer.data.user.User
 import com.bounswe2020group3.paperlayer.util.Session
 import io.reactivex.Observable
 import io.reactivex.Single

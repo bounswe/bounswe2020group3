@@ -136,6 +136,9 @@
         <argument
             android:name="userID"
             app:argType="integer" />
+        <action
+            android:id="@+id/navigateToFollowListFromUser"
+            app:destination="@id/followListFragment" />
     </fragment>
     <fragment
         android:id="@+id/inviteFragment"

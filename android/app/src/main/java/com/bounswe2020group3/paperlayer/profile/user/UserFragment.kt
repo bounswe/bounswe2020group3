@@ -7,14 +7,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.data.follow.FollowType
 import com.bounswe2020group3.paperlayer.data.user.User
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.fragment_user.imageViewProfileAvatar
-import kotlinx.android.synthetic.main.fragment_user_item.*
+import kotlinx.android.synthetic.main.fragment_user.textViewBio
+import kotlinx.android.synthetic.main.fragment_user.textViewBirthday
+import kotlinx.android.synthetic.main.fragment_user.textViewEmail
+import kotlinx.android.synthetic.main.fragment_user.textViewExpertise
+import kotlinx.android.synthetic.main.fragment_user.textViewFullName
+import kotlinx.android.synthetic.main.fragment_user.textViewGender
+import kotlinx.android.synthetic.main.fragment_user.textViewInterests
+
 import javax.inject.Inject
 
 private const val ARG_USER_ID = "userID"
@@ -59,6 +68,18 @@ class UserFragment : Fragment(), UserContract.View {
                     presenter.sendFollow(userID!!)
                 }
             }
+        }
+
+        val followerBundle = bundleOf("followType" to FollowType.FOLLOWER, "userID" to userID)
+
+        val followingBundle = bundleOf("followType" to FollowType.FOLLOWING, "userID" to userID)
+
+        layoutUserFollowers.setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToFollowListFromUser, followerBundle)
+        }
+
+        layoutUserFollowings.setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToFollowListFromUser, followingBundle)
         }
     }
 

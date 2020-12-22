@@ -42,6 +42,17 @@ class FollowSerializer(serializers.HyperlinkedModelSerializer):
         fields = ("from_user", "to_user", "created")
 
 
+class FollowPostSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Follow serializer
+    """
+    to_user = serializers.IntegerField(source='to_user.id')
+
+    class Meta:
+        model = Following
+        fields = ("to_user", "created")
+
+
 class FollowRequestSerializer(serializers.HyperlinkedModelSerializer):
     """
     Follow request serializer.
@@ -52,6 +63,17 @@ class FollowRequestSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = FollowRequest
         fields = ("req_from_user", "req_to_user", "created")
+
+
+class FollowRequestPostSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Follow request serializer.
+    """
+    req_to_user = serializers.IntegerField(source='req_to_user.id')
+
+    class Meta:
+        model = FollowRequest
+        fields = ("req_to_user", "created")
 
 
 class IncomingFollowRequestSerializer(serializers.HyperlinkedModelSerializer):

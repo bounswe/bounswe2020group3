@@ -65,6 +65,8 @@ class ProfilePictureViewSet(viewsets.GenericViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfilePictureSerializer
     parser_classes = (MultiPartParser, FormParser)
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
 
     def retrieve(self, request, pk=None):
         picture = self.get_object().profile_picture

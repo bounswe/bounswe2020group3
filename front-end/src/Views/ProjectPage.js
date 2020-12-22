@@ -11,6 +11,8 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import Typography from "@material-ui/core/Typography";
 import Profilebar from '../Components/ProfileBar/Profilebar';
 import { getUserId, getAccessToken, setPhotoCookie } from "../Components/Auth/Authenticate";
+import { Button } from '@material-ui/core'; 
+
 
 const Container = styled(Box)({
   background: "#f9f9eb",
@@ -32,7 +34,7 @@ const Container = styled(Box)({
   }
 });
 
-export default class HomePage extends Component {
+export default class EditProjectPage extends Component {
     constructor(props) {
         super(props);
         this.SnackbarRef = React.createRef();
@@ -66,6 +68,9 @@ export default class HomePage extends Component {
     };
     goToProjectCreation = () => {
       this.props.history.push(config.Create_Project_Path);
+    };
+    goToEditProjectPage = (pid) => {
+      this.props.history.push("/edit-project/" + pid);
     };
     
     componentDidMount() {
@@ -129,6 +134,7 @@ export default class HomePage extends Component {
     };
 
     render() {
+      var project_id =this.props.location.pathname.split('/')[2];
       return (
         <Container>
           <UserNavbar
@@ -193,6 +199,9 @@ export default class HomePage extends Component {
               <Grid item sm={9} style={{ maxHeight:"40vh",minHeight: "20vh"}}>
                 <Typography variant="h5" color="primary">Upcoming Deadlines</Typography>
                 {this.renderDeadlines()}
+              </Grid>
+              <Grid item sm={9} style={{ maxHeight:"40vh",minHeight: "20vh"}}>
+                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.goToEditProjectPage(project_id)}>Edit Project</Button>
               </Grid>
             </Grid>
             </Grid>

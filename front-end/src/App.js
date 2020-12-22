@@ -14,6 +14,7 @@ import ProfilePage from "./Views/ProfilePage";
 import EditProfilePage from "./Views/EditProfilePage";
 import ProjectPage from "./Views/ProjectPage";
 import EventPage from "./Views/EventPage";
+import EditProjectPage from "./Views/EditProjectPage";
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <AuthenticatedRoute path="/events/:eventId" component={EventPage} />
             <AuthenticatedRoute path="/profile" component={ProfilePage} />
             <AuthenticatedRoute path="/edit-profile" component={EditProfilePage} />
+            <AuthenticatedRoute path="/edit-project/:projectId" component={EditProjectPage} />
           </Switch>
         </BrowserRouter>
       </ThemeProvider>

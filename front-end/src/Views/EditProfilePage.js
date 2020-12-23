@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { styled } from '@material-ui/core';
 import AlertTypes from '../Common/AlertTypes.json';
 import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -13,6 +14,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import DateComponent from "../Components/Date/DateComponent";
+import UserNavbar from '../Components/TopBar/UserNavbar';
 
 const genderTypes = {
     male: "male",
@@ -27,14 +29,6 @@ const dropdownMenuStyle = {
 const width = {
     width: "60%",
     minWidth: "450px"
-}
-const middleDiv = {
-    margin: "auto",
-    width: "50%",
-    textAlign: "center",
-    minWidth: "500px",
-    verticalAlign: "middle",
-    lineHeight: "1"
 }
 const FormWrapper = styled(Box)({
     backgroundColor: "#E0E0E0",
@@ -57,7 +51,7 @@ const Container = styled(Box)({
     borderRadius: 3,
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
     color: 'white',
-    height: "100vh",
+    height: "98vh",
     width: "100%",
   
     '& .MuiTextField-root': {
@@ -89,7 +83,8 @@ export default class EditProfilePage extends Component {
         shareAffiliations: false,
         shareGender : false,
         shareBio: false,
-
+        isPublic: false
+ 
 
       }
     };
@@ -184,6 +179,21 @@ export default class EditProfilePage extends Component {
     handleGenderEdit = (e) => {
         this.setState({ gender: e.target.value });
     }
+    handleShareBio = (e) => {
+      this.setState({ shareBio: e.target.value });
+  }
+  handleShareBirthday = (e) => {
+    this.setState({ shareBirthday: e.target.value });
+  }
+  handleShareAffiliations = (e) => {
+    this.setState({ shareAffiliations: e.target.value });
+  }
+  handleShareGender = (e) => {
+    this.setState({ shareGender: e.target.value });
+  }
+  handleProfilePrivacy = (e) => {
+    this.setState({ profilePublic: e.target.value });
+  }
     handleInterestsEdit = (e) => {
         this.setState({ interests: e.target.value });
     }
@@ -220,10 +230,15 @@ export default class EditProfilePage extends Component {
         const { gender } = this.state;
         return (
           <Container>
+            <UserNavbar
+              logout={() => { this.props.history.push(config.Login_Path) }}
+              pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
+              goHome={() => { this.props.history.push(config.Homepage_Path) }}
+            />
             <FormWrapper>
               <h1 style={{ color: "black" }}> Edit Profile </h1>
-    
-              <div style={middleDiv}>
+              <Grid container direction="row" justify="center" alignItems="center">
+                <Grid sm={6} >
                 <div>
                   <TextField
                     type="text"
@@ -285,23 +300,14 @@ export default class EditProfilePage extends Component {
                     style={width}
                     variant="filled" />
                 </div> 
-                {/* <div>
-                  <TextField
-                    type="text"
-                    error=""
-                    label="Age"
-                    value={this.state.birthday}
-                    onChange={this.handleAgeEdit}
-                    defaultValue=""
-                    helperText="Age"
-                    style={width}
-                    variant="filled" />
-                </div>  */}
+                </Grid>
+
+                <Grid sm={6} >
                 <div>
                   <DateComponent
                     value={this.state.birthday}
                     handleDateChange={this.handleDateChange}
-                    helperText="Due Date"
+                    helperText="Birthday"
                     past={true}
                     style={width}
                   />
@@ -322,15 +328,28 @@ export default class EditProfilePage extends Component {
                   <TextField
                     type="text"
                     error=""
-                    label="Interests"
+                    label="Expertise"
                     value={this.state.expertise}
                     onChange={this.handleExpertiseEdit}
                     defaultValue=""
                     helperText="Expertise"
                     style={width}
                     variant="filled" />
-                </div>                    
+                </div>      
+                              
                 <div style={{ marginBottom: "10px" }}>
+                <FormControl>
+                    <InputLabel style={{ marginLeft: "12px" }} id="profilePriv">Profile Privacy</InputLabel>
+                    <Select
+                      style={dropdownMenuStyle}
+                      value={this.state.isPublic}
+                      onChange={this.handleProfilePrivacy}
+                      labelId="profilePriv"
+                    >
+                      <MenuItem value={true}>Public</MenuItem>
+                      <MenuItem value={false}>Private</MenuItem>
+                    </Select>
+                  </FormControl>
                   <FormControl>
                     <InputLabel style={{ marginLeft: "12px" }} id="gender">Gender</InputLabel>
                     <Select
@@ -345,8 +364,75 @@ export default class EditProfilePage extends Component {
                     </Select>
                   </FormControl>
                 </div>
+                <div>
+                <FormControl>
+                    <InputLabel style={{ marginLeft: "12px" }} id="sharebio">Share Bio</InputLabel>
+                    <Select
+                      style={dropdownMenuStyle}
+                      value={this.state.shareBio}
+                      onChange={this.handleShareBio}
+                      labelId="sharebio"
+                    >
+                      <MenuItem value={true}>Yes</MenuItem>
+                      <MenuItem value={false}>No</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <InputLabel style={{ marginLeft: "12px" }} id="shareBday">Share Birthday</InputLabel>
+                    <Select
+                      style={dropdownMenuStyle}
+                      value={this.state.shareBirthday}
+                      onChange={this.handleShareBirthday}
+                      labelId="shareBday"
+                    >
+                      <MenuItem value={true}>Yes</MenuItem>
+                      <MenuItem value={false}>No</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+                <div>
+                <FormControl>
+                    <InputLabel style={{ marginLeft: "12px" }} id="genderReveal">Share Gender</InputLabel>
+                    <Select
+                      style={dropdownMenuStyle}
+                      value={this.state.shareGender}
+                      onChange={this.handleShareGender}
+                      labelId="genderReveal"
+                    >
+                      <MenuItem value={true}>Yes</MenuItem>
+                      <MenuItem value={false}>No</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <InputLabel style={{ marginLeft: "12px" }} id="shareAff">Share Affiliations</InputLabel>
+                    <Select
+                      style={dropdownMenuStyle}
+                      value={this.state.shareAffiliations}
+                      onChange={this.handleShareAffiliations}
+                      labelId="shareAff"
+                    >
+                      <MenuItem value={true}>Yes</MenuItem>
+                      <MenuItem value={false}>No</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+                </Grid>
+                
+                {/* <div>
+                  <TextField
+                    type="text"
+                    error=""
+                    label="Age"
+                    value={this.state.birthday}
+                    onChange={this.handleAgeEdit}
+                    defaultValue=""
+                    helperText="Age"
+                    style={width}
+                    variant="filled" />
+                </div>  */}
+                
                 <Button color="primary" variant="contained" style={{ marginTop: "20px" }} onClick={this.submitProfile}>Submit Changes</Button>  
-              </div>
+              </Grid>
             </FormWrapper>
             <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpen} type={this.state.messageType} />
           </Container>);

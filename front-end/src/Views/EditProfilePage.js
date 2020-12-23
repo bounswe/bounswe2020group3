@@ -12,11 +12,12 @@ import config from '../config';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
+import DateComponent from "../Components/Date/DateComponent";
 
 const genderTypes = {
-    male: "Male",
-    female: "Female",
-    non: "Do not want to share"
+    male: "male",
+    female: "female",
+    non: "do not want to share"
 }
 const dropdownMenuStyle = {
     minWidth: "150px",
@@ -174,9 +175,9 @@ export default class EditProfilePage extends Component {
     handleBioEdit = (e) => {
         this.setState({ bio: e.target.value });
     }
-    handleAgeEdit = (e) => {
-        this.setState({ birthday: e.target.value });
-    }
+    handleDateChange = (date) => {
+      this.setState({ birthday: date });
+    };
     handleExpertiseEdit = (e) => {
         this.setState({ expertise: e.target.value });
     }
@@ -187,7 +188,7 @@ export default class EditProfilePage extends Component {
         this.setState({ interests: e.target.value });
     }
     submitProfile = () => {
-        const { name, middle_name, last_name, email, img, bio, age, expertise, gender, interests } = this.state; 
+        const { name, middle_name, last_name, email, img, bio, birthday, expertise, gender, interests } = this.state; 
         const profile = {
           name: name,
           middle_name: middle_name,
@@ -195,7 +196,7 @@ export default class EditProfilePage extends Component {
           email: email,
           img: img,
           bio: bio,
-          age: age,
+          birthday: birthday,
           expertise: expertise,
           gender: gender,
           interests: interests
@@ -284,7 +285,7 @@ export default class EditProfilePage extends Component {
                     style={width}
                     variant="filled" />
                 </div> 
-                <div>
+                {/* <div>
                   <TextField
                     type="text"
                     error=""
@@ -295,7 +296,16 @@ export default class EditProfilePage extends Component {
                     helperText="Age"
                     style={width}
                     variant="filled" />
-                </div> 
+                </div>  */}
+                <div>
+                  <DateComponent
+                    value={this.state.birthday}
+                    handleDateChange={this.handleDateChange}
+                    helperText="Due Date"
+                    past={true}
+                    style={width}
+                  />
+                </div>
                 <div>
                   <TextField
                     type="text"

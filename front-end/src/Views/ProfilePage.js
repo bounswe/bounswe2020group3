@@ -78,7 +78,7 @@ export default class HomePage extends Component {
       email: "",
       img: "",
       bio: "",
-      age: "",
+      birthday: "",
       expertise: "",
       gender: "",
       interests: "",
@@ -116,7 +116,8 @@ export default class HomePage extends Component {
             last_name: prof.last_name,
             bio: prof.bio,
             img: prof.photo_url,
-            age: prof.age, expertise: prof.expertise,
+            birthday: prof.birthday, 
+            expertise: prof.expertise,
             gender: prof.gender,
             interests: prof.interests,
             affiliations: prof.affiliations,
@@ -301,7 +302,7 @@ export default class HomePage extends Component {
         <>
           <Typography variant="h5" color="primary" style={titleStyle}>Personal Information</Typography>
           <Paper elevation={6} style={textStyle}>
-            <p>{"Age : " + this.state.age} <br />
+            <p>{"Birthday : " + this.state.birthday} <br />
               {(this.state.gender !== privateGender ? "Gender : " + this.state.gender : "")}</p>
           </Paper>
         </>

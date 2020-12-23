@@ -1,6 +1,7 @@
 package com.bounswe2020group3.paperlayer.home
 
 import com.bounswe2020group3.paperlayer.home.data.CollaborateRequest
+import com.bounswe2020group3.paperlayer.home.data.CollaborationRequest
 import com.bounswe2020group3.paperlayer.home.data.Event
 import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
 import com.bounswe2020group3.paperlayer.project.data.Project
@@ -41,4 +42,17 @@ class HomeModel @Inject constructor(private var sessionManager: Session, retrofi
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
+
+    override fun fetchRequests(userId: Int): Observable<List<CollaborationRequest>> {
+        return collaborationService.fetchRequests(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun deleteRequest(collabId: Int): Single<String> {
+        val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
+
+        return collaborationService.deleteRequest(authToken,collabId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())    }
 }

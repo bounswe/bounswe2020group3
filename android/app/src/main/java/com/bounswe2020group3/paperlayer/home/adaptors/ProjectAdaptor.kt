@@ -55,12 +55,23 @@ class ProjectAdaptor (var clickListener: OnCardClickListener) : RecyclerView.Ada
             projectBody.text = item.projectBody
             projectCreator.text = item.projectCreator
             projectType.text = item.projectType
-            Log.i(TAG,"${item.projectTitle} binded") //information
-            //Listeners for each project cards
-            buttonCollab.setOnClickListener {
-                action.onInviteButtonClick(item,adapterPosition)
+            if(item.requestSent) {
+                buttonCollab.text = "WITHDRAW REQUEST"
+                buttonCollab.setOnClickListener {
+                    action.onInviteButtonClick(item, adapterPosition)
+                }
             }
+            else if(item.projectState !="open for collaborators" )
+                buttonCollab.text = "Not looking for new collaborators"
+            else {
+                buttonCollab.text = "Collaborate"
 
+                Log.i(TAG, "${item.projectTitle} binded") //information
+                //Listeners for each project cards
+                buttonCollab.setOnClickListener {
+                    action.onInviteButtonClick(item, adapterPosition)
+                }
+            }
 
 
         }

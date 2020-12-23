@@ -5,8 +5,10 @@ import com.bounswe2020group3.paperlayer.home.cards.EventCard
 import com.bounswe2020group3.paperlayer.home.cards.MilestoneCard
 import com.bounswe2020group3.paperlayer.home.cards.ProjectUpdateCard
 import com.bounswe2020group3.paperlayer.home.data.CollaborateRequest
+import com.bounswe2020group3.paperlayer.home.data.CollaborationRequest
 import com.bounswe2020group3.paperlayer.home.data.Event
 import com.bounswe2020group3.paperlayer.invite.InviteCard
+import com.bounswe2020group3.paperlayer.invite.data.CollaborationInvite
 import com.bounswe2020group3.paperlayer.invite.data.InviteRequest
 import com.bounswe2020group3.paperlayer.invite.data.InviteResponse
 import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
@@ -56,6 +58,8 @@ interface HomeContract {
         fun showToast(message: String)
         fun writeLogMessage(type:String ,tag: String,message: String)
 
+        fun cardCheck(id : Int,position : Int)
+        fun cardUncheck(id : Int,position : Int)
         fun resetCardList()
         fun submitCardList()
         fun addCard(card : ProjectUpdateCard)
@@ -81,7 +85,8 @@ interface HomeContract {
         fun getAuthToken(): BehaviorSubject<AuthToken>
         fun getAllProjects(OwnerId:Int): Observable<List<ProjectShort>>
         fun collaborateRequest(request : CollaborateRequest) : Single<CollaborateRequest>
-
+        fun fetchRequests(userId:Int)   :   Observable<List<CollaborationRequest>>
+        fun deleteRequest( collabId : Int ) : Single<String>
     }
     interface EventsService{
         @GET("/api/events/")
@@ -97,8 +102,10 @@ interface HomeContract {
     interface CollaborationRequestService{
         @POST("/api/collaboration_requests/")
         fun collaborationRequest(@Header("Authorization") authorization: String, @Body collaborate : CollaborateRequest) : Single<CollaborateRequest>
-
-
+        @GET("/api/collaboration_requests/")
+        fun fetchRequests(@Query("from_user__id") userId: Int) : Observable<List<CollaborationRequest>>
+        @DELETE("api/collaboration_requests/{id}/")
+        fun deleteRequest(@Header("Authorization") authorization: String,@Path("id") collabId : Int ) : Single<String>
     }
 
 

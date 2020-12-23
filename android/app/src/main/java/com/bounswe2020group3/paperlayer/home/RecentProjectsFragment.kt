@@ -93,6 +93,22 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
 
     }
 
+    override fun cardCheck(id: Int, position: Int) {
+        projectslist[position].requestSent = true
+
+
+        submitCardList()
+        viewAdapter.notifyDataSetChanged()
+    }
+
+    override fun cardUncheck(id: Int, position: Int) {
+        projectslist[position].requestSent = false
+
+
+        submitCardList()
+        viewAdapter.notifyDataSetChanged()
+    }
+
     override fun resetCardList() {
         projectslist.clear()
         viewAdapter.submitList(this.projectslist)

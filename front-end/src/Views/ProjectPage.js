@@ -33,7 +33,7 @@ const Container = styled(Box)({
   }
 });
 
-export default class EditProjectPage extends Component {
+export default class HomePage extends Component {
     constructor(props) {
         super(props);
         this.SnackbarRef = React.createRef();

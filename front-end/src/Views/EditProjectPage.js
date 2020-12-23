@@ -126,7 +126,11 @@ export default class ProjectPage extends Component {
       collaborators: [this.getSelfProfile()],  //Other members to be added later TODO
       isPublic: true,
       events: [],
-      event : ""
+      event : "",
+      tags: [{
+        name: "",
+        color: "",
+      }]
     }
   };
 
@@ -143,12 +147,15 @@ export default class ProjectPage extends Component {
           this.setState({events:[prof.event]});
         }
         this.setState({tags:[{name:"alpha",color:"#F8C471"}]});
-        temp_members.forEach(item =>{
+    /*    temp_members.forEach(item =>{
           var last_members = this.state.members;
+          console.log("members")
+          console.log(last_members)
+          console.log(this.state.members)
           const member = item.profile[0];
           last_members.push(member.name+" "+member.last_name);
           this.setState({members:last_members});
-        } );
+        } );*/
 
       });
     axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers:{'Content-Type':'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
@@ -270,9 +277,10 @@ export default class ProjectPage extends Component {
       requirements: projectRequirements,
       members: collaborators,
       is_public: isPublic,
-      // state: projectState,
-      // project_type: projectType,
-      due_date: dueDate
+      stat: projectState,
+      type: projectType,
+      due_date: dueDate,
+      events: event
     };
     if(projectType !== "" )
       project.project_type = projectType;
@@ -290,7 +298,6 @@ export default class ProjectPage extends Component {
         console.log(res.data)
         this.setState({ success: true, message: Messages.projectEditSuccess, messageType: AlertTypes.Success }, () => {
           this.handleSnackbarOpen();
-          
           setTimeout(() => { this.props.history.push("/project/" + project_id); }, 5000);
         });
 
@@ -315,7 +322,6 @@ export default class ProjectPage extends Component {
         />
         <FormWrapper>
           <h1 style={{ color: "black" }}> Edit Project </h1>
-
           <div style={leftDiv}>
             <div>
               <TextField
@@ -337,7 +343,7 @@ export default class ProjectPage extends Component {
                 onChange={this.handleDescriptionChange}
                 defaultValue=""
                 placeholder="Please describe the project."
-                helperText=""
+                helperText="Project Description"
                 rows={10}
                 multiline
                 style={width}
@@ -363,7 +369,7 @@ export default class ProjectPage extends Component {
                 onChange={this.handleRequirementChange}
                 defaultValue=""
                 placeholder="Please list the requirements for this project."
-                helperText=""
+                helperText="Project Requirements"
                 multiline
                 rows={6}
                 variant="filled" />

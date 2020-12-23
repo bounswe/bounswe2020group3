@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
-import { getAccessToken } from '../Components/Auth/Authenticate';
+import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
 import axios from 'axios';
 import config from '../config';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -71,6 +71,7 @@ export default class EditProfilePage extends Component {
       super(props);
       this.SnackbarRef = React.createRef();
       this.state = {
+        profileId:-1,
         success: false,
         messageType: "",
         name:"",
@@ -82,9 +83,75 @@ export default class EditProfilePage extends Component {
         age:"",
         expertise:"",
         gender:"",
-        interests:""
+        interests:"",
+        shareBirthday: false,
+        shareAffiliations: false,
+        shareGender : false,
+        shareBio: false,
+
+
       }
     };
+    componentDidMount() {
+      axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`,
+      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let prof = res.data.profile[0];
+        this.setState({
+          isPublic: prof.is_public,
+          profileId: prof.id,
+          name: prof.name,
+          middle_name: prof.middle_name,
+          last_name: prof.last_name,
+          bio: prof.bio,
+          img: prof.photo_url,
+          birthday: prof.birthday, 
+          expertise: prof.expertise,
+          gender: prof.gender,
+          interests: prof.interests,
+          affiliations: prof.affiliations,
+          shareBio: prof.share_bio,
+          shareGender: prof.share_gender,
+          shareAffiliations: prof.share_affiliations,
+          shareBirthday: prof.share_birthday,
+        });
+        // this.getProfile(profId);
+      }
+      , (error) => {
+        this.setState({ success: false, message: "Error when fetching profile data.", messageType: AlertTypes.Error });
+        this.handleSnackbarOpen()
+        console.log(error);
+      });
+      
+      
+    }
+    getProfile = (id) => {
+      axios.get(`${config.API_URL}${config.Edit_Profile_Url}${id}/`, 
+      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        const prof = res.data[0];
+
+        this.setState({
+          isPublic: prof.is_public,
+          profileId: prof.id,
+          name: prof.name,
+          middle_name: prof.middle_name,
+          last_name: prof.last_name,
+          bio: prof.bio,
+          img: prof.photo_url,
+          birthday: prof.birthday, 
+          expertise: prof.expertise,
+          gender: prof.gender,
+          interests: prof.interests,
+          affiliations: prof.affiliations,
+          shareBio: prof.share_bio,
+          shareGender: prof.share_gender,
+          shareAffiliations: prof.share_affiliations,
+          shareBirthday: prof.share_birthday,
+        });
+
+      })
+    }
 
     handleSnackbarOpen = () => {
         this.SnackbarRef.current.turnOnSnackbar();
@@ -108,7 +175,7 @@ export default class EditProfilePage extends Component {
         this.setState({ bio: e.target.value });
     }
     handleAgeEdit = (e) => {
-        this.setState({ age: e.target.value });
+        this.setState({ birthday: e.target.value });
     }
     handleExpertiseEdit = (e) => {
         this.setState({ expertise: e.target.value });
@@ -133,12 +200,12 @@ export default class EditProfilePage extends Component {
           gender: gender,
           interests: interests
         };
-        axios.post(`${config.API_URL}${config.Edit_Profile_Url}`, profile, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        axios.put(`${config.API_URL}${config.Edit_Profile_Url}${this.state.profileId}/`, profile, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
           .then(res => {
             console.log(res.data)
             this.setState({ success: true, messageType: AlertTypes.Success }, () => {
               this.handleSnackbarOpen();
-              setTimeout(() => { this.props.history.push(config.Profilepage_Path); }, 3000);
+              setTimeout(() => { this.props.history.push(config.Profille_Page_Path + `/${getUserId()}`); }, 3000);
             });
     
           }, (error) => {
@@ -161,6 +228,7 @@ export default class EditProfilePage extends Component {
                     type="text"
                     error=""
                     label="Name"
+                    value={this.state.name}
                     onChange={this.handleNameEdit}
                     defaultValue=""
                     helperText="Name"
@@ -173,6 +241,7 @@ export default class EditProfilePage extends Component {
                     type="text"
                     error=""
                     label="Midlle Name"
+                    value={this.state.middle_name}
                     onChange={this.handleMidNameEdit}
                     defaultValue=""
                     helperText="Middle Name"
@@ -184,28 +253,31 @@ export default class EditProfilePage extends Component {
                     type="text"
                     error=""
                     label="Last Name"
+                    value={this.state.last_name}
                     onChange={this.handleLastNameEdit}
                     defaultValue=""
                     helperText="Last Name"
                     style={width}
                     variant="filled" />
                 </div>
-                <div>
+                {/* <div>
                   <TextField
                     type="text"
                     error=""
                     label="email"
+
                     onChange={this.handleEmailEdit}
                     defaultValue=""
                     helperText="E-mail"
                     style={width}
                     variant="filled" />
-                </div>
+                </div> */}
                 <div>
                   <TextField
                     type="text"
                     error=""
                     label="Bio"
+                    value={this.state.bio}
                     onChange={this.handleBioEdit}
                     defaultValue=""
                     helperText="Bio"
@@ -217,6 +289,7 @@ export default class EditProfilePage extends Component {
                     type="text"
                     error=""
                     label="Age"
+                    value={this.state.birthday}
                     onChange={this.handleAgeEdit}
                     defaultValue=""
                     helperText="Age"
@@ -228,9 +301,22 @@ export default class EditProfilePage extends Component {
                     type="text"
                     error=""
                     label="Interests"
+                    value={this.state.interests}
                     onChange={this.handleInterestsEdit}
                     defaultValue=""
                     helperText="Interests"
+                    style={width}
+                    variant="filled" />
+                </div>
+                <div>
+                  <TextField
+                    type="text"
+                    error=""
+                    label="Interests"
+                    value={this.state.expertise}
+                    onChange={this.handleExpertiseEdit}
+                    defaultValue=""
+                    helperText="Expertise"
                     style={width}
                     variant="filled" />
                 </div>                    

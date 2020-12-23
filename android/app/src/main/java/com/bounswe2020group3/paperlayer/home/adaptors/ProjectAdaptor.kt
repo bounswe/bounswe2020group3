@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.home.cards.ProjectUpdateCard
-import com.bounswe2020group3.paperlayer.invite.UserInviteAdapter
 
 
 private const val TAG = "ProjectAdapter"
@@ -32,7 +31,7 @@ class ProjectAdaptor (var clickListener: OnCardClickListener) : RecyclerView.Ada
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectViewHolder {
-        return ProjectViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.layout_list_item_invite, parent, false))
+        return ProjectViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.layout_list_item_projectupdate, parent, false))
     }
 
     override fun onBindViewHolder(holder: ProjectViewHolder, position: Int) {
@@ -49,7 +48,7 @@ class ProjectAdaptor (var clickListener: OnCardClickListener) : RecyclerView.Ada
         val projectBody: TextView =itemView.findViewById<TextView>(R.id.textViewProjectDescription)
         val projectCreator: TextView =itemView.findViewById<TextView>(R.id.textViewProjectCreator)
         val projectType: TextView =itemView.findViewById<TextView>(R.id.TextViewProjectType)
-        val buttonCollab : Button = itemView.findViewById<Button>(R.id.inviteButton)
+        val buttonCollab : Button = itemView.findViewById<Button>(R.id.buttonCollab)
 
         fun bind(item : ProjectUpdateCard, action: OnCardClickListener){
             projectTitle.text = item.projectTitle

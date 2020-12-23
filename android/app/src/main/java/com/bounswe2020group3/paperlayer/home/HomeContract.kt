@@ -4,17 +4,19 @@ package com.bounswe2020group3.paperlayer.home
 import com.bounswe2020group3.paperlayer.home.cards.EventCard
 import com.bounswe2020group3.paperlayer.home.cards.MilestoneCard
 import com.bounswe2020group3.paperlayer.home.cards.ProjectUpdateCard
+import com.bounswe2020group3.paperlayer.home.data.CollaborateRequest
 import com.bounswe2020group3.paperlayer.home.data.Event
 import com.bounswe2020group3.paperlayer.invite.InviteCard
+import com.bounswe2020group3.paperlayer.invite.data.InviteRequest
+import com.bounswe2020group3.paperlayer.invite.data.InviteResponse
 import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.project.data.Project
+import com.bounswe2020group3.paperlayer.project.data.ProjectShort
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface HomeContract {
     interface EventPresenter : Mvp.Presenter<EventView> {
@@ -77,7 +79,8 @@ interface HomeContract {
     interface Model{
         fun getAllEvents(): Observable<List<Event>>?
         fun getAuthToken(): BehaviorSubject<AuthToken>
-        fun getallprojectsOfTheOwner(OwnerId:Int): Observable<List<Project>>
+        fun getAllProjects(OwnerId:Int): Observable<List<ProjectShort>>
+        fun collaborateRequest(request : CollaborateRequest) : Single<CollaborateRequest>
 
     }
     interface EventsService{
@@ -87,7 +90,15 @@ interface HomeContract {
     interface ProjectService {
 
         @GET("/api/projects/")
-        fun getAllProjects(): Observable<List<Project>>
+        fun getAllProjects(): Observable<List<ProjectShort>>
+
+
+    }
+    interface CollaborationRequestService{
+        @POST("/api/collaboration_requests/")
+        fun collaborationRequest(@Header("Authorization") authorization: String, @Body collaborate : CollaborateRequest) : Single<CollaborateRequest>
+
+
     }
 
 

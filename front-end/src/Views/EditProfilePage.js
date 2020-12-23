@@ -76,6 +76,7 @@ export default class EditProfilePage extends Component {
         img:"",
         bio:"",
         age:"",
+        birthday: new Date(),
         expertise:"",
         gender:"",
         interests:"",
@@ -117,36 +118,7 @@ export default class EditProfilePage extends Component {
         this.setState({ success: false, message: "Error when fetching profile data.", messageType: AlertTypes.Error });
         this.handleSnackbarOpen()
         console.log(error);
-      });
-      
-      
-    }
-    getProfile = (id) => {
-      axios.get(`${config.API_URL}${config.Edit_Profile_Url}${id}/`, 
-      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-      .then(res => {
-        const prof = res.data[0];
-
-        this.setState({
-          isPublic: prof.is_public,
-          profileId: prof.id,
-          name: prof.name,
-          middle_name: prof.middle_name,
-          last_name: prof.last_name,
-          bio: prof.bio,
-          img: prof.photo_url,
-          birthday: prof.birthday, 
-          expertise: prof.expertise,
-          gender: prof.gender,
-          interests: prof.interests,
-          affiliations: prof.affiliations,
-          shareBio: prof.share_bio,
-          shareGender: prof.share_gender,
-          shareAffiliations: prof.share_affiliations,
-          shareBirthday: prof.share_birthday,
-        });
-
-      })
+      }); 
     }
 
     handleSnackbarOpen = () => {
@@ -228,6 +200,7 @@ export default class EditProfilePage extends Component {
 
     render() {
         const { gender } = this.state;
+        console.log(this.state.birthday)
         return (
           <Container>
             <UserNavbar
@@ -306,6 +279,7 @@ export default class EditProfilePage extends Component {
                 <div>
                   <DateComponent
                     value={this.state.birthday}
+                    dateValue={this.state.birthday}
                     handleDateChange={this.handleDateChange}
                     helperText="Birthday"
                     past={true}

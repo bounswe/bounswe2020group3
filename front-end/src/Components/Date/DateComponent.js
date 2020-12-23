@@ -21,7 +21,7 @@ function DateComponent(props) {
                     style={props.style}
                     clearable
                     value={selectedDate}
-                    placeholder={currentDate}
+                    placeholder={props.dateValue ? props.dateValue : currentDate}
                     //for accessing the data
                     onChange={date => handleDate(date)}
                     minDate={past ? new Date("1900", "01") :  new Date()}

@@ -41,7 +41,6 @@ class SearchPresenter @Inject constructor(private var model:SearchContract.Model
 
     override fun navigateToUser(userID: Int) {
         val bundle = bundleOf("userID" to userID )
-        //FIX
         view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToUserFromSearch,bundle) }
     }
 

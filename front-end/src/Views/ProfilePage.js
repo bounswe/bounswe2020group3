@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, styled } from '@material-ui/core';
+import { Button, Input, styled } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
@@ -94,7 +94,9 @@ export default class HomePage extends Component {
       followers:[],
       following:[],
       milestones: [],
-      projects: []
+      projects: [],
+      file : undefined,
+      showUpload: false
     }
   };
 
@@ -322,7 +324,29 @@ export default class HomePage extends Component {
           <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.followers.length:0}</b> followers</Typography> */}
         </Paper>);
   };
+  handleProfilePictureChange = (e) => {
+    this.setState({ file: e.target.files[0] });
+  }
+  handleShowUpload = (e) => {
+    this.setState({ showUpload: true });
+  }
+  submitPhoto = () => {
+    const { file } = this.state;
+    console.log(file);
+    if(file === undefined){
+      return;
+    }
+    const data = new FormData();
+    data.append("profile_picture", file);
+    axios.put(`${config.API_URL}/api/profile_picture/${this.state.profileId}/`, data, 
+    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } } )
+    .then(res => {
+      console.log("OK");
+    })
+  }
+
   renderSelfProfile() {
+    console.log(this.state.showUpload)
     return (<SelfContainer>
       <UserNavbar
         logout={() => { this.props.history.push(config.Login_Path) }}
@@ -349,6 +373,25 @@ export default class HomePage extends Component {
           <Grid container spacing={2} item sm={6}>
             <Grid item sm={12} >
               <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
+              {this.state.showUpload ?
+                <><Input type="file" onChange={this.handleProfilePictureChange}></Input>
+                {this.state.file !== undefined ?
+                  <Button color='primary'
+                    type='outlined'
+                    style={{ width: '40px', fontSize: "8px" }}
+                    onClick={this.submitPhoto}
+                  > Save Picture </Button>
+                :
+                <></>
+                }
+                </>
+                :
+                <Button color='primary'
+                  type='outlined'
+                  style={{ width: '40px', fontSize: "8px" }}
+                  onClick={this.handleShowUpload}
+                >Change Picture</Button>
+              }
               <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
                 <Typography>{this.state.name + " " + this.state.middle_name} <br />
                   {this.state.last_name.toUpperCase()}</Typography>

@@ -51,7 +51,9 @@ export default class HomePage extends Component {
       photoUrl: "",
       projectId: "",
       showAddTag: false,
-      newTag: ""
+      tagQuery: "",
+      currTag: [],
+      allTags: []
     }
   };
 
@@ -61,8 +63,8 @@ export default class HomePage extends Component {
   goToLogin = () => {
     this.props.history.push("/login");
   };
-  handleNewTag = (e) => {
-    this.setState({ newTag: e.target.value })
+  handleTagQuery = (e) => {
+    this.setState({ tagQuery: e.target.value })
   };
   goToProfile = () => {
     this.props.history.push("/profile/" + getUserId());
@@ -76,15 +78,12 @@ export default class HomePage extends Component {
   goToEditProjectPage = (pid) => {
     this.props.history.push("/edit-project/" + pid);
   };
-
-  componentDidMount() {
-    var project_id = this.props.location.pathname.split('/')[2];
-    this.setState({ projectId: project_id });
+  getProject = (project_id) => {
     axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}/`, { headers: { 'Content-Type': 'Application/json' } })
       .then(res => {
         const prof = res.data;
-        const temp_members = prof.members;//, tags: prof.tags to be added to set State later
-        this.setState({ name: prof.name, desc: prof.description, reqs: prof.requirements, stat: prof.state, age: prof.age, type: prof.project_type, due: prof.due_date  });
+        const temp_members = prof.members;
+        this.setState({ name: prof.name, desc: prof.description, reqs: prof.requirements, stat: prof.state, age: prof.age, type: prof.project_type, due: prof.due_date, tags: prof.tags });
         if (prof.event == null) {
           this.setState({ events: [] });
         } else {
@@ -98,6 +97,8 @@ export default class HomePage extends Component {
         });
 
       });
+  }
+  getProfile = () => {
     axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         let name = res.data.profile[0].name;
@@ -108,7 +109,14 @@ export default class HomePage extends Component {
         setPhotoCookie(photoUrl)
         this.setState({ username: name, userlastname: lastname, photoUrl: photoUrl });
       });
-      this.getTags();
+  }
+
+  componentDidMount() {
+    var project_id = this.props.location.pathname.split('/')[2];
+    this.setState({ projectId: project_id });
+    this.getProject(project_id);
+    this.getProfile();
+    this.getTags();
   };
 
   renderContributor() {
@@ -141,9 +149,29 @@ export default class HomePage extends Component {
     const { tags } = this.state;
     return tags.map((item) => {
       return (
-        <Chip style={{ background: colorCodes[item.color], margin:"3px" }} label={item.name} />)
+        <Chip onDelete={() => { this.deleteTag(item) }} style={{ background: colorCodes[item.color], margin: "3px", textTransform: "capitalize" }} label={item.name} />)
     });
   };
+
+  renderDesiredTags = () => {
+    const { tagQuery, allTags } = this.state;
+    if (tagQuery === "") return;
+    return allTags.map((item) => {
+      let tag = item.name;
+      return (<>
+        {tag.toLowerCase().includes(tagQuery.toLowerCase()) && !this.inTags(tag) ?
+          <Chip
+            style={{ background: colorCodes[item.color], margin: "3px", cursor: "pointer", textTransform: "capitalize" }}
+            onClick={() => { this.setState({ currTag: item, tagQuery: item.name }) }}
+            label={item.name} />
+          :
+          <></>
+        }
+      </>
+      )
+
+    });
+  }
 
   render() {
     var project_id = this.props.location.pathname.split('/')[2];
@@ -166,15 +194,17 @@ export default class HomePage extends Component {
             <Grid item sm={7}>
               <Typography variant="h5" color="primary">{this.state.name}</Typography>
               <Typography variant="h5" color="primary">Brief Description</Typography>
-              <Paper elevation={6} style={{ minHeight: "100px" }}>
+              <Paper elevation={6} style={{ border: "solid 1px blue", borderRadius: '5px', textAlign: "left", minHeight: "100px", padding: "10px" }}>
                 <p>{this.state.desc}</p>
               </Paper>
-              <Typography variant="h5" color="primary">Colaboration Qualifications</Typography>
-              <Paper elevation={6} style={{ minHeight: "100px" }}>
-                <p>{this.state.reqs}</p>
+              <Typography variant="h5" color="primary" style={{ marginTop: '10px' }}>Collaboration Qualifications</Typography>
+              <Paper elevation={6} style={{ border: "solid 1px blue", borderRadius: '5px', textAlign: "left", minHeight: "100px", padding: "10px" }}>
+                <div style={{ height: "100%", width: "100%" }}>
+                  {this.state.reqs}
+                </div>
               </Paper>
-              <Paper elevation={6} style={{ minHeight: "100px", textAlign:"left" }}>
-                <p></p>
+              <Typography variant="h5" color="primary" style={{ marginTop: '10px' }}>Project Tags</Typography>
+              <Paper elevation={6} style={{ border: "solid 1px blue", borderRadius: '5px', padding: "10px", minHeight: "40px", marginTop: '20px', textAlign: "left" }}>
                 {this.renderTags()}
               </Paper>
               <p></p>
@@ -213,22 +243,24 @@ export default class HomePage extends Component {
                 {this.renderDeadlines()}
               </Grid>
               <Grid item sm={9} style={{ minHeight: "10vh" }}>
-                <Typography variant="h5" color="primary">Tags</Typography>
+                {/* <Typography variant="h5" color="primary">Tags</Typography> */}
                 <Paper elevation={6}
                   style={{ width: "80%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
                   borderColor="primary"
                   border={1}>
-                  {this.renderTags}
                   {this.state.showAddTag ?
                     <>
                       <Input
                         type="text"
                         color='primary'
-                        style={{ width: "90%" }}
+                        style={{ width: "90%", textTransform: "capitalize" }}
                         placeholder="Please enter a new tag and press enter"
-                        onChange={(e) => { this.handleNewTag(e); }} 
-                        value={this.state.newTag}/>
-                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitNewTag}>Add Tag</Button>
+                        onChange={(e) => { this.handleTagQuery(e); }}
+                        value={this.state.tagQuery}
+                      />
+                      {this.renderDesiredTags()}
+                      <br />
+                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitTagQuery}>Add Tag</Button>
                     </>
                     :
                     <Button color="primary" variant="outlined" onClick={() => { this.setState({ showAddTag: true }) }}> Add New Tag </Button>
@@ -247,27 +279,109 @@ export default class HomePage extends Component {
         </Grid>
       </Container>);
   }
-  submitNewTag = () => {
-    const { newTag } = this.state;
-    console.log(newTag, "TAG")
-    if(newTag === undefined) return;
-    let tag = newTag.trim();
-    if (tag === "") return;
+  submitTagQuery = () => {
+    const { tagQuery, currTag, tags, allTags } = this.state;
+    let newTagId = undefined;
+    let newTagColor = undefined;
+    let newTagName = undefined;
+    let newTag = {};
+    let newTags = tags;
+    let tagIds = []
+    if (tagQuery === undefined) return;
+    let tag = tagQuery.trim();
+    if (currTag.name !== undefined && currTag.name.toLowerCase() === tag.toLocaleLowerCase()) {
+      newTags.push(currTag);
+      for (let i = 0; i < newTags.length; i++) {
+        tagIds.push(newTags[i].id);
+      }
+      axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { tags: tagIds }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          this.setState({ showAddTag: false, tagQuery: "", currTag: [] });
+          this.getProject(this.state.projectId);
+        })
+    }
+    else if (currTag.name === undefined && tag !== "" && this.inAllTags()) {
+      for (let i = 0; i < allTags.length; i++) {
+        if (allTags[i].name.toLowerCase() === tagQuery.toLowerCase()) {
+          newTags.push(allTags[i]);
+          break;
+        }
+      }
+      tagIds = this.getTagIds(newTags);
+      axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { tags: tagIds }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          this.setState({ showAddTag: false, tagQuery: "", currTag: [] });
+          this.getProject(this.state.projectId);
+        });
+    }
 
-    // Request here : 
-    axios.post(`${config.API_URL}/api/tags/`, {name: tag}, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}`}});
-    // on success
-    this.setState({showAddTag: false, newTag:""});
-    
-    // get project again and update
+    else if (currTag.name === undefined && tag !== "") {
+      axios.post(`${config.API_URL}/api/tags/`, { name: tag.toLowerCase() }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          newTagColor = res.data.color;
+          newTagId = res.data.id;
+          newTagName = res.data.name;
+          newTag = { color: newTagColor, id: newTagId, name: newTagName };
+          newTags.push(newTag);
+          tagIds = this.getTagIds(newTags);
+          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { tags: tagIds }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            .then(res => {
+              this.setState({ showAddTag: false, tagQuery: "", currTag: [] });
+              this.getProject(this.state.projectId);
+            })
+          // STH
+        });
+    }
+
   }
-  getTags = () =>{
+  //Get tag ids for patch operations
+  getTagIds = (newTags) => {
+    let tagIds = []
+    for (let i = 0; i < newTags.length; i++) {
+      tagIds.push(newTags[i].id);
+    }
+    return tagIds;
+  }
+  //Check if the query is one of all system tags
+  inAllTags = () => {
+    const { tagQuery, allTags } = this.state;
+    let tag = tagQuery.trim().toLowerCase();
+    for (let i = 0; i < allTags.length; i++) {
+      if (allTags[i].name.toLowerCase() === tag) {
+        return true;
+      }
+    }
+  }
+  //Check if the query is in your own tags
+  inTags = (query) => {
+    const { tags } = this.state;
+    let tag = query.trim().toLowerCase();
+    for (let i = 0; i < tags.length; i++) {
+      if (tags[i].name.toLowerCase() === tag) {
+        return true;
+      }
+    }
+  }
+  //Delete this particular tag.
+  deleteTag = (tag) => {
+    const { tags } = this.state;
+    let id = tag.id;
+    let newTags = tags;
+    newTags.splice(newTags.indexOf(id), 1);
+    let tagIds = this.getTagIds(newTags);
+    axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { tags: tagIds }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        this.getProject(this.state.projectId);
+      })
 
-    axios.get(`${config.API_URL}/api/tags/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
-    .then(res => {
-      let tags = res.data;
-      this.setState({tags: tags});
-    })
+  }
+
+  getTags = () => {
+    axios.get(`${config.API_URL}/api/tags/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let tags = res.data;
+        this.setState({ allTags: tags });
+      })
   }
 
 }

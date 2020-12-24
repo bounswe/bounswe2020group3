@@ -11,7 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bounswe2020group3.paperlayer.dagger.AppComponent
 import com.bounswe2020group3.paperlayer.dagger.DaggerAppComponent
-import com.bounswe2020group3.paperlayer.data.follow.FollowType
+import com.bounswe2020group3.paperlayer.profile.follow.FollowType
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -30,10 +30,16 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             if (destination.id == R.id.followListFragment && arguments != null) {
-                if ((arguments.get("followType") as FollowType) == FollowType.FOLLOWER) {
-                    destination.label = "Followers"
-                } else {
-                    destination.label = "Followings"
+                when ((arguments.get("followType") as FollowType)) {
+                    FollowType.FOLLOWER -> {
+                        destination.label = "Followers"
+                    }
+                    FollowType.FOLLOWING -> {
+                        destination.label = "Followings"
+                    }
+                    else -> {
+                        destination.label = "Follow Requests"
+                    }
                 }
             }
 

@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from api.models.following import Following, FollowRequest
 from api.permission import IsRequestSenderOrReceiver
-from api.serializers.following import FollowSerializer,\
+from api.serializers.following import FollowSerializer, \
     FollowRequestSerializer, FollowPostSerializer, \
     FollowRequestPostSerializer
 from django.shortcuts import get_object_or_404
@@ -80,7 +80,7 @@ class FollowRequestViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             return FollowRequestPostSerializer
         return FollowRequestSerializer
-    
+
     @action(detail=True, methods=['POST'], name='accept_follow_request',
             serializer_class=None)
     def accept_follow(self, request, pk=None):

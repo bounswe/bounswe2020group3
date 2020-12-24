@@ -17,6 +17,8 @@ RUN set -ex \
     openssl-dev \
     postgresql-dev \
     build-base \
+    libxml2-dev \
+    libxslt-dev \
     && python -m pip install --upgrade pip \
     && pip install --no-cache-dir poetry
 

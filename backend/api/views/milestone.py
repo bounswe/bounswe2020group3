@@ -29,6 +29,7 @@ class MilestoneViewSet(viewsets.ModelViewSet):
             serializer = ProjectMilestonesSerializer(projects, many=True)
             for item in serializer.data:
                 for milestone in item['milestones']:
+                    milestone['project_name'] = item['name']
                     list_of_milestones.append(milestone)
             list_of_milestones.sort(key=lambda x: x.get('date'))
             return Response(data={

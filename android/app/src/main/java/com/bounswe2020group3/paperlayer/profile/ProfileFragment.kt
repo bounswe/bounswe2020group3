@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.data.follow.FollowType
+import com.bounswe2020group3.paperlayer.profile.follow.FollowType
 import com.bounswe2020group3.paperlayer.data.user.User
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -40,19 +40,24 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
         presenter.subscribeAuthUser()
 
-        imageButtonSettings.setOnClickListener{
+        imageButtonSettings.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.navigateToProfileEditFromProfile)
         }
 
         val followerBundle = bundleOf("followType" to FollowType.FOLLOWER)
         val followingBundle = bundleOf("followType" to FollowType.FOLLOWING)
+        val followRequestBundle = bundleOf("followType" to FollowType.FOLLOW_REQUEST)
 
-        linearLayoutFollowers.setOnClickListener{
+        linearLayoutFollowers.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.navigateToFollowListFromProfile, followerBundle)
         }
 
-        linearLayoutFollowings.setOnClickListener{
+        linearLayoutFollowings.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.navigateToFollowListFromProfile, followingBundle)
+        }
+
+        layoutFollowRequests.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.navigateToFollowListFromProfile, followRequestBundle)
         }
     }
 
@@ -79,7 +84,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         textViewExpertise.text = profile.expertise
 
         val imageUrl = profile.profile_picture
-        if(imageUrl != null && imageUrl.contains("http")) {
+        if (imageUrl != null && imageUrl.contains("http")) {
             Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
         }
     }

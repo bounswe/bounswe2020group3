@@ -2,7 +2,7 @@ from api.models.collaboration_request import CollaborationRequest
 from rest_framework import viewsets
 from rest_framework import permissions
 from api.serializers.collaboration_request \
-    import CollaborationRequestSerializer, CollaborationRequestPOSTSerializer
+    import CollaborationRequestSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -10,6 +10,7 @@ from rest_framework import status
 from api.permission import CollaborationPermissions
 from django.shortcuts import get_object_or_404
 from api.models.project import Project
+from django.utils import timezone
 
 
 class CollaborationRequestViewSet(viewsets.ModelViewSet):
@@ -30,6 +31,7 @@ class CollaborationRequestViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        serializer.validated_data['created'] = timezone.now()
         serializer.validated_data['from_user'] = self.request.user
         project = Project.objects.get(
             id=serializer.validated_data['to_project'].id)
@@ -69,8 +71,3 @@ class CollaborationRequestViewSet(viewsets.ModelViewSet):
             return Response(data={
                 'error': 'Unauthorized'
             }, status=status.HTTP_401_UNAUTHORIZED)
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return CollaborationRequestPOSTSerializer
-        return super().get_serializer_class()

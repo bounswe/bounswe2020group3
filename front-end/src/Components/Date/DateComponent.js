@@ -3,7 +3,9 @@ import DateFnsUtils from '@date-io/date-fns'
 import { KeyboardDatePicker, MuiPickersUtilsProvider /*DatePicker*/ } from "@material-ui/pickers";
 
 function DateComponent(props) {
-    const [selectedDate, handleDateChange] = useState(new Date());
+    // initialDate = undefined
+    // props.dateValue !== undefined ? initialDate = props.dateValue : new Date(); 
+    const [selectedDate, handleDateChange] = useState(props.dateValue);
     var now = new Date();
     var currentDate = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
 
@@ -15,13 +17,13 @@ function DateComponent(props) {
         props.handleDateChange(dateString);        
     }
     let past = props.past
+    console.log(props.dateValue)
     return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                     style={props.style}
-                    clearable
                     value={selectedDate}
-                    placeholder={props.dateValue ? props.dateValue : currentDate}
+                    // placeholder={props.dateValue ? props.dateValue : currentDate}
                     //for accessing the data
                     onChange={date => handleDate(date)}
                     minDate={past ? new Date("1900", "01") :  new Date()}

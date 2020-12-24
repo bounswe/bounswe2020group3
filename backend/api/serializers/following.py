@@ -40,7 +40,7 @@ class FollowSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Following
-        fields = ("from_user", "to_user", "created")
+        fields = ("id", "from_user", "to_user", "created")
 
 
 class FollowPostSerializer(serializers.HyperlinkedModelSerializer):

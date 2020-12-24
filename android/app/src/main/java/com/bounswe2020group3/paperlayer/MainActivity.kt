@@ -2,9 +2,8 @@ package com.bounswe2020group3.paperlayer
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
 import android.view.View
-import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -15,7 +14,7 @@ import com.bounswe2020group3.paperlayer.dagger.DaggerAppComponent
 import com.bounswe2020group3.paperlayer.data.follow.FollowType
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
 
     lateinit var navController: NavController
     private lateinit var appComponent: AppComponent
@@ -28,23 +27,48 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
 
         navController = findNavController(R.id.fragment)
-        setSupportActionBar(toolbar)
-        val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.eventFragment, R.id.projectMainFragment, R.id.profileFragment,R.id.searchFragment
-        ))
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            if(destination.id == R.id.followListFragment && arguments != null) {
-                if((arguments.get("followType") as FollowType) == FollowType.FOLLOWER) {
+            if (destination.id == R.id.followListFragment && arguments != null) {
+                if ((arguments.get("followType") as FollowType) == FollowType.FOLLOWER) {
                     destination.label = "Followers"
                 } else {
                     destination.label = "Followings"
                 }
             }
+
+            // Hide toolbar on main fragment
+            if (controller.currentDestination?.id == R.id.mainFragment) {
+                toolbar.visibility = View.INVISIBLE
+            } else {
+                toolbar.visibility = View.VISIBLE
+            }
+
+            // Hide notification button on login and register fragments
+            if (controller.currentDestination?.id in setOf(R.id.loginFragment, R.id.registerFragment)) {
+                findViewById<View>(R.id.itemNotificationAction)?.visibility = View.GONE
+            } else {
+                findViewById<View>(R.id.itemNotificationAction)?.visibility = View.VISIBLE
+            }
         }
 
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        // Set toolbar invisible by default
+        toolbar.visibility = View.INVISIBLE
+
+        // Use custom toolbar
+        setSupportActionBar(toolbar)
+
+        val bottomNavConfiguration = AppBarConfiguration(setOf(
+                R.id.eventFragment, R.id.projectMainFragment, R.id.profileFragment, R.id.searchFragment
+        ))
+
+        setupActionBarWithNavController(navController, bottomNavConfiguration)
         navigationBarBottom.setupWithNavController(navController)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_options_menu, menu)
+        return true
     }
 
     override fun onSupportNavigateUp(): Boolean {

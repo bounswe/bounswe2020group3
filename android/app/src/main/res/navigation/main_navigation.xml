@@ -181,8 +181,7 @@
     </fragment>
     <fragment
         android:id="@+id/followListFragment"
-        android:name="com.bounswe2020group3.paperlayer.profile.follow.FollowListFragment"
-        android:label="FollowListFragment" >
+        android:name="com.bounswe2020group3.paperlayer.profile.follow.FollowListFragment">
         <action
             android:id="@+id/navigateToUserFromFollowList"
             app:destination="@id/userFragment" />

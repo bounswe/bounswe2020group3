@@ -372,7 +372,7 @@ export default class HomePage extends Component {
 
           <Grid container spacing={2} item sm={6}>
             <Grid item sm={12} >
-              <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
+              <Avatar src={getPhoto()} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
               {this.state.showUpload ?
                 <><Input type="file" onChange={this.handleProfilePictureChange}></Input>
                 {this.state.file !== undefined ?

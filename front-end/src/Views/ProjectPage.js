@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import Typography from "@material-ui/core/Typography";
 import Profilebar from '../Components/ProfileBar/Profilebar';
-import { getUserId, getAccessToken, setPhotoCookie } from "../Components/Auth/Authenticate";
+import { getUserId, getAccessToken } from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
   background: "#f9f9eb",
@@ -97,9 +97,7 @@ export default class HomePage extends Component {
           let mname = res.data.profile[0].middle_name;
           let lastname = res.data.profile[0].last_name;
           name = name + " " + mname;
-          let photoUrl = (res.data.profile[0].photo_url)
-          setPhotoCookie(photoUrl)
-          this.setState({ username:name , userlastname: lastname, photoUrl:photoUrl });
+          this.setState({ username:name , userlastname: lastname });
         });
     };
 

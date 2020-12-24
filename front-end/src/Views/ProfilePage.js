@@ -342,6 +342,7 @@ export default class HomePage extends Component {
     { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } } )
     .then(res => {
       console.log("OK");
+      window.location.reload(false);
     })
   }
 

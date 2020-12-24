@@ -6,8 +6,8 @@ function DateComponent(props) {
     // initialDate = undefined
     // props.dateValue !== undefined ? initialDate = props.dateValue : new Date(); 
     const [selectedDate, handleDateChange] = useState(props.dateValue);
-    var now = new Date();
-    var currentDate = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
+    // var now = new Date();
+    // var currentDate = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
 
     const handleDate = (date) => {
         let month = (parseInt(date.getMonth())+1).toString()

@@ -18,7 +18,7 @@ const Container = styled(Box)({
   borderRadius: 3,
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
   color: 'white',
-  height: "calc(98vh - 60px)",
+  height: "calc(100vh - 60px)",
   paddingBottom: "60px",
   top: "0",
   bottom: "0",
@@ -88,15 +88,14 @@ export default class HomePage extends Component {
         if (prof.event == null) {
           this.setState({ events: [] });
         } else {
-          this.setState({ events: [prof.event] });
+          this.setState({ events: [prof.event] }); // ATTENTION : May cause bugs later ! ! ! 
         }
+        let memberNames = []
         temp_members.forEach(item => {
-          var last_members = this.state.members;
           const member = item.profile[0];
-          last_members.push(member.name + " " + member.last_name);
-          this.setState({ members: last_members });
+          memberNames.push(member.name + " " + member.last_name); // ATTENTION : WE may want to add the middle names as well.
         });
-
+        this.setState({ members: memberNames });
       });
   }
   getProfile = () => {
@@ -123,9 +122,9 @@ export default class HomePage extends Component {
   renderContributor() {
     var mems = this.state.members;
     return mems.map((item) => {
-      return (<Paper elevation={6} style={{ padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+      return (
         <Typography variant="h6" color="primary" style={{ cursor: "pointer", width: "100%", textAlign: "left" }}>{item}</Typography>
-      </Paper>)
+      )
     });
   };
   renderEvents() {
@@ -143,9 +142,9 @@ export default class HomePage extends Component {
     deadlines.push({ "deadline": this.state.due });
     deadlines.sort();
     return deadlines.map((item) => {
-      return (<Paper elevation={6} style={{ width: "80%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+      return (
         <Typography variant="h6" color="primary" style={{ cursor: "pointer", width: "100%", textAlign: "center" }}>{item.deadline}</Typography>
-      </Paper>)
+      )
     });
   };
   renderTags() {
@@ -233,30 +232,28 @@ export default class HomePage extends Component {
               </Grid>
             </Grid>
             <Grid item sm={4}>
-              {/* <Grid item sm={9}>
-                <Paper elevation={6} style={{padding:"5", width:"100%", background:"white", margin:"auto", marginBottom:"10px"}}>
-                <SvgIcon><svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></SvgIcon>
-                Follow()
-                </Paper>
-              </Grid> */}
-              <Grid item sm={9} style={{ maxHeight: "30vh", minHeight: "15vh", overflowY: "scroll", margin: "5px 0" }}>
+              <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
                 <Typography variant="h5" color="primary">Contributors</Typography>
+                <Paper elevation={6} style={{ padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
                 {this.renderContributor()}
+                </Paper>
               </Grid>
-              <Grid item sm={9} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
+              <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
                 <Typography variant="h5" color="primary">Related Events</Typography>
                 <Paper elevation={6} style={{ padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
                 {this.renderEvents()}
                 </Paper>
               </Grid>
-              <Grid item sm={9} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: 'scroll', margin: "5px 0" }}>
+              <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: 'scroll', margin: "5px 0" }}>
                 <Typography variant="h5" color="primary">Upcoming Deadlines</Typography>
+                <Paper elevation={6} style={{ width: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
                 {this.renderDeadlines()}
+                </Paper>
               </Grid>
-              <Grid item sm={9} style={{ minHeight: "10vh" }}>
+              <Grid item sm={12} style={{ minHeight: "10vh" }}>
                 {/* <Typography variant="h5" color="primary">Tags</Typography> */}
                 <Paper elevation={6}
-                  style={{ width: "80%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
+                  style={{ width: "90%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
                   borderColor="primary"
                   border={1}>
                   {this.state.showAddTag ?
@@ -278,7 +275,7 @@ export default class HomePage extends Component {
                   }
                 </Paper>
               </Grid>
-              <Grid item sm={9} style={{ minHeight: "10vh" }}>
+              <Grid item sm={12} style={{ minHeight: "10vh" }}>
                 <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.goToEditProjectPage(project_id)}>Edit Project</Button>
                 <br />
                 <Button variant="contained" color="primary" style={{ marginTop: "10px" }}

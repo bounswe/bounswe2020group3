@@ -59,7 +59,6 @@ class FollowRequestViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsAuthenticatedOrReadOnly,
                           IsRequestSenderOrReceiver)
-    serializer_class = FollowRequestSerializer
     queryset = FollowRequest.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['req_to_user']
@@ -77,6 +76,11 @@ class FollowRequestViewSet(viewsets.ModelViewSet):
         FollowRequest.objects.create(**serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return FollowRequestPostSerializer
+        return FollowRequestSerializer
+    
     @action(detail=True, methods=['POST'], name='accept_follow_request',
             serializer_class=None)
     def accept_follow(self, request, pk=None):

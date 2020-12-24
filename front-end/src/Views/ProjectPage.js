@@ -41,6 +41,7 @@ export default class HomePage extends Component {
       desc: "",
       reqs: "",
       members: [],
+      membersData : [],
       stat: "",
       type: "",
       due: "",
@@ -83,7 +84,7 @@ export default class HomePage extends Component {
       .then(res => {
         const prof = res.data;
         const temp_members = prof.members;
-        this.setState({ name: prof.name, desc: prof.description, reqs: prof.requirements, stat: prof.state, age: prof.age, type: prof.project_type, due: prof.due_date, tags: prof.tags });
+        this.setState({ name: prof.name, desc: prof.description, membersData: prof.members, reqs: prof.requirements, stat: prof.state, age: prof.age, type: prof.project_type, due: prof.due_date, tags: prof.tags });
         if (prof.event == null) {
           this.setState({ events: [] });
         } else {
@@ -122,17 +123,19 @@ export default class HomePage extends Component {
   renderContributor() {
     var mems = this.state.members;
     return mems.map((item) => {
-      return (<Paper elevation={6} style={{ padding: "15px", width: "100%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+      return (<Paper elevation={6} style={{ padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
         <Typography variant="h6" color="primary" style={{ cursor: "pointer", width: "100%", textAlign: "left" }}>{item}</Typography>
       </Paper>)
     });
   };
   renderEvents() {
-    var events = this.state.events;
+    const { events } = this.state;
+    if (events.length === 0) return (  <Typography variant='h6' color="textPrimary">No Related Events</Typography>)
+
     return events.map((item) => {
-      return (<Paper elevation={6} style={{ padding: "15px", width: "100%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+      return (<>
         <Typography variant="h6" color="primary" style={{ cursor: "pointer", width: "100%", textAlign: "center" }} onClick={() => this.goToEvent(item.id)}>{item.title}</Typography>
-      </Paper>)
+      </>)
     });
   };
   renderDeadlines() {
@@ -148,8 +151,14 @@ export default class HomePage extends Component {
   renderTags() {
     const { tags } = this.state;
     return tags.map((item) => {
-      return (
-        <Chip onDelete={() => { this.deleteTag(item) }} style={{ background: colorCodes[item.color], margin: "3px", textTransform: "capitalize" }} label={item.name} />)
+      return (<>{this.isMember() ?
+        <Chip onDelete={() => { this.deleteTag(item) }}
+          style={{ background: colorCodes[item.color], margin: "3px", textTransform: "capitalize" }}
+          label={item.name} />
+        :
+        <Chip style={{ background: colorCodes[item.color], margin: "3px", textTransform: "capitalize" }} label={item.name} />
+      }
+      </>)
     });
   };
 
@@ -235,8 +244,10 @@ export default class HomePage extends Component {
                 {this.renderContributor()}
               </Grid>
               <Grid item sm={9} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
-                <Typography variant="h5" color="primary">Upcoming Events</Typography>
+                <Typography variant="h5" color="primary">Related Events</Typography>
+                <Paper elevation={6} style={{ padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
                 {this.renderEvents()}
+                </Paper>
               </Grid>
               <Grid item sm={9} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: 'scroll', margin: "5px 0" }}>
                 <Typography variant="h5" color="primary">Upcoming Deadlines</Typography>
@@ -334,6 +345,15 @@ export default class HomePage extends Component {
     }
 
   }
+  isMember = () => {
+    const { membersData } = this.state;
+    for(let i = 0 ; i < membersData.length ; i++){
+      if(membersData[i].id === parseInt(getUserId()) ) { return true; }
+    }
+    return false;
+     
+  }
+
   //Get tag ids for patch operations
   getTagIds = (newTags) => {
     let tagIds = []

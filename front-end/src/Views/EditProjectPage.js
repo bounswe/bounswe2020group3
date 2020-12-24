@@ -139,7 +139,7 @@ export default class ProjectPage extends Component {
     axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}`, { headers:{'Content-Type':'Application/json'}})
       .then(res => {
         const prof = res.data;
-        const temp_members = prof.members;
+        //const temp_members = prof.members;
         this.setState({projectTitle:prof.name, projectDescription:prof.description, projectRequirements:prof.requirements,  projectState:prof.state, age:prof.age, projectType:prof.project_type, dueDate:prof.due_date, tags:prof.tags});
         if(prof.event == null){
           this.setState({events:[]});

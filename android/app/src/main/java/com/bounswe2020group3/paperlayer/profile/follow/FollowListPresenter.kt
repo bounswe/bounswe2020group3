@@ -1,13 +1,13 @@
 package com.bounswe2020group3.paperlayer.profile.follow
 
 import android.util.Log
-import com.bounswe2020group3.paperlayer.data.follow.FollowType
+import com.bounswe2020group3.paperlayer.data.follow.ListableFollow
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class FollowListPresenter @Inject constructor(private val followModel: FollowModel) :
-    BasePresenter<FollowContract.View>(), FollowContract.Presenter {
+        BasePresenter<FollowContract.View>(), FollowContract.Presenter {
 
     private var disposable = CompositeDisposable()
 
@@ -17,25 +17,83 @@ class FollowListPresenter @Inject constructor(private val followModel: FollowMod
     }
 
     override fun loadFollowList(userId: Int?, type: FollowType?) {
-        val followListObservable = if (type == FollowType.FOLLOWER) {
-            followModel.getFollowerList(userId)
-        } else {
-            followModel.getFollowingList(userId)
+        val followListObservable = when (type) {
+            FollowType.FOLLOWER -> {
+                followModel.getFollowerList(userId)
+            }
+            FollowType.FOLLOWING -> {
+                followModel.getFollowingList(userId)
+            }
+            else -> {
+                followModel.getFollowRequestList()
+            }
         }
 
         val followListSub = followListObservable.subscribe(
-            { followList ->
-                view?.updateFollowListUI(followList)
-            },
-            { error ->
-                Log.d("Error", "Error occured while fetching follow list.")
-            }
+                { followList ->
+                    view?.updateFollowListUI(followList as List<ListableFollow>)
+                },
+                { error ->
+                    Log.d("Error", "Error occured while fetching follow list.")
+                }
         )
         disposable.add(followListSub)
     }
 
     override fun isUserAuthenticatedUser(userId: Int): Boolean {
         return followModel.getAuthToken().id == userId
+    }
+
+    override fun sendFollow(toUserId: Int) {
+        val followSub = followModel.sendFollow(toUserId).subscribe(
+                { _ ->
+                    view?.showInfoToast("Follow sent successfully")
+                    view?.loadList()
+                },
+                { _ ->
+                    view?.showErrorToast("Some error occurred. Please try again")
+                }
+        )
+        disposable.add(followSub)
+    }
+
+    override fun sendFollowRequest(toUserId: Int) {
+        val followRequestSub = followModel.sendFollowRequest(toUserId).subscribe(
+                { _ ->
+                    view?.showInfoToast("Follow request sent successfully")
+                    view?.loadList()
+                },
+                { _ ->
+                    view?.showErrorToast("Some error occurred. Please try again")
+                }
+        )
+        disposable.add(followRequestSub)
+    }
+
+    override fun acceptRequest(requestId: Int, fromUserId: Int) {
+        val acceptSub = followModel.acceptFollowRequest(requestId, fromUserId).subscribe(
+                { _ ->
+                    view?.showInfoToast("Follow request is accepted")
+                    view?.loadList()
+                },
+                { _ ->
+                    view?.showErrorToast("Some error occurred. Please try again")
+                }
+        )
+        disposable.add(acceptSub)
+    }
+
+    override fun rejectRequest(requestId: Int, fromUserId: Int) {
+        val rejectSub = followModel.rejectFollowRequest(requestId, fromUserId).subscribe(
+                { _ ->
+                    view?.showInfoToast("Follow request is rejected")
+                    view?.loadList()
+                },
+                { _ ->
+                    view?.showErrorToast("Some error occurred. Please try again")
+                }
+        )
+        disposable.add(rejectSub)
     }
 
 }

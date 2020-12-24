@@ -9,6 +9,7 @@ import com.bounswe2020group3.paperlayer.util.Session
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import retrofit2.Response
 import retrofit2.Retrofit
 import java.lang.Exception
 import javax.inject.Inject
@@ -60,6 +61,14 @@ class FollowModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    override fun getFollowRequestList(): Observable<List<FollowRequest>> {
+        val userId = getAuthToken().id
+        val authorization = "Token ${getAuthToken().token}"
+        return followService.getFollowRequestList(authorization, userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
     override fun sendFollowRequest(toUserId: Int): Observable<Any> {
         val userId = getAuthToken().id
         val followRequestCreate = FollowRequestCreate(
@@ -80,16 +89,26 @@ class FollowModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun acceptFollowRequest(followRequestId: Int): Observable<Any> {
+    override fun acceptFollowRequest(followRequestId: Int, fromUserId: Int): Observable<Response<Void>> {
         val authorization = "Token ${getAuthToken().token}"
-        return followService.acceptFollowRequest(authorization, followRequestId)
+        val userId = getAuthToken().id
+        val acceptBody = FollowRequestCreate(
+                requestFromUser = fromUserId,
+                requestToUser = userId
+        )
+        return followService.acceptFollowRequest(authorization, followRequestId, acceptBody)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun rejectFollowRequest(followRequestId: Int): Observable<Any> {
+    override fun rejectFollowRequest(followRequestId: Int, fromUserId: Int): Observable<Response<Void>> {
         val authorization = "Token ${getAuthToken().token}"
-        return followService.rejectFollowRequest(authorization, followRequestId)
+        val userId = getAuthToken().id
+        val rejectBody = FollowRequestCreate(
+                requestFromUser = fromUserId,
+                requestToUser = userId
+        )
+        return followService.rejectFollowRequest(authorization, followRequestId, rejectBody)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

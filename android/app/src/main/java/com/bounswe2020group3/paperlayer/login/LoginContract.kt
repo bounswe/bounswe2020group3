@@ -1,15 +1,10 @@
 package com.bounswe2020group3.paperlayer.login
 
-import android.view.View
-import android.widget.EditText
-import com.bounswe2020group3.paperlayer.login.data.AuthToken
-import com.bounswe2020group3.paperlayer.login.data.UserCredentials
+import com.bounswe2020group3.paperlayer.data.user.AuthToken
+import com.bounswe2020group3.paperlayer.data.user.UserCredentials
 import com.bounswe2020group3.paperlayer.mvp.Mvp
-import com.bounswe2020group3.paperlayer.project.data.Project
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
-import retrofit2.Call
 import retrofit2.http.*
 
 
@@ -41,7 +36,7 @@ interface LoginContract {
 
     interface ModelService {
         @POST("/api/auth/")
-        fun authLogin(@Body userCredentials:UserCredentials): Single<AuthToken>
+        fun authLogin(@Body userCredentials: UserCredentials): Single<AuthToken>
     }
 
 }

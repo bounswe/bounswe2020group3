@@ -1,8 +1,9 @@
 package com.bounswe2020group3.paperlayer.project
 
 
-import com.bounswe2020group3.paperlayer.login.data.AuthToken
+import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.project.data.Project
+import com.bounswe2020group3.paperlayer.project.data.ProjectShort
 import com.bounswe2020group3.paperlayer.util.Session
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -12,9 +13,9 @@ import io.reactivex.subjects.BehaviorSubject
 import retrofit2.Retrofit
 import javax.inject.Inject
 
-class ProjectModel @Inject constructor(private var sessionManager: Session,retrofit: Retrofit):ProjectMainContract.Model,ProjectContract.Model{
+class ProjectModel @Inject constructor(private var sessionManager: Session,retrofit: Retrofit):ProjectsContract.Model,ProjectDetailContract.Model{
 
-    private var projectService: ProjectMainContract.ProjectService = retrofit.create(ProjectMainContract.ProjectService::class.java)
+    private var projectService: ProjectsContract.ProjectService = retrofit.create(ProjectsContract.ProjectService::class.java)
 
     //ProjectContract.Model
     //Get given project
@@ -26,7 +27,7 @@ class ProjectModel @Inject constructor(private var sessionManager: Session,retro
 
     //ProjectMainContract.Model
     //Get all projects of given owner
-    override fun getAllProjectsOfOwner(ownerId: Int): Observable<List<Project>> {
+    override fun getAllProjectsOfOwner(ownerId: Int): Observable<List<ProjectShort>> {
         return projectService.getAllProjectsOfOwner(ownerId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

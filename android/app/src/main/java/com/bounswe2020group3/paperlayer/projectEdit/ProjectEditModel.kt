@@ -1,6 +1,7 @@
 package com.bounswe2020group3.paperlayer.projectEdit
 
 import com.bounswe2020group3.paperlayer.network.RetrofitProvider
+import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.util.Session
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -12,7 +13,7 @@ class ProjectEditModel @Inject constructor(private var sessionManager: Session):
     private var projectEditService: ProjectEditContract.ProjectEditService =
             RetrofitProvider.instance.create(ProjectEditContract.ProjectEditService::class.java)
 
-    override fun editProject(projectID: Int, projectEditRequest: ProjectEditRequest): Single<ProjectEditResponse> {
+    override fun editProject(projectID: Int, projectEditRequest: ProjectEditRequest): Single<Project> {
         val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
 
         return projectEditService.editProject(authToken, projectID, projectEditRequest)

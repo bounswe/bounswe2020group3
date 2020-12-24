@@ -8,6 +8,8 @@
     <color name="secondaryDarkColor">#5d99c6</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorBlack">#000000</color>
+    <color name="colorBlackLowAlpha">#34000000</color>
     <color name="colorGray">#E5E5E5</color>
+    <color name="colorDarkGray">#252525</color>
     <color name="colorTransparent">#00FFFFFF</color>
 </resources>

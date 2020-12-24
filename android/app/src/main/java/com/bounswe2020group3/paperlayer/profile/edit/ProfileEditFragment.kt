@@ -10,11 +10,10 @@ import android.widget.Toast
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.profile.data.Profile
-import com.bounswe2020group3.paperlayer.profile.data.User
+import com.bounswe2020group3.paperlayer.data.user.Profile
+import com.bounswe2020group3.paperlayer.data.user.User
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile_edit.*
 import kotlinx.android.synthetic.main.fragment_profile_edit.imageViewProfileAvatar
 import javax.inject.Inject
@@ -54,7 +53,7 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
                     profileData.lastName = editTextLastName.text.toString()
                     profileData.expertise = editTextExpertise.text.toString()
                     profileData.interests = editTextInterests.text.toString()
-                    profileData.age = editTextAge.text.toString().toInt()
+                    profileData.birthday = editTextBirthday.text.toString()
                     profileData.bio = editTextBio.text.toString()
                     profileData.gender = selectedGender
                     presenter.updateProfile(profileData)
@@ -114,14 +113,14 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
         editTextLastName.setText(profile.lastName)
         editTextExpertise.setText(profile.expertise)
         editTextInterests.setText(profile.interests)
-        editTextAge.setText(profile.age.toString())
+        editTextBirthday.setText(profile.birthday.toString())
         editTextBio.setText(profile.bio)
 
         val genderText = "Gender: ${profile.gender}"
         buttonGenderSelect.text = genderText
         selectedGender = profile.gender
 
-        val imageUrl = profile.photoUrl
+        val imageUrl = profile.profile_picture
         if(imageUrl != null && imageUrl.contains("http")) {
             Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
         }

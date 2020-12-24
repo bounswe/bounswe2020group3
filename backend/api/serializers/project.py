@@ -41,7 +41,10 @@ class ProjectPrivateSerializer(serializers.ModelSerializer):
     Project serializer, includes also profile owner
     """
     owner = serializers.ReadOnlyField(source='owner.username')
+    tags = TagSerializer(many=True, read_only=True)
 
     class Meta:
         model = Project
-        fields = ['id', 'name', 'description', 'owner', 'is_public']
+        fields = ['id', 'name', 'description', 'owner',
+                  'project_type', 'tags', 'is_public',
+                  'state']

@@ -172,7 +172,7 @@ export default class EditProfilePage extends Component {
                   <TextField
                     type="text"
                     error=""
-                    label="Midlle Name"
+                    label="Middle Name"
                     onChange={this.handleMidNameEdit}
                     defaultValue=""
                     helperText="Middle Name"

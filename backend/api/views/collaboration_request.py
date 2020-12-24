@@ -1,3 +1,4 @@
+from rest_framework.exceptions import PermissionDenied
 from api.models.collaboration_request import CollaborationRequest
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -39,8 +40,17 @@ class CollaborationRequestViewSet(viewsets.ModelViewSet):
         serializer.validated_data['to_project'] = project
         if project.state == 'open for collaborators' and \
                 self.request.user.id != project.owner.id:
-            CollaborationRequest.objects.create(**serializer.validated_data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            old_request = CollaborationRequest.objects.filter(
+                from_user=self.request.user,
+                to_project=project)
+            if old_request.count() > 0:
+                raise AlreadyRequestedException(
+                    status_code=status.HTTP_400_BAD_REQUEST)
+            col_request = CollaborationRequest.objects.create(
+                **serializer.validated_data)
+            changed_data = {'id': col_request.id}
+            changed_data.update(serializer.data)
+            return Response(changed_data, status=status.HTTP_201_CREATED)
         else:
             return Response(data={
                 'error': 'Unauthorized'
@@ -71,3 +81,13 @@ class CollaborationRequestViewSet(viewsets.ModelViewSet):
             return Response(data={
                 'error': 'Unauthorized'
             }, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class AlreadyRequestedException(PermissionDenied):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "This user has already requested joining."
+    status_code = 'invalid'
+
+    def __init__(self, status_code=None):
+        if status_code is not None:
+            self.status_code = status_code

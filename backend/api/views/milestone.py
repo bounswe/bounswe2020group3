@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from api.models.milestone import Milestone
 from api.models.project import Project
-from api.serializers.project import ProjectGETPublicSerializer
+from api.serializers.project import ProjectMilestonesSerializer
 from api.serializers.milestone import MilestoneSerializer
 from api.permission import IsMilestoneMemberOrReadOnly
 from rest_framework.decorators import action
@@ -25,14 +25,14 @@ class MilestoneViewSet(viewsets.ModelViewSet):
         username = self.request.user.username
         list_of_milestones = []
         if username:
-            projects = Project.objects.filter(owner__username=username)
-            serializer = ProjectGETPublicSerializer(projects, many=True)
+            projects = Project.objects.filter(members__username__in=[username])
+            serializer = ProjectMilestonesSerializer(projects, many=True)
             for item in serializer.data:
                 for milestone in item['milestones']:
                     list_of_milestones.append(milestone)
             list_of_milestones.sort(key=lambda x: x.get('date'))
             return Response(data={
-                'result': list_of_milestones
+                'result': list_of_milestones,
             }, status=status.HTTP_200_OK)
         else:
             return Response(data={

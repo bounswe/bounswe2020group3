@@ -31,7 +31,7 @@ class MilestonePresenter @Inject constructor(private var model: HomeContract.Mod
     }
 
     override fun fetchMilestones(ownerId: Int) {
-        /*this.view?.writeLogMessage("i", TAG, "Fetching all projects of owner $ownerId ...")
+        this.view?.writeLogMessage("i", TAG, "Fetching all projects of owner $ownerId ...")
         val getProjectObservable = model.getallprojectsOfTheOwner(ownerId).subscribe(
                 { projectList ->
                     for (project in projectList){
@@ -51,7 +51,7 @@ class MilestonePresenter @Inject constructor(private var model: HomeContract.Mod
                     this.view?.writeLogMessage("e", TAG,"Error in fetching all projects of owner $ownerId")
                 }
         )
-        disposable.add(getProjectObservable)*/
+        disposable.add(getProjectObservable)
     }
 
     override fun subscribeAuthToken() {

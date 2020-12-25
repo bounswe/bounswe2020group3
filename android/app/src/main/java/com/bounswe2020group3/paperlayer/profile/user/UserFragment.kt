@@ -11,7 +11,7 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.data.follow.FollowType
+import com.bounswe2020group3.paperlayer.profile.follow.FollowType
 import com.bounswe2020group3.paperlayer.data.user.User
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_user.*

@@ -1,20 +1,29 @@
 package com.bounswe2020group3.paperlayer.profile
 
+import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.profile.follow.FollowType
+import com.bounswe2020group3.paperlayer.data.user.Profile
 import com.bounswe2020group3.paperlayer.data.user.User
-import com.squareup.picasso.Picasso
+import com.bounswe2020group3.paperlayer.profile.follow.FollowType
 import kotlinx.android.synthetic.main.fragment_profile.*
+import okhttp3.MediaType
+import java.io.File
+import java.io.FileOutputStream
 import javax.inject.Inject
 
 
@@ -22,6 +31,10 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     @Inject
     lateinit var presenter: ProfileContract.Presenter
+
+    private var selectPhoto = 1
+
+    private var profile: Profile? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,6 +72,45 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         layoutFollowRequests.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.navigateToFollowListFromProfile, followRequestBundle)
         }
+
+        // Update profile picture
+        imageViewProfileAvatar.setOnClickListener {
+            if (this.profile != null) {
+                val intent: Intent = Intent(Intent.ACTION_PICK)
+                intent.type = "image/*"
+                startActivityForResult(intent, selectPhoto)
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (profile != null && requestCode == selectPhoto && resultCode == RESULT_OK && data != null && data.data != null) {
+            try {
+                val activity = requireActivity()
+                val uri = data.data!!
+                val contentResolver = activity.contentResolver
+                val imageType = contentResolver.getType(uri)!!
+                val mediaType = MediaType.parse(imageType)!!
+
+                // Create a temporary path name to the file
+                val inputStream = contentResolver.openInputStream(uri)!!
+                var pathName = ""
+                val cursor = contentResolver.query(uri, null, null, null)
+                cursor?.use {
+                    it.moveToFirst()
+                    pathName = cursor.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                }
+                val file = File(activity.cacheDir, pathName)
+                val outputStream = FileOutputStream(file)
+                inputStream.copyTo(outputStream)
+
+                presenter.updateProfilePicture(profile!!.id, file, mediaType)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     override fun onResume() {
@@ -73,6 +125,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     override fun updateProfileUI(user: User) {
         val profile = user.profile[0]
+        this.profile = profile
         val fullName = "${profile.name} ${profile.lastName}"
 
         textViewEmail.text = user.email
@@ -84,9 +137,9 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         textViewExpertise.text = profile.expertise
 
         val imageUrl = profile.profile_picture
-        if (imageUrl != null && imageUrl.contains("http")) {
-            Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
-        }
+//        if (imageUrl != null && imageUrl.contains("http")) {
+//            Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
+//        }
     }
 
     override fun navigateToLogin() {

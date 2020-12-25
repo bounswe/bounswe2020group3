@@ -109,14 +109,18 @@ export default class HomePage extends Component {
   };
                           
     renderMilestones(){
-      var milestones = this.state.milestones;
+      const { milestones } = this.state;
+      if(milestones.length === 0){
+        return(<Typography noWrap style={{textAlign:"center", color:"black"}}>No Upcoming Milestones</Typography>)
+      }
+
       return milestones.map((item) => {return (
-      <Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+        <>
         <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Typography>
         <Typography noWrap style={{textAlign:"left", color:"black"}}>
           {item.description}
         </Typography>
-        </Paper>)
+        </>)
          });
     };
     renderFeed(){
@@ -164,9 +168,12 @@ export default class HomePage extends Component {
                 {this.renderEvents()}
               </Grid>
               <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEventCreation}>Create an Event</Button>
-              <Typography variant="h5" color="primary">Milestones</Typography>
+              
+              <Typography variant="h5" color="primary" style={{marginTop:"10px"}}>Milestones</Typography>
               <Grid style={{maxHeight:"40vh", overflowY:"scroll"}} item sm={12}>
-                {this.renderMilestones()}
+                  <Paper elevation={6} style={{ padding: "15px", width: "80%", background: "white", margin: "auto", marginBottom: "10px", minHeight:'3vh' }} borderColor="primary" border={1}>
+                    {this.renderMilestones()}
+                  </Paper>
               </Grid>
             </Grid>
           </Grid>

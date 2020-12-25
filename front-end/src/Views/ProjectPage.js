@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import Typography from "@material-ui/core/Typography";
 import Profilebar from '../Components/ProfileBar/Profilebar';
-import { getUserId, getAccessToken } from "../Components/Auth/Authenticate";
+import { getUserId, getAccessToken, getPhoto } from "../Components/Auth/Authenticate";
 
 
 const Container = styled(Box)({
@@ -49,7 +49,6 @@ export default class HomePage extends Component {
             tags:[],
             username:"",
             userlastname:"",
-            photoUrl:"",
             projectId: ""
         }
     };
@@ -144,7 +143,7 @@ export default class HomePage extends Component {
             <Profilebar
               name={this.state.username}
               lastName={this.state.userlastname}
-              photoUrl={this.state.photoUrl}
+              photoUrl={getPhoto()}
               goToProjectCreation={this.goToProjectCreation}
               goToProfile={this.goToProfile}
             />

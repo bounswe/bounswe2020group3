@@ -164,13 +164,13 @@ export default class EditProfilePage extends Component {
     this.setState({ shareGender: e.target.value });
   }
   handleProfilePrivacy = (e) => {
-    this.setState({ profilePublic: e.target.value });
+    this.setState({ isPublic: e.target.value });
   }
     handleInterestsEdit = (e) => {
         this.setState({ interests: e.target.value });
     }
     submitProfile = () => {
-        const { name, middle_name, last_name, email, img, bio, birthday, expertise, gender, interests } = this.state; 
+        const { name, middle_name, last_name, email, img, bio, birthday, expertise, gender, interests, isPublic, shareBio, shareBirthday, shareAffiliations,shareGender } = this.state; 
         const profile = {
           name: name,
           middle_name: middle_name,
@@ -181,7 +181,12 @@ export default class EditProfilePage extends Component {
           birthday: birthday,
           expertise: expertise,
           gender: gender,
-          interests: interests
+          interests: interests,
+          is_public: isPublic,
+          share_birthday: shareBirthday,
+          share_gender : shareGender,
+          share_affiliations: shareAffiliations,
+          share_bio : shareBio
         };
         axios.put(`${config.API_URL}${config.Edit_Profile_Url}${this.state.profileId}/`, profile, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
           .then(res => {

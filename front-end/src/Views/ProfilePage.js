@@ -146,8 +146,6 @@ export default class HomePage extends Component {
         }
 
       });
-
-
     axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         this.setState({ milestones: res.data.result });
@@ -250,8 +248,6 @@ export default class HomePage extends Component {
             <Typography variant="h6" color="textPrimary" style={{ "textAlign": 'center' }}>No Upcoming Milestones</Typography>
           </Paper>
         }
-
-
       </Box>)
 
   };
@@ -341,7 +337,6 @@ export default class HomePage extends Component {
     axios.put(`${config.API_URL}/api/profile_picture/${this.state.profileId}/`, data, 
     { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } } )
     .then(res => {
-      console.log("OK");
       window.location.reload(false);
     })
   }
@@ -394,7 +389,7 @@ export default class HomePage extends Component {
                 >Change Picture</Button>
               }
               <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
-                <Typography>{this.state.name + " " + this.state.middle_name} <br />
+                <Typography style={{textTransform:"capitalize "}}>{this.state.name + " " + this.state.middle_name} <br />
                   {this.state.last_name.toUpperCase()}</Typography>
               </Paper>
             </Grid>
@@ -412,7 +407,7 @@ export default class HomePage extends Component {
             this.state.self ?
               <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
               :
-              <Typography variant="h5" color="error"> This Profile is Private </Typography>
+              <></>
           }
         </Grid>
       </Grid>
@@ -447,9 +442,9 @@ export default class HomePage extends Component {
 
             <Grid container spacing={2} item sm={6}>
               <Grid item sm={12} >
-                <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
+                <Avatar src={this.getUserPhoto(this.state.profileId)} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
                 <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
-                  <Typography>{this.state.name + " " + this.state.middle_name} <br />
+                  <Typography style={{textTransform:"capitalize"}}>{this.state.name + " " + this.state.middle_name} <br />
                     {this.state.last_name.toUpperCase()}</Typography>
                 </Paper>
               </Grid>
@@ -462,9 +457,9 @@ export default class HomePage extends Component {
 { /* Buraya bir seyler gelecek - recommendation vb. */ }
             </Grid>
             {
-              this.state.self ?
-                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
-                :
+              this.state.isPublic ?
+              <></>
+              :
                 <Typography variant="h5" color="error"> This Profile is Private </Typography>
             }
           </Grid>
@@ -481,6 +476,11 @@ export default class HomePage extends Component {
     }
 
   }
+
+  getUserPhoto = (profileId) =>{
+    return `${config.API_URL}/api/profile_picture/${profileId}/`;
+  } 
+
   showPersonalInfo = () => {
     return this.showGender() && this.showAge();
   }

@@ -105,7 +105,6 @@ export default class HomePage extends Component {
 
   componentDidMount() {
     this.getProfile();
-    
       axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         this.setState({ selfName: res.data.profile[0].name +" " +  res.data.profile[0].middle_name,
@@ -147,6 +146,8 @@ export default class HomePage extends Component {
             loading: false,
             rating: (prof.rating ? prof.rating: 4.5),
             currentUserId : windowUserId
+          }, () => {
+            this.getComments();
           });
           if(windowUserId === parseInt(getUserId())){
           axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
@@ -179,6 +180,44 @@ export default class HomePage extends Component {
       
       );
   }
+  getComments = () => {
+    const { currentUserId } = this.state;
+    axios.get(`${config.API_URL}/api/comments/?to_user=${currentUserId}`, 
+    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } } )
+    .then(res => {
+      this.setState({comments: (res.data ? res.data : [] ) });
+    });
+  }
+  postComment = () => {
+    const { currentUserId, newComment } = this.state;
+    let data = { from_user: getUserId(), to_user: currentUserId, comment: newComment };
+    axios.post(`${config.API_URL}/api/comments/`, data,
+      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        this.setState({ message: "Comment Posted", messageType: AlertTypes.Success }, () => {
+          this.handleSnackbarOpen();
+        })
+      }, (error) => {
+        this.setState({ message: "Error while posting comment, please try again.", messageType: AlertTypes.Error }, () => {
+          this.handleSnackbarOpen();
+        })
+      })
+  }
+  deleteComment = (id) => {
+    axios.delete(`${config.API_URL}/api/comments/`, { id: id },
+      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        this.setState({ message: "Comment Deleted", messageType: AlertTypes.Success }, () => {
+          this.handleSnackbarOpen();
+        })
+      }, (error) => {
+        this.setState({ message: "Error while deleting comment, please try again.", messageType: AlertTypes.Error }, () => {
+          this.handleSnackbarOpen();
+        })
+      })
+  }
+
+
 
   postRating = () => {
     const { currentUserId, currentRating } = this.state;
@@ -492,7 +531,7 @@ export default class HomePage extends Component {
           }
         </Grid>
       </Grid>
-      <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
+      <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpen} type={this.state.messageType} message={this.state.message} />
     </SelfContainer>);
   }
   renderOtherProfile() {
@@ -552,7 +591,7 @@ export default class HomePage extends Component {
             }
           </Grid>
         </Grid>
-        <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
+        <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpen} type={this.state.messageType} message={this.state.message} />
       </Box>
     </Container>);
   }

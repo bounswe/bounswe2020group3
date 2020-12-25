@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from 'axios';
 import config from '../config';
-import { Button, styled } from '@material-ui/core';
+import { Button, styled, Chip } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import Grid from '@material-ui/core/Grid';
@@ -9,7 +9,9 @@ import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import UserNavbar from '../Components/TopBar/UserNavbar';
 import Profilebar from '../Components/ProfileBar/Profilebar';
+import { colorCodes } from "../Common/ColorTheme";
 import { getUserId, getAccessToken, getPhoto, setProfileId } from "../Components/Auth/Authenticate";
+
 const Container = styled(Box)({
     background: "#f9f9eb",
     border: 0,
@@ -93,15 +95,20 @@ export default class HomePage extends Component {
           this.setState({ name:name , lastName: lastname });
 
         });
-       
-    }
-
+  }
+  renderTags(tags) {
+    return tags.map((item) => {
+      return (
+        <Chip style={{ background: colorCodes[item.color], margin: "3px", textTransform: "capitalize" }} label={item.name} />
+      )
+    });
+  };
     renderProject(){
       var projects = this.state.projects;
       return projects.map((item) => {return (
       <Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
         <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Typography>
-        <Typography  style={{textAlign:"left", color:"black"}}>TAGS HERE</Typography>
+        <Typography  style={{textAlign:"left", color:"black"}}>{this.renderTags(item.tags)}</Typography>
         <Typography  style={{textAlign:"left", color:"black"}}>
           {item.description}
         </Typography>

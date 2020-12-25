@@ -43,7 +43,7 @@ class FollowingViewSet(viewsets.ModelViewSet):
 
         following = get_object_or_404(
             Following, pk=pk)
-        if following.to_user == self.request.user:
+        if following.from_user == self.request.user:
             following.unfollow()
             return Response(status=status.HTTP_201_CREATED)
         else:

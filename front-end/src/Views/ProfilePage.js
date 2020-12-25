@@ -1,11 +1,8 @@
 import React, { Component } from "react";
-import { Button, Input, styled } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
-import Box from '@material-ui/core/Box';
+import { Button, Input, styled, Avatar, Box, Grid, Paper, Typography } from '@material-ui/core';
+import { Rating } from '@material-ui/lab';
+import AlertTypes  from "../Common/AlertTypes.json";
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from "@material-ui/core/Typography";
 import { getUserId, getAccessToken, getPhoto } from '../Components/Auth/Authenticate';
 import axios from 'axios';
 import config from '../config';
@@ -71,6 +68,8 @@ export default class HomePage extends Component {
     super(props);
     this.SnackbarRef = React.createRef();
     this.state = {
+      message: "",
+      messageType: "",
       profileId: "",
       name: "",
       middle_name: "",
@@ -97,12 +96,25 @@ export default class HomePage extends Component {
       projects: [],
       file : undefined,
       showUpload: false,
-      loading: true // For eradicating glitches due to request delays
+      loading: true, // For eradicating glitches due to request delays
+      rating: 0,
+      currentRating: 0,
+      currentUserId: -1
     }
   };
 
   componentDidMount() {
+    this.getProfile();
+    
+      axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        this.setState({ selfName: res.data.profile[0].name +" " +  res.data.profile[0].middle_name,
+          selfLastName: res.data.profile[0].last_name
+        });
+      });
+  };
 
+  getProfile = () => {
     var userId = this.props.location.pathname.split('/')[2];
     axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
@@ -132,7 +144,9 @@ export default class HomePage extends Component {
             follow_reqs:user.follow_requests,
             followers:user.followers,
             following:user.following,
-            loading: false
+            loading: false,
+            rating: (prof.rating ? prof.rating: 4.5),
+            currentUserId : windowUserId
           });
           if(windowUserId === parseInt(getUserId())){
           axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
@@ -164,16 +178,33 @@ export default class HomePage extends Component {
       }
       
       );
-    
-      axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-      .then(res => {
-        this.setState({ selfName: res.data.profile[0].name +" " +  res.data.profile[0].middle_name,
-          selfLastName: res.data.profile[0].last_name
-        });
-      });
-      
-    
-  };
+  }
+
+  postRating = () => {
+    const { currentUserId, currentRating } = this.state;
+    let rating = { rating: currentRating, from_user:getUserId(), to_user: currentUserId };
+    axios.post(`${config.API_URL}/api/ratings/`, rating,
+    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } } )
+    .then(res => {
+      this.getProfile();
+    }, (error) => {
+      axios.put(`${config.API_URL}/api/ratings/`, rating,
+    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } } )
+    .then(re => {
+
+    }, (error) => {
+      this.setState({messageType: AlertTypes.Error, message:"Error while rating please try again later." }, () => {
+        this.handleSnackbarOpen();
+      })
+    })
+    })
+  }
+
+  handleRatingChange = (e) =>{
+    this.setState({currentRating: e.target.value * 2 }, () =>{
+      this.postRating();
+    });
+  }
 
   handleSnackbarOpen = () => {
     this.SnackbarRef.current.turnOnSnackbar();
@@ -325,13 +356,43 @@ export default class HomePage extends Component {
   renderGraph() {
     return (
       <>{this.state.self ?
-        <Button variant="outlined" color="primary" style={{width:"50", fontSize:'10px', marginBottom:"50px"}} onClick={() => { 
+        <Button variant="outlined" color="primary" style={{width:"50", fontSize:'10px', marginBottom:"20px"}} onClick={() => { 
           this.deletePhoto( this.getUserPhoto(this.state.profileId))       
           window.location.reload(false);
            }}> Delete Photo </Button>
         :
         <></>
       }
+      {!this.state.self ? 
+       <div style={{textAlign:'left', width:"90%", paddingLeft:"10%"}}>
+       <Typography component="span" style={{ textAlign:"left", width:'50%', marginBottom:"5px"}} color="primary">{"Your Rating :     "}</Typography>
+         <Rating 
+           defaultValue={0}
+           precision={0.5}
+           name="pristine"
+           size="small"
+           style={{ top:"3px", paddingLeft:"13px" }}
+           value={this.state.currentRating}
+           onChange={(e) => { this.handleRatingChange(e) }} 
+         />
+       </div>
+    :
+    <></>
+    }    
+        <div style={{textAlign:'left', width:"90%", paddingLeft:"10%"}}>
+        <Typography component="span" style={{ textAlign:"left", width:'50%', marginBottom:"5px"}} color="primary">Overall Rating :</Typography>
+          <Rating 
+            defaultValue={0}
+            precision={0.5}
+            name="pristine"
+            size="small"
+            style={{ top:"3px", paddingRight:"5px" }}
+            value={this.state.rating / 2.0 }
+            disabled
+          />
+          <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">{this.state.rating}</Typography>
+
+        </div>
         <Paper elevation={6} style={{ padding: "15px", width: "80%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
           {/* <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.follow_reqs.length:0}</b> following request</Typography>
           <hr />
@@ -480,6 +541,7 @@ export default class HomePage extends Component {
 
             </Grid>
             <Grid item sm={3}>
+              {this.renderGraph()}
 { /* Buraya bir seyler gelecek - recommendation vb. */ }
             </Grid>
             {

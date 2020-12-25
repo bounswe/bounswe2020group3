@@ -192,7 +192,7 @@ export default class HomePage extends Component {
 
           <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{overflowY:"scroll", marginLeft:"200px", width:`calc(100% - 200px)`}}>
             
-             <Grid item sm={9} style={{ maxHeight:"88vh"}}>
+             <Grid item sm={9} style={{ maxHeight:"90vh" , paddingBottom:"10px"}}>
                <Typography variant="h3" color="primary">Home</Typography>
                {this.renderProject()}
              </Grid> 

@@ -97,7 +97,9 @@ export default class HomePage extends Component {
       projects: [],
       file : undefined,
       showUpload: false,
-      loading: true // For eradicating glitches due to request delays
+      loading: true, // For eradicating glitches due to request delays
+      rating: 0,
+      userRating : undefined
     }
   };
 
@@ -132,7 +134,8 @@ export default class HomePage extends Component {
             follow_reqs:user.follow_requests,
             followers:user.followers,
             following:user.following,
-            loading: false
+            loading: false,
+            rating: (prof.rating ? prof.rating : 0) 
           });
           if(windowUserId === parseInt(getUserId())){
           axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
@@ -161,7 +164,7 @@ export default class HomePage extends Component {
 
       });
     
-      axios.get(`${config.API_URL}${config.User_Path}${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         this.setState({ selfName: res.data.profile[0].name +" " +  res.data.profile[0].middle_name,
           selfLastName: res.data.profile[0].last_name
@@ -308,7 +311,7 @@ export default class HomePage extends Component {
         <>
           <Typography variant="h5" color="primary" style={titleStyle}>Personal Information</Typography>
           <Paper elevation={6} style={textStyle}>
-            <p>{"Birthday : " + this.state.birthday} <br />
+            <p style={{textTransform:"capitalize"}}>{"Birthday : " + this.state.birthday} <br />
               {(this.state.gender !== privateGender ? "Gender : " + this.state.gender : "")}</p>
           </Paper>
         </>
@@ -318,10 +321,11 @@ export default class HomePage extends Component {
     </Grid>
     );
   }
+  
   renderGraph() {
     return (
       <>{this.state.self ?
-        <Button variant="outlined" color="primary" style={{width:"50", fontSize:'10px', marginBottom:"50px"}} onClick={() => { 
+        <Button variant="outlined" color="primary" style={{width:"50", fontSize:'10px', marginBottom:"40px"}} onClick={() => { 
           this.deletePhoto( this.getUserPhoto(this.state.profileId))       
           window.location.reload(false);
            }}> Delete Photo </Button>

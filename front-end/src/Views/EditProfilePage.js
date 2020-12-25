@@ -16,6 +16,11 @@ import Select from '@material-ui/core/Select';
 import DateComponent from "../Components/Date/DateComponent";
 import UserNavbar from '../Components/TopBar/UserNavbar';
 
+const Messages = {
+  emptyFieldError: "Name and surname can not be empty!",
+  profileEditFail: "Profile Edit Failed. Please try again.",
+  profileEditSuccess: "Profile edited."
+}
 const genderTypes = {
     male: "male",
     female: "female",
@@ -170,7 +175,15 @@ export default class EditProfilePage extends Component {
         this.setState({ interests: e.target.value });
     }
     submitProfile = () => {
-        const { name, middle_name, last_name, bio, birthday, expertise, gender, interests, isPublic, shareBio, shareBirthday, shareAffiliations,shareGender } = this.state; 
+      const { name, middle_name, last_name, bio, birthday, expertise, gender, interests, isPublic, shareBio, shareBirthday, shareAffiliations, shareGender } = this.state;
+      if (name === "" || last_name === "") {
+        this.setState({ success: true, messageType: AlertTypes.Warning, message: Messages.emptyFieldError }, () => {
+          this.handleSnackbarOpen();
+          return;
+        });
+        return;
+      }
+        
         const profile = {
           name: name,
           middle_name: middle_name,
@@ -186,16 +199,17 @@ export default class EditProfilePage extends Component {
           share_affiliations: shareAffiliations,
           share_bio : shareBio
         };
+        
         axios.put(`${config.API_URL}${config.Edit_Profile_Url}${this.state.profileId}/`, profile, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
           .then(res => {
             console.log(res.data)
-            this.setState({ success: true, messageType: AlertTypes.Success }, () => {
+            this.setState({ success: true, messageType: AlertTypes.Success, message: Messages.profileEditSuccess }, () => {
               this.handleSnackbarOpen();
               setTimeout(() => { this.props.history.push(config.Profille_Page_Path + `/${getUserId()}`); }, 3000);
             });
     
           }, (error) => {
-            this.setState({ success: false, messageType: AlertTypes.Error });
+            this.setState({ success: false, messageType: AlertTypes.Error, message:Messages.profileEditFail });
             this.handleSnackbarOpen()
             console.log(error);
           })
@@ -411,7 +425,7 @@ export default class EditProfilePage extends Component {
                 <Button color="primary" variant="contained" style={{ marginTop: "20px" }} onClick={this.submitProfile}>Submit Changes</Button>  
               </Grid>
             </FormWrapper>
-            <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpen} type={this.state.messageType} />
+            <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpen} type={this.state.messageType} message={this.state.message} />
           </Container>);
     }
 

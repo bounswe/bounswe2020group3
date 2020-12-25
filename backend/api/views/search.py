@@ -188,7 +188,8 @@ class SearchGenericAPIView(generics.GenericAPIView):
             query_private_projects = list(set(query_private_projects))
 
             project_serializer = ProjectGETPublicSerializer(
-                query_projects, many=True)
+                query_projects, many=True,
+                context={'request': request})
             private_project_serializer = ProjectPrivateSerializer(
                 query_private_projects, many=True)
 

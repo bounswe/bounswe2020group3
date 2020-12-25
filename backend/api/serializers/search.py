@@ -11,7 +11,7 @@ SEARCH_TYPE_CHOICES = [(SEARCH_TYPES[i], str(i))
 
 
 class SearchRequestSerializer(serializers.Serializer):
-    keyword = serializers.CharField(min_length=3)
+    keyword = serializers.CharField(min_length=2)
     search_type = serializers.ChoiceField(
         choices=SEARCH_TYPE_CHOICES, allow_null=True, required=False,
         default="all")

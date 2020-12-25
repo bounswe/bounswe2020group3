@@ -383,8 +383,8 @@ export default class HomePage extends Component {
     const { tags } = this.state;
     let id = tag.id;
     let newTags = tags;
-    newTags.splice(newTags.indexOf(id), 1);
     let tagIds = this.getTagIds(newTags);
+    tagIds.splice(tagIds.indexOf(id), 1);
     axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { tags: tagIds }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         this.getProject(this.state.projectId);

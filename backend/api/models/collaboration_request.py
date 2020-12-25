@@ -21,7 +21,7 @@ class CollaborationRequest(models.Model):
         related_name="collab_request_of_project"
     )
     message = models.CharField(max_length=200, blank=True, default='')
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(blank=True, null=True)
     rejected = models.DateTimeField(blank=True, null=True)
 
     class Meta:

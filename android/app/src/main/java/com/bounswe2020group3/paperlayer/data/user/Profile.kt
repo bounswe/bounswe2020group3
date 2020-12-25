@@ -38,5 +38,5 @@ data class Profile (
     @field:Json(name = "share_affiliations")
     var share_affiliations: Boolean?,
     @field:Json(name = "is_public")
-    var is_public: Boolean?,
+    var is_public: Boolean,
 )

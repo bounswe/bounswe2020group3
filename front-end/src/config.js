@@ -18,6 +18,7 @@ const config = {
   Event_Path: "/events",
   Milestone_url:"/api/milestones/",
   OwnMilestoneUrl : "/api/milestones/get_user_milestones/",
-  Issue_Milestone_Path : "/issue-milestone"
+  Issue_Milestone_Path : "/issue-milestone",
+  Profille_Page_Path : "/profile"
 }
 export default config;

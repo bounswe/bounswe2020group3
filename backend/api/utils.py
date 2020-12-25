@@ -47,7 +47,8 @@ def get_is_follow_request_sent(this_user, accessed_user):
 
 def get_is_follow_request_received(this_user, accessed_user):
     """
-        Returns True if "this_user" has gotten follow request from "accessed_user"
+        Returns True if "this_user" has
+        gotten follow request from "accessed_user"
     """
     if not this_user or this_user.is_anonymous:
         is_is_follow_request_received = False

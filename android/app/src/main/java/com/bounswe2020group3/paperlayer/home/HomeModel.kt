@@ -3,7 +3,7 @@ package com.bounswe2020group3.paperlayer.home
 import com.bounswe2020group3.paperlayer.home.data.CollaborateRequest
 import com.bounswe2020group3.paperlayer.home.data.CollaborationRequest
 import com.bounswe2020group3.paperlayer.home.data.Event
-import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
+import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.ProjectShort
 import com.bounswe2020group3.paperlayer.util.Session

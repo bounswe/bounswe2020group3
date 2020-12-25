@@ -1,4 +1,4 @@
-package com.bounswe2020group3.paperlayer.profile.list
+package com.bounswe2020group3.paperlayer.profile.follow
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.data.follow.Follow
+import com.bounswe2020group3.paperlayer.data.follow.FollowType
 import com.bounswe2020group3.paperlayer.data.user.User
 
 interface OnUserClickListener {
@@ -13,12 +15,13 @@ interface OnUserClickListener {
 }
 
 /**
- * [RecyclerView.Adapter] that can display a [User].
+ * [RecyclerView.Adapter] that can display a [Follow].
  */
-class UserListAdapter(
-    private val values: List<User>,
-    private val clickListener: OnUserClickListener
-) : RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
+class FollowListAdapter(
+    private val values: List<Follow>,
+    private val clickListener: OnUserClickListener,
+    private val followType: FollowType?
+) : RecyclerView.Adapter<FollowListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -27,7 +30,12 @@ class UserListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val user = values[position]
+        val follow = values[position]
+        val user = if (followType == FollowType.FOLLOWER) {
+            follow.fromUser
+        } else {
+            follow.toUser
+        }
         holder.bind(user, clickListener)
     }
 

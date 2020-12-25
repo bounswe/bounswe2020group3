@@ -5,7 +5,9 @@ data class ProjectUpdateCard(
         var projectBody: String,
         var projectCreator: String,
         var projectId: Int,
-        var projectType: String
+        var projectType: String,
+        var projectState: String,
+        var requestSent: Boolean,
 ) {
 
 

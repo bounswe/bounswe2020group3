@@ -1,15 +1,23 @@
 package com.bounswe2020group3.paperlayer.profile
 
-import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
+import android.net.Uri
+import android.os.FileUtils
+import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.network.RetrofitProvider
-import com.bounswe2020group3.paperlayer.profile.data.Profile
-import com.bounswe2020group3.paperlayer.profile.data.User
+import com.bounswe2020group3.paperlayer.data.user.Profile
+import com.bounswe2020group3.paperlayer.data.user.User
 import com.bounswe2020group3.paperlayer.util.Session
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.Response
+import java.io.File
+import java.io.InputStream
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -60,5 +68,14 @@ class ProfileModel @Inject constructor(private var sessionManager: Session) : Pr
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap { userList -> Observable.fromArray(userList.subList(1, userList.size - 1)) }
+    }
+
+    override fun updateProfilePicture(profileId: Int, file: File, type: MediaType): Observable<Response<Void>> {
+        val authorization = "Token ${getAuthToken().token}"
+        val fileRequestBody: RequestBody = RequestBody.create(type, file)
+        val pictureFile: MultipartBody.Part = MultipartBody.Part.createFormData("profile_picture", file.name, fileRequestBody)
+        return profileService.updateProfilePicture(authorization, profileId, pictureFile)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
     }
 }

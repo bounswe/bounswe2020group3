@@ -12,6 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import Profilebar from '../Components/ProfileBar/Profilebar';
 import { getUserId, getAccessToken } from "../Components/Auth/Authenticate";
 
+
 const Container = styled(Box)({
   background: "#f9f9eb",
   border: 0,
@@ -67,6 +68,9 @@ export default class HomePage extends Component {
     };
     goToProjectCreation = () => {
       this.props.history.push(config.Create_Project_Path);
+    };
+    goToEditProjectPage = (pid) => {
+      this.props.history.push("/edit-project/" + pid);
     };
     
     componentDidMount() {
@@ -129,6 +133,7 @@ export default class HomePage extends Component {
     };
 
     render() {
+      var project_id =this.props.location.pathname.split('/')[2];
       return (
         <Container>
           <UserNavbar
@@ -195,7 +200,9 @@ export default class HomePage extends Component {
                 {this.renderDeadlines()}
               </Grid>
               <Grid item sm={9} style={{ maxHeight:"40vh",minHeight: "20vh"}}>
-                <Button variant="contained" color="primary" 
+                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.goToEditProjectPage(project_id)}>Edit Project</Button>
+                <br/>
+                <Button variant="contained" color="primary" style={{marginTop:"10px"}}
                 onClick={() => { this.props.history.push("/issue-milestone", {projectId: this.state.projectId }); } }>Set New Milestone</Button>
               </Grid>
               

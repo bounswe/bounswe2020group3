@@ -54,6 +54,11 @@
     <string name="date">Date</string>
     <string name="project_successfully_created">Project successfully created!</string>
     <string name="follow">Follow</string>
+    <string name="unfollow">Unfollow</string>
+    <string name="report">Report</string>
+    <string name="rating">Rating</string>
+    <string name="give_rating">Give Rating</string>
+    <string name="request_sent">Request sent</string>
     <string name="edit_project">Edit Project</string>
     <string name="text_edit_project">EDIT PROJECT</string>
     <string name="project_edit_success">Project successfully edited!</string>

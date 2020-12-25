@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, styled } from '@material-ui/core';
+import { Button, Input, styled } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
@@ -78,7 +78,7 @@ export default class HomePage extends Component {
       email: "",
       img: "",
       bio: "",
-      age: "",
+      birthday: "",
       expertise: "",
       gender: "",
       interests: "",
@@ -94,7 +94,9 @@ export default class HomePage extends Component {
       followers:[],
       following:[],
       milestones: [],
-      projects: []
+      projects: [],
+      file : undefined,
+      showUpload: false
     }
   };
 
@@ -116,7 +118,8 @@ export default class HomePage extends Component {
             last_name: prof.last_name,
             bio: prof.bio,
             img: prof.photo_url,
-            age: prof.age, expertise: prof.expertise,
+            birthday: prof.birthday, 
+            expertise: prof.expertise,
             gender: prof.gender,
             interests: prof.interests,
             affiliations: prof.affiliations,
@@ -143,8 +146,6 @@ export default class HomePage extends Component {
         }
 
       });
-
-
     axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         this.setState({ milestones: res.data.result });
@@ -247,8 +248,6 @@ export default class HomePage extends Component {
             <Typography variant="h6" color="textPrimary" style={{ "textAlign": 'center' }}>No Upcoming Milestones</Typography>
           </Paper>
         }
-
-
       </Box>)
 
   };
@@ -301,7 +300,7 @@ export default class HomePage extends Component {
         <>
           <Typography variant="h5" color="primary" style={titleStyle}>Personal Information</Typography>
           <Paper elevation={6} style={textStyle}>
-            <p>{"Age : " + this.state.age} <br />
+            <p>{"Birthday : " + this.state.birthday} <br />
               {(this.state.gender !== privateGender ? "Gender : " + this.state.gender : "")}</p>
           </Paper>
         </>
@@ -311,17 +310,48 @@ export default class HomePage extends Component {
     </Grid>
     );
   }
-  renderGraph(){
+  renderGraph() {
     return (
-        <Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+      <>{this.state.self ?
+        <Button variant="outlined" color="primary" style={{width:"50", fontSize:'10px', marginBottom:"50px"}} onClick={() => { 
+          this.deletePhoto( this.getUserPhoto(this.state.profileId))       
+          window.location.reload(false);
+           }}> Delete Photo </Button>
+        :
+        <></>
+      }
+        <Paper elevation={6} style={{ padding: "15px", width: "80%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
           {/* <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.follow_reqs.length:0}</b> following request</Typography>
           <hr />
           <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.following.length:0}</b> followings</Typography>
           <hr />
           <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.followers.length:0}</b> followers</Typography> */}
-        </Paper>);
+        </Paper>
+      </>);
   };
+  handleProfilePictureChange = (e) => {
+    this.setState({ file: e.target.files[0] });
+  }
+  handleShowUpload = (e) => {
+    this.setState({ showUpload: true });
+  }
+  submitPhoto = () => {
+    const { file } = this.state;
+    console.log(file);
+    if(file === undefined){
+      return;
+    }
+    const data = new FormData();
+    data.append("profile_picture", file);
+    axios.put(`${config.API_URL}/api/profile_picture/${this.state.profileId}/`, data, 
+    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } } )
+    .then(res => {
+      window.location.reload(false);
+    })
+  }
+
   renderSelfProfile() {
+    console.log(this.state.showUpload)
     return (<SelfContainer>
       <UserNavbar
         logout={() => { this.props.history.push(config.Login_Path) }}
@@ -347,9 +377,28 @@ export default class HomePage extends Component {
 
           <Grid container spacing={2} item sm={6}>
             <Grid item sm={12} >
-              <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
+              <Avatar src={getPhoto()} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
+              {this.state.showUpload ?
+                <><Input type="file" onChange={this.handleProfilePictureChange}></Input>
+                {this.state.file !== undefined ?
+                  <Button color='primary'
+                    type='outlined'
+                    style={{ width: '40px', fontSize: "8px" }}
+                    onClick={this.submitPhoto}
+                  > Save Picture </Button>
+                :
+                <></>
+                }
+                </>
+                :
+                <Button color='primary'
+                  type='outlined'
+                  style={{ width: '40px', fontSize: "8px" }}
+                  onClick={this.handleShowUpload}
+                >Change Picture</Button>
+              }
               <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
-                <Typography>{this.state.name + " " + this.state.middle_name} <br />
+                <Typography style={{textTransform:"capitalize "}}>{this.state.name + " " + this.state.middle_name} <br />
                   {this.state.last_name.toUpperCase()}</Typography>
               </Paper>
             </Grid>
@@ -367,7 +416,7 @@ export default class HomePage extends Component {
             this.state.self ?
               <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
               :
-              <Typography variant="h5" color="error"> This Profile is Private </Typography>
+              <></>
           }
         </Grid>
       </Grid>
@@ -402,9 +451,9 @@ export default class HomePage extends Component {
 
             <Grid container spacing={2} item sm={6}>
               <Grid item sm={12} >
-                <Avatar src={this.state.img} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
+                <Avatar src={this.getUserPhoto(this.state.profileId)} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
                 <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
-                  <Typography>{this.state.name + " " + this.state.middle_name} <br />
+                  <Typography style={{textTransform:"capitalize"}}>{this.state.name + " " + this.state.middle_name} <br />
                     {this.state.last_name.toUpperCase()}</Typography>
                 </Paper>
               </Grid>
@@ -417,9 +466,9 @@ export default class HomePage extends Component {
 { /* Buraya bir seyler gelecek - recommendation vb. */ }
             </Grid>
             {
-              this.state.self ?
-                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
-                :
+              this.state.isPublic ?
+              <></>
+              :
                 <Typography variant="h5" color="error"> This Profile is Private </Typography>
             }
           </Grid>
@@ -436,6 +485,15 @@ export default class HomePage extends Component {
     }
 
   }
+
+  getUserPhoto = (profileId) =>{
+    return `${config.API_URL}/api/profile_picture/${profileId}/`;
+  }
+  
+  deletePhoto = (url) =>{
+    axios.delete(url, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } });
+  }
+
   showPersonalInfo = () => {
     return this.showGender() && this.showAge();
   }

@@ -14,16 +14,23 @@ class MilestoneTests(APITestCase):
             username='milestone_usr', email='milestone_user@gmail.com',
             password='1234_secret')
         self.client.force_authenticate(user=self.user)
+
         self.project = Project.objects.create(
             name='Academic Project',
             description='This is an academic project.',
             state='open for collaborators',
-            owner=self.user, due_date="2020-12-25")
+            owner=self.user,
+            due_date="2020-12-25")
+        self.project.members.add(self.user)
+        self.project.save()
         self.project2 = Project.objects.create(
             name='ML Project',
             description='This is an ML project.',
             state='open for collaborators',
-            owner=self.user, due_date="2020-12-30")
+            owner=self.user,
+            due_date="2020-12-30")
+        self.project2.members.add(self.user)
+        self.project2.save()
 
     def test_can_create_milestone(self):
         response = self.client.post('/api/milestones/',

@@ -135,11 +135,6 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         textViewGender.text = profile.gender
         textViewInterests.text = profile.interests
         textViewExpertise.text = profile.expertise
-
-        val imageUrl = profile.profile_picture
-//        if (imageUrl != null && imageUrl.contains("http")) {
-//            Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
-//        }
     }
 
     override fun navigateToLogin() {

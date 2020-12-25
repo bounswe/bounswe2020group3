@@ -1,7 +1,7 @@
 package com.bounswe2020group3.paperlayer.login
 
-import com.bounswe2020group3.paperlayer.data.user.AuthToken
-import com.bounswe2020group3.paperlayer.data.user.UserCredentials
+import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
+import com.bounswe2020group3.paperlayer.profile.data.data.UserCredentials
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject

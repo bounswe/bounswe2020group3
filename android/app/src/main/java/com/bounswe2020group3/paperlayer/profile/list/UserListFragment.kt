@@ -8,11 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.data.user.User
+import com.bounswe2020group3.paperlayer.profile.data.User
+import com.bounswe2020group3.paperlayer.project.ProjectAdapter
+import kotlinx.android.synthetic.main.fragment_user_list.*
 import javax.inject.Inject
 
 private const val ARG_PEOPLE_LIST = "people-list"
@@ -54,13 +57,12 @@ class UserListFragment : Fragment(), UserListContract.View, OnUserClickListener 
             view.adapter = userListAdapter
         }
 
-        this.presenter.loadUserList()
-
         return view
     }
 
     override fun onResume() {
         super.onResume()
+        this.presenter.loadUserList()
     }
 
     companion object {
@@ -75,7 +77,6 @@ class UserListFragment : Fragment(), UserListContract.View, OnUserClickListener 
     }
 
     override fun updateUserListUI(userList: List<User>) {
-        this.userList.clear()
         this.userList.addAll(userList)
         userListAdapter.notifyDataSetChanged()
     }

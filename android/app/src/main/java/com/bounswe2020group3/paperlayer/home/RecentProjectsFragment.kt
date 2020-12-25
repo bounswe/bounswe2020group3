@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -62,7 +63,7 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
     }
 
     override fun showToast(message: String) {
-        TODO("Not yet implemented")
+        Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
     fun initRecycler(){}
     override fun writeLogMessage(type: String, tag: String, message: String) {
@@ -90,6 +91,22 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
         this.recyclerView.adapter=inviteAdapter
         */
 
+    }
+
+    override fun cardCheck(id: Int, position: Int) {
+        projectslist[position].requestSent = true
+
+
+        submitCardList()
+        viewAdapter.notifyDataSetChanged()
+    }
+
+    override fun cardUncheck(id: Int, position: Int) {
+        projectslist[position].requestSent = false
+
+
+        submitCardList()
+        viewAdapter.notifyDataSetChanged()
     }
 
     override fun resetCardList() {

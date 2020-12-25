@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.data.user.User
+import com.bounswe2020group3.paperlayer.profile.data.User
 
 interface OnUserClickListener {
     fun onUserClick(user: User)

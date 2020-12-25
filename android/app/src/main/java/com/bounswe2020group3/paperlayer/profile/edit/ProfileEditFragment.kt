@@ -10,10 +10,11 @@ import android.widget.Toast
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.data.user.Profile
-import com.bounswe2020group3.paperlayer.data.user.User
+import com.bounswe2020group3.paperlayer.profile.data.Profile
+import com.bounswe2020group3.paperlayer.profile.data.User
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile_edit.*
 import kotlinx.android.synthetic.main.fragment_profile_edit.imageViewProfileAvatar
 import javax.inject.Inject

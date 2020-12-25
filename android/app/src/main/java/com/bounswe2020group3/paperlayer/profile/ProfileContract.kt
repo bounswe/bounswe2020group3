@@ -1,8 +1,8 @@
 package com.bounswe2020group3.paperlayer.profile
 
 import com.bounswe2020group3.paperlayer.mvp.Mvp
-import com.bounswe2020group3.paperlayer.data.user.Profile
-import com.bounswe2020group3.paperlayer.data.user.User
+import com.bounswe2020group3.paperlayer.profile.data.Profile
+import com.bounswe2020group3.paperlayer.profile.data.User
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject

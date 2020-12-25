@@ -2,8 +2,6 @@ package com.bounswe2020group3.paperlayer.search
 
 
 import androidx.core.os.bundleOf
-import androidx.navigation.Navigation
-import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -41,7 +39,8 @@ class SearchPresenter @Inject constructor(private var model:SearchContract.Model
 
     override fun navigateToUser(userID: Int) {
         val bundle = bundleOf("userID" to userID )
-        view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToUserFromSearch,bundle) }
+        //FIX
+        //view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectFromProjectMainFragment,bundle) }
     }
 
     override fun navigateToEvent(eventID: Int) {

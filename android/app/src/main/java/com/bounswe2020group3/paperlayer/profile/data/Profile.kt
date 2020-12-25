@@ -1,4 +1,4 @@
-package com.bounswe2020group3.paperlayer.data.user
+package com.bounswe2020group3.paperlayer.profile.data
 
 import com.squareup.moshi.Json
 

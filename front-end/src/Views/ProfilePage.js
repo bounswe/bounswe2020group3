@@ -96,7 +96,8 @@ export default class HomePage extends Component {
       milestones: [],
       projects: [],
       file : undefined,
-      showUpload: false
+      showUpload: false,
+      loading: true // For eradicating glitches due to request delays
     }
   };
 
@@ -130,8 +131,20 @@ export default class HomePage extends Component {
             self: windowUserId === parseInt(getUserId()),
             follow_reqs:user.follow_requests,
             followers:user.followers,
-            following:user.following
+            following:user.following,
+            loading: false
           });
+          if(windowUserId === parseInt(getUserId())){
+          axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            .then(res => {
+              this.setState({ milestones: res.data.result });
+            });
+            axios.get(`${config.API_URL}${config.Projectpage_url}?owner__id=${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+              .then(res => {
+                this.setState({ projects: res.data });
+              });
+
+          }
         }
         else if (prof.is_public === false) {
           this.setState({
@@ -141,25 +154,20 @@ export default class HomePage extends Component {
             name: prof.name,
             middle_name: prof.middle_name,
             last_name: prof.last_name,
-            img: prof.photo_url
+            img: prof.photo_url,
+            loading:false
           })
         }
 
       });
-    axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-      .then(res => {
-        this.setState({ milestones: res.data.result });
-      });
+    
       axios.get(`${config.API_URL}${config.User_Path}${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
-        this.setState({ selfName: res.data.profile[0].name + res.data.profile[0].middle_name,
+        this.setState({ selfName: res.data.profile[0].name +" " +  res.data.profile[0].middle_name,
           selfLastName: res.data.profile[0].last_name
         });
       });
-      axios.get(`${config.API_URL}${config.Projectpage_url}?owner__id=${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-      .then(res => {
-        this.setState({ projects:res.data });
-      });
+      
     
   };
 
@@ -377,7 +385,7 @@ export default class HomePage extends Component {
 
           <Grid container spacing={2} item sm={6}>
             <Grid item sm={12} >
-              <Avatar src={getPhoto()} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
+              <Avatar src={this.getUserPhoto(this.state.profileId)} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
               {this.state.showUpload ?
                 <><Input type="file" onChange={this.handleProfilePictureChange}></Input>
                 {this.state.file !== undefined ?
@@ -427,20 +435,26 @@ export default class HomePage extends Component {
     return (<Container>
       <UserNavbar
         logout={() => { this.props.history.push(config.Login_Path) }}
-        pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
+        pushProfile={() => {
+          this.props.history.push("/profile/" + getUserId());
+          window.location.reload(false);
+        }}
         goHome={() => { this.props.history.push(config.Homepage_Path) }}
       />
       <Box>
-        {this.state.self ?  // So that re-render doesn't cause any glitch-like graphics.
-        <Profilebar
-          name={this.state.selfName}
-          lastName={this.state.selfLastName}
-          photoUrl={getPhoto()}
-          goToProjectCreation={this.goToProjectCreation}
-          goToProfile={() => { this.props.history.push("/profile/" + getUserId()); }}
-        />
-        :
-        <></>
+        {!this.state.self && !this.state.loading ?  // So that re-render doesn't cause any glitch-like graphics.
+          <Profilebar
+            name={this.state.selfName}
+            lastName={this.state.selfLastName}
+            photoUrl={getPhoto()}
+            goToProjectCreation={this.goToProjectCreation}
+            goToProfile={() => {
+              this.props.history.push("/profile/" + getUserId()); 
+              window.location.reload(false);
+            }}
+          />
+          :
+          <></>
         }
         <Grid container direction="row" justify="center" alignItems="center" >
           <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">

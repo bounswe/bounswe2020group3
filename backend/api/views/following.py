@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from api.models.following import Following, FollowRequest
 from api.permission import IsRequestSenderOrReceiver
-from api.serializers.following import FollowSerializer,\
+from api.serializers.following import FollowSerializer, \
     FollowRequestSerializer, FollowPostSerializer, \
     FollowRequestPostSerializer
 from django.shortcuts import get_object_or_404
@@ -59,7 +59,6 @@ class FollowRequestViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsAuthenticatedOrReadOnly,
                           IsRequestSenderOrReceiver)
-    serializer_class = FollowRequestSerializer
     queryset = FollowRequest.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['req_to_user']
@@ -76,6 +75,11 @@ class FollowRequestViewSet(viewsets.ModelViewSet):
         serializer.validated_data['req_to_user'] = to_user
         FollowRequest.objects.create(**serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return FollowRequestPostSerializer
+        return FollowRequestSerializer
 
     @action(detail=True, methods=['POST'], name='accept_follow_request',
             serializer_class=None)

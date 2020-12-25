@@ -127,8 +127,8 @@ class FollowListFragment : Fragment(), FollowContract.View,
         }
     }
 
-    override fun onUnfollowButtonClick(user: User) {
-        showInfoToast("Not implemented yet.")
+    override fun onUnfollowButtonClick(followId: Int) {
+        presenter.sendUnfollow(followId)
     }
 
     override fun onAcceptRequestClick(followRequestId: Int, fromUser: User) {

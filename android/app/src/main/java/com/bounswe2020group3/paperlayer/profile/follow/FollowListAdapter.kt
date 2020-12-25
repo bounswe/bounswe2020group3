@@ -95,7 +95,7 @@ class FollowListAdapter(
 
             // Button click listeners
             buttonFollowListUnfollow.setOnClickListener {
-                followButtonClickListener.onUnfollowButtonClick(user)
+                followButtonClickListener.onUnfollowButtonClick(followId)
             }
 
             // Button click listeners

@@ -14,6 +14,7 @@ interface FollowContract {
         fun isUserAuthenticatedUser(userId: Int): Boolean
         fun sendFollow(toUserId: Int)
         fun sendFollowRequest(toUserId: Int)
+        fun sendUnfollow(followId: Int)
         fun acceptRequest(requestId: Int, fromUserId: Int)
         fun rejectRequest(requestId: Int, fromUserId: Int)
     }
@@ -30,6 +31,7 @@ interface FollowContract {
         fun sendFollow(toUserId: Int): Observable<Any>
         fun getFollowerList(userId: Int?): Observable<List<Follow>>
         fun getFollowingList(userId: Int?): Observable<List<Follow>>
+        fun sendUnfollow(followId: Int): Observable<Response<Void>>
         fun getFollowRequestList(): Observable<List<FollowRequest>>
         fun sendFollowRequest(toUserId: Int): Observable<Any>
         fun getFollowRequestList(userId: Int?): Observable<List<FollowRequest>>
@@ -55,6 +57,12 @@ interface FollowContract {
                 @Header("Authorization") authorization: String,
                 @Query("from_user__id") userId: Int
         ): Observable<List<Follow>>
+
+        @POST("/api/follow/{follow_id}/unfollow/")
+        fun sendUnfollow(
+                @Header("Authorization") authorization: String,
+                @Path("follow_id") followId: Int
+        ): Observable<Response<Void>>
 
         @POST("/api/follow_request/")
         fun sendFollowRequest(
@@ -89,7 +97,7 @@ interface FollowContract {
 
     interface OnFollowButtonClickListener {
         fun onFollowButtonClick(user: User)
-        fun onUnfollowButtonClick(user: User)
+        fun onUnfollowButtonClick(followId: Int)
         fun onAcceptRequestClick(followRequestId: Int, fromUser: User)
         fun onRejectRequestClick(followRequestId: Int, fromUser: User)
     }

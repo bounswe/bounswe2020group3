@@ -14,7 +14,7 @@ class Comment(models.Model):
                                 on_delete=models.CASCADE,
                                 )
     created = models.DateTimeField(auto_now_add=True)
-    comment = models.CharField(max_length=200)
+    comment = models.CharField(max_length=1000)
 
     class Meta:
         ordering = ['created']

@@ -87,10 +87,15 @@ export default class HomePage extends Component {
       .then(res => {
         const prof = res.data;
         const temp_members = (prof.members ? prof.members : [])
-        this.setState({ name: prof.name, desc: prof.description, membersData: (prof.members ? prof.members : []) , reqs: prof.requirements, 
-          stat: prof.state, age: prof.age, type: prof.project_type, due: prof.due_date, tags: prof.tags, isPublic: prof.is_public, owner:prof.owner }, () =>{
-            this.isMember();
-          });
+        this.setState({
+          name: prof.name, desc: prof.description,
+          membersData: (prof.members ? prof.members : []), reqs: prof.requirements,
+          stat: prof.state, age: prof.age, type: prof.project_type,
+          due: prof.due_date, tags: prof.tags, isPublic: prof.is_public,
+          owner: prof.owner
+        }, () => {
+          this.isMember();
+        });
         if (prof.event == null) {
           this.setState({ events: [] });
         } else {
@@ -103,6 +108,8 @@ export default class HomePage extends Component {
         });
 
         this.setState({ members: memberNames });
+      }, (error) => {
+        this.props.history.push("/"); // Forwards from unexisting profiles to homepage
       });
   }
   getProfile = () => {

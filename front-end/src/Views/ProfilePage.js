@@ -159,7 +159,11 @@ export default class HomePage extends Component {
           })
         }
 
-      });
+      },(error) => {
+        this.props.history.push("/"); // Forwards from unexisting profiles to homepage
+      }
+      
+      );
     
       axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {

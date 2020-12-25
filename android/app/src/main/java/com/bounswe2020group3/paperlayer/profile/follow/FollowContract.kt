@@ -2,6 +2,7 @@ package com.bounswe2020group3.paperlayer.profile.follow
 
 import com.bounswe2020group3.paperlayer.data.follow.*
 import com.bounswe2020group3.paperlayer.data.user.AuthToken
+import com.bounswe2020group3.paperlayer.data.user.User
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import io.reactivex.Observable
 import retrofit2.Response
@@ -80,5 +81,16 @@ interface FollowContract {
                 @Path("id") followRequestId: Int,
                 @Body followRequestReject: FollowRequestCreate
         ): Observable<Response<Void>>
+    }
+
+    interface OnUserClickListener {
+        fun onUserClick(user: User)
+    }
+
+    interface OnFollowButtonClickListener {
+        fun onFollowButtonClick(user: User)
+        fun onUnfollowButtonClick(user: User)
+        fun onAcceptRequestClick(followRequestId: Int, fromUser: User)
+        fun onRejectRequestClick(followRequestId: Int, fromUser: User)
     }
 }

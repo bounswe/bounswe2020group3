@@ -11,24 +11,13 @@ import com.bounswe2020group3.paperlayer.data.follow.Follow
 import com.bounswe2020group3.paperlayer.data.follow.ListableFollow
 import com.bounswe2020group3.paperlayer.data.user.User
 
-interface OnUserClickListener {
-    fun onUserClick(user: User)
-}
-
-interface OnFollowButtonClickListener {
-    fun onFollowButtonClick(user: User)
-    fun onUnfollowButtonClick(user: User)
-    fun onAcceptRequestClick(followRequestId: Int, fromUser: User)
-    fun onRejectRequestClick(followRequestId: Int, fromUser: User)
-}
-
 /**
  * [RecyclerView.Adapter] that can display a [Follow].
  */
 class FollowListAdapter(
         private val values: List<ListableFollow>,
-        private val clickListener: OnUserClickListener,
-        private val followButtonClickListener: OnFollowButtonClickListener,
+        private val clickListener: FollowContract.OnUserClickListener,
+        private val followButtonClickListener: FollowContract.OnFollowButtonClickListener,
         private val followType: FollowType?
 ) : RecyclerView.Adapter<FollowListAdapter.ViewHolder>() {
 

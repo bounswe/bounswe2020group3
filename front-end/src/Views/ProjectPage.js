@@ -9,8 +9,8 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import Profilebar from '../Components/ProfileBar/Profilebar';
-import { getUserId, getAccessToken, setPhotoCookie } from "../Components/Auth/Authenticate";
 import { colorCodes } from "../Common/ColorTheme";
+import { getUserId, getAccessToken } from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
   background: "#f9f9eb",
@@ -95,6 +95,7 @@ export default class HomePage extends Component {
           const member = item.profile[0];
           memberNames.push(member.name + " " + member.last_name); // ATTENTION : WE may want to add the middle names as well.
         });
+
         this.setState({ members: memberNames });
       });
   }
@@ -105,11 +106,9 @@ export default class HomePage extends Component {
         let mname = res.data.profile[0].middle_name;
         let lastname = res.data.profile[0].last_name;
         name = name + " " + mname;
-        let photoUrl = (res.data.profile[0].photo_url)
-        setPhotoCookie(photoUrl)
-        this.setState({ username: name, userlastname: lastname, photoUrl: photoUrl });
-      });
-  }
+        this.setState({ username: name, userlastname: lastname });
+        });
+    };
 
   componentDidMount() {
     var project_id = this.props.location.pathname.split('/')[2];

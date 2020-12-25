@@ -9,8 +9,9 @@ import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import UserNavbar from '../Components/TopBar/UserNavbar';
 import Profilebar from '../Components/ProfileBar/Profilebar';
-import { getUserId, getAccessToken, setPhotoCookie } from "../Components/Auth/Authenticate";
 import { colorCodes } from "../Common/ColorTheme";
+import { getUserId, getAccessToken, getPhoto, setProfileId } from "../Components/Auth/Authenticate";
+
 const Container = styled(Box)({
     background: "#f9f9eb",
     border: 0,
@@ -42,7 +43,7 @@ export default class HomePage extends Component {
             messageType: "",
             projects:[],
             events:[],
-            milestones:[]
+            milestones:[],
         }
     };
 
@@ -89,9 +90,10 @@ export default class HomePage extends Component {
           let mname = res.data.profile[0].middle_name;
           let lastname = res.data.profile[0].last_name;
           name = name + " " + mname;
-          let photoUrl = (res.data.profile[0].photo_url)
-          setPhotoCookie(photoUrl)
-          this.setState({ name:name , lastName: lastname, photoUrl:photoUrl });
+          let profileId = res.data.profile[0].id;
+          setProfileId(profileId);
+          this.setState({ name:name , lastName: lastname });
+
         });
   }
   renderTags(tags) {
@@ -137,6 +139,7 @@ export default class HomePage extends Component {
         </Typography>
         </Paper>)});
     };
+    
 
     render() {
       return (
@@ -151,7 +154,7 @@ export default class HomePage extends Component {
             <Profilebar 
               name={this.state.name}
               lastName={this.state.lastName}
-              photoUrl={this.state.photoUrl}
+              photoUrl={getPhoto()}
               goToProjectCreation={this.goToProjectCreation}
               goToProfile={() => { this.props.history.push( "/profile/" + getUserId() ); }}
             />

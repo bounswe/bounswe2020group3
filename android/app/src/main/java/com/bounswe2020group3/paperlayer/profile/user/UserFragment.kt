@@ -179,11 +179,6 @@ class UserFragment : Fragment(), UserContract.View {
                 buttonUserFollow.visibility = View.VISIBLE
             }
         }
-
-        val imageUrl = profile.profile_picture
-        if(imageUrl != null && imageUrl.contains("http")) {
-            Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
-        }
     }
 
     override fun loadUser() {

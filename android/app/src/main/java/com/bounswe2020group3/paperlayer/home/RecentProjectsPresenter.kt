@@ -81,12 +81,13 @@ class RecentProjectsPresenter @Inject constructor(private var model: HomeContrac
 
     override fun OnInviteButtonClicked(item: ProjectUpdateCard, position: Int) {
         if(!item.requestSent) {
-            val collaborateObservable = model.collaborateRequest(CollaborateRequest(item.projectId, "hello")).subscribe({
+            val collaborateObservable = model.collaborateRequest(CollaborateRequest(item.projectId, "hello")).subscribe({request->
 
                 view?.writeLogMessage("i", TAG, "request sent")
                 view?.showToast("Request sent.")
                 view?.cardCheck(item.projectId,position)
-
+                requestSent.add(request)
+                view?.writeLogMessage("i",TAG,"request to project ${request.to_project} with the requestid ${request.id}")
                 //view?.cardInviteCheck(item.id,position)
                 disposable.clear()
 
@@ -115,7 +116,7 @@ class RecentProjectsPresenter @Inject constructor(private var model: HomeContrac
             val uninviteUserObservable = model.deleteRequest(index).subscribe({
                 view?.writeLogMessage("i", TAG,"request withdrawal successful")
                 view?.cardUncheck(item.projectId,position)
-
+                requestSent.removeAt(i)
                 disposable.clear()
                 //item.called = false
             },

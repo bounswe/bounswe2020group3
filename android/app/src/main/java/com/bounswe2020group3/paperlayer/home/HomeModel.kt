@@ -7,6 +7,7 @@ import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.ProjectShort
 import com.bounswe2020group3.paperlayer.util.Session
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -35,7 +36,7 @@ class HomeModel @Inject constructor(private var sessionManager: Session, retrofi
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun collaborateRequest(request : CollaborateRequest) : Single<CollaborateRequest> {
+    override fun collaborateRequest(request : CollaborateRequest) : Observable<CollaborationRequest> {
         val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
 
         return collaborationService.collaborationRequest(authToken,request)
@@ -49,7 +50,7 @@ class HomeModel @Inject constructor(private var sessionManager: Session, retrofi
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun deleteRequest(collabId: Int): Single<String> {
+    override fun deleteRequest(collabId: Int): Completable {
         val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
 
         return collaborationService.deleteRequest(authToken,collabId)

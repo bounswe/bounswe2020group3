@@ -170,13 +170,11 @@ export default class EditProfilePage extends Component {
         this.setState({ interests: e.target.value });
     }
     submitProfile = () => {
-        const { name, middle_name, last_name, email, img, bio, birthday, expertise, gender, interests, isPublic, shareBio, shareBirthday, shareAffiliations,shareGender } = this.state; 
+        const { name, middle_name, last_name, bio, birthday, expertise, gender, interests, isPublic, shareBio, shareBirthday, shareAffiliations,shareGender } = this.state; 
         const profile = {
           name: name,
           middle_name: middle_name,
           last_name: last_name,
-          email: email,
-          img: img,
           bio: bio,
           birthday: birthday,
           expertise: expertise,

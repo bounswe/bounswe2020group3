@@ -310,15 +310,24 @@ export default class HomePage extends Component {
     </Grid>
     );
   }
-  renderGraph(){
+  renderGraph() {
     return (
-        <Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+      <>{this.state.self ?
+        <Button variant="outlined" color="primary" style={{width:"50", fontSize:'10px', marginBottom:"50px"}} onClick={() => { 
+          this.deletePhoto( this.getUserPhoto(this.state.profileId))       
+          window.location.reload(false);
+           }}> Delete Photo </Button>
+        :
+        <></>
+      }
+        <Paper elevation={6} style={{ padding: "15px", width: "80%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
           {/* <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.follow_reqs.length:0}</b> following request</Typography>
           <hr />
           <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.following.length:0}</b> followings</Typography>
           <hr />
           <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.followers.length:0}</b> followers</Typography> */}
-        </Paper>);
+        </Paper>
+      </>);
   };
   handleProfilePictureChange = (e) => {
     this.setState({ file: e.target.files[0] });
@@ -479,7 +488,11 @@ export default class HomePage extends Component {
 
   getUserPhoto = (profileId) =>{
     return `${config.API_URL}/api/profile_picture/${profileId}/`;
-  } 
+  }
+  
+  deletePhoto = (url) =>{
+    axios.delete(url, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } });
+  }
 
   showPersonalInfo = () => {
     return this.showGender() && this.showAge();

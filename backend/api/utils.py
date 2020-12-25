@@ -90,6 +90,6 @@ def get_count_of_followings(this_user):
 
 def get_count_of_follow_requests(this_user):
     """
-        Returns length of follow requests.
+        Returns length of follow requests coming to user.
     """
     return FollowRequest.objects.filter(req_to_user=this_user.id).count()

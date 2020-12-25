@@ -161,7 +161,7 @@ export default class HomePage extends Component {
 
       });
     
-      axios.get(`${config.API_URL}${config.User_Path}${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         this.setState({ selfName: res.data.profile[0].name +" " +  res.data.profile[0].middle_name,
           selfLastName: res.data.profile[0].last_name
@@ -221,7 +221,6 @@ export default class HomePage extends Component {
     const { milestones } = this.state;
     return (
       <Box style={{ overflowY: "scroll", maxHeight: "500px", paddingTop: "10px", paddingBottom: "10px" }}>
-
         {milestones.length !== 0
           ?
           milestones.map((item) => {
@@ -233,11 +232,12 @@ export default class HomePage extends Component {
                 }}
                 borderColor="primary" border={1}>
                 <Typography variant="h6" color="primary"
-                  style={{ cursor: "pointer", width: "50%", textAlign: "left" }}
-                >{item.date}</Typography>
+                  style={{ cursor: "pointer", width: "50%", textAlign: "left", display:"inline-block"}}
+                  onClick={() => { this.props.history.push(`${config.Projectpage_Path}/${item.project}`) }}
+                >{item.project_name}</Typography>
                 <Typography variant="h6" color="primary"
-                  style={{ cursor: "pointer", width: "50%", textAlign: "left", paddingBottom: "5px" }}
-                >{item.project}</Typography>
+                  style={{ cursor: "pointer", width: "50%", textAlign: "right", display:"inline-block" }}
+                >{item.date}</Typography>
                 <hr />
                 <Typography nowrap variant="body2" style={{ textAlign: "left", color: "black" }}>
                   {item.description.substr(0, 120)}
@@ -359,7 +359,6 @@ export default class HomePage extends Component {
   }
 
   renderSelfProfile() {
-    console.log(this.state.showUpload)
     return (<SelfContainer>
       <UserNavbar
         logout={() => { this.props.history.push(config.Login_Path) }}

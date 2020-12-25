@@ -49,7 +49,8 @@ export default class HomePage extends Component {
             tags:[],
             username:"",
             userlastname:"",
-            projectId: ""
+            projectId: "",
+            isMember: "false"
         }
     };
 
@@ -130,6 +131,16 @@ export default class HomePage extends Component {
       <Chip style={{background:item.color}} label={item.name}/>)
       });
     };
+    isMember = () =>{
+      const { membersData } = this.state;
+      let ids = []
+      for(let i ; i < membersData.length ; i++){
+        ids.append(membersData[i].profile[0].id);
+      }
+      if( ids.includes(parseInt(getUserId())) ){
+        this.setState({isMember :true})
+      }
+    }
 
     render() {
       var project_id =this.props.location.pathname.split('/')[2];

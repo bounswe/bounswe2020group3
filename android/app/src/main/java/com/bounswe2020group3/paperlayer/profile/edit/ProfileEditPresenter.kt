@@ -3,8 +3,8 @@ package com.bounswe2020group3.paperlayer.profile.edit
 import android.util.Log
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import com.bounswe2020group3.paperlayer.profile.ProfileContract
-import com.bounswe2020group3.paperlayer.profile.data.Profile
-import com.bounswe2020group3.paperlayer.profile.data.User
+import com.bounswe2020group3.paperlayer.data.user.Profile
+import com.bounswe2020group3.paperlayer.data.user.User
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 

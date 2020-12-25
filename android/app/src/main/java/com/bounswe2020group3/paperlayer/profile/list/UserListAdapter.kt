@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.profile.data.User
+import com.bounswe2020group3.paperlayer.data.user.User
 
 interface OnUserClickListener {
     fun onUserClick(user: User)
@@ -16,8 +16,8 @@ interface OnUserClickListener {
  * [RecyclerView.Adapter] that can display a [User].
  */
 class UserListAdapter(
-    private val values: List<User>,
-    private val clickListener: OnUserClickListener
+        private val values: List<User>,
+        private val clickListener: OnUserClickListener
 ) : RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

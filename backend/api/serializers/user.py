@@ -33,7 +33,7 @@ class UserFullSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email',
                   'profile', 'is_follower', 'is_following',
-                  'is_follow_request_sent']
+                  'is_follow_request_sent', 'is_active']
 
 
 class UserBasicSerializer(serializers.ModelSerializer):

@@ -102,7 +102,9 @@ export default class HomePage extends Component {
       currentUserId: -1,
       comments: [],
       newComment: "",
-      showAddNewComment: false
+      showAddNewComment: false,
+      ratedBefore : false, 
+      myRatingId : -1
     }
   };
 
@@ -148,8 +150,11 @@ export default class HomePage extends Component {
             followers: user.followers,
             following: user.following,
             loading: false,
-            rating: (prof.rating ? prof.rating : 4.5),
-            currentUserId: windowUserId
+            rating: (prof.rating ? parseFloat(prof.rating) : 0),
+            currentRating: (prof.my_rating && typeof(prof.my_rating) !== 'string' ? parseFloat(prof.my_rating) : 0),
+            currentUserId: windowUserId,
+            ratedBefore: (prof.my_rating && typeof(prof.my_rating) !== 'string'),
+            myRatingId : (prof.my_rating_id && typeof(prof.my_rating_id) !== 'string' ? prof.my_rating_id : -1)
           }, () => {
             this.getComments();
           });
@@ -175,9 +180,10 @@ export default class HomePage extends Component {
             last_name: prof.last_name,
             img: prof.photo_url,
             loading: false,
+            rating: (prof.rating ? parseFloat(prof.rating) : 0),
             currentUserId: windowUserId
           }, () => {
-            this.getComments();
+            // this.getComments();
           })
         }
 
@@ -197,16 +203,27 @@ export default class HomePage extends Component {
   }
   renderComments = () => {
     const { comments } = this.state;
-    console.log(comments);
     return (
       <>
         {comments.length !== 0 ?
           comments.map((item) => {
+            let fullName = item.name + " " + item.middle_name + " " + item.last_name;
             return (
               <>
-                <Typography variant="caption" color="primary" style={{ textAlign: "left", width: "100%", textTransform: "capitalize" }}>{"TODO ISIM GELECEK"}</Typography>
+                <Typography variant="caption" color="primary"
+                  style={{ textAlign: "left", width: "100%", textTransform: "capitalize", cursor:"pointer"}}
+                  onClick={() => {
+                    this.props.history.push(`${config.Profille_Page_Path}/${item.from_user}`);
+                    window.location.reload(false);
+                }}
+                >{fullName}</Typography>
+
                 <Paper elevation={6} style={{ textAlign: "center" }}>
-                  <Typography variant="caption" color="primary" style={{ textAlign: "left", display: "inline-block", width: "85%" }}>{item.comment}</Typography>
+                  <Typography
+                    variant="caption"
+                    color="primary"
+                    style={{ textAlign: "left", display: "inline-block", width: "85%" }}
+                  >{item.comment}</Typography>
                   {item.from_user === parseInt(getUserId()) ?
                     <Typography variant="caption" color="error"
                       style={{ textAlign: "right", display: "inline-block", width: "10%", cursor: "pointer", fontSize: "10px" }}
@@ -270,23 +287,34 @@ export default class HomePage extends Component {
 
 
   postRating = () => {
-    const { currentUserId, currentRating } = this.state;
-    let rating = { rating: currentRating, from_user: getUserId(), to_user: currentUserId };
-    axios.post(`${config.API_URL}/api/ratings/`, rating,
-      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-      .then(res => {
-        this.getProfile();
-      }, (error) => {
-        axios.put(`${config.API_URL}/api/ratings/`, rating,
-          { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-          .then(re => {
+    const { currentUserId, currentRating, ratedBefore, myRatingId, rating } = this.state;
+    let ratingm = { rating: currentRating, from_user: getUserId(), to_user: currentUserId };
 
-          }, (error) => {
-            this.setState({ messageType: AlertTypes.Error, message: "Error while rating please try again later." }, () => {
-              this.handleSnackbarOpen();
-            })
+    console.log(currentRating , ratedBefore, myRatingId, rating)
+    if (!ratedBefore) {
+      axios.post(`${config.API_URL}/api/ratings/`, ratingm,
+        { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          this.getProfile();
+        }, (error) => {
+          this.setState({ messageType: AlertTypes.Error, message: "Error while rating please try again later." }, () => {
+            this.handleSnackbarOpen();
           })
-      })
+        });
+    } else {
+      axios.patch(`${config.API_URL}/api/ratings/${myRatingId}/`, {rating: currentRating},
+        { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          this.setState({ messageType: AlertTypes.Success, message: "Rating Updated." }, () => {
+            this.handleSnackbarOpen();
+          })
+          this.getProfile();
+        }, (error) => {
+          this.setState({ messageType: AlertTypes.Error, message: "Rating update failed. Please try again." }, () => {
+            this.handleSnackbarOpen();
+          });
+        });
+    }
   }
 
   handleRatingChange = (e) => {
@@ -446,6 +474,8 @@ export default class HomePage extends Component {
     );
   }
   renderAddComment() {
+    if(!this.state.isPublic && !this.state.self) return (<></>);
+
     return (
       <>
         {this.state.showAddNewComment ?
@@ -477,7 +507,7 @@ export default class HomePage extends Component {
         :
         <></>
       }
-        {!this.state.self ?
+        {!this.state.self && this.state.isPublic ?
           <div style={{ textAlign: 'left', width: "90%", paddingLeft: "10%" }}>
             <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">{"Your Rating :     "}</Typography>
             <Rating
@@ -486,13 +516,14 @@ export default class HomePage extends Component {
               name="pristine"
               size="small"
               style={{ top: "3px", paddingLeft: "13px" }}
-              value={this.state.currentRating}
+              value={this.state.currentRating / 2.0}
               onChange={(e) => { this.handleRatingChange(e) }}
             />
           </div>
           :
           <></>
         }
+        {this.state.isPublic || this.state.self ? 
         <div style={{ textAlign: 'left', width: "90%", paddingLeft: "10%" }}>
           <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">Overall Rating :</Typography>
           <Rating
@@ -504,16 +535,14 @@ export default class HomePage extends Component {
             value={this.state.rating / 2.0}
             disabled
           />
-          <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">{this.state.rating}</Typography>
+          <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">{this.state.rating.toPrecision(2)}</Typography>
 
         </div>
-        {/* <Paper elevation={6} style={{ padding: "15px", width: "80%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}> */}
-        {/* <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.follow_reqs.length:0}</b> following request</Typography>
-          <hr />
-          <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.following.length:0}</b> followings</Typography>
-          <hr />
-          <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.followers.length:0}</b> followers</Typography> */}
-        {/* </Paper> */}
+        :
+        <></>
+        }
+        {this.state.isPublic || this.state.self ? 
+          <>
         <Typography variant='h6' color='primary' style={{ margin: "10px 0" }}>Comments</Typography>
         <Paper elevation={6}
           style={{
@@ -529,6 +558,10 @@ export default class HomePage extends Component {
           borderColor="primary" border={1}>
           {this.renderComments()}
         </Paper>
+        </>
+        :
+        <></>
+        }
       </>);
   };
   handleProfilePictureChange = (e) => {
@@ -663,6 +696,12 @@ export default class HomePage extends Component {
                   <Typography style={{ textTransform: "capitalize" }}>{this.state.name + " " + this.state.middle_name} <br />
                     {this.state.last_name.toUpperCase()}</Typography>
                 </Paper>
+                {
+                  this.state.isPublic ?
+                    <></>
+                    :
+                    <Typography variant="h5" color="error"> ( Private ) </Typography>
+                }
               </Grid>
 
               {(this.state.self || this.state.isPublic) ? this.renderMidLeftColumn() : <></>}
@@ -673,12 +712,6 @@ export default class HomePage extends Component {
               {this.renderGraph()}
               {this.renderAddComment()}
             </Grid>
-            {
-              this.state.isPublic ?
-                <></>
-                :
-                <Typography variant="h5" color="error"> This Profile is Private </Typography>
-            }
           </Grid>
         </Grid>
         <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpen} type={this.state.messageType} message={this.state.message} />

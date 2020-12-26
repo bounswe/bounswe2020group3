@@ -14,13 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.home.adaptors.MilestoneAdaptor
-import com.bounswe2020group3.paperlayer.home.cards.MilestoneCard
 import com.bounswe2020group3.paperlayer.home.cards.ProjectUpdateCard
-import com.bounswe2020group3.paperlayer.invite.InviteCard
 import com.bounswe2020group3.paperlayer.home.adaptors.OnCardClickListener
 import com.bounswe2020group3.paperlayer.home.adaptors.ProjectAdaptor
-import com.bounswe2020group3.paperlayer.invite.UserInviteAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import javax.inject.Inject
 private const val TAG = "RecentProjectsFragment"
@@ -53,6 +49,7 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
         }
 
         initRecycler()
+        resetCardList()
         this.presenter.bind(this)
         initRecyclerView()
         writeLogMessage("i",TAG,"event fragment has been created.")
@@ -132,7 +129,7 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
     }
 
     override fun onCollabButtonClick(item: ProjectUpdateCard, position: Int) {
-        this.presenter.OnInviteButtonClicked(item,position)
+        this.presenter.OnCollabButtonClicked(item,position)
     }
 
     override fun onViewButtonClick(item: ProjectUpdateCard, position: Int) {

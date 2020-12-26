@@ -38,6 +38,7 @@ class EventFragment : Fragment(), HomeContract.EventView {
         this.fragment_view = view
         initRecycler()
         this.presenter.bind(this)
+        resetCardList()
         writeLogMessage("i",TAG,"event fragment has been created.")
         view.findViewById<BottomNavigationView>(R.id.bottomNavigationView).setOnNavigationItemSelectedListener { item ->
             when(item.itemId){

@@ -5,9 +5,7 @@ import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.home.cards.EventCard
 import com.bounswe2020group3.paperlayer.home.cards.MilestoneCard
 import com.bounswe2020group3.paperlayer.home.cards.ProjectUpdateCard
-import com.bounswe2020group3.paperlayer.home.data.CollaborateRequest
-import com.bounswe2020group3.paperlayer.home.data.CollaborationRequest
-import com.bounswe2020group3.paperlayer.home.data.Event
+import com.bounswe2020group3.paperlayer.home.data.*
 import com.bounswe2020group3.paperlayer.invite.InviteCard
 import com.bounswe2020group3.paperlayer.invite.data.CollaborationInvite
 import com.bounswe2020group3.paperlayer.invite.data.InviteRequest
@@ -72,7 +70,7 @@ interface HomeContract {
         fun showMessage(message: String)
         fun fetchProjects(ownerId : Int)
         fun subscribeAuthToken()
-        fun OnInviteButtonClicked(Item : ProjectUpdateCard, position : Int)
+        fun OnCollabButtonClicked(Item : ProjectUpdateCard, position : Int)
 
     }
 
@@ -89,6 +87,7 @@ interface HomeContract {
         fun collaborateRequest(request : CollaborateRequest) : Observable<CollaborationRequest>
         fun fetchRequests(userId:Int)   :   Observable<List<CollaborationRequest>>
         fun deleteRequest( collabId : Int ) : Completable
+        fun getMilestones() : Observable<MilestoneListWrapper>
     }
     interface EventsService{
         @GET("/api/events/")
@@ -109,6 +108,9 @@ interface HomeContract {
         @DELETE("api/collaboration_requests/{id}/")
         fun deleteRequest(@Header("Authorization") authorization: String,@Path("id") collabId : Int ) : Completable
     }
-
+    interface MilestonesService{
+        @GET("api/milestones/get_user_milestones/")
+        fun getMilestones(@Header("Authorization") authorization : String) : Observable<MilestoneListWrapper>
+    }
 
 }

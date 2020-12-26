@@ -15,7 +15,6 @@ import AlertTypes from '../Common/AlertTypes.json';
 import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
 import { format } from "date-fns";
 import UserNavbar from "../Components/TopBar/UserNavbar";
-import { setPhotoCookie } from "../Components/Auth/Authenticate";
 
 
 const Messages = {
@@ -147,15 +146,6 @@ export default class ProjectPage extends Component {
           this.setState({events:[prof.event]});
         }
         this.setState({tags:[{name:"alpha",color:"#F8C471"}]});
-    /*    temp_members.forEach(item =>{
-          var last_members = this.state.members;
-          console.log("members")
-          console.log(last_members)
-          console.log(this.state.members)
-          const member = item.profile[0];
-          last_members.push(member.name+" "+member.last_name);
-          this.setState({members:last_members});
-        } );*/
 
       });
     axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers:{'Content-Type':'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
@@ -165,7 +155,6 @@ export default class ProjectPage extends Component {
         let lastname = res.data.profile[0].last_name;
         name = name + " " + mname;
         let photoUrl = (res.data.profile[0].photo_url)
-        setPhotoCookie(photoUrl)
         this.setState({ username:name , userlastname: lastname, photoUrl:photoUrl });
       });
   };

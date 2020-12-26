@@ -4,12 +4,12 @@ import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.project.data.Event
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.ProjectShort
+import com.bounswe2020group3.paperlayer.search.data.Search
+import com.bounswe2020group3.paperlayer.search.data.SearchResponse
 import com.bounswe2020group3.paperlayer.search.data.User
 import io.reactivex.Observable
 import io.reactivex.Single
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 
 interface SearchContract {
@@ -22,10 +22,7 @@ interface SearchContract {
         fun navigateToUser(userID: Int)
         fun navigateToEvent(eventID: Int)
 
-        fun searchRequest(keyword:String)
-        fun getAllProjects()
-        fun getAllUsers()
-        fun getAllEvents()
+        fun searchRequest(searchFilter:Search)
         fun onProjectClicked(item:SearchCard,position:Int)
         fun onUserClicked(item:SearchCard,position:Int)
         fun onEventClicked(item:SearchCard,position:Int)
@@ -35,6 +32,8 @@ interface SearchContract {
         fun getLayout(): android.view.View
         fun showToast(message: String)
         fun writeLogMessage(type:String ,tag: String,message: String)
+        fun showLoading()
+        fun hideLoading()
 
         fun resetSearchCardList()
         fun submitSearchCardList()
@@ -43,21 +42,12 @@ interface SearchContract {
 
     //FIX
     interface Model {
-        fun searchProject(keyword: String): Single<List<Project>>
-        fun getAllProjects(): Observable<List<ProjectShort>>
-        fun getAllUsers(): Observable<List<User>>
-        fun getAllEvents(): Observable<List<Event>>
+        fun searchRequest(searchFilter: Search): Single<SearchResponse>
     }
 
     interface SearchService {
-        @GET("/api/search/{keyword}/")
-        fun searchProject(@Path("keyword") keyword: String): Single<List<Project>>
-        @GET("/api/projects/")
-        fun getAllProjects(): Observable<List<ProjectShort>>
-        @GET("/api/users/")
-        fun getAllUsers(): Observable<List<User>>
-        @GET("/api/events/")
-        fun getAllEvents(): Observable<List<Event>>
+        @POST("/api/search/")
+        fun searchRequest(@Body searchFilter: Search): Single<SearchResponse>
     }
 
 }

@@ -119,6 +119,9 @@
         <action
             android:id="@+id/navigateToUserFromSearch"
             app:destination="@id/userFragment" />
+        <action
+            android:id="@+id/navigateToProjectFromSearch"
+            app:destination="@id/projectFragment" />
     </fragment>
     <fragment
         android:id="@+id/userListFragment"

@@ -2,6 +2,8 @@ package com.bounswe2020group3.paperlayer.search
 
 
 import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
+import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import com.bounswe2020group3.paperlayer.search.data.Search
 import io.reactivex.disposables.CompositeDisposable
@@ -34,19 +36,18 @@ class SearchPresenter @Inject constructor(private var model:SearchContract.Model
 
     override fun navigateToProject(projectID: Int) {
         val bundle = bundleOf("projectID" to projectID )
-        //FIX
-        //view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectFromProjectMainFragment,bundle) }
+        view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectFromSearch,bundle) }
     }
 
     override fun navigateToUser(userID: Int) {
+        //Fix id problem Currently tries profile ID instead of user ID
         val bundle = bundleOf("userID" to userID )
-        //FIX
-        //view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectFromProjectMainFragment,bundle) }
+        view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToUserFromSearch,bundle) }
     }
 
     override fun navigateToEvent(eventID: Int) {
         val bundle = bundleOf("eventID" to eventID )
-        //FIX
+        //FIX After Event page added
         //view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectFromProjectMainFragment,bundle) }
     }
 

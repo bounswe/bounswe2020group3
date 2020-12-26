@@ -11,13 +11,14 @@ import android.widget.Toast
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.project.data.Project
-import kotlinx.android.synthetic.main.fragment_project.*
-import kotlinx.android.synthetic.main.fragment_project.view.*
+import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.fragment_project_detail.*
+import kotlinx.android.synthetic.main.fragment_project_detail.view.*
 import javax.inject.Inject
 
 private const val TAG = "ProjectFragment"
 
-class ProjectFragment : Fragment(),ProjectDetailContract.View {
+class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
 
     //Presenter object
     @Inject
@@ -42,7 +43,7 @@ class ProjectFragment : Fragment(),ProjectDetailContract.View {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_project, container, false)
+        val view = inflater.inflate(R.layout.fragment_project_detail, container, false)
         this.fragmentView=view
         //Set ProjectPresenter view to project fragment
         this.presenter.setView(this)
@@ -80,6 +81,25 @@ class ProjectFragment : Fragment(),ProjectDetailContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        tabLayoutProject.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when (tab?.position) {
+                    0 -> {
+                        linearLayoutProperties.visibility = View.VISIBLE
+                        linearLayoutMembers.visibility = View.GONE
+                    }
+                    1 -> {
+                        linearLayoutProperties.visibility = View.GONE
+                        linearLayoutMembers.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
+
+            override fun onTabReselected(tab: TabLayout.Tab?) = Unit
+
+        })
         buttonEditProject.setOnClickListener {
             presenter.navigateToEditProject()
         }

@@ -60,14 +60,7 @@ class MilestoneFragment : Fragment(), HomeContract.MileStoneView , OnCardClickLi
         viewManager = LinearLayoutManager(this.context)
         viewAdapter = MilestoneAdaptor(this)
 
-        /*setHasFixedSize(true):Bu özelliği set ettiğimizde
-        performansı arttırır. Eğer içeriğin değişmesi, RecyclerView
-        düzen boyutunu değiştirmiyorsa bu özelliği set edebilirsiniz.
 
-        layoutManager: Her bir satırın nasıl hizalanacağı belirlenir.
-        Her satır dikey olarak hizalanır.
-
-        adapter: RecyclerView, adapter ile doldurulur.*/
         recyclerView = fragment_view.findViewById<RecyclerView>(R.id.recyclerViewMilestones).apply{
             setHasFixedSize(true)
             layoutManager = viewManager

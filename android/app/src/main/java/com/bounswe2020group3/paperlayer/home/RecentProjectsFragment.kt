@@ -82,12 +82,7 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
             layoutManager = viewManager
             adapter = viewAdapter
         }
-        /*
-        this.recyclerView= fragmentView.findViewById(R.id.recyclerViewInviteUsers)!!
-        this.recyclerView.layoutManager= LinearLayoutManager(this.context)
-        this.inviteAdapter= UserInviteAdapter(this)
-        this.recyclerView.adapter=inviteAdapter
-        */
+
 
     }
 

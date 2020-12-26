@@ -3,6 +3,7 @@ package com.bounswe2020group3.paperlayer.search
 
 import androidx.core.os.bundleOf
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
+import com.bounswe2020group3.paperlayer.search.data.Search
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -49,86 +50,49 @@ class SearchPresenter @Inject constructor(private var model:SearchContract.Model
         //view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectFromProjectMainFragment,bundle) }
     }
 
-    override fun searchRequest(keyword: String) {
-        this.view?.writeLogMessage("i", TAG, "Getting results of search with keyword $keyword ...")
-        val getProjectObservable = model.searchProject(keyword).subscribe(
-                { projectList ->
-                    for (project in projectList){
-                        //this.view?.addProjectCard(project.name,project.description,project.owner,project.id,project.project_type)
-                        this.view?.writeLogMessage("i", TAG,"Project Fetched + " + project.project_type)
-                    }
-                    this.view?.writeLogMessage("i", TAG,"Results fetched.")
-                    //this.view?.submitProjectCardList()
-                },
-                { error ->
-                    this.view?.writeLogMessage("e", TAG,"Error in getting results of search with keyword  $keyword")
-                }
-        )
-        disposable.add(getProjectObservable)
-    }
-
-    override fun getAllProjects() {
-        this.view?.writeLogMessage("i", TAG, "Fetching all projects ")
-        val getProjectObservable = model.getAllProjects().subscribe(
-                { projectList ->
-                    for (project in projectList){
-                        var projectIconType: Int
-                        /*when(project.project_type){
-                            "conference"->projectIconType=0
-                            "instutution"->projectIconType=1
-                            "journal"->projectIconType=2
-                            else->projectIconType=3
-                        }*/
-                        projectIconType=3//Fix after API updates
-                        this.view?.addSearchCard(0,projectIconType,project.name,project.description,project.owner,listOf<String>(),project.id)
-                        this.view?.writeLogMessage("i", TAG,"Project Fetched + ")
-                    }
-                    this.view?.writeLogMessage("i", TAG,"Fetching finished.")
-                    this.view?.submitSearchCardList()
-                },
-                { error ->
-                    this.view?.writeLogMessage("e", TAG,"Error in fetching all projects")
-                }
-        )
-        disposable.add(getProjectObservable)
-    }
-
-    override fun getAllUsers() {
-        this.view?.writeLogMessage("i", TAG, "Fetching all users ")
-        val getProjectObservable = model.getAllUsers().subscribe(
-                { userList ->
-                    for (user in userList){
-                        var title=""
-                        if(!user.profile.isEmpty())
-                        {
-                            title=user.profile[0].name+user.profile[0].lastname
+    override fun searchRequest(searchFilter: Search) {
+        this.view?.writeLogMessage("i", TAG, "Getting results of search with keyword ${searchFilter.keyword} ...")
+        val getProjectObservable = model.searchRequest(searchFilter).subscribe(
+                { searchResponse ->
+                    when (searchFilter.searchType) {
+                        "project" -> {
+                            // project search
+                            for (project in searchResponse.projects!!) {
+                                var projectIconType: Int
+                                when (project.project_type) {
+                                    "conference" -> projectIconType = 0
+                                    "instutution" -> projectIconType = 1
+                                    "journal" -> projectIconType = 2
+                                    else -> projectIconType = 3
+                                }
+                                this.view?.addSearchCard(0, projectIconType, project.name, project.description, project.owner, listOf<String>(), project.id)
+                                this.view?.writeLogMessage("i", TAG, "Project Fetched + " + project.name)
+                            }
                         }
-                        this.view?.addSearchCard(1,0,title,"",user.username,listOf<String>(),user.id)
-                        this.view?.writeLogMessage("i", TAG,"User Fetched + ")
+                        "profile" -> {
+                            //profile search
+                            for (profile in searchResponse.profiles!!) {
+                                var title = "No Name"
+                                var owner= "No owner"
+                                title = profile.name + profile.lastName
+                                owner= profile.owner.toString()
+                                this.view?.addSearchCard(1, 0, title, "", owner, listOf<String>(), profile.id)
+                                this.view?.writeLogMessage("i", TAG, "User Fetched + ")
+                            }
+                        }
+                        "event" -> {
+                            //event search
+                            for (event in searchResponse.events!!) {
+                                this.view?.addSearchCard(2,0,event.title,event.description,event.date,listOf<String>(),event.id)
+                                this.view?.writeLogMessage("i", TAG,"Event Fetched")
+                            }
+                        }
                     }
-                    this.view?.writeLogMessage("i", TAG,"Fetching finished.")
+                    this.view?.writeLogMessage("i", TAG,"Search results fetched successfully.")
                     this.view?.submitSearchCardList()
                 },
                 { error ->
-                    this.view?.writeLogMessage("e", TAG,"Error in fetching all users")
-                }
-        )
-        disposable.add(getProjectObservable)
-    }
-
-    override fun getAllEvents() {
-        this.view?.writeLogMessage("i", TAG, "Fetching all events ")
-        val getProjectObservable = model.getAllEvents().subscribe(
-                { eventList ->
-                    for (event in eventList){
-                        this.view?.addSearchCard(2,0,event.title,event.description,event.date,listOf<String>(),event.id)
-                        this.view?.writeLogMessage("i", TAG,"Event Fetched")
-                    }
-                    this.view?.writeLogMessage("i", TAG,"Fetching finished.")
-                    this.view?.submitSearchCardList()
-                },
-                { error ->
-                    this.view?.writeLogMessage("e", TAG,"Error in fetching all events")
+                    this.view?.writeLogMessage("e", TAG,"Error in getting results of search with keyword  ${searchFilter.keyword}")
                 }
         )
         disposable.add(getProjectObservable)

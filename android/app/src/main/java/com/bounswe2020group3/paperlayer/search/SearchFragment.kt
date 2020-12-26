@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.search.data.Search
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_search.*
 
@@ -146,13 +147,19 @@ class SearchFragment: Fragment(),SearchContract.View ,OnCardClickListener{
         resetSearchCardList()
         when(this.tabLayoutSearch.selectedTabPosition){
             0->{//Project Tab selected
-                this.presenter.getAllProjects()
+                var searchFilter = Search(keyword,"project",null,null,null,
+                        null,null,null,null,null,null,null,null)
+                this.presenter.searchRequest(searchFilter)
             }
             1->{//User Tab selected
-                this.presenter.getAllUsers()
+                var searchFilter = Search(keyword,"profile",null,null,null,
+                        null,null,null,null,null,null,null,null)
+                this.presenter.searchRequest(searchFilter)
             }
             2->{//Event Tab selected
-                this.presenter.getAllEvents()
+                var searchFilter = Search(keyword,"event",null,null,null,
+                        null,null,null,null,null,null,null,null)
+                this.presenter.searchRequest(searchFilter)
             }
         }
     }

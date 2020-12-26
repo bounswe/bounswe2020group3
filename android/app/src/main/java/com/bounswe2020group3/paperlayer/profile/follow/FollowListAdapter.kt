@@ -10,17 +10,19 @@ import android.widget.TextView
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.data.follow.Follow
 import com.bounswe2020group3.paperlayer.data.follow.ListableFollow
+import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.data.user.User
 import com.squareup.picasso.Picasso
 
 /**
  * [RecyclerView.Adapter] that can display a [Follow].
  */
-class FollowListAdapter(
+class FollowListAdapter (
         private val values: List<ListableFollow>,
         private val clickListener: FollowContract.OnUserClickListener,
         private val followButtonClickListener: FollowContract.OnFollowButtonClickListener,
-        private val followType: FollowType?
+        private val followType: FollowType?,
+        private val authId: Int?
 ) : RecyclerView.Adapter<FollowListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,6 +41,7 @@ class FollowListAdapter(
                 follow.fetchToUser()
             }
             else -> {
+                // Follow request list
                 follow.fetchFromUser()
             }
         }
@@ -80,20 +83,22 @@ class FollowListAdapter(
             buttonFollowListRequestSent.visibility = View.GONE
             groupFollowListAcceptReject.visibility = View.GONE
 
-            if (followType == FollowType.FOLLOWER || followType == FollowType.FOLLOWING) {
-                when {
-                    user.isFollowing -> {
-                        buttonFollowListUnfollow.visibility = View.VISIBLE
+            if(user.id != authId) {
+                if (followType == FollowType.FOLLOWER || followType == FollowType.FOLLOWING) {
+                    when {
+                        user.isFollowing -> {
+                            buttonFollowListUnfollow.visibility = View.VISIBLE
+                        }
+                        user.isFollowRequestSent -> {
+                            buttonFollowListRequestSent.visibility = View.VISIBLE
+                        }
+                        else -> {
+                            buttonFollowListFollow.visibility = View.VISIBLE
+                        }
                     }
-                    user.isFollowRequestSent -> {
-                        buttonFollowListRequestSent.visibility = View.VISIBLE
-                    }
-                    else -> {
-                        buttonFollowListFollow.visibility = View.VISIBLE
-                    }
+                } else if (followType == FollowType.FOLLOW_REQUEST) {
+                    groupFollowListAcceptReject.visibility = View.VISIBLE
                 }
-            } else if (followType == FollowType.FOLLOW_REQUEST) {
-                groupFollowListAcceptReject.visibility = View.VISIBLE
             }
 
             // Button click listeners

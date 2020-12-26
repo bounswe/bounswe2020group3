@@ -87,6 +87,11 @@ class ProfileFragment : Fragment(), ProfileContract.View {
             textViewInterests.text = profile.interests
             textViewExpertise.text = profile.expertise
 
+            // Stats
+            textViewProfileFollowers.text = user.countOfFollowers.toString()
+            textViewProfileFollowings.text = user.countOfFollowings.toString()
+            textViewProfileFollowRequestCount.text = user.countOfFollowRequests.toString()
+
             val imageUrl = profile.profile_picture
             if (imageUrl != null && imageUrl != "") {
                 Picasso.get().load(imageUrl).into(imageViewProfileAvatar)

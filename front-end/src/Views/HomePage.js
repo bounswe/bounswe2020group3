@@ -115,17 +115,48 @@ export default class HomePage extends Component {
         </Paper>)});
   };
                           
-    renderMilestones(){
-      var milestones = this.state.milestones;
-      return milestones.map((item) => {return (
-      <Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
-        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Typography>
-        <Typography noWrap style={{textAlign:"left", color:"black"}}>
-          {item.description}
-        </Typography>
-        </Paper>)
-         });
-    };
+  renderMilestones() {
+    const { milestones } = this.state;
+    return (
+      <Grid style={{ maxHeight: "500px", paddingTop: "10px", paddingBottom: "10px" }}>
+        {milestones.length !== 0
+          ?
+          milestones.map((item) => {
+            return (
+              <Paper elevation={6}
+                style={{
+                  padding: "15px", maxHeight: "160px", width: "80%",
+                  background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+                }}
+                borderColor="primary" border={1}>
+                <Typography variant="h6" color="primary"
+                  style={{ cursor: "pointer", width: "50%", textAlign: "left", display:"inline-block"}}
+                  onClick={() => { this.props.history.push(`${config.Projectpage_Path}/${item.project}`) }}
+                >{item.project_name}</Typography>
+                <Typography variant="h6" color="primary"
+                  style={{ cursor: "pointer", width: "50%", textAlign: "right", display:"inline-block" }}
+                >{item.date}</Typography>
+                <hr />
+                <Typography nowrap variant="body2" style={{ textAlign: "left", color: "black" }}>
+                  {item.description.substr(0, 120)}
+                  {/*May need more fine tuning as a future work.*/}
+                </Typography>
+              </Paper>
+            )
+          })
+          :
+          <Paper elevation={6}
+            style={{
+              padding: "15px", maxHeight: "160px", width: "80%",
+              background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+            }}
+            borderColor="primary" border={1}>
+            <Typography variant="h6" color="textPrimary" style={{ "textAlign": 'center' }}>No Upcoming Milestones</Typography>
+          </Paper>
+        }
+      </Grid>)
+
+  };
     renderFeed(){
       var news = [];
       return news.map((item) => {return (<p>{item}</p>)});
@@ -171,9 +202,10 @@ export default class HomePage extends Component {
                 {this.renderEvents()}
               </Grid>
               <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEventCreation}>Create an Event</Button>
-              <Typography variant="h5" color="primary">Milestones</Typography>
+              
+              <Typography variant="h5" color="primary" style={{marginTop:"10px"}}>Milestones</Typography>
               <Grid style={{maxHeight:"40vh", overflowY:"scroll"}} item sm={12}>
-                {this.renderMilestones()}
+                  {this.renderMilestones()}
               </Grid>
             </Grid>
           </Grid>

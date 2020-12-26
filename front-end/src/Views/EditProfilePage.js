@@ -117,7 +117,6 @@ export default class EditProfilePage extends Component {
           shareAffiliations: prof.share_affiliations,
           shareBirthday: prof.share_birthday,
         });
-        // this.getProfile(profId);
       }
       , (error) => {
         this.setState({ success: false, message: "Error when fetching profile data.", messageType: AlertTypes.Error });

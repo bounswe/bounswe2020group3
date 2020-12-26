@@ -1,29 +1,23 @@
 package com.bounswe2020group3.paperlayer.profile
 
-import android.app.Activity.RESULT_OK
+
 import android.content.Context
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.data.user.Profile
 import com.bounswe2020group3.paperlayer.data.user.User
 import com.bounswe2020group3.paperlayer.profile.follow.FollowType
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
-import okhttp3.MediaType
-import java.io.File
-import java.io.FileOutputStream
+import kotlinx.android.synthetic.main.fragment_profile.imageViewProfileAvatar
+import kotlinx.android.synthetic.main.fragment_profile.layoutProfileDetail
 import javax.inject.Inject
 
 
@@ -31,10 +25,6 @@ class ProfileFragment : Fragment(), ProfileContract.View {
 
     @Inject
     lateinit var presenter: ProfileContract.Presenter
-
-    private var selectPhoto = 1
-
-    private var profile: Profile? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -72,45 +62,6 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         layoutFollowRequests.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.navigateToFollowListFromProfile, followRequestBundle)
         }
-
-        // Update profile picture
-        imageViewProfileAvatar.setOnClickListener {
-            if (this.profile != null) {
-                val intent: Intent = Intent(Intent.ACTION_PICK)
-                intent.type = "image/*"
-                startActivityForResult(intent, selectPhoto)
-            }
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (profile != null && requestCode == selectPhoto && resultCode == RESULT_OK && data != null && data.data != null) {
-            try {
-                val activity = requireActivity()
-                val uri = data.data!!
-                val contentResolver = activity.contentResolver
-                val imageType = contentResolver.getType(uri)!!
-                val mediaType = MediaType.parse(imageType)!!
-
-                // Create a temporary path name to the file
-                val inputStream = contentResolver.openInputStream(uri)!!
-                var pathName = ""
-                val cursor = contentResolver.query(uri, null, null, null)
-                cursor?.use {
-                    it.moveToFirst()
-                    pathName = cursor.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                }
-                val file = File(activity.cacheDir, pathName)
-                val outputStream = FileOutputStream(file)
-                inputStream.copyTo(outputStream)
-
-                presenter.updateProfilePicture(profile!!.id, file, mediaType)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
     }
 
     override fun onResume() {
@@ -124,17 +75,31 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     }
 
     override fun updateProfileUI(user: User) {
-        val profile = user.profile[0]
-        this.profile = profile
-        val fullName = "${profile.name} ${profile.lastName}"
+        try {
+            val profile = user.profile.first()
+            val fullName = "${profile.name} ${profile.lastName}"
 
-        textViewEmail.text = user.email
-        textViewFullName.text = fullName
-        textViewBio.text = profile.bio
-        textViewBirthday.text = profile.birthday.toString()
-        textViewGender.text = profile.gender
-        textViewInterests.text = profile.interests
-        textViewExpertise.text = profile.expertise
+            textViewEmail.text = user.email
+            textViewFullName.text = fullName
+            textViewBio.text = profile.bio
+            textViewBirthday.text = profile.birthday.toString()
+            textViewGender.text = profile.gender
+            textViewInterests.text = profile.interests
+            textViewExpertise.text = profile.expertise
+
+            // Stats
+            textViewProfileFollowers.text = user.countOfFollowers.toString()
+            textViewProfileFollowings.text = user.countOfFollowings.toString()
+            textViewProfileFollowRequestCount.text = user.countOfFollowRequests.toString()
+
+            val imageUrl = profile.profile_picture
+            if (imageUrl != null && imageUrl != "") {
+                Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
+            }
+        } catch (e: NoSuchElementException) {
+            e.printStackTrace()
+            showErrorToast("An error occurred. Please try again.")
+        }
     }
 
     override fun navigateToLogin() {

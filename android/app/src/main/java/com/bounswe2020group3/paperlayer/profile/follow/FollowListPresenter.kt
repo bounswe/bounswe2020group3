@@ -47,7 +47,7 @@ class FollowListPresenter @Inject constructor(private val followModel: FollowMod
     override fun sendFollow(toUserId: Int) {
         val followSub = followModel.sendFollow(toUserId).subscribe(
                 { _ ->
-                    view?.showInfoToast("Follow sent successfully")
+                    view?.showInfoToast("User is followed")
                     view?.loadList()
                 },
                 { _ ->
@@ -61,6 +61,19 @@ class FollowListPresenter @Inject constructor(private val followModel: FollowMod
         val followRequestSub = followModel.sendFollowRequest(toUserId).subscribe(
                 { _ ->
                     view?.showInfoToast("Follow request sent successfully")
+                    view?.loadList()
+                },
+                { _ ->
+                    view?.showErrorToast("Some error occurred. Please try again")
+                }
+        )
+        disposable.add(followRequestSub)
+    }
+
+    override fun sendUnfollow(followId: Int) {
+        val followRequestSub = followModel.sendUnfollow(followId).subscribe(
+                { _ ->
+                    view?.showInfoToast("User is unfollowed")
                     view?.loadList()
                 },
                 { _ ->

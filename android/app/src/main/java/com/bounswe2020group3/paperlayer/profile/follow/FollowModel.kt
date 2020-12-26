@@ -61,6 +61,13 @@ class FollowModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    override fun sendUnfollow(followId: Int): Observable<Response<Void>> {
+        val authorization = "Token ${getAuthToken().token}"
+        return followService.sendUnfollow(authorization, followId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
     override fun getFollowRequestList(): Observable<List<FollowRequest>> {
         val userId = getAuthToken().id
         val authorization = "Token ${getAuthToken().token}"

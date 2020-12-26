@@ -179,7 +179,8 @@ class SearchGenericAPIView(generics.GenericAPIView):
         if search_events:
             query_events = list(set(query_events))
 
-            event_serializer = EventSerializer(query_events, many=True)
+            event_serializer = EventSerializer(query_events, many=True,
+                                               context={'request': request})
 
             res['events'] = event_serializer.data
 
@@ -191,7 +192,8 @@ class SearchGenericAPIView(generics.GenericAPIView):
                 query_projects, many=True,
                 context={'request': request})
             private_project_serializer = ProjectPrivateSerializer(
-                query_private_projects, many=True)
+                query_private_projects, many=True,
+                context={'request': request})
 
             res['projects'] = project_serializer.data + \
                 private_project_serializer.data
@@ -202,11 +204,14 @@ class SearchGenericAPIView(generics.GenericAPIView):
             query_private_profiles = list(set(query_private_profiles))
 
             profile_serializer = ProfileBasicSerializer(
-                query_profiles, many=True)
+                query_profiles, many=True,
+                context={'request': request})
             followed_profile_serializer = ProfileBasicSerializer(
-                query_followed_profiles, many=True)
+                query_followed_profiles, many=True,
+                context={'request': request})
             private_profile_serializer = ProfilePrivateSerializer(
-                query_private_profiles, many=True)
+                query_private_profiles, many=True,
+                context={'request': request})
 
             res['profiles'] = profile_serializer.data + \
                 followed_profile_serializer.data + \

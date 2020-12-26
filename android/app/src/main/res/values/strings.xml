@@ -19,7 +19,7 @@
     <string name="err_not_unique_username">Username is either not unique or not in a suitable format.</string>
     <string name="text_username">Username</string>
     <string name="text_password_confirm">Password Confirm</string>
-    <string name="text_birthday_example">Birthday (DD/MM/YYYY)</string>
+    <string name="text_birthday_example">Birthday (YYYY-MM-DD)</string>
     <string name="text_first_name">First name</string>
     <string name="text_last_name">Last name</string>
     <string name="err_invalid_name">Please enter a valid name.</string>

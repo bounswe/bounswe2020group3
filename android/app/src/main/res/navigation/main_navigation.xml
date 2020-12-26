@@ -139,6 +139,9 @@
         <action
             android:id="@+id/navigateToFollowListFromUser"
             app:destination="@id/followListFragment" />
+        <action
+            android:id="@+id/navigateToProfileFromUser"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/inviteFragment"

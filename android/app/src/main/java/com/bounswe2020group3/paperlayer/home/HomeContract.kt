@@ -65,6 +65,7 @@ interface HomeContract {
         fun submitCardList()
         fun addCard(card : ProjectUpdateCard)
 
+
     }
     interface RecentProjectsPresenter : Mvp.Presenter<RecentProjectsView> {
         fun setView(view: HomeContract.RecentProjectsView)

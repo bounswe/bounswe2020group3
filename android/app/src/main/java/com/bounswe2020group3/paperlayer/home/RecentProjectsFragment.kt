@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -130,7 +131,14 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
         mContext=context
     }
 
-    override fun onInviteButtonClick(item: ProjectUpdateCard, position: Int) {
+    override fun onCollabButtonClick(item: ProjectUpdateCard, position: Int) {
         this.presenter.OnInviteButtonClicked(item,position)
     }
+
+    override fun onViewButtonClick(item: ProjectUpdateCard, position: Int) {
+        val bundle = bundleOf("projectID" to item.projectId )
+
+        Navigation.findNavController(fragment_view).navigate(R.id.navigateToProjectFromRecentProjects,bundle)    }
+
+
 }

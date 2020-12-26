@@ -14,7 +14,8 @@ import com.bounswe2020group3.paperlayer.home.cards.ProjectUpdateCard
 private const val TAG = "ProjectAdapter"
 
 interface OnCardClickListener{
-    fun onInviteButtonClick(item: ProjectUpdateCard, position: Int )
+    fun onCollabButtonClick(item: ProjectUpdateCard, position: Int )
+    fun onViewButtonClick(item : ProjectUpdateCard, position: Int)
 }
 class ProjectAdaptor (var clickListener: OnCardClickListener) : RecyclerView.Adapter<ProjectAdaptor.ProjectViewHolder>() {
     private var projects: List<ProjectUpdateCard> = ArrayList()
@@ -49,7 +50,7 @@ class ProjectAdaptor (var clickListener: OnCardClickListener) : RecyclerView.Ada
         val projectCreator: TextView =itemView.findViewById<TextView>(R.id.textViewProjectCreator)
         val projectType: TextView =itemView.findViewById<TextView>(R.id.TextViewProjectType)
         val buttonCollab : Button = itemView.findViewById<Button>(R.id.buttonCollab)
-
+        val buttonView : Button  = itemView.findViewById<Button>(R.id.buttonView)
         fun bind(item : ProjectUpdateCard, action: OnCardClickListener){
             projectTitle.text = item.projectTitle
             projectBody.text = item.projectBody
@@ -58,7 +59,7 @@ class ProjectAdaptor (var clickListener: OnCardClickListener) : RecyclerView.Ada
             if(item.requestSent) {
                 buttonCollab.text = "WITHDRAW REQUEST"
                 buttonCollab.setOnClickListener {
-                    action.onInviteButtonClick(item, adapterPosition)
+                    action.onCollabButtonClick(item, adapterPosition)
                 }
             }
             else if(item.projectState !="open for collaborators" )
@@ -69,8 +70,11 @@ class ProjectAdaptor (var clickListener: OnCardClickListener) : RecyclerView.Ada
                 Log.i(TAG, "${item.projectTitle} binded") //information
                 //Listeners for each project cards
                 buttonCollab.setOnClickListener {
-                    action.onInviteButtonClick(item, adapterPosition)
+                    action.onCollabButtonClick(item, adapterPosition)
                 }
+            }
+            buttonView.setOnClickListener{
+                action.onViewButtonClick(item,adapterPosition)
             }
 
 

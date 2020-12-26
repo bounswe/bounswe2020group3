@@ -63,4 +63,12 @@
     <string name="text_edit_project">EDIT PROJECT</string>
     <string name="project_edit_success">Project successfully edited!</string>
     <string name="done">DONE</string>
+    <string name="event_deadline_date_header">Submission Deadline</string>
+    <string name="event_date_header">Event Date</string>
+    <string name="event_type_header">Event Type</string>
+    <string name="event_title_placeholder">ISAECT 2020</string>
+    <string name="event_description_placeholder">ISAECT 2020 - International Symposium on Advanced Electrical and Communication Technologies</string>
+    <string name="event_deadline_date_placeholder">2020–10–27</string>
+    <string name="event_date_placeholder">2020–10–25</string>
+    <string name="event_type_placeholder">academic conference</string>
 </resources>

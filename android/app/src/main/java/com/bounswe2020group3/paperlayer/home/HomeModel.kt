@@ -1,9 +1,7 @@
 package com.bounswe2020group3.paperlayer.home
 
 import com.bounswe2020group3.paperlayer.data.user.AuthToken
-import com.bounswe2020group3.paperlayer.home.data.CollaborateRequest
-import com.bounswe2020group3.paperlayer.home.data.CollaborationRequest
-import com.bounswe2020group3.paperlayer.home.data.Event
+import com.bounswe2020group3.paperlayer.home.data.*
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.ProjectShort
 import com.bounswe2020group3.paperlayer.util.Session
@@ -20,6 +18,7 @@ class HomeModel @Inject constructor(private var sessionManager: Session, retrofi
     private var eventService: HomeContract.EventsService = retrofit.create(HomeContract.EventsService::class.java)
     private var projectService: HomeContract.ProjectService = retrofit.create(HomeContract.ProjectService::class.java)
     private var collaborationService : HomeContract.CollaborationRequestService  = retrofit.create(HomeContract.CollaborationRequestService::class.java)
+    private var milestonesService : HomeContract.MilestonesService = retrofit.create(HomeContract.MilestonesService::class.java)
     override fun getAllEvents(): Observable<List<Event>>? {
         return eventService.getEvents()
                 .subscribeOn(Schedulers.io())
@@ -56,4 +55,12 @@ class HomeModel @Inject constructor(private var sessionManager: Session, retrofi
         return collaborationService.deleteRequest(authToken,collabId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())    }
+
+    override fun getMilestones() : Observable<MilestoneListWrapper> {
+        val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
+
+        return milestonesService.getMilestones(authToken)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
 }

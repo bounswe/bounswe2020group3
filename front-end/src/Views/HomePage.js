@@ -13,6 +13,7 @@ import { colorCodes } from "../Common/ColorTheme";
 import { getUserId, getAccessToken, getPhoto, setProfileId } from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
+    backgroundColor: '#f7f7f5',
     background: "#f9f9eb",
     border: 0,
     borderRadius: 3,
@@ -106,7 +107,7 @@ export default class HomePage extends Component {
     renderProject(){
       var projects = this.state.projects;
       return projects.map((item) => {return (
-      <Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+      <Paper elevation={6}  style={{border: "solid 1px blue", padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
         <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Typography>
         <Typography  style={{textAlign:"left", color:"black"}}>{this.renderTags(item.tags)}</Typography>
         <Typography  style={{textAlign:"left", color:"black"}}>
@@ -124,8 +125,8 @@ export default class HomePage extends Component {
           milestones.map((item) => {
             return (
               <Paper elevation={6}
-                style={{
-                  padding: "15px", maxHeight: "160px", width: "80%",
+                style={{ border: "solid 1px blue",
+                    padding: "15px", maxHeight: "160px", width: "80%",
                   background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
                 }}
                 borderColor="primary" border={1}>
@@ -163,7 +164,7 @@ export default class HomePage extends Component {
     };
     renderEvents(){
       var events = this.state.events;
-      return events.map((item) => {return (<Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+      return events.map((item) => {return (<Paper elevation={6}  style={{border: "solid 1px blue", padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
         <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToEvent(item.id)}>{item.title}</Typography>
         <Typography noWrap style={{textAlign:"left", color:"black"}}>
           {item.description}
@@ -197,7 +198,7 @@ export default class HomePage extends Component {
                {this.renderProject()}
              </Grid> 
             <Grid item sm={3} >
-              <Grid style={{ maxHeight: "40vh", overflowY: "scroll" }} item sm={12}>
+              <Grid style={{ maxHeight: "50vh", overflowY: "scroll" }} item sm={12}>
                 <Typography variant="h5" color="primary">Upcoming Events</Typography>
                 {this.renderEvents()}
               </Grid>

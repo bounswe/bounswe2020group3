@@ -38,6 +38,7 @@ class EventFragment : Fragment(), HomeContract.EventView {
         this.fragment_view = view
         initRecycler()
         this.presenter.bind(this)
+        resetCardList()
         writeLogMessage("i",TAG,"event fragment has been created.")
         view.findViewById<BottomNavigationView>(R.id.bottomNavigationView).setOnNavigationItemSelectedListener { item ->
             when(item.itemId){
@@ -55,14 +56,7 @@ class EventFragment : Fragment(), HomeContract.EventView {
         viewManager = LinearLayoutManager(this.context)
         viewAdapter = EventAdaptor()
 
-        /*setHasFixedSize(true):Bu özelliği set ettiğimizde
-        performansı arttırır. Eğer içeriğin değişmesi, RecyclerView
-        düzen boyutunu değiştirmiyorsa bu özelliği set edebilirsiniz.
 
-        layoutManager: Her bir satırın nasıl hizalanacağı belirlenir.
-        Her satır dikey olarak hizalanır.
-
-        adapter: RecyclerView, adapter ile doldurulur.*/
         recyclerView = fragment_view.findViewById<RecyclerView>(R.id.recyclerViewEvents).apply{
             setHasFixedSize(true)
             layoutManager = viewManager

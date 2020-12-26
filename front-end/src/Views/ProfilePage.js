@@ -23,11 +23,13 @@ const titleStyleCenter = {
   marginTop: "10px"
 }
 const textStyle = {
+  border: "solid 1px blue",
   textAlign: "left",
   minHeight: "100px",
   padding: "2px 12px"
 }
 const SelfContainer = styled(Box)({
+  backgroundColor: '#f7f7f5',
   background: "#f9f9eb",
   border: 0,
   borderRadius: 3,
@@ -48,7 +50,7 @@ const SelfContainer = styled(Box)({
   }
 });
 const Container = styled(Box)({
-  background: "#f9f9eb",
+  backgroundColor: '#f7f7f5',
   border: 0,
   borderRadius: 3,
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
@@ -471,7 +473,7 @@ export default class ProfilePage extends Component {
                   onClick={this.handleShowUpload}
                 >Change Picture</Button>
               }
-              <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
+              <Paper elevation={6} style={{ border: "solid 1px blue", padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
                 <Typography style={{textTransform:"capitalize "}}>{this.state.name + " " + this.state.middle_name} <br />
                   {this.state.last_name.toUpperCase()}</Typography>
               </Paper>
@@ -498,7 +500,7 @@ export default class ProfilePage extends Component {
     </SelfContainer>);
   }
   renderOtherProfile() {
-    return (<Container>
+    return (<Container style={{backgroundColor: '#f7f7f5'}}>
       <UserNavbar
         logout={() => { this.props.history.push(config.Login_Path) }}
         pushProfile={() => {

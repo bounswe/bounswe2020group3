@@ -15,10 +15,10 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/projectTitle"
-            android:layout_width="325dp"
-            android:layout_height="wrap_content"
+            android:layout_width="271dp"
+            android:layout_height="28dp"
             android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/border_with_corner_radius"
             android:text="title"
             android:textSize="20dp"
@@ -27,13 +27,13 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="94dp"
+            android:layout_height="36dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="date"
             android:textColor="@color/colorGray"
-            android:textSize="15sp"
+            android:textSize="27sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.137"
             app:layout_constraintStart_toEndOf="@+id/projectTitle"
@@ -49,6 +49,15 @@
             android:text="description"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/date" />
+
+        <Button
+            android:id="@+id/buttonViewProject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Go To The Project"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/description" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

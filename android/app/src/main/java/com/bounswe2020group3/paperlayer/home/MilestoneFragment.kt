@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,12 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.home.adaptors.MilestoneAdaptor
+import com.bounswe2020group3.paperlayer.home.adaptors.OnCardClickListenerForMilestones
 import com.bounswe2020group3.paperlayer.home.cards.MilestoneCard
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import javax.inject.Inject
 private const val TAG = "MilestoneFragment"
 
-class MilestoneFragment : Fragment(), HomeContract.MileStoneView  {
+class MilestoneFragment : Fragment(), HomeContract.MileStoneView , OnCardClickListenerForMilestones {
 
 
     @Inject
@@ -36,7 +38,10 @@ class MilestoneFragment : Fragment(), HomeContract.MileStoneView  {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_milestones, container, false)
         fragment_view = view
+
         initRecycler()
+        resetCardList()
+
         this.presenter.bind(this)
         writeLogMessage("i",TAG,"event fragment has been created.")
         view.findViewById<BottomNavigationView>(R.id.bottomNavigationView).setOnNavigationItemSelectedListener { item ->
@@ -53,16 +58,9 @@ class MilestoneFragment : Fragment(), HomeContract.MileStoneView  {
     }
     fun initRecycler(){
         viewManager = LinearLayoutManager(this.context)
-        viewAdapter = MilestoneAdaptor()
+        viewAdapter = MilestoneAdaptor(this)
 
-        /*setHasFixedSize(true):Bu özelliği set ettiğimizde
-        performansı arttırır. Eğer içeriğin değişmesi, RecyclerView
-        düzen boyutunu değiştirmiyorsa bu özelliği set edebilirsiniz.
 
-        layoutManager: Her bir satırın nasıl hizalanacağı belirlenir.
-        Her satır dikey olarak hizalanır.
-
-        adapter: RecyclerView, adapter ile doldurulur.*/
         recyclerView = fragment_view.findViewById<RecyclerView>(R.id.recyclerViewMilestones).apply{
             setHasFixedSize(true)
             layoutManager = viewManager
@@ -101,6 +99,12 @@ class MilestoneFragment : Fragment(), HomeContract.MileStoneView  {
             "v"-> Log.v(tag,message) //verbose
             else-> Log.e(tag,"Type is not defined")
         }
+    }
+
+    override fun onViewButtonClick(item: MilestoneCard, position: Int) {
+        val bundle = bundleOf("projectID" to item.projectId )
+
+        Navigation.findNavController(fragment_view).navigate(R.id.navigateToProjectFromHomepageMilestones,bundle)
     }
 
     override fun resetCardList() {

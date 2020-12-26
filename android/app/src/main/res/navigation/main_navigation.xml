@@ -173,6 +173,9 @@
         <action
             android:id="@+id/navigateToProjectUpdatesFromMilestones"
             app:destination="@id/recentProjectsFragment" />
+        <action
+            android:id="@+id/navigateToProjectFromHomepageMilestones"
+            app:destination="@id/projectFragment" />
     </fragment>
     <fragment
         android:id="@+id/recentProjectsFragment"
@@ -184,6 +187,9 @@
         <action
             android:id="@+id/navigateToEventsFromProjectUpdates"
             app:destination="@id/eventFragment" />
+        <action
+            android:id="@+id/navigateToProjectFromRecentProjects"
+            app:destination="@id/projectFragment" />
     </fragment>
     <fragment
         android:id="@+id/followListFragment"

@@ -70,6 +70,10 @@ class UserFragment : Fragment(), UserContract.View {
             }
         }
 
+        buttonUserUnfollow.setOnClickListener {
+            showInfoToast("Not implemented. You can perform unfollow operation in followings page.")
+        }
+
         val followerBundle = bundleOf("followType" to FollowType.FOLLOWER, "userID" to userID)
 
         val followingBundle = bundleOf("followType" to FollowType.FOLLOWING, "userID" to userID)

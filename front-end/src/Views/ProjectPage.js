@@ -183,7 +183,7 @@ export default class HomePage extends Component {
   render() {
     var project_id = this.props.location.pathname.split('/')[2];
     return (
-      <Container>
+      <Container style={{backgroundColor: '#f7f7f5'}}>
         <UserNavbar
           logout={() => { this.props.history.push(config.Login_Path) }}
           pushProfile={this.goToProfile}

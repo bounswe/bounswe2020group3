@@ -114,7 +114,7 @@ export default class LoginPage extends Component {
 
     render() {
         return (
-            <Container>
+            <Container style={{backgroundColor: '#f7f7f5'}}>
                 <PrimarySearchAppBar registerNav={this.goToRegister} />
                 <form className="" onSubmit={this.handleSubmit}>
                     <Typography variant="h4" color="primary">Login</Typography>

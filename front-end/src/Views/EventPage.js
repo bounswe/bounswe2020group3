@@ -75,7 +75,7 @@ export default class HomePage extends Component {
 
     render() {
       return (
-        <Container>
+        <Container style={{backgroundColor: '#f7f7f5'}}>
           <UserNavbar
             logout={() => { this.props.history.push(config.Login_Path) }}
             pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}

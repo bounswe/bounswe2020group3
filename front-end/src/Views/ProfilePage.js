@@ -359,7 +359,7 @@ export default class HomePage extends Component {
   }
 
   renderSelfProfile() {
-    return (<SelfContainer>
+    return (<SelfContainer style={{backgroundColor: '#f7f7f5'}}>
       <UserNavbar
         logout={() => { this.props.history.push(config.Login_Path) }}
         pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
@@ -431,7 +431,7 @@ export default class HomePage extends Component {
     </SelfContainer>);
   }
   renderOtherProfile() {
-    return (<Container>
+    return (<Container style={{backgroundColor: '#f7f7f5'}}>
       <UserNavbar
         logout={() => { this.props.history.push(config.Login_Path) }}
         pushProfile={() => {

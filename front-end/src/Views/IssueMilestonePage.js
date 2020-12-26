@@ -141,7 +141,7 @@ export default class IssueMilestonePage extends Component {
   render() {
     console.log(this.state);
     return (
-      <Container>
+      <Container style={{backgroundColor: '#f7f7f5'}}>
         <UserNavbar 
           logout={() => { this.props.history.push(config.Login_Path) }}
           pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }} 

@@ -17,4 +17,12 @@ data class User (
     var isFollowing: Boolean,
     @field:Json(name = "is_follow_request_sent")
     var isFollowRequestSent: Boolean,
+    @field:Json(name = "is_follow_request_received")
+    var isFollowRequestReceived: Boolean,
+    @field:Json(name = "count_of_followers")
+    var countOfFollowers: Int,
+    @field:Json(name = "count_of_followings")
+    var countOfFollowings: Int,
+    @field:Json(name = "count_of_follow_requests")
+    var countOfFollowRequests: Int
 )

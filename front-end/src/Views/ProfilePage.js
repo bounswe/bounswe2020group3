@@ -354,7 +354,7 @@ export default class ProfilePage extends Component {
                         <Box style={{ overflowY: "scroll", minWidth: "100%",maxHeight: "200px", paddingTop: "10px", paddingBottom: "10px" }}>
                             {this.state.follow_reqs.map(req =>{
                                 return (<Paper style={{
-                                    padding: "15px", maxHeight: "160px", width: "80%",
+                                    padding: "15px", maxHeight: "160px", width: "80%", cursor:"pointer",
                                     background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"}} borderColor="primary" border={1} alignItems="flex-start">
                                     <Typography onClick={()=>{  this.props.history.push("/profile/"+(req.id+1)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
                                 </Paper>)
@@ -372,7 +372,7 @@ export default class ProfilePage extends Component {
                         <Box style={{ overflowY: "scroll", minWidth: "100%",maxHeight: "200px", paddingTop: "10px", paddingBottom: "10px" }}>
                             {this.state.following.map(req =>{
                                 return (<Paper style={{
-                                    padding: "15px", maxHeight: "160px", width: "80%",
+                                    padding: "15px", maxHeight: "160px", width: "80%", cursor:"pointer",
                                     background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"}} borderColor="primary" border={1} alignItems="flex-start">
                                     <Typography onClick={()=>{  this.props.history.push("/profile/"+(req.id+1)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
                                 </Paper>)
@@ -390,7 +390,7 @@ export default class ProfilePage extends Component {
                         <Box style={{ overflowY: "scroll", minWidth: "100%",maxHeight: "200px", paddingTop: "10px", paddingBottom: "10px" }}>
                             {this.state.followers.map(req =>{
                                 return (<Paper style={{
-                                    padding: "15px", maxHeight: "160px", width: "80%",
+                                    padding: "15px", maxHeight: "160px", width: "80%", cursor:"pointer",
                                     background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"}} borderColor="primary" border={1} alignItems="flex-start">
                                     <Typography onClick={()=>{this.props.history.push("/profile/"+(req.id+1)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
                                 </Paper>)

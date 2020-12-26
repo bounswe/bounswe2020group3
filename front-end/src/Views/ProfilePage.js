@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, Input, styled, Avatar, Box, Grid, Paper, Typography } from '@material-ui/core';
 import { Rating } from '@material-ui/lab';
-import AlertTypes  from "../Common/AlertTypes.json";
+import AlertTypes from "../Common/AlertTypes.json";
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import { getUserId, getAccessToken, getPhoto } from '../Components/Auth/Authenticate';
 import axios from 'axios';
@@ -54,7 +54,7 @@ const Container = styled(Box)({
   bottom: "0",
   left: "0",
   right: "0",
-  height:"calc(98vh - 60px)",
+  height: "calc(98vh - 60px)",
   margin: "auto",
   '& .MuiTextField-root': {
     margin: "10px",
@@ -89,25 +89,29 @@ export default class HomePage extends Component {
       self: false,
       selfName: "",
       selfLastName: "",
-      follow_reqs:[],
-      followers:[],
-      following:[],
+      follow_reqs: [],
+      followers: [],
+      following: [],
       milestones: [],
       projects: [],
-      file : undefined,
+      file: undefined,
       showUpload: false,
       loading: true, // For eradicating glitches due to request delays
       rating: 0,
       currentRating: 0,
-      currentUserId: -1
+      currentUserId: -1,
+      comments: [],
+      newComment: "",
+      showAddNewComment: false
     }
   };
 
   componentDidMount() {
     this.getProfile();
-      axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
-        this.setState({ selfName: res.data.profile[0].name +" " +  res.data.profile[0].middle_name,
+        this.setState({
+          selfName: res.data.profile[0].name + " " + res.data.profile[0].middle_name,
           selfLastName: res.data.profile[0].last_name
         });
       });
@@ -130,7 +134,7 @@ export default class HomePage extends Component {
             last_name: prof.last_name,
             bio: prof.bio,
             img: prof.photo_url,
-            birthday: prof.birthday, 
+            birthday: prof.birthday,
             expertise: prof.expertise,
             gender: prof.gender,
             interests: prof.interests,
@@ -140,20 +144,20 @@ export default class HomePage extends Component {
             shareAffiliations: prof.share_affiliations,
             shareBirthday: prof.share_birthday,
             self: windowUserId === parseInt(getUserId()),
-            follow_reqs:user.follow_requests,
-            followers:user.followers,
-            following:user.following,
+            follow_reqs: user.follow_requests,
+            followers: user.followers,
+            following: user.following,
             loading: false,
-            rating: (prof.rating ? prof.rating: 4.5),
-            currentUserId : windowUserId
+            rating: (prof.rating ? prof.rating : 4.5),
+            currentUserId: windowUserId
           }, () => {
             this.getComments();
           });
-          if(windowUserId === parseInt(getUserId())){
-          axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-            .then(res => {
-              this.setState({ milestones: res.data.result });
-            });
+          if (windowUserId === parseInt(getUserId())) {
+            axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+              .then(res => {
+                this.setState({ milestones: res.data.result });
+              });
             axios.get(`${config.API_URL}${config.Projectpage_url}?owner__id=${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
               .then(res => {
                 this.setState({ projects: res.data });
@@ -170,32 +174,77 @@ export default class HomePage extends Component {
             middle_name: prof.middle_name,
             last_name: prof.last_name,
             img: prof.photo_url,
-            loading:false
+            loading: false,
+            currentUserId: windowUserId
+          }, () => {
+            this.getComments();
           })
         }
 
-      },(error) => {
+      }, (error) => {
         this.props.history.push("/"); // Forwards from unexisting profiles to homepage
       }
-      
+
       );
   }
   getComments = () => {
     const { currentUserId } = this.state;
-    axios.get(`${config.API_URL}/api/comments/?to_user=${currentUserId}`, 
-    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } } )
-    .then(res => {
-      this.setState({comments: (res.data ? res.data : [] ) });
-    });
+    axios.get(`${config.API_URL}/api/comments/?to_user=${currentUserId}`,
+      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        this.setState({ comments: (res.data ? res.data : []) });
+      });
   }
+  renderComments = () => {
+    const { comments } = this.state;
+    console.log(comments);
+    return (
+      <>
+        {comments.length !== 0 ?
+          comments.map((item) => {
+            return (
+              <>
+                <Typography variant="caption" color="primary" style={{ textAlign: "left", width: "100%", textTransform: "capitalize" }}>{"TODO ISIM GELECEK"}</Typography>
+                <Paper elevation={6} style={{ textAlign: "center" }}>
+                  <Typography variant="caption" color="primary" style={{ textAlign: "left", display: "inline-block", width: "85%" }}>{item.comment}</Typography>
+                  {item.from_user === parseInt(getUserId()) ?
+                    <Typography variant="caption" color="error"
+                      style={{ textAlign: "right", display: "inline-block", width: "10%", cursor: "pointer", fontSize: "10px" }}
+                      onClick={() => { this.deleteComment(item.id) }}
+                    >delete</Typography>
+                    : <></>}
+
+                </Paper>
+                <hr />
+              </>
+            )
+          })
+          :
+          <>
+            <Typography variant='h6' color='textPrimary' style={{ textAlign: 'center' }}>0 comments found</Typography>
+          </>
+        }
+      </>
+    )
+  }
+
   postComment = () => {
     const { currentUserId, newComment } = this.state;
-    let data = { from_user: getUserId(), to_user: currentUserId, comment: newComment };
+
+    if (newComment.trim() === "") {
+      this.setState({ message: "Comment Can't Be Empty", messageType: AlertTypes.Warning }, () => {
+        this.handleSnackbarOpen();
+      });
+      return;
+    }
+
+    let data = { from_user: parseInt(getUserId()), to_user: currentUserId, comment: newComment };
     axios.post(`${config.API_URL}/api/comments/`, data,
       { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
-        this.setState({ message: "Comment Posted", messageType: AlertTypes.Success }, () => {
+        this.setState({ message: "Comment Posted", messageType: AlertTypes.Success, newComment: "", showAddNewComment: false }, () => {
           this.handleSnackbarOpen();
+          this.getComments();
         })
       }, (error) => {
         this.setState({ message: "Error while posting comment, please try again.", messageType: AlertTypes.Error }, () => {
@@ -209,6 +258,7 @@ export default class HomePage extends Component {
       .then(res => {
         this.setState({ message: "Comment Deleted", messageType: AlertTypes.Success }, () => {
           this.handleSnackbarOpen();
+          this.getComments();
         })
       }, (error) => {
         this.setState({ message: "Error while deleting comment, please try again.", messageType: AlertTypes.Error }, () => {
@@ -221,28 +271,31 @@ export default class HomePage extends Component {
 
   postRating = () => {
     const { currentUserId, currentRating } = this.state;
-    let rating = { rating: currentRating, from_user:getUserId(), to_user: currentUserId };
+    let rating = { rating: currentRating, from_user: getUserId(), to_user: currentUserId };
     axios.post(`${config.API_URL}/api/ratings/`, rating,
-    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } } )
-    .then(res => {
-      this.getProfile();
-    }, (error) => {
-      axios.put(`${config.API_URL}/api/ratings/`, rating,
-    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } } )
-    .then(re => {
+      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        this.getProfile();
+      }, (error) => {
+        axios.put(`${config.API_URL}/api/ratings/`, rating,
+          { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+          .then(re => {
 
-    }, (error) => {
-      this.setState({messageType: AlertTypes.Error, message:"Error while rating please try again later." }, () => {
-        this.handleSnackbarOpen();
+          }, (error) => {
+            this.setState({ messageType: AlertTypes.Error, message: "Error while rating please try again later." }, () => {
+              this.handleSnackbarOpen();
+            })
+          })
       })
-    })
-    })
   }
 
-  handleRatingChange = (e) =>{
-    this.setState({currentRating: e.target.value * 2 }, () =>{
+  handleRatingChange = (e) => {
+    this.setState({ currentRating: e.target.value * 2 }, () => {
       this.postRating();
     });
+  }
+  handleCommentChange = (e) => {
+    this.setState({ newComment: e.target.value });
   }
 
   handleSnackbarOpen = () => {
@@ -274,7 +327,7 @@ export default class HomePage extends Component {
                 borderColor="primary" border={1}>
                 <Typography variant="h6" color="primary"
                   style={{ cursor: "pointer", width: "50%", textAlign: "left" }}
-                  onClick={()=>{    this.props.history.push("/project/" + item.id);}}
+                  onClick={() => { this.props.history.push("/project/" + item.id); }}
                 >{item.name}</Typography>
               </Paper>
             )
@@ -306,11 +359,11 @@ export default class HomePage extends Component {
                 }}
                 borderColor="primary" border={1}>
                 <Typography variant="h6" color="primary"
-                  style={{ cursor: "pointer", width: "50%", textAlign: "left", display:"inline-block"}}
+                  style={{ cursor: "pointer", width: "50%", textAlign: "left", display: "inline-block" }}
                   onClick={() => { this.props.history.push(`${config.Projectpage_Path}/${item.project}`) }}
                 >{item.project_name}</Typography>
                 <Typography variant="h6" color="primary"
-                  style={{ cursor: "pointer", width: "50%", textAlign: "right", display:"inline-block" }}
+                  style={{ cursor: "pointer", width: "50%", textAlign: "right", display: "inline-block" }}
                 >{item.date}</Typography>
                 <hr />
                 <Typography nowrap variant="body2" style={{ textAlign: "left", color: "black" }}>
@@ -392,52 +445,89 @@ export default class HomePage extends Component {
     </Grid>
     );
   }
+  renderAddComment() {
+    return (
+      <>
+        {this.state.showAddNewComment ?
+          <>
+            <Input
+              multiline={true}
+              value={this.state.newComment}
+              placeholder="Your Comment"
+              style={{ width: "80%", marginBottom: "10px" }}
+              onChange={(e) => { this.handleCommentChange(e) }}
+            />
+            <br />
+            <Button variant="outlined" color="primary" onClick={() => { this.postComment() }}>Post</Button>
+          </>
+          :
+          <Button variant="outlined" color="primary" onClick={() => { this.setState({ showAddNewComment: true }) }}>Comment</Button>
+        }
+      </>
+    )
+  }
+
   renderGraph() {
     return (
       <>{this.state.self ?
-        <Button variant="outlined" color="primary" style={{width:"50", fontSize:'10px', marginBottom:"20px"}} onClick={() => { 
-          this.deletePhoto( this.getUserPhoto(this.state.profileId))       
+        <Button variant="outlined" color="primary" style={{ width: "50", fontSize: '10px', marginBottom: "20px" }} onClick={() => {
+          this.deletePhoto(this.getUserPhoto(this.state.profileId))
           window.location.reload(false);
-           }}> Delete Photo </Button>
+        }}> Delete Profile Picture </Button>
         :
         <></>
       }
-      {!this.state.self ? 
-       <div style={{textAlign:'left', width:"90%", paddingLeft:"10%"}}>
-       <Typography component="span" style={{ textAlign:"left", width:'50%', marginBottom:"5px"}} color="primary">{"Your Rating :     "}</Typography>
-         <Rating 
-           defaultValue={0}
-           precision={0.5}
-           name="pristine"
-           size="small"
-           style={{ top:"3px", paddingLeft:"13px" }}
-           value={this.state.currentRating}
-           onChange={(e) => { this.handleRatingChange(e) }} 
-         />
-       </div>
-    :
-    <></>
-    }    
-        <div style={{textAlign:'left', width:"90%", paddingLeft:"10%"}}>
-        <Typography component="span" style={{ textAlign:"left", width:'50%', marginBottom:"5px"}} color="primary">Overall Rating :</Typography>
-          <Rating 
+        {!this.state.self ?
+          <div style={{ textAlign: 'left', width: "90%", paddingLeft: "10%" }}>
+            <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">{"Your Rating :     "}</Typography>
+            <Rating
+              defaultValue={0}
+              precision={0.5}
+              name="pristine"
+              size="small"
+              style={{ top: "3px", paddingLeft: "13px" }}
+              value={this.state.currentRating}
+              onChange={(e) => { this.handleRatingChange(e) }}
+            />
+          </div>
+          :
+          <></>
+        }
+        <div style={{ textAlign: 'left', width: "90%", paddingLeft: "10%" }}>
+          <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">Overall Rating :</Typography>
+          <Rating
             defaultValue={0}
             precision={0.5}
             name="pristine"
             size="small"
-            style={{ top:"3px", paddingRight:"5px" }}
-            value={this.state.rating / 2.0 }
+            style={{ top: "3px", paddingRight: "5px" }}
+            value={this.state.rating / 2.0}
             disabled
           />
           <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">{this.state.rating}</Typography>
 
         </div>
-        <Paper elevation={6} style={{ padding: "15px", width: "80%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
-          {/* <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.follow_reqs.length:0}</b> following request</Typography>
+        {/* <Paper elevation={6} style={{ padding: "15px", width: "80%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}> */}
+        {/* <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.follow_reqs.length:0}</b> following request</Typography>
           <hr />
           <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.following.length:0}</b> followings</Typography>
           <hr />
           <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.followers.length:0}</b> followers</Typography> */}
+        {/* </Paper> */}
+        <Typography variant='h6' color='primary' style={{ margin: "10px 0" }}>Comments</Typography>
+        <Paper elevation={6}
+          style={{
+            padding: "15px",
+            width: "80%",
+            background: "white",
+            margin: "auto",
+            marginBottom: "10px",
+            textAlign: 'left',
+            maxHeight: "500px",
+            overflowY: "scroll"
+          }}
+          borderColor="primary" border={1}>
+          {this.renderComments()}
         </Paper>
       </>);
   };
@@ -450,16 +540,16 @@ export default class HomePage extends Component {
   submitPhoto = () => {
     const { file } = this.state;
     console.log(file);
-    if(file === undefined){
+    if (file === undefined) {
       return;
     }
     const data = new FormData();
     data.append("profile_picture", file);
-    axios.put(`${config.API_URL}/api/profile_picture/${this.state.profileId}/`, data, 
-    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } } )
-    .then(res => {
-      window.location.reload(false);
-    })
+    axios.put(`${config.API_URL}/api/profile_picture/${this.state.profileId}/`, data,
+      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        window.location.reload(false);
+      })
   }
 
   renderSelfProfile() {
@@ -491,15 +581,15 @@ export default class HomePage extends Component {
               <Avatar src={this.getUserPhoto(this.state.profileId)} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
               {this.state.showUpload ?
                 <><Input type="file" onChange={this.handleProfilePictureChange}></Input>
-                {this.state.file !== undefined ?
-                  <Button color='primary'
-                    type='outlined'
-                    style={{ width: '40px', fontSize: "8px" }}
-                    onClick={this.submitPhoto}
-                  > Save Picture </Button>
-                :
-                <></>
-                }
+                  {this.state.file !== undefined ?
+                    <Button color='primary'
+                      type='outlined'
+                      style={{ width: '40px', fontSize: "8px" }}
+                      onClick={this.submitPhoto}
+                    > Save Picture </Button>
+                    :
+                    <></>
+                  }
                 </>
                 :
                 <Button color='primary'
@@ -509,7 +599,7 @@ export default class HomePage extends Component {
                 >Change Picture</Button>
               }
               <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
-                <Typography style={{textTransform:"capitalize "}}>{this.state.name + " " + this.state.middle_name} <br />
+                <Typography style={{ textTransform: "capitalize " }}>{this.state.name + " " + this.state.middle_name} <br />
                   {this.state.last_name.toUpperCase()}</Typography>
               </Paper>
             </Grid>
@@ -552,7 +642,7 @@ export default class HomePage extends Component {
             photoUrl={getPhoto()}
             goToProjectCreation={this.goToProjectCreation}
             goToProfile={() => {
-              this.props.history.push("/profile/" + getUserId()); 
+              this.props.history.push("/profile/" + getUserId());
               window.location.reload(false);
             }}
           />
@@ -562,15 +652,15 @@ export default class HomePage extends Component {
         <Grid container direction="row" justify="center" alignItems="center" >
           <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">
 
-            <Grid item sm={3}>
-{/* Burasi bos kalacak */}
+            <Grid item sm={2}>
+              {/* Burasi bos kalacak */}
             </Grid>
 
-            <Grid container spacing={2} item sm={6}>
+            <Grid container spacing={2} item sm={7}>
               <Grid item sm={12} >
                 <Avatar src={this.getUserPhoto(this.state.profileId)} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
                 <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
-                  <Typography style={{textTransform:"capitalize"}}>{this.state.name + " " + this.state.middle_name} <br />
+                  <Typography style={{ textTransform: "capitalize" }}>{this.state.name + " " + this.state.middle_name} <br />
                     {this.state.last_name.toUpperCase()}</Typography>
                 </Paper>
               </Grid>
@@ -581,12 +671,12 @@ export default class HomePage extends Component {
             </Grid>
             <Grid item sm={3}>
               {this.renderGraph()}
-{ /* Buraya bir seyler gelecek - recommendation vb. */ }
+              {this.renderAddComment()}
             </Grid>
             {
               this.state.isPublic ?
-              <></>
-              :
+                <></>
+                :
                 <Typography variant="h5" color="error"> This Profile is Private </Typography>
             }
           </Grid>
@@ -604,11 +694,11 @@ export default class HomePage extends Component {
 
   }
 
-  getUserPhoto = (profileId) =>{
+  getUserPhoto = (profileId) => {
     return `${config.API_URL}/api/profile_picture/${profileId}/`;
   }
-  
-  deletePhoto = (url) =>{
+
+  deletePhoto = (url) => {
     axios.delete(url, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } });
   }
 

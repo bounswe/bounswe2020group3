@@ -121,7 +121,14 @@
         android:id="@+id/searchFragment"
         android:name="com.bounswe2020group3.paperlayer.search.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/navigateToUserFromSearch"
+            app:destination="@id/userFragment" />
+        <action
+            android:id="@+id/navigateToProjectFromSearch"
+            app:destination="@id/projectFragment" />
+    </fragment>
     <fragment
         android:id="@+id/userListFragment"
         android:name="com.bounswe2020group3.paperlayer.profile.list.UserListFragment"

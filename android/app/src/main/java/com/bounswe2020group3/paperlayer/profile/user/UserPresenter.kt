@@ -19,6 +19,10 @@ class UserPresenter @Inject constructor(
     }
 
     override fun loadUser(userId: Int) {
+        if(model.getAuthUser().value?.id == userId) {
+            view?.navigateToProfile()
+            return
+        }
         view?.showLoading()
         val userSub = model.getUser(userId).subscribe(
             { user ->

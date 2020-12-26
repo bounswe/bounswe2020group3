@@ -8,11 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.profile.follow.FollowType
 import com.bounswe2020group3.paperlayer.data.user.User
+import com.bounswe2020group3.paperlayer.util.Session
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.fragment_user.imageViewProfileAvatar
@@ -30,6 +32,7 @@ private const val ARG_USER_ID = "userID"
 
 class UserFragment : Fragment(), UserContract.View {
 
+    @Inject lateinit var sessionManager: Session
     @Inject lateinit var presenter: UserContract.Presenter
 
     private var userID: Int? = -1
@@ -206,6 +209,10 @@ class UserFragment : Fragment(), UserContract.View {
             showErrorToast("User id is invalid. Please try again.")
             navigateBack()
         }
+    }
+
+    override fun navigateToProfile() {
+        Navigation.findNavController(requireView()).navigate(R.id.navigateToProfileFromUser)
     }
 
 }

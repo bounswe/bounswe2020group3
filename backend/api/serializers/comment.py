@@ -24,7 +24,7 @@ class CommentSerializer(serializers.ModelSerializer):
         if is_profile_exists:
             return profile[0].name
         else:
-            return "You did not rate this user."
+            return "There is no such profile."
 
     def get_middle_name(self, obj):
         profile = Profile.objects.filter(owner__exact=obj.from_user)
@@ -32,7 +32,7 @@ class CommentSerializer(serializers.ModelSerializer):
         if is_profile_exists:
             return profile[0].middle_name
         else:
-            return "You did not rate this user."
+            return "There is no such profile."
 
     def get_last_name(self, obj):
         profile = Profile.objects.filter(owner__exact=obj.from_user)
@@ -40,7 +40,7 @@ class CommentSerializer(serializers.ModelSerializer):
         if is_profile_exists:
             return profile[0].last_name
         else:
-            return "You did not rate this user."
+            return "There is no such profile."
 
 
 class CommentUpdateSerializer(serializers.ModelSerializer):

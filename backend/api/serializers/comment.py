@@ -1,5 +1,6 @@
 from api.models.comment import Comment
 from rest_framework import serializers
+from api.serializers.user import UserPrivateSerializer
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -7,7 +8,7 @@ class CommentSerializer(serializers.ModelSerializer):
     Comment serializer
     """
     created = serializers.DateTimeField(read_only=True)
-    owner = serializers.ReadOnlyField(source='from_user.username')
+    owner = UserPrivateSerializer(source='from_user')
 
     class Meta:
         model = Comment

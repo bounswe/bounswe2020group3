@@ -20,6 +20,8 @@ from .views.search import SearchGenericAPIView
 from django.contrib.auth import views as auth_views
 from .views.comment import CommentViewSet
 from .views.rating import RatingViewSet
+from django.contrib import admin
+from django_email_verification import urls as mail_urls
 
 router = DefaultRouter()
 router.register(r'profiles', ProfileViewSet)
@@ -62,7 +64,8 @@ urlpatterns = [
     path('reset_password_complete/',
          auth_views.PasswordResetCompleteView.as_view(),
          name="password_reset_complete"),
-
+    path('admin/', admin.site.urls),
+    path('email/', include(mail_urls)),
     path('search/', SearchGenericAPIView.as_view(), name='search'),
 
 

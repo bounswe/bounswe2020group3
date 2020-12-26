@@ -54,7 +54,7 @@ class UserFullSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email',
                   'profile', 'is_follower', 'is_following',
-                  'is_follow_request_sent',
+                  'is_follow_request_sent', 'is_active',
                   'is_follow_request_received',
                   'count_of_followers',
                   'count_of_followings',

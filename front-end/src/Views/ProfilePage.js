@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Input, styled } from '@material-ui/core';
+import { Button, Input, styled,Accordion,AccordionSummary,AccordionDetails } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
@@ -11,6 +11,7 @@ import axios from 'axios';
 import config from '../config';
 import UserNavbar from '../Components/TopBar/UserNavbar';
 import Profilebar from '../Components/ProfileBar/Profilebar';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const privateGender = "do not want to share";
 const titleStyle = {
@@ -66,7 +67,7 @@ const Container = styled(Box)({
   }
 });
 
-export default class HomePage extends Component {
+export default class ProfilePage extends Component {
   constructor(props) {
     super(props);
     this.SnackbarRef = React.createRef();
@@ -108,7 +109,6 @@ export default class HomePage extends Component {
       .then(res => {
         this.setState({ email: res.data.email, self: res.data.id === parseInt(getUserId()), });
         const prof = res.data.profile[0];
-        const user = res.data;
         let windowUserId = res.data.id;
         if (windowUserId === parseInt(getUserId()) || res.data.profile[0].is_public) {
           this.setState({
@@ -129,9 +129,6 @@ export default class HomePage extends Component {
             shareAffiliations: prof.share_affiliations,
             shareBirthday: prof.share_birthday,
             self: windowUserId === parseInt(getUserId()),
-            follow_reqs:user.follow_requests,
-            followers:user.followers,
-            following:user.following,
             loading: false
           });
           if(windowUserId === parseInt(getUserId())){
@@ -139,9 +136,25 @@ export default class HomePage extends Component {
             .then(res => {
               this.setState({ milestones: res.data.result });
             });
-            axios.get(`${config.API_URL}${config.Projectpage_url}?owner__id=${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-              .then(res => {
-                this.setState({ projects: res.data });
+          axios.get(`${config.API_URL}${config.Projectpage_url}?owner__id=${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            .then(res => {
+              this.setState({ projects: res.data });
+            });
+
+          axios.get(`${config.API_URL}${config.Follow_url}?from_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+              .then(res=>{
+                const temp_followings = res.data.map(f => f.to_user.profile[0]);
+                this.setState({following:temp_followings});
+              });
+          axios.get(`${config.API_URL}${config.Follow_url}?to_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+              .then(res=>{
+                const temp_followers = res.data.map(f => f.from_user.profile[0]);
+                this.setState({followers:temp_followers});
+              });
+          axios.get(`${config.API_URL}${config.Follow_request_url}?req_to_user=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+              .then(res=>{
+                const temp_follow_reqs = res.data.map(f => f.req_from_user.profile[0]);
+                this.setState({follow_reqs:temp_follow_reqs});
               });
 
           }
@@ -225,6 +238,7 @@ export default class HomePage extends Component {
     const { milestones } = this.state;
     return (
       <Box style={{ overflowY: "scroll", maxHeight: "500px", paddingTop: "10px", paddingBottom: "10px" }}>
+
         {milestones.length !== 0
           ?
           milestones.map((item) => {
@@ -322,25 +336,74 @@ export default class HomePage extends Component {
     </Grid>
     );
   }
-  renderGraph() {
-    return (
-      <>{this.state.self ?
-        <Button variant="outlined" color="primary" style={{width:"50", fontSize:'10px', marginBottom:"50px"}} onClick={() => { 
-          this.deletePhoto( this.getUserPhoto(this.state.profileId))       
-          window.location.reload(false);
-           }}> Delete Photo </Button>
-        :
-        <></>
-      }
-        <Paper elevation={6} style={{ padding: "15px", width: "80%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
-          {/* <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.follow_reqs.length:0}</b> following request</Typography>
-          <hr />
-          <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.following.length:0}</b> followings</Typography>
-          <hr />
-          <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}><b>{this.state.self?this.state.followers.length:0}</b> followers</Typography> */}
-        </Paper>
-      </>);
-  };
+  renderGraph(){
+        return (
+            <div>
+                {this.state.self ?
+                    <Button variant="outlined" color="primary" style={{width: "50", fontSize: '10px', marginBottom: "50px"}}
+                            onClick={() => {
+                                this.deletePhoto(this.getUserPhoto(this.state.profileId))
+                                window.location.reload(false);
+                            }}> Delete Photo </Button>
+                    :
+                    <></>
+                }
+                <Accordion>
+                    <AccordionSummary disabled={!this.state.follow_reqs.length>0} expandIcon={<ExpandMoreIcon />}>
+                        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}>
+                            <b>{this.state.follow_reqs?this.state.follow_reqs.length:0}</b> following request
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Box style={{ overflowY: "scroll", minWidth: "100%",maxHeight: "200px", paddingTop: "10px", paddingBottom: "10px" }}>
+                            {this.state.follow_reqs.map(req =>{
+                                return (<Paper style={{
+                                    padding: "15px", maxHeight: "160px", width: "80%", cursor:"pointer",
+                                    background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"}} borderColor="primary" border={1} alignItems="flex-start">
+                                    <Typography onClick={()=>{  this.props.history.push("/profile/"+(req.id+1)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
+                                </Paper>)
+                            })}
+                        </Box>
+                    </AccordionDetails>
+                </Accordion>
+                <Accordion>
+                    <AccordionSummary disabled={!this.state.following.length>0} expandIcon={<ExpandMoreIcon />}>
+                        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}>
+                            <b>{this.state.following?this.state.following.length:0}</b> following
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Box style={{ overflowY: "scroll", minWidth: "100%",maxHeight: "200px", paddingTop: "10px", paddingBottom: "10px" }}>
+                            {this.state.following.map(req =>{
+                                return (<Paper style={{
+                                    padding: "15px", maxHeight: "160px", width: "80%", cursor:"pointer",
+                                    background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"}} borderColor="primary" border={1} alignItems="flex-start">
+                                    <Typography onClick={()=>{  this.props.history.push("/profile/"+(req.id+1)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
+                                </Paper>)
+                            })}
+                        </Box>
+                    </AccordionDetails>
+                </Accordion>
+                <Accordion>
+                    <AccordionSummary disabled={!this.state.followers.length>0} expandIcon={<ExpandMoreIcon />}>
+                        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}>
+                            <b>{this.state.followers?this.state.followers.length:0}</b> follower
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Box style={{ overflowY: "scroll", minWidth: "100%",maxHeight: "200px", paddingTop: "10px", paddingBottom: "10px" }}>
+                            {this.state.followers.map(req =>{
+                                return (<Paper style={{
+                                    padding: "15px", maxHeight: "160px", width: "80%", cursor:"pointer",
+                                    background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"}} borderColor="primary" border={1} alignItems="flex-start">
+                                    <Typography onClick={()=>{this.props.history.push("/profile/"+(req.id+1)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
+                                </Paper>)
+                            })}
+                        </Box>
+                    </AccordionDetails>
+                </Accordion>
+            </div>);
+    };
   handleProfilePictureChange = (e) => {
     this.setState({ file: e.target.files[0] });
   }

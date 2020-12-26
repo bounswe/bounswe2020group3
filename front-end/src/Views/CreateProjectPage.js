@@ -265,7 +265,7 @@ export default class CreateProjectPage extends Component {
     const { isPublic, projectType, projectState } = this.state;
     console.log(this.state)
     return (
-      <Container>
+      <Container >
         <UserNavbar
           logout={() => { this.props.history.push(config.Login_Path) }}
           pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}

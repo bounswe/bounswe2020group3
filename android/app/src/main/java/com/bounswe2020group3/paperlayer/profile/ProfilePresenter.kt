@@ -52,25 +52,4 @@ class ProfilePresenter @Inject constructor(private var model: ProfileContract.Mo
             view?.navigateToLogin()
         }
     }
-
-    override fun updateProfilePicture(profileId: Int, file: File, type: MediaType) {
-        view?.showLoading()
-        try {
-            val fetchSub = model.updateProfilePicture(profileId, file, type).subscribe(
-                    {
-                        view?.hideLoading()
-                        view?.showInfoToast("Profile updated successfully")
-                        loadAuthUser()
-                    },
-                    {
-                        view?.hideLoading()
-                        view?.showErrorToast("An error occurred while updating the profile picture. Please try again.")
-                    }
-            )
-            disposable.add(fetchSub)
-        } catch (e: Exception) {
-            view?.showErrorToast("Please log in first.")
-            view?.navigateToLogin()
-        }
-    }
 }

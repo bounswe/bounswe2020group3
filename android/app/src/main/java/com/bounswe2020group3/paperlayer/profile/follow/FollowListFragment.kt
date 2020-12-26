@@ -15,7 +15,7 @@ import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.data.follow.ListableFollow
 import com.bounswe2020group3.paperlayer.data.user.User
-import kotlinx.android.synthetic.main.fragment_user.*
+import com.bounswe2020group3.paperlayer.util.Session
 import javax.inject.Inject
 
 private const val ARG_FOLLOW_TYPE = "followType"
@@ -24,7 +24,11 @@ private const val ARG_USER_ID = "userID"
 /**
  * A fragment representing a list of [User].
  */
-class FollowListFragment : Fragment(), FollowContract.View, OnUserClickListener, OnFollowButtonClickListener {
+class FollowListFragment : Fragment(), FollowContract.View,
+        FollowContract.OnUserClickListener, FollowContract.OnFollowButtonClickListener {
+
+    @Inject
+    lateinit var sessionManager: Session
 
     @Inject
     lateinit var presenter: FollowContract.Presenter
@@ -61,7 +65,8 @@ class FollowListFragment : Fragment(), FollowContract.View, OnUserClickListener,
 
         this.presenter.bind(this)
 
-        followListAdapter = FollowListAdapter(followList, this, this, followType)
+        followListAdapter = FollowListAdapter(followList, this, this,
+                followType, sessionManager.getToken().value?.id)
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -119,15 +124,15 @@ class FollowListFragment : Fragment(), FollowContract.View, OnUserClickListener,
     }
 
     override fun onFollowButtonClick(user: User) {
-        if(user.profile[0].is_public) {
+        if (user.profile[0].is_public) {
             presenter.sendFollow(user.id)
         } else {
             presenter.sendFollowRequest(user.id)
         }
     }
 
-    override fun onUnfollowButtonClick(user: User) {
-        showInfoToast("Not implemented yet.")
+    override fun onUnfollowButtonClick(followId: Int) {
+        presenter.sendUnfollow(followId)
     }
 
     override fun onAcceptRequestClick(followRequestId: Int, fromUser: User) {

@@ -8,6 +8,7 @@ export const getAccessToken = () => Cookies.get('access_token')
 export const getRefreshToken = () => Cookies.get('refresh_token')
 export const getUserId = () => Cookies.get('user_id');
 export const isAuthenticated = () => !!getAccessToken()
+export const getProfileId = () => Cookies.get('user_prof_id')
 export const getPhoto = () => {
     let id = Cookies.get('user_prof_id');
     return `${config.API_URL}/api/profile_picture/${id}/`;

@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import Profilebar from '../Components/ProfileBar/Profilebar';
 import { colorCodes } from "../Common/ColorTheme";
-import { getUserId, getAccessToken } from "../Components/Auth/Authenticate";
+import { getUserId, getAccessToken, getPhoto, getProfileId } from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
   background: "#f9f9eb",
@@ -54,7 +54,10 @@ export default class HomePage extends Component {
       showAddTag: false,
       tagQuery: "",
       currTag: [],
-      allTags: []
+      allTags: [],
+      isMember: false,
+      isPublic: false,
+      owner: ""
     }
   };
 
@@ -83,8 +86,16 @@ export default class HomePage extends Component {
     axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}/`, { headers: { 'Content-Type': 'Application/json' } })
       .then(res => {
         const prof = res.data;
-        const temp_members = prof.members;
-        this.setState({ name: prof.name, desc: prof.description, membersData: prof.members, reqs: prof.requirements, stat: prof.state, age: prof.age, type: prof.project_type, due: prof.due_date, tags: prof.tags });
+        const temp_members = (prof.members ? prof.members : [])
+        this.setState({
+          name: prof.name, desc: prof.description,
+          membersData: (prof.members ? prof.members : []), reqs: prof.requirements,
+          stat: prof.state, age: prof.age, type: prof.project_type,
+          due: prof.due_date, tags: prof.tags, isPublic: prof.is_public,
+          owner: prof.owner
+        }, () => {
+          this.isMember();
+        });
         if (prof.event == null) {
           this.setState({ events: [] });
         } else {
@@ -97,6 +108,8 @@ export default class HomePage extends Component {
         });
 
         this.setState({ members: memberNames });
+      }, (error) => {
+        this.props.history.push("/"); // Forwards from unexisting profiles to homepage
       });
   }
   getProfile = () => {
@@ -109,6 +122,17 @@ export default class HomePage extends Component {
         this.setState({ username: name, userlastname: lastname });
         });
     };
+    isMember = () =>{
+      const { membersData } = this.state;
+      let ids = []
+      for(let i = 0 ; i < membersData.length ; i++){
+        ids.push(membersData[i].profile[0].id);
+      }
+      console.log(ids, membersData);
+      if( ids.includes(parseInt(getProfileId() ) ) ){
+        this.setState({isMember :true})
+      }
+    }
 
   componentDidMount() {
     var project_id = this.props.location.pathname.split('/')[2];
@@ -122,7 +146,7 @@ export default class HomePage extends Component {
     var mems = this.state.members;
     return mems.map((item) => {
       return (
-        <Typography variant="h6" color="primary" style={{ cursor: "pointer", width: "100%", textAlign: "left" }}>{item}</Typography>
+        <Typography variant="h6" color="primary" style={{ cursor: "pointer", width: "100%", textAlign: "left", textTransform:"capitalize" }}>{item}</Typography>
       )
     });
   };
@@ -149,7 +173,7 @@ export default class HomePage extends Component {
   renderTags() {
     const { tags } = this.state;
     return tags.map((item) => {
-      return (<>{this.isMember() ?
+      return (<>{this.state.isMember ?
         <Chip onDelete={() => { this.deleteTag(item) }}
           style={{ background: colorCodes[item.color], margin: "3px", textTransform: "capitalize" }}
           label={item.name} />
@@ -179,51 +203,105 @@ export default class HomePage extends Component {
 
     });
   }
+  renderCollabQualifications = () => {
+    const { isPublic } = this.state;
+    return(
+      <>
+      {isPublic ? 
+      <>
+        <Typography variant="h6" color="primary" style={{ marginTop: '10px' }}>Collaboration Qualifications</Typography>
+        <Paper elevation={6} style={{ border: "solid 1px blue", borderRadius: '5px', textAlign: "left", minHeight: "100px", padding: "10px" }}>
+          <div style={{ height: "100%", width: "100%" }}>
+            {this.state.reqs}
+          </div>
+        </Paper>
+        </>
+        :
+        <></>
+      }
+      </>
+    )
+  }
+  renderMembers = () => {
+    const { isPublic } = this.state;
+    if (isPublic)
+      return (
+        <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
+          <Typography variant="h6" color="primary">Contributors</Typography>
+          <Paper elevation={6} style={{ padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+            {this.renderContributor()}
+          </Paper>
+        </Grid>
+      )
+    else return(<>
+    <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
+          <Typography variant="6" color="primary">Owner</Typography>
+          <Paper elevation={6} style={{ padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+            <Typography variant="h6" colour="primary">{this.state.owner}</Typography>
+          </Paper>
+        </Grid>
+    </>)
+    
+  }
+  renderRelatedEvents = () => {
+    const { isPublic } = this.state;
+    if (isPublic)
+      return (
+        <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
+          <Typography variant="h6" color="primary">Related Events</Typography>
+          <Paper elevation={6} style={{ padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+            {this.renderEvents()}
+          </Paper>
+        </Grid>
+      )
+    else return (<></>)
+  }
 
   render() {
     var project_id = this.props.location.pathname.split('/')[2];
     return (
       <Container style={{backgroundColor: '#f7f7f5'}}>
-        <UserNavbar
-          logout={() => { this.props.history.push(config.Login_Path) }}
-          pushProfile={this.goToProfile}
-          goHome={() => { this.props.history.push(config.Homepage_Path) }}
-        />
-        <Profilebar
-          name={this.state.username}
-          lastName={this.state.userlastname}
-          photoUrl={this.state.photoUrl}
-          goToProjectCreation={this.goToProjectCreation}
-          goToProfile={this.goToProfile}
-        />
-        <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{ marginLeft: "225px", marginTop: "10px", width: `calc(100% - 225px)` }}>
+          <UserNavbar
+            logout={() => { this.props.history.push(config.Login_Path) }}
+            pushProfile={this.goToProfile}
+            goHome={() => { this.props.history.push(config.Homepage_Path) }}
+          />
+            <Profilebar
+              name={this.state.username}
+              lastName={this.state.userlastname}
+              photoUrl={getPhoto()}
+              goToProjectCreation={this.goToProjectCreation}
+              goToProfile={this.goToProfile}
+            />
+            <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{marginLeft:"225px",marginTop:"10px", width:`calc(100% - 225px)`}}>
           <Grid container direction="row" justify="space-evenly" alignItems="baseline">
             <Grid item sm={7}>
-              <Typography variant="h5" color="primary">{this.state.name}</Typography>
-              <Typography variant="h5" color="primary">Brief Description</Typography>
+              <Typography variant="h4" color="primary">{this.state.name}</Typography>
+
+              {this.state.isPublic && !this.state.isMember ?
+                <Typography variant="h6" color="error">(Private Project)</Typography>
+                :
+                <></>
+              }
+              <Typography variant="h6" color="primary">Brief Description</Typography>
               <Paper elevation={6} style={{ border: "solid 1px blue", borderRadius: '5px', textAlign: "left", minHeight: "100px", padding: "10px" }}>
                 <p>{this.state.desc}</p>
               </Paper>
-              <Typography variant="h5" color="primary" style={{ marginTop: '10px' }}>Collaboration Qualifications</Typography>
-              <Paper elevation={6} style={{ border: "solid 1px blue", borderRadius: '5px', textAlign: "left", minHeight: "100px", padding: "10px" }}>
-                <div style={{ height: "100%", width: "100%" }}>
-                  {this.state.reqs}
-                </div>
-              </Paper>
-              <Typography variant="h5" color="primary" style={{ marginTop: '10px' }}>Project Tags</Typography>
+              {this.renderCollabQualifications()}
+              <Typography variant="h6" color="primary" style={{ marginTop: '10px' }}>Project Tags</Typography>
               <Paper elevation={6} style={{ border: "solid 1px blue", borderRadius: '5px', padding: "10px", minHeight: "40px", marginTop: '20px', textAlign: "left" }}>
                 {this.renderTags()}
               </Paper>
               <p></p>
               <Grid container direction="row" justify="space-evenly" alignItems="baseline">
                 <Grid item sm={5}>
-                  <Typography variant="h5" color="primary">Recommended Users</Typography>
+                  <Typography variant="h6" color="primary">Recommended Users</Typography>
                   <Paper elevation={6} style={{ minHeight: "100px" }}>
                     <p></p>
                   </Paper>
                 </Grid>
                 <Grid item sm={5}>
-                  <Typography variant="h5" color="primary">Similar Projects</Typography>
+                  <Typography variant="h6" color="primary">Similar Projects</Typography>
                   <Paper elevation={6} style={{ minHeight: "100px" }}>
                     <p></p>
                   </Paper>
@@ -231,25 +309,21 @@ export default class HomePage extends Component {
               </Grid>
             </Grid>
             <Grid item sm={4}>
-              <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
-                <Typography variant="h5" color="primary">Contributors</Typography>
-                <Paper elevation={6} style={{ padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
-                {this.renderContributor()}
-                </Paper>
-              </Grid>
-              <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
-                <Typography variant="h5" color="primary">Related Events</Typography>
-                <Paper elevation={6} style={{ padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
-                {this.renderEvents()}
-                </Paper>
-              </Grid>
+
+              {this.renderMembers()}
+              {this.renderRelatedEvents()}
+              {this.state.isMember ? 
               <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: 'scroll', margin: "5px 0" }}>
-                <Typography variant="h5" color="primary">Upcoming Deadlines</Typography>
+                <Typography variant="h6" color="primary">Upcoming Deadlines</Typography>
                 <Paper elevation={6} style={{ width: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
                 {this.renderDeadlines()}
                 </Paper>
               </Grid>
-              <Grid item sm={12} style={{ minHeight: "10vh" }}>
+              :
+              <></>
+              }
+              {this.state.isMember ? 
+                <Grid item sm={12} style={{ minHeight: "10vh" }}>
                 {/* <Typography variant="h5" color="primary">Tags</Typography> */}
                 <Paper elevation={6}
                   style={{ width: "90%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
@@ -274,18 +348,28 @@ export default class HomePage extends Component {
                   }
                 </Paper>
               </Grid>
-              <Grid item sm={12} style={{ minHeight: "10vh" }}>
+              :
+              <></>
+                }
+                {this.state.isMember ? 
+                <Grid item sm={12} style={{ minHeight: "10vh" }}>
                 <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.goToEditProjectPage(project_id)}>Edit Project</Button>
                 <br />
                 <Button variant="contained" color="primary" style={{ marginTop: "10px" }}
                   onClick={() => { this.props.history.push("/issue-milestone", { projectId: this.state.projectId }); }}>Set New Milestone</Button>
               </Grid>
+              :
+              <></>
+              }
+              
             </Grid>
           </Grid>
           <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
         </Grid>
       </Container>);
   }
+  
+
   submitTagQuery = () => {
     const { tagQuery, currTag, tags, allTags } = this.state;
     let newTagId = undefined;
@@ -341,14 +425,14 @@ export default class HomePage extends Component {
     }
 
   }
-  isMember = () => {
-    const { membersData } = this.state;
-    for(let i = 0 ; i < membersData.length ; i++){
-      if(membersData[i].id === parseInt(getUserId()) ) { return true; }
-    }
-    return false;
+  // {/* isMember = () => {
+  //   const { membersData } = this.state;
+  //   for(let i = 0 ; i < membersData.length ; i++){
+  //     if(membersData[i].id === parseInt(getUserId()) ) { return true; }
+  //   }
+  //   return false;
      
-  }
+  // } */}
 
   //Get tag ids for patch operations
   getTagIds = (newTags) => {

@@ -22,6 +22,7 @@ const titleStyleCenter = {
   marginTop: "10px"
 }
 const textStyle = {
+  border: "solid 1px blue",
   textAlign: "left",
   minHeight: "100px",
   padding: "2px 12px"
@@ -159,7 +160,11 @@ export default class HomePage extends Component {
           })
         }
 
-      });
+      },(error) => {
+        this.props.history.push("/"); // Forwards from unexisting profiles to homepage
+      }
+      
+      );
     
       axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
@@ -404,7 +409,7 @@ export default class HomePage extends Component {
                   onClick={this.handleShowUpload}
                 >Change Picture</Button>
               }
-              <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
+              <Paper elevation={6} style={{ border: "solid 1px blue", padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
                 <Typography style={{textTransform:"capitalize "}}>{this.state.name + " " + this.state.middle_name} <br />
                   {this.state.last_name.toUpperCase()}</Typography>
               </Paper>

@@ -2,6 +2,7 @@ package com.bounswe2020group3.paperlayer.profile.follow
 
 import com.bounswe2020group3.paperlayer.data.follow.*
 import com.bounswe2020group3.paperlayer.data.user.AuthToken
+import com.bounswe2020group3.paperlayer.data.user.User
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import io.reactivex.Observable
 import retrofit2.Response
@@ -13,6 +14,7 @@ interface FollowContract {
         fun isUserAuthenticatedUser(userId: Int): Boolean
         fun sendFollow(toUserId: Int)
         fun sendFollowRequest(toUserId: Int)
+        fun sendUnfollow(followId: Int)
         fun acceptRequest(requestId: Int, fromUserId: Int)
         fun rejectRequest(requestId: Int, fromUserId: Int)
     }
@@ -29,6 +31,7 @@ interface FollowContract {
         fun sendFollow(toUserId: Int): Observable<Any>
         fun getFollowerList(userId: Int?): Observable<List<Follow>>
         fun getFollowingList(userId: Int?): Observable<List<Follow>>
+        fun sendUnfollow(followId: Int): Observable<Response<Void>>
         fun getFollowRequestList(): Observable<List<FollowRequest>>
         fun sendFollowRequest(toUserId: Int): Observable<Any>
         fun getFollowRequestList(userId: Int?): Observable<List<FollowRequest>>
@@ -55,6 +58,12 @@ interface FollowContract {
                 @Query("from_user__id") userId: Int
         ): Observable<List<Follow>>
 
+        @POST("/api/follow/{follow_id}/unfollow/")
+        fun sendUnfollow(
+                @Header("Authorization") authorization: String,
+                @Path("follow_id") followId: Int
+        ): Observable<Response<Void>>
+
         @POST("/api/follow_request/")
         fun sendFollowRequest(
                 @Header("Authorization") authorization: String,
@@ -80,5 +89,16 @@ interface FollowContract {
                 @Path("id") followRequestId: Int,
                 @Body followRequestReject: FollowRequestCreate
         ): Observable<Response<Void>>
+    }
+
+    interface OnUserClickListener {
+        fun onUserClick(user: User)
+    }
+
+    interface OnFollowButtonClickListener {
+        fun onFollowButtonClick(user: User)
+        fun onUnfollowButtonClick(followId: Int)
+        fun onAcceptRequestClick(followRequestId: Int, fromUser: User)
+        fun onRejectRequestClick(followRequestId: Int, fromUser: User)
     }
 }

@@ -12,13 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
+import kotlinx.android.synthetic.main.fragment_projects.*
 import javax.inject.Inject
-import kotlinx.android.synthetic.main.fragment_project_main.*
 
 
 private const val TAG = "ProjectMainFragment"
 
-class ProjectMainFragment : Fragment(), ProjectsContract.View, OnCardClickListener {
+class ProjectsFragment : Fragment(), ProjectsContract.View, OnCardClickListener {
 
     //Presenter object
     @Inject
@@ -56,7 +56,7 @@ class ProjectMainFragment : Fragment(), ProjectsContract.View, OnCardClickListen
             savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_project_main, container, false)
+        val view = inflater.inflate(R.layout.fragment_projects, container, false)
         this.fragmentView = view
         initRecyclerView()
         resetProjectCardList()

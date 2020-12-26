@@ -15,7 +15,6 @@ interface ProfileContract {
     interface Presenter : Mvp.Presenter<View> {
         fun subscribeAuthUser()
         fun loadAuthUser()
-        fun updateProfilePicture(profileId: Int, file: File, type: MediaType)
     }
 
     interface View : Mvp.View {

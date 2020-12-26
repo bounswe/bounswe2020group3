@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Input, styled, Avatar, Box, Grid, Paper, Typography } from '@material-ui/core';
+import { Button, Input, styled, Avatar, Box, Grid, Paper, Typography,Accordion,AccordionSummary,AccordionDetails } from '@material-ui/core';
 import { Rating } from '@material-ui/lab';
 import AlertTypes from "../Common/AlertTypes.json";
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
@@ -8,6 +8,7 @@ import axios from 'axios';
 import config from '../config';
 import UserNavbar from '../Components/TopBar/UserNavbar';
 import Profilebar from '../Components/ProfileBar/Profilebar';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const privateGender = "do not want to share";
 const titleStyle = {
@@ -19,11 +20,13 @@ const titleStyleCenter = {
   marginTop: "10px"
 }
 const textStyle = {
+  border: "solid 1px blue",
   textAlign: "left",
   minHeight: "100px",
   padding: "2px 12px"
 }
 const SelfContainer = styled(Box)({
+  backgroundColor: '#f7f7f5',
   background: "#f9f9eb",
   border: 0,
   borderRadius: 3,
@@ -44,7 +47,7 @@ const SelfContainer = styled(Box)({
   }
 });
 const Container = styled(Box)({
-  background: "#f9f9eb",
+  backgroundColor: '#f7f7f5',
   border: 0,
   borderRadius: 3,
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
@@ -63,7 +66,7 @@ const Container = styled(Box)({
   }
 });
 
-export default class HomePage extends Component {
+export default class ProfilePage extends Component {
   constructor(props) {
     super(props);
     this.SnackbarRef = React.createRef();
@@ -125,7 +128,6 @@ export default class HomePage extends Component {
       .then(res => {
         this.setState({ email: res.data.email, self: res.data.id === parseInt(getUserId()), });
         const prof = res.data.profile[0];
-        const user = res.data;
         let windowUserId = res.data.id;
         if (windowUserId === parseInt(getUserId()) || res.data.profile[0].is_public) {
           this.setState({
@@ -146,9 +148,6 @@ export default class HomePage extends Component {
             shareAffiliations: prof.share_affiliations,
             shareBirthday: prof.share_birthday,
             self: windowUserId === parseInt(getUserId()),
-            follow_reqs: user.follow_requests,
-            followers: user.followers,
-            following: user.following,
             loading: false,
             rating: (prof.rating ? parseFloat(prof.rating) : 0),
             currentRating: (prof.my_rating && typeof(prof.my_rating) !== 'string' ? parseFloat(prof.my_rating) : 0),
@@ -157,6 +156,21 @@ export default class HomePage extends Component {
             myRatingId : (prof.my_rating_id && typeof(prof.my_rating_id) !== 'string' ? prof.my_rating_id : -1)
           }, () => {
             this.getComments();
+            axios.get(`${config.API_URL}${config.Follow_url}?from_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+              .then(res => {
+                const temp_followings = res.data.map(f => f.to_user.profile[0]);
+                this.setState({ following: temp_followings });
+              });
+            axios.get(`${config.API_URL}${config.Follow_url}?to_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+              .then(res => {
+                const temp_followers = res.data.map(f => f.from_user.profile[0]);
+                this.setState({ followers: temp_followers });
+              });
+            axios.get(`${config.API_URL}${config.Follow_request_url}?req_to_user=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+              .then(res => {
+                const temp_follow_reqs = res.data.map(f => f.req_from_user.profile[0]);
+                this.setState({ follow_reqs: temp_follow_reqs });
+              });
           });
           if (windowUserId === parseInt(getUserId())) {
             axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
@@ -167,7 +181,6 @@ export default class HomePage extends Component {
               .then(res => {
                 this.setState({ projects: res.data });
               });
-
           }
         }
         else if (prof.is_public === false) {
@@ -376,6 +389,7 @@ export default class HomePage extends Component {
     const { milestones } = this.state;
     return (
       <Box style={{ overflowY: "scroll", maxHeight: "500px", paddingTop: "10px", paddingBottom: "10px" }}>
+
         {milestones.length !== 0
           ?
           milestones.map((item) => {
@@ -541,6 +555,60 @@ export default class HomePage extends Component {
         :
         <></>
         }
+         <Accordion>
+                    <AccordionSummary disabled={!this.state.follow_reqs.length>0} expandIcon={<ExpandMoreIcon />}>
+                        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}>
+                            <b>{this.state.follow_reqs?this.state.follow_reqs.length:0}</b> following request
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Box style={{ overflowY: "scroll", minWidth: "100%",maxHeight: "200px", paddingTop: "10px", paddingBottom: "10px" }}>
+                            {this.state.follow_reqs.map(req =>{
+                                return (<Paper style={{
+                                    padding: "15px", maxHeight: "160px", width: "80%", cursor:"pointer",
+                                    background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"}} borderColor="primary" border={1} alignItems="flex-start">
+                                    <Typography onClick={()=>{  this.props.history.push("/profile/"+(req.id+1)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
+                                </Paper>)
+                            })}
+                        </Box>
+                    </AccordionDetails>
+                </Accordion>
+                <Accordion>
+                    <AccordionSummary disabled={!this.state.following.length>0} expandIcon={<ExpandMoreIcon />}>
+                        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}>
+                            <b>{this.state.following?this.state.following.length:0}</b> following
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Box style={{ overflowY: "scroll", minWidth: "100%",maxHeight: "200px", paddingTop: "10px", paddingBottom: "10px" }}>
+                            {this.state.following.map(req =>{
+                                return (<Paper style={{
+                                    padding: "15px", maxHeight: "160px", width: "80%", cursor:"pointer",
+                                    background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"}} borderColor="primary" border={1} alignItems="flex-start">
+                                    <Typography onClick={()=>{  this.props.history.push("/profile/"+(req.id+1)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
+                                </Paper>)
+                            })}
+                        </Box>
+                    </AccordionDetails>
+                </Accordion>
+                <Accordion>
+                    <AccordionSummary disabled={!this.state.followers.length>0} expandIcon={<ExpandMoreIcon />}>
+                        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}>
+                            <b>{this.state.followers?this.state.followers.length:0}</b> follower
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Box style={{ overflowY: "scroll", minWidth: "100%",maxHeight: "200px", paddingTop: "10px", paddingBottom: "10px" }}>
+                            {this.state.followers.map(req =>{
+                                return (<Paper style={{
+                                    padding: "15px", maxHeight: "160px", width: "80%", cursor:"pointer",
+                                    background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"}} borderColor="primary" border={1} alignItems="flex-start">
+                                    <Typography onClick={()=>{this.props.history.push("/profile/"+(req.id+1)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
+                                </Paper>)
+                            })}
+                        </Box>
+                    </AccordionDetails>
+                </Accordion>
         {this.state.isPublic || this.state.self ? 
           <>
         <Typography variant='h6' color='primary' style={{ margin: "10px 0" }}>Comments</Typography>
@@ -631,7 +699,7 @@ export default class HomePage extends Component {
                   onClick={this.handleShowUpload}
                 >Change Picture</Button>
               }
-              <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
+              <Paper elevation={6} style={{ border: "solid 1px blue", padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
                 <Typography style={{ textTransform: "capitalize " }}>{this.state.name + " " + this.state.middle_name} <br />
                   {this.state.last_name.toUpperCase()}</Typography>
               </Paper>
@@ -658,7 +726,7 @@ export default class HomePage extends Component {
     </SelfContainer>);
   }
   renderOtherProfile() {
-    return (<Container>
+    return (<Container style={{backgroundColor: '#f7f7f5'}}>
       <UserNavbar
         logout={() => { this.props.history.push(config.Login_Path) }}
         pushProfile={() => {

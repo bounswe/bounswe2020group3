@@ -18,5 +18,6 @@ interface UserContract {
         fun showErrorToast(message: String = "Error")
         fun updateProfileUI(user: User)
         fun loadUser()
+        fun navigateToProfile()
     }
 }

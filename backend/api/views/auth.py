@@ -11,6 +11,7 @@ from rest_framework.compat import coreapi, coreschema
 from rest_framework.schemas import ManualSchema
 from rest_framework.schemas import coreapi as coreapi_schema
 from rest_framework.views import APIView
+from django_email_verification import sendConfirm
 
 
 class RegisterGenericAPIView(generics.GenericAPIView):
@@ -22,7 +23,10 @@ class RegisterGenericAPIView(generics.GenericAPIView):
         """
         serializer = auth.RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        user = serializer.save()
+
+        sendConfirm(user)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 

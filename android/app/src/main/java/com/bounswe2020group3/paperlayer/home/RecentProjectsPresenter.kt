@@ -79,7 +79,7 @@ class RecentProjectsPresenter @Inject constructor(private var model: HomeContrac
         disposable.add(getProjectObservable)
     }
 
-    override fun OnInviteButtonClicked(item: ProjectUpdateCard, position: Int) {
+    override fun OnCollabButtonClicked(item: ProjectUpdateCard, position: Int) {
         if(!item.requestSent) {
             val collaborateObservable = model.collaborateRequest(CollaborateRequest(item.projectId, "hello")).subscribe({request->
 

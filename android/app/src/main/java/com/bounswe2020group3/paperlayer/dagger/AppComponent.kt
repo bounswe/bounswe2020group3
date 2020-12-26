@@ -1,5 +1,6 @@
 package com.bounswe2020group3.paperlayer.dagger
 
+import com.bounswe2020group3.paperlayer.event.EventDetailFragment
 import com.bounswe2020group3.paperlayer.home.EventFragment
 import com.bounswe2020group3.paperlayer.home.MilestoneFragment
 import com.bounswe2020group3.paperlayer.home.RecentProjectsFragment
@@ -32,7 +33,8 @@ import javax.inject.Singleton
     ProjectCreateModule::class,
     ProjectEditModule::class,
     SearchModule::class,
-    UserModule::class
+    UserModule::class,
+    EventModule::class
 ])
 @Singleton
 interface AppComponent {
@@ -52,4 +54,5 @@ interface AppComponent {
     fun inject(fragment: RecentProjectsFragment)
     fun inject(fragment: UserFragment)
     fun inject(fragment: FollowListFragment)
+    fun inject(fragment: EventDetailFragment)
 }

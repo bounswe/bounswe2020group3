@@ -7,10 +7,11 @@ class CommentSerializer(serializers.ModelSerializer):
     Comment serializer
     """
     created = serializers.DateTimeField(read_only=True)
+    owner = serializers.ReadOnlyField(source='from_user.username')
 
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ['id', 'created', 'comment', 'from_user', 'to_user', 'owner']
 
 
 class CommentUpdateSerializer(serializers.ModelSerializer):

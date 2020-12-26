@@ -1,5 +1,6 @@
 from api.models.following import Following, FollowRequest
 from api.models.project import Project
+from api.models.rating import Rating
 
 
 def get_is_following(this_user, accessed_user):
@@ -58,3 +59,15 @@ def get_is_collaborator(this_user, accessed_user):
             filter(members__exact=accessed_user.id).exists()
 
     return is_collaborator
+
+
+def get_my_rating(this_user, accessed_user):
+    if this_user.is_anonymous:
+        return "You need to log in to see this."
+    rating = Rating.objects.filter(to_user__exact=accessed_user,
+                                   from_user__exact=this_user)
+    is_rating_exists = rating.exists()
+    if is_rating_exists:
+        return rating[0].rating
+    else:
+        return "You did not rate this user."

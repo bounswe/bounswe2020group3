@@ -12,6 +12,7 @@ import Profilebar from "../Components/ProfileBar/Profilebar";
 import {getAccessToken, getUserId, getPhoto} from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
+    backgroundColor: '#f7f7f5',
     background: "#f9f9eb",
     border: 0,
     borderRadius: 3,
@@ -75,7 +76,7 @@ export default class HomePage extends Component {
 
     render() {
       return (
-        <Container style={{backgroundColor: '#f7f7f5'}}>
+        <Container>
           <UserNavbar
             logout={() => { this.props.history.push(config.Login_Path) }}
             pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}

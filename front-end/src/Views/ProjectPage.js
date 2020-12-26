@@ -13,6 +13,7 @@ import { colorCodes } from "../Common/ColorTheme";
 import { getUserId, getAccessToken, getPhoto, getProfileId } from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
+  backgroundColor: '#f7f7f5',
   background: "#f9f9eb",
   border: 0,
   borderRadius: 3,
@@ -260,7 +261,7 @@ export default class HomePage extends Component {
   render() {
     var project_id = this.props.location.pathname.split('/')[2];
     return (
-      <Container style={{backgroundColor: '#f7f7f5'}}>
+      <Container>
           <UserNavbar
             logout={() => { this.props.history.push(config.Login_Path) }}
             pushProfile={this.goToProfile}

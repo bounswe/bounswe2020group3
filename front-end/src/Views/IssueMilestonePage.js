@@ -51,6 +51,7 @@ const FormWrapper = styled(Box)({
 
 
 const Container = styled(Box)({
+  backgroundColor: '#f7f7f5',
   background: "white",
   border: 0,
   borderRadius: 3,
@@ -141,7 +142,7 @@ export default class IssueMilestonePage extends Component {
   render() {
     console.log(this.state);
     return (
-      <Container style={{backgroundColor: '#f7f7f5'}}>
+      <Container>
         <UserNavbar 
           logout={() => { this.props.history.push(config.Login_Path) }}
           pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }} 

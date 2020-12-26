@@ -28,6 +28,7 @@ const textStyle = {
   padding: "2px 12px"
 }
 const SelfContainer = styled(Box)({
+  backgroundColor: '#f7f7f5',
   background: "#f9f9eb",
   border: 0,
   borderRadius: 3,
@@ -48,7 +49,7 @@ const SelfContainer = styled(Box)({
   }
 });
 const Container = styled(Box)({
-  background: "#f9f9eb",
+  backgroundColor: '#f7f7f5',
   border: 0,
   borderRadius: 3,
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
@@ -364,7 +365,7 @@ export default class HomePage extends Component {
   }
 
   renderSelfProfile() {
-    return (<SelfContainer style={{backgroundColor: '#f7f7f5'}}>
+    return (<SelfContainer>
       <UserNavbar
         logout={() => { this.props.history.push(config.Login_Path) }}
         pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}

@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.data.follow.Follow
 import com.bounswe2020group3.paperlayer.data.follow.ListableFollow
 import com.bounswe2020group3.paperlayer.data.user.User
+import com.squareup.picasso.Picasso
 
 interface OnUserClickListener {
     fun onUserClick(user: User)
@@ -58,6 +60,7 @@ class FollowListAdapter(
 
     inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         private val userFullName: TextView = view.findViewById(R.id.userFullName)
+        private val imageViewProfileAvatar: ImageView = view.findViewById(R.id.imageViewProfileAvatar)
 
         private val buttonFollowListFollow: Button = view.findViewById(R.id.buttonFollowListFollow)
         private val buttonFollowListUnfollow: Button = view.findViewById(R.id.buttonFollowListUnfollow)
@@ -75,6 +78,11 @@ class FollowListAdapter(
             userFullName.text = fullName
             itemView.setOnClickListener {
                 clickListener.onUserClick(user)
+            }
+
+            val imageUrl = user.profile[0].profile_picture
+            if(imageUrl != null && imageUrl != "") {
+                Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
             }
 
             // Button displays

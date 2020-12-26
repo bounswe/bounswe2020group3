@@ -122,62 +122,72 @@ class UserFragment : Fragment(), UserContract.View {
     }
 
     override fun updateProfileUI(user: User) {
-        val profile = user.profile[0]
-        val fullName = "${profile.name} ${profile.lastName}"
-        textViewFullName.text = fullName
+        try {
+            val profile = user.profile.first()
+            val fullName = "${profile.name} ${profile.lastName}"
+            textViewFullName.text = fullName
 
-        if(profile.is_public!! || user.isFollowing) {
-            // Public or following profile
-            // Private Profile
-            this.isFollowRequest = false
-
-            // Layouts
-            layoutUserStatsWrapper.visibility = View.VISIBLE
-            layoutUserInformationWrapper.visibility = View.VISIBLE
-            layoutUserPrivateWrapper.visibility = View.GONE
-
-            // Bio
-            if(profile.bio == null || profile.bio == "") {
-                layoutUserBioWrapper.visibility = View.GONE
-            } else {
-                layoutUserBioWrapper.visibility = View.VISIBLE
-                textViewBio.text = profile.bio
+            val imageUrl = profile.profile_picture
+            if(imageUrl != null && imageUrl != "") {
+                Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
             }
 
-            // Text Views
-            textViewEmail.text = user.email
-            textViewBirthday.text = profile.birthday.toString()
-            textViewGender.text = profile.gender
-            textViewInterests.text = profile.interests
-            textViewExpertise.text = profile.expertise
+            if (profile.is_public || user.isFollowing) {
+                // Public or following profile
+                // Private Profile
+                this.isFollowRequest = false
 
-            // Buttons
-            buttonUserRequestSent.visibility = View.GONE
-            if(user.isFollowing) {
-                buttonUserFollow.visibility = View.GONE
-                buttonUserUnfollow.visibility = View.VISIBLE
-            } else {
-                buttonUserFollow.visibility = View.VISIBLE
-                buttonUserUnfollow.visibility = View.GONE
-            }
-        } else {
-            // Private Profile
-            this.isFollowRequest = true
+                // Layouts
+                layoutUserStatsWrapper.visibility = View.VISIBLE
+                layoutUserInformationWrapper.visibility = View.VISIBLE
+                layoutUserPrivateWrapper.visibility = View.GONE
 
-            layoutUserStatsWrapper.visibility = View.GONE
-            layoutUserBioWrapper.visibility = View.GONE
-            layoutUserInformationWrapper.visibility = View.GONE
-            layoutUserPrivateWrapper.visibility = View.VISIBLE
+                // Bio
+                if (profile.bio == null || profile.bio == "") {
+                    layoutUserBioWrapper.visibility = View.GONE
+                } else {
+                    layoutUserBioWrapper.visibility = View.VISIBLE
+                    textViewBio.text = profile.bio
+                }
 
-            // Buttons
-            buttonUserUnfollow.visibility = View.GONE
-            if(user.isFollowRequestSent) {
-                buttonUserRequestSent.visibility = View.VISIBLE
-                buttonUserFollow.visibility = View.GONE
-            } else {
+                // Text Views
+                textViewEmail.text = user.email
+                textViewBirthday.text = profile.birthday.toString()
+                textViewGender.text = profile.gender
+                textViewInterests.text = profile.interests
+                textViewExpertise.text = profile.expertise
+
+                // Buttons
                 buttonUserRequestSent.visibility = View.GONE
-                buttonUserFollow.visibility = View.VISIBLE
+                if (user.isFollowing) {
+                    buttonUserFollow.visibility = View.GONE
+                    buttonUserUnfollow.visibility = View.VISIBLE
+                } else {
+                    buttonUserFollow.visibility = View.VISIBLE
+                    buttonUserUnfollow.visibility = View.GONE
+                }
+            } else {
+                // Private Profile
+                this.isFollowRequest = true
+
+                layoutUserStatsWrapper.visibility = View.GONE
+                layoutUserBioWrapper.visibility = View.GONE
+                layoutUserInformationWrapper.visibility = View.GONE
+                layoutUserPrivateWrapper.visibility = View.VISIBLE
+
+                // Buttons
+                buttonUserUnfollow.visibility = View.GONE
+                if (user.isFollowRequestSent) {
+                    buttonUserRequestSent.visibility = View.VISIBLE
+                    buttonUserFollow.visibility = View.GONE
+                } else {
+                    buttonUserRequestSent.visibility = View.GONE
+                    buttonUserFollow.visibility = View.VISIBLE
+                }
             }
+        } catch (e: NoSuchElementException) {
+            e.printStackTrace()
+            showErrorToast("An error occurred, please try again.")
         }
     }
 

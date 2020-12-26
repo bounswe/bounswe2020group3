@@ -20,7 +20,11 @@ import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.data.user.Profile
 import com.bounswe2020group3.paperlayer.data.user.User
 import com.bounswe2020group3.paperlayer.profile.follow.FollowType
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.fragment_profile.imageViewProfileAvatar
+import kotlinx.android.synthetic.main.fragment_profile.layoutProfileDetail
+import kotlinx.android.synthetic.main.fragment_profile_edit.*
 import okhttp3.MediaType
 import java.io.File
 import java.io.FileOutputStream
@@ -124,17 +128,27 @@ class ProfileFragment : Fragment(), ProfileContract.View {
     }
 
     override fun updateProfileUI(user: User) {
-        val profile = user.profile[0]
-        this.profile = profile
-        val fullName = "${profile.name} ${profile.lastName}"
+        try {
+            val profile = user.profile.first()
+            this.profile = profile
+            val fullName = "${profile.name} ${profile.lastName}"
 
-        textViewEmail.text = user.email
-        textViewFullName.text = fullName
-        textViewBio.text = profile.bio
-        textViewBirthday.text = profile.birthday.toString()
-        textViewGender.text = profile.gender
-        textViewInterests.text = profile.interests
-        textViewExpertise.text = profile.expertise
+            textViewEmail.text = user.email
+            textViewFullName.text = fullName
+            textViewBio.text = profile.bio
+            textViewBirthday.text = profile.birthday.toString()
+            textViewGender.text = profile.gender
+            textViewInterests.text = profile.interests
+            textViewExpertise.text = profile.expertise
+
+            val imageUrl = profile.profile_picture
+            if (imageUrl != null && imageUrl != "") {
+                Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
+            }
+        } catch (e: NoSuchElementException) {
+            e.printStackTrace()
+            showErrorToast("An error occurred. Please try again.")
+        }
     }
 
     override fun navigateToLogin() {

@@ -47,8 +47,8 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
         imageButtonSave.setOnClickListener{
             val userData = presenter.getUserData()
             if(userData != null) {
-                val profileData = userData.profile.first()
-                if(profileData != null) {
+                try {
+                    val profileData = userData.profile.first()
                     profileData.name = editTextFirstName.text.toString()
                     profileData.lastName = editTextLastName.text.toString()
                     profileData.expertise = editTextExpertise.text.toString()
@@ -57,6 +57,10 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
                     profileData.bio = editTextBio.text.toString()
                     profileData.gender = selectedGender
                     presenter.updateProfile(profileData)
+                } catch (e: NoSuchElementException) {
+                    e.printStackTrace()
+                    showErrorToast("An error occurred. Please try again.")
+                    navigateBack()
                 }
             }
         }
@@ -121,7 +125,7 @@ class ProfileEditFragment : Fragment(), ProfileEditContract.View {
         selectedGender = profile.gender
 
         val imageUrl = profile.profile_picture
-        if(imageUrl != null && imageUrl.contains("http")) {
+        if(imageUrl != null && imageUrl != "") {
             Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
         }
     }

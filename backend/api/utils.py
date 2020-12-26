@@ -89,6 +89,18 @@ def get_my_rating(this_user, accessed_user):
         return "You did not rate this user."
 
 
+def get_my_rating_id(this_user, accessed_user):
+    if this_user.is_anonymous:
+        return "You need to log in to see this."
+    rating = Rating.objects.filter(to_user__exact=accessed_user,
+                                   from_user__exact=this_user)
+    is_rating_exists = rating.exists()
+    if is_rating_exists:
+        return rating[0].id
+    else:
+        return "You did not rate this user."
+
+
 def get_count_of_followers(this_user):
     """
         Returns length of followers of user

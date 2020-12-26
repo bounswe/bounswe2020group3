@@ -89,6 +89,7 @@ class SearchPresenter @Inject constructor(private var model:SearchContract.Model
                             }
                         }
                     }
+                    this.view?.hideLoading()
                     this.view?.writeLogMessage("i", TAG,"Search results fetched successfully.")
                     this.view?.submitSearchCardList()
                 },

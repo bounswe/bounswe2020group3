@@ -32,6 +32,8 @@ interface SearchContract {
         fun getLayout(): android.view.View
         fun showToast(message: String)
         fun writeLogMessage(type:String ,tag: String,message: String)
+        fun showLoading()
+        fun hideLoading()
 
         fun resetSearchCardList()
         fun submitSearchCardList()

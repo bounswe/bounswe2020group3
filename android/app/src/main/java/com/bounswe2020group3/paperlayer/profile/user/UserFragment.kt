@@ -157,6 +157,10 @@ class UserFragment : Fragment(), UserContract.View {
                 textViewInterests.text = profile.interests
                 textViewExpertise.text = profile.expertise
 
+                // Stats
+                textViewProfileFollowers.text = user.countOfFollowers.toString()
+                textViewProfileFollowings.text = user.countOfFollowings.toString()
+
                 // Buttons
                 buttonUserRequestSent.visibility = View.GONE
                 if (user.isFollowing) {

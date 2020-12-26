@@ -24,7 +24,8 @@ private const val ARG_USER_ID = "userID"
 /**
  * A fragment representing a list of [User].
  */
-class FollowListFragment : Fragment(), FollowContract.View, OnUserClickListener, OnFollowButtonClickListener {
+class FollowListFragment : Fragment(), FollowContract.View,
+        FollowContract.OnUserClickListener, FollowContract.OnFollowButtonClickListener {
 
     @Inject
     lateinit var presenter: FollowContract.Presenter
@@ -119,15 +120,15 @@ class FollowListFragment : Fragment(), FollowContract.View, OnUserClickListener,
     }
 
     override fun onFollowButtonClick(user: User) {
-        if(user.profile[0].is_public) {
+        if (user.profile[0].is_public) {
             presenter.sendFollow(user.id)
         } else {
             presenter.sendFollowRequest(user.id)
         }
     }
 
-    override fun onUnfollowButtonClick(user: User) {
-        showInfoToast("Not implemented yet.")
+    override fun onUnfollowButtonClick(followId: Int) {
+        presenter.sendUnfollow(followId)
     }
 
     override fun onAcceptRequestClick(followRequestId: Int, fromUser: User) {

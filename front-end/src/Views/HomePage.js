@@ -18,10 +18,9 @@ const Container = styled(Box)({
     border: 0,
     borderRadius: 3,
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    height: "calc(98vh -64px)",
     color: 'white',
-    paddingBottom:"60px",
-    top:"0",
-    bottom:"0",
+    // paddingBottom:"60px",
     left:"0",
     right:"0",
     margin: "auto",
@@ -107,13 +106,17 @@ export default class HomePage extends Component {
     renderProject(){
       var projects = this.state.projects;
       return projects.map((item) => {return (
+        item.id < 15 ? 
       <Paper elevation={6}  style={{border: "solid 1px blue", padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
         <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Typography>
         <Typography  style={{textAlign:"left", color:"black"}}>{this.renderTags(item.tags)}</Typography>
         <Typography  style={{textAlign:"left", color:"black"}}>
           {item.description}
         </Typography>
-        </Paper>)});
+        </Paper>
+        :
+        <></>
+        )});
   };
                           
   renderMilestones() {
@@ -191,9 +194,10 @@ export default class HomePage extends Component {
               goToProfile={() => { this.props.history.push( "/profile/" + getUserId() ); }}
             />
 
-          <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{overflowY:"scroll", marginLeft:"200px", width:`calc(100% - 200px)`}}>
+          <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" 
+            style={{overflowY:"scroll", maxHeight:"calc(99vh - 55px)", marginLeft:"200px", width:`calc(100% - 200px)`}}>
             
-             <Grid item sm={9} style={{ maxHeight:"88vh"}}>
+             <Grid item sm={9} style={{paddingBottom:"50px"}}>
                <Typography variant="h3" color="primary">Home</Typography>
                {this.renderProject()}
              </Grid> 

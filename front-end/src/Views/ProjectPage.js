@@ -54,9 +54,13 @@ export default class HomePage extends Component {
       projectId: "",
       showAddTag: false,
       tagQuery: "",
+      colabQuery: "",
+      allColabs: [],
+      currColab: [],
       currTag: [],
       allTags: [],
       isMember: false,
+      isNotMember: true,
       isPublic: false,
       owner: ""
     }
@@ -70,6 +74,9 @@ export default class HomePage extends Component {
   };
   handleTagQuery = (e) => {
     this.setState({ tagQuery: e.target.value })
+  };
+  handleColabQuery = (e) => {
+    this.setState({ colabQuery: e.target.value })
   };
   goToProfile = () => {
     this.props.history.push("/profile/" + getUserId());
@@ -122,8 +129,8 @@ export default class HomePage extends Component {
         name = name + " " + mname;
         this.setState({ username: name, userlastname: lastname });
         });
-    };
-    isMember = () =>{
+  };
+  isMember = () =>{
       const { membersData } = this.state;
       let ids = []
       for(let i = 0 ; i < membersData.length ; i++){
@@ -133,7 +140,10 @@ export default class HomePage extends Component {
       if( ids.includes(parseInt(getProfileId() ) ) ){
         this.setState({isMember :true})
       }
-    }
+      if( ids.includes(parseInt(getProfileId() ) ) ){
+        this.setState({isNotMember :false})
+      }
+  }
 
   componentDidMount() {
     var project_id = this.props.location.pathname.split('/')[2];
@@ -151,6 +161,7 @@ export default class HomePage extends Component {
       )
     });
   };
+
   renderEvents() {
     const { events } = this.state;
     if (events.length === 0) return (  <Typography variant='h6' color="textPrimary">No Related Events</Typography>)
@@ -161,6 +172,7 @@ export default class HomePage extends Component {
       </>)
     });
   };
+
   renderDeadlines() {
     const deadlines = JSON.parse(JSON.stringify(this.state.events));
     deadlines.push({ "deadline": this.state.due });
@@ -171,6 +183,7 @@ export default class HomePage extends Component {
       )
     });
   };
+
   renderTags() {
     const { tags } = this.state;
     return tags.map((item) => {
@@ -204,6 +217,7 @@ export default class HomePage extends Component {
 
     });
   }
+
   renderCollabQualifications = () => {
     const { isPublic } = this.state;
     return(
@@ -223,6 +237,7 @@ export default class HomePage extends Component {
       </>
     )
   }
+
   renderMembers = () => {
     const { isPublic } = this.state;
     if (isPublic)
@@ -244,6 +259,38 @@ export default class HomePage extends Component {
     </>)
     
   }
+
+  renderDesiredCollaborators = () => {
+    const { colabQuery, allColabs } = this.state;
+    if (colabQuery === "") return;
+
+    return allColabs.map((item) => {
+      let colab = item.name;
+      return (<>
+        {colab.toLowerCase().includes(colabQuery.toLowerCase()) && !this.inColabs(colab) ?
+          <Chip
+            style={{ background: colorCodes[item.color], margin: "3px", cursor: "pointer", textTransform: "capitalize" }}
+            onClick={() => { this.setState({ currColab: item, colabQuery: item.name }) }}
+            label={item.name} />
+          :
+          <></>
+        }
+      </>
+      )
+
+    });
+  }
+
+  renderColabRequest = () => {
+
+
+  }
+
+  renderColabInvite = () => {
+
+
+  }
+
   renderRelatedEvents = () => {
     const { isPublic } = this.state;
     if (isPublic)
@@ -358,7 +405,17 @@ export default class HomePage extends Component {
                 <br />
                 <Button variant="contained" color="primary" style={{ marginTop: "10px" }}
                   onClick={() => { this.props.history.push("/issue-milestone", { projectId: this.state.projectId }); }}>Set New Milestone</Button>
+                <br />
+
               </Grid>
+              :
+              <></>
+              }
+              <br />
+              {this.state.isNotMember ? 
+                <Grid item sm={12} style={{ minHeight: "10vh" }}>
+                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderColabRequest}>Send Colab Request</Button>
+                </Grid>
               :
               <></>
               }
@@ -463,6 +520,17 @@ export default class HomePage extends Component {
       }
     }
   }
+
+  inColabs = (query) => {
+    const { colabs } = this.state;
+    let colab = query.trim().toLowerCase();
+    for (let i = 0; i < colabs.length; i++) {
+      if (colabs[i].name.toLowerCase() === colab) {
+        return true;
+      }
+    }
+  }
+  
   //Delete this particular tag.
   deleteTag = (tag) => {
     const { tags } = this.state;

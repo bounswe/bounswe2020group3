@@ -12,6 +12,7 @@ import Profilebar from "../Components/ProfileBar/Profilebar";
 import {getAccessToken, getUserId, getPhoto} from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
+    backgroundColor: '#f7f7f5',
     background: "#f9f9eb",
     border: 0,
     borderRadius: 3,

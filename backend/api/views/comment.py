@@ -34,6 +34,10 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(from_user=self.request.user)
 
     def create(self, request, *args, **kwargs):
+        '''
+        Users can only comment on other user that they
+        colllaborate on a project.
+        '''
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.validated_data['from_user'] = self.request.user
@@ -53,6 +57,10 @@ class CommentViewSet(viewsets.ModelViewSet):
             }, status=status.HTTP_401_UNAUTHORIZED)
 
     def retrieve(self, request, *args, **kwargs):
+        '''
+        Users can see comments of a user that
+        has a public profile or that they follow.
+        '''
         self.accessed_comment = self.get_object()
         serializer = self.get_serializer(self.accessed_comment)
 
@@ -68,6 +76,13 @@ class CommentViewSet(viewsets.ModelViewSet):
             }, status=status.HTTP_401_UNAUTHORIZED)
 
     def list(self, request, *args, **kwargs):
+        '''
+        Users can list comments that belong to
+        users with public profiles,
+        themselves,
+        someone they follow
+        or comments they created.
+        '''
         user = request.user
         queryset = self.filter_queryset(self.get_queryset())
         if user.is_anonymous:

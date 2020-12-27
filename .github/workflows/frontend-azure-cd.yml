@@ -35,4 +35,4 @@ jobs:
           tags: |
             paperlayer.azurecr.io/paperlayer-frontend:${{ github.sha }}
           build-args: |
-            REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
+            REACT_APP_API_URL=https://paperlayer-backend.azurewebsites.net

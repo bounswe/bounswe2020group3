@@ -51,6 +51,7 @@ const FormWrapper = styled(Box)({
 
 
 const Container = styled(Box)({
+  backgroundColor: '#f7f7f5',
   background: "white",
   border: 0,
   borderRadius: 3,

@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
@@ -13,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.search.data.Search
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_search.*
 
@@ -144,15 +148,22 @@ class SearchFragment: Fragment(),SearchContract.View ,OnCardClickListener{
     private fun searchSubmit(keyword:String){
         writeLogMessage("i", TAG,"Search : $keyword submitted .")
         resetSearchCardList()
+        showLoading()
         when(this.tabLayoutSearch.selectedTabPosition){
             0->{//Project Tab selected
-                this.presenter.getAllProjects()
+                var searchFilter = Search(keyword,"project",null,null,null,
+                        null,null,null,null,null,null,null,null)
+                this.presenter.searchRequest(searchFilter)
             }
             1->{//User Tab selected
-                this.presenter.getAllUsers()
+                var searchFilter = Search(keyword,"profile",null,null,null,
+                        null,null,null,null,null,null,null,null)
+                this.presenter.searchRequest(searchFilter)
             }
             2->{//Event Tab selected
-                this.presenter.getAllEvents()
+                var searchFilter = Search(keyword,"event",null,null,null,
+                        null,null,null,null,null,null,null,null)
+                this.presenter.searchRequest(searchFilter)
             }
         }
     }
@@ -169,6 +180,16 @@ class SearchFragment: Fragment(),SearchContract.View ,OnCardClickListener{
                 this.presenter.onEventClicked(item,position)
             }
         }
+    }
+
+    override fun hideLoading()
+    {
+        this.progressIndicatorSearch.visibility=GONE
+    }
+
+    override fun showLoading()
+    {
+        this.progressIndicatorSearch.visibility= VISIBLE
     }
 
 

@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'password_reset',
     'storages'
-]
+    'django_email_verification',
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -173,6 +173,17 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'bounswe2020group3@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 
+# For email verification
+EMAIL_ACTIVE_FIELD = 'is_active'
+EMAIL_SERVER = 'smtp.gmail.com'
+EMAIL_ADDRESS = 'bounswe2020group3@gmail.com'
+EMAIL_FROM_ADDRESS = 'noreply@bounswe2020group3.com'
+EMAIL_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_MAIL_SUBJECT = 'Confirm your email'
+EMAIL_MAIL_HTML = 'verification_body.html'
+EMAIL_MAIL_PLAIN = 'verification_body.txt'
+EMAIL_PAGE_TEMPLATE = 'verification_confirm.html'
+EMAIL_PAGE_DOMAIN = 'https://paperlayer-backend.azurewebsites.net'
 
 django_heroku.settings(locals())
 

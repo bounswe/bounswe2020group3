@@ -157,7 +157,7 @@ export default class CreateEventPage extends Component {
   render() {
     const { eventType } = this.state;
     return (
-      <Container>
+      <Container >
         <UserNavbar 
           logout={() => { this.props.history.push(config.Login_Path) }}
           pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }} 

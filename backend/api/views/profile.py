@@ -10,7 +10,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.http import FileResponse
 from rest_framework.response import Response
 from rest_framework import status
-import os
 from rest_framework.parsers import MultiPartParser, FormParser
 from api.utils import get_is_following
 
@@ -75,12 +74,8 @@ class ProfilePictureViewSet(viewsets.GenericViewSet):
         data = {"profile_picture": request.data["profile_picture"]}
         profile = self.get_object()
         serializer = ProfilePictureSerializer(profile, data=data, partial=True)
-        if 'profile_picture' in request.data:
-            if profile.profile_picture:
-                if profile.profile_picture != request.data['profile_picture']:
-                    if os.path.isfile(profile.profile_picture.path):
-                        os.remove(profile.profile_picture.path)
-
+        if profile.profile_picture:
+            profile.profile_picture.delete()
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

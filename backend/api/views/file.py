@@ -9,7 +9,6 @@ from django.http import FileResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from django.db.models import Q
-import os
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -55,8 +54,8 @@ class FileViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance, data=request.data,
                                          partial=partial)
         serializer.is_valid(raise_exception=True)
-        if os.path.isfile(instance.file.path):
-            os.remove(instance.file.path)
+        if instance.file:
+            instance.file.delete()
         self.perform_update(serializer)
         return Response(serializer.data)
 

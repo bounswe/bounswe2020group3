@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_yasg',
     'password_reset',
-    'storages'
+    'storages',
     'django_email_verification'
 ]
 

@@ -40,7 +40,7 @@ class EventPresenter @Inject constructor(private var model: HomeContract.Model) 
         disposable.add(userProfileSub)
     }
     fun dataToCard(event : Event) : EventCard{
-        return EventCard(event.title,event.description,event.deadline,event.date,event.event_type,event.url)
+        return EventCard(event.id,event.title,event.description,event.deadline,event.date,event.event_type,event.url)
     }
     override fun fetchEvents(ownerId : Int) {
         val getEventsObservable = model.getAllEvents()?.subscribe(

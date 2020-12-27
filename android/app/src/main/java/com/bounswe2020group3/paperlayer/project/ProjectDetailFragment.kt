@@ -1,22 +1,30 @@
 package com.bounswe2020group3.paperlayer.project
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.Toast
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.project.data.Project
+import com.google.android.material.chip.Chip
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_project_detail.*
 import kotlinx.android.synthetic.main.fragment_project_detail.view.*
 import javax.inject.Inject
 
 private const val TAG = "ProjectFragment"
+
+
+//val tagColors = arrayOf("#D2B4DE", "#F8C471", "#76D7C4", "#AED6F1", "#DAF7A6", "#FA8072", "#FEC8D8", "#85EE85", "#FDFD96", "#89AED8")
+val tagColors = arrayOf(R.color.tagColor0, R.color.tagColor1, R.color.tagColor2,R.color.tagColor3,R.color.tagColor4,R.color.tagColor5,R.color.tagColor6,R.color.tagColor7,R.color.tagColor8,R.color.tagColor9)
+
 
 class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
 
@@ -118,6 +126,27 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         this.fragmentView.projectType.text=project.project_type
         this.fragmentView.projectDue.text=project.due_date
         this.fragmentView.projectState.text=project.state
+        if(project.event!=null)
+        {
+            this.fragmentView.textViewEvents.text=project.event.title
+        }
+
+
+        //Tag Field Text
+        if(project.tags.isEmpty()) {
+            this.fragmentView.textViewTags.text="There is no tags in this project. You can add tags to project from project edit page."
+        }
+        else{
+            this.fragmentView.textViewTags.visibility=GONE
+        }
+        //Adding tags to dynamically to project tags
+        for (tag in project.tags){
+            val chip = Chip(this.fragmentView.chipGroupTags.context)
+            chip.text=tag.name
+            chip.setChipBackgroundColorResource(tagColors[tag.color])
+            this.fragmentView.chipGroupTags.addView(chip)
+        }
+
         writeLogMessage("i",TAG,"Project UI Updated")
     }
 

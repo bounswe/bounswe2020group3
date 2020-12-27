@@ -3,7 +3,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { Button, Typography, Box, styled } from '@material-ui/core';
 
 const Side = styled(Box)({
-    backgroundColor: "#123321",
+    backgroundColor: "#183761",
     paddingTop: "60px",
     height: '100%',
     minWidth: "200px",

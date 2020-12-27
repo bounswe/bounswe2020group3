@@ -18,7 +18,8 @@ class CollaborationInvitePOSTSerializer(serializers.ModelSerializer):
     """
     Post serializer, includes only user
     """
+    from_user = serializers.ReadOnlyField(source='from_user.id')
 
     class Meta:
         model = CollaborationInvite
-        fields = ['to_user', 'to_project', 'message']
+        fields = '__all__'

@@ -107,7 +107,8 @@ export default class ProfilePage extends Component {
       newComment: "",
       showAddNewComment: false,
       ratedBefore : false, 
-      myRatingId : -1
+      myRatingId : -1,
+      isCommentable: false
     }
   };
 
@@ -153,7 +154,8 @@ export default class ProfilePage extends Component {
             currentRating: (prof.my_rating && typeof(prof.my_rating) !== 'string' ? parseFloat(prof.my_rating) : 0),
             currentUserId: windowUserId,
             ratedBefore: (prof.my_rating && typeof(prof.my_rating) !== 'string'),
-            myRatingId : (prof.my_rating_id && typeof(prof.my_rating_id) !== 'string' ? prof.my_rating_id : -1)
+            myRatingId : (prof.my_rating_id && typeof(prof.my_rating_id) !== 'string' ? prof.my_rating_id : -1),
+            isCommentable: prof.is_commentable
           }, () => {
             this.getComments();
             axios.get(`${config.API_URL}${config.Follow_url}?from_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
@@ -194,6 +196,7 @@ export default class ProfilePage extends Component {
             img: prof.photo_url,
             loading: false,
             rating: (prof.rating ? parseFloat(prof.rating) : 0),
+            isCommentable: prof.is_commentable,
             currentUserId: windowUserId
           }, () => {
             // this.getComments();
@@ -220,7 +223,7 @@ export default class ProfilePage extends Component {
       <>
         {comments.length !== 0 ?
           comments.map((item) => {
-            let fullName = item.name + " " + item.middle_name + " " + item.last_name;
+            let fullName = item.name + " " + (item.middle_name ? item.middle_name + " " : "") + item.last_name + ":";
             return (
               <>
                 <Typography variant="caption" color="primary"
@@ -251,7 +254,7 @@ export default class ProfilePage extends Component {
           })
           :
           <>
-            <Typography variant='h6' color='textPrimary' style={{ textAlign: 'center' }}>0 comments found</Typography>
+            <Typography variant='h6' color='textPrimary' style={{ textAlign: 'center' }}>No comments found</Typography>
           </>
         }
       </>
@@ -488,7 +491,7 @@ export default class ProfilePage extends Component {
     );
   }
   renderAddComment() {
-    if(!this.state.isPublic && !this.state.self) return (<></>);
+    if(!this.state.isPublic && !this.state.isCommentable) return (<></>);
 
     return (
       <>
@@ -760,7 +763,7 @@ export default class ProfilePage extends Component {
             <Grid container spacing={2} item sm={7}>
               <Grid item sm={12} >
                 <Avatar src={this.getUserPhoto(this.state.profileId)} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
-                <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
+                <Paper elevation={6} style={{ border: "solid 1px blue", padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
                   <Typography style={{ textTransform: "capitalize" }}>{this.state.name + " " + this.state.middle_name} <br />
                     {this.state.last_name.toUpperCase()}</Typography>
                 </Paper>

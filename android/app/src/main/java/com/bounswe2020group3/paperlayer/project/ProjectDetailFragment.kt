@@ -7,11 +7,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.fragment_invite.*
 import kotlinx.android.synthetic.main.fragment_project_detail.*
 import kotlinx.android.synthetic.main.fragment_project_detail.view.*
 import javax.inject.Inject
@@ -48,6 +52,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         //Set ProjectPresenter view to project fragment
         this.presenter.setView(this)
         this.presenter.bind(this)
+
         //Getting bundle arguments
         var projectID = arguments?.getInt("projectID")
         if (projectID != null) {
@@ -55,6 +60,12 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         }
         else{
             writeLogMessage("e",TAG,"projectID null")
+        }
+        //Giving bundle arguments
+        val bundle = bundleOf("projectID" to projectID )
+
+        view.findViewById<Button>(R.id.buttonInvite).setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToInviteFromProjectDetails,bundle)
         }
         writeLogMessage("i",TAG,"ProjectFragment view created")
         return view

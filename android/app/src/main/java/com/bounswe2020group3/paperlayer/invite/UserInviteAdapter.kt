@@ -62,9 +62,9 @@ class UserInviteAdapter(var clickListener: OnCardClickListener) : RecyclerView.A
                 action.onInviteButtonClick(invitecard,adapterPosition)
             }
             if (invitecard.called)
-                buttonInvite.setText("Uninvite")
-
-
+                buttonInvite.setText("UNINVITE")
+            else
+                buttonInvite.setText("INVITE")
         }
 
     }

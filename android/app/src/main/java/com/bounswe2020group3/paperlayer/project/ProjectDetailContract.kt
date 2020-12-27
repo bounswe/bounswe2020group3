@@ -21,6 +21,10 @@ interface ProjectDetailContract {
         fun writeLogMessage(type:String ,tag: String,message: String)
         fun resetProjectUI()
         fun updateProjectUI(project:Project)
+
+        fun resetMemberCardList()
+        fun submitMemberCardList()
+        fun addMemberCard(username: String)
     }
 
     interface Model {

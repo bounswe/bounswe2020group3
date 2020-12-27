@@ -9,5 +9,7 @@ data class Tag (
         @field:Json(name = "id")
         var id: Int,
         @field:Json(name = "name")
-        var name: String
+        var name: String,
+        @field:Json(name = "color")
+        var color: Int
 ) : Parcelable

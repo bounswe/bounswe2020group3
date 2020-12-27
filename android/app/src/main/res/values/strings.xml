@@ -71,6 +71,8 @@
     <string name="event_deadline_date_placeholder">2020–10–27</string>
     <string name="event_date_placeholder">2020–10–25</string>
     <string name="event_type_placeholder">academic conference</string>
+    <string name="selected_tag">You selected %1$d tags.</string>
+    <string name="select_tag_title">Choose project tags</string>
     <string name="project_detail_tag_not_found">There is no tags in this project. You can add tags to project from project edit page.</string>
     <string name="project_detail_tag_title">Tags</string>
     <string name="project_detail_milestone_title">Milestones</string>

@@ -12,7 +12,7 @@ data class Project (
         @field:Json(name = "description") var description: String,
         @field:Json(name = "requirements") var requirements: String,
         @field:Json(name = "owner") var owner: String,
-        @field:Json(name = "members") var members: List<User>,
+        @field:Json(name = "members") var members: List<User>?,
         @field:Json(name = "is_public") var is_public: Boolean,
         @field:Json(name = "state") var state: String,
         @field:Json(name = "project_type") var project_type: String,

@@ -17,5 +17,7 @@ data class ProjectShort (
         @field:Json(name = "is_public")
         var isPublic: Boolean,
         @field:Json(name = "state")
-        var state: String
+        var state: String,
+        @field:Json(name = "owner_id")
+        var owner_id: String,
 ): Parcelable

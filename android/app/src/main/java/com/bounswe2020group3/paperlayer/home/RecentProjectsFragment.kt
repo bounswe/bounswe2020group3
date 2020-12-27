@@ -49,9 +49,10 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
         }
 
         initRecycler()
-        resetCardList()
         this.presenter.bind(this)
         initRecyclerView()
+        resetCardList()
+
         writeLogMessage("i",TAG,"event fragment has been created.")
         return view
     }

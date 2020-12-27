@@ -81,6 +81,9 @@
         <action
             android:id="@+id/navigateToProjectEditFromProjectFragment"
             app:destination="@+id/projectEditFragment" />
+        <action
+            android:id="@+id/navigateToInviteFromProjectDetails"
+            app:destination="@id/inviteFragment" />
     </fragment>
 
     <fragment
@@ -153,7 +156,11 @@
         android:id="@+id/inviteFragment"
         android:name="com.bounswe2020group3.paperlayer.invite.InviteFragment"
         android:label="fragment_invite"
-        tools:layout="@layout/fragment_invite" />
+        tools:layout="@layout/fragment_invite" >
+        <action
+            android:id="@+id/navigateToProjectDetailsFromInvite"
+            app:destination="@id/projectFragment" />
+    </fragment>
     <fragment
         android:id="@+id/eventFragment"
         android:name="com.bounswe2020group3.paperlayer.home.EventFragment"

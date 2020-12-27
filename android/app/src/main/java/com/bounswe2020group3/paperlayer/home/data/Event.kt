@@ -3,6 +3,8 @@ package com.bounswe2020group3.paperlayer.home.data
 import com.squareup.moshi.Json
 
 data class Event (
+        @field:Json(name = "id")
+        var id: Int,
         @field:Json(name = "title")
         var title: String,
         @field:Json(name = "description")

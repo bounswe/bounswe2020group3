@@ -68,12 +68,12 @@ class EventDetailFragment : Fragment(), EventDetailContract.View {
 
     override fun showLoading() {
         progressBarEvent.visibility = View.VISIBLE
-        layoutEvetWrapper.visibility = View.GONE
+        layoutEventWrapper.visibility = View.GONE
     }
 
     override fun hideLoading() {
         progressBarEvent.visibility = View.GONE
-        layoutEvetWrapper.visibility = View.VISIBLE
+        layoutEventWrapper.visibility = View.VISIBLE
     }
 
     override fun showInfoToast(message: String) {

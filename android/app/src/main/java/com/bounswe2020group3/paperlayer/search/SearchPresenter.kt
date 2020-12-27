@@ -47,8 +47,7 @@ class SearchPresenter @Inject constructor(private var model:SearchContract.Model
 
     override fun navigateToEvent(eventID: Int) {
         val bundle = bundleOf("eventID" to eventID )
-        //FIX After Event page added
-        //view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectFromProjectMainFragment,bundle) }
+        view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToEventDetailFromSearch,bundle) }
     }
 
     override fun searchRequest(searchFilter: Search) {

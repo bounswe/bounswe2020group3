@@ -20,14 +20,14 @@
             android:id="@+id/tabItemProject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Project"
+            android:text="@string/project_detail_tab_title_project"
             android:icon="@drawable/ic_project"
             />
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItemMembers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Members"
+            android:text="@string/project_detail_tab_title_member"
             android:icon="@drawable/ic_groups"
             />
     </com.google.android.material.tabs.TabLayout>
@@ -264,7 +264,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Events"
+                                android:text="@string/project_detail_event_title"
                                 android:gravity="center_vertical"
                                 android:textAppearance="?attr/textAppearanceHeadline5"
                                 />
@@ -305,7 +305,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Milestones"
+                                android:text="@string/project_detail_milestone_title"
                                 android:gravity="center_vertical"
                                 android:textAppearance="?attr/textAppearanceHeadline5"
                                 />
@@ -346,7 +346,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Tags"
+                                android:text="@string/project_detail_tag_title"
                                 android:gravity="center_vertical"
                                 android:textAppearance="?attr/textAppearanceHeadline5"
                                 />
@@ -356,7 +356,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:gravity="center_vertical"
-                                android:text=""
+                                android:text="@string/project_detail_tag_not_found"
                                 android:textAppearance="?attr/textAppearanceBody2"
                                 android:textColor="?android:attr/textColorSecondary"
                                 />

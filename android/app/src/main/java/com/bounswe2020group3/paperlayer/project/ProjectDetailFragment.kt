@@ -134,7 +134,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
 
         //Tag Field Text
         if(project.tags.isEmpty()) {
-            this.fragmentView.textViewTags.text="There is no tags in this project. You can add tags to project from project edit page."
+            this.fragmentView.textViewTags.setText(R.string.project_detail_tag_not_found)
         }
         else{
             this.fragmentView.textViewTags.visibility=GONE

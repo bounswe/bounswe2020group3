@@ -126,11 +126,13 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         this.fragmentView.projectType.text=project.project_type
         this.fragmentView.projectDue.text=project.due_date
         this.fragmentView.projectState.text=project.state
+        this.fragmentView.projectRequirements.text=project.requirements
+
+
         if(project.event!=null)
         {
             this.fragmentView.textViewEvents.text=project.event.title
         }
-
 
         //Tag Field Text
         if(project.tags.isEmpty()) {

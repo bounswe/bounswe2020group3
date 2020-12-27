@@ -77,4 +77,6 @@
     <string name="project_detail_event_title">Events</string>
     <string name="project_detail_tab_title_project">Project</string>
     <string name="project_detail_tab_title_member">Members</string>
+    <string name="project_requirements_title">Project Requirements</string>
+
 </resources>

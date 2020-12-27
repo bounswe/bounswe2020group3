@@ -248,6 +248,97 @@
                     android:orientation="horizontal">
 
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardViewRequirements"
+                        android:layout_width="match_parent"
+                        app:cardElevation="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/gradient"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <!-- Title, secondary and supporting text -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/project_requirements_title"
+                                android:layout_gravity="left"
+                                android:gravity="center_vertical"
+                                android:textAppearance="?attr/textAppearanceHeadline5"
+                                />
+                            <TextView
+                                android:id="@+id/projectRequirements"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:gravity="center_vertical"
+                                android:layout_gravity="left"
+                                android:text=""
+                                android:textAppearance="?attr/textAppearanceBody2"
+                                android:textColor="?android:attr/textColorSecondary"
+                                />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardViewTag"
+                        android:layout_width="match_parent"
+                        app:cardElevation="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/gradient"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <!-- Title, secondary and supporting text -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/project_detail_tag_title"
+                                android:gravity="center_vertical"
+                                android:textAppearance="?attr/textAppearanceHeadline5"
+                                />
+                            <TextView
+                                android:id="@+id/textViewTags"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:gravity="center_vertical"
+                                android:text="@string/project_detail_tag_not_found"
+                                android:textAppearance="?attr/textAppearanceBody2"
+                                android:textColor="?android:attr/textColorSecondary"
+                                />
+
+                            <com.google.android.material.chip.ChipGroup
+                                android:id="@+id/chipGroupTags"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                            </com.google.android.material.chip.ChipGroup>
+
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardViewEvent"
                         android:layout_width="match_parent"
                         app:cardElevation="5dp"
@@ -323,55 +414,6 @@
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cardViewTag"
-                        android:layout_width="match_parent"
-                        app:cardElevation="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/gradient"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-
-                            <!-- Title, secondary and supporting text -->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/project_detail_tag_title"
-                                android:gravity="center_vertical"
-                                android:textAppearance="?attr/textAppearanceHeadline5"
-                                />
-                            <TextView
-                                android:id="@+id/textViewTags"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:gravity="center_vertical"
-                                android:text="@string/project_detail_tag_not_found"
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
-
-                            <com.google.android.material.chip.ChipGroup
-                                android:id="@+id/chipGroupTags"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-                            </com.google.android.material.chip.ChipGroup>
-
-
-
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout

@@ -16,7 +16,7 @@ class EventDetailPresenter @Inject constructor(
                             this.view?.hideLoading()
                         },
                         { error ->
-                            this.view?.showErrorToast("An error occurred while fetching event.")
+                            this.view?.showErrorToast("An error occurred while fetching event. $error")
                             this.view?.navigateBack()
                             this.view?.hideLoading()
                         }

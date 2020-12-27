@@ -58,10 +58,11 @@ class RecentProjectsPresenter @Inject constructor(private var model: HomeContrac
                                 }
                                 for (project in projectList) {
                                     if (project.isPublic)
-                                        if(project.id in requested)
-                                            this.view?.addCard(ProjectUpdateCard(project.name, project.description, project.owner, project.id, "Project",project.state,true))
-                                        else
-                                            this.view?.addCard(ProjectUpdateCard(project.name, project.description, project.owner, project.id, "Project",project.state,false))
+                                        if(project.owner_id.toInt() != ownerId)
+                                            if(project.id in requested)
+                                                this.view?.addCard(ProjectUpdateCard(project.name, project.description, project.owner, project.id, "Project",project.state,true))
+                                            else
+                                                this.view?.addCard(ProjectUpdateCard(project.name, project.description, project.owner, project.id, "Project",project.state,false))
                                     this.view?.writeLogMessage("i", TAG, "Project Fetched + ")//+ project.project_type)
                                 }
                                 this.view?.writeLogMessage("i", TAG, "Fetching finished.")

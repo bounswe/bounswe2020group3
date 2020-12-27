@@ -53,6 +53,7 @@ export default class HomePage extends Component {
       photoUrl: "",
       projectId: "",
       showAddTag: false,
+      showInviteColab: false,
       tagQuery: "",
       colabQuery: "",
       allColabs: [],
@@ -288,7 +289,6 @@ export default class HomePage extends Component {
 
   renderColabInvite = () => {
 
-
   }
 
   renderRelatedEvents = () => {
@@ -405,8 +405,32 @@ export default class HomePage extends Component {
                 <br />
                 <Button variant="contained" color="primary" style={{ marginTop: "10px" }}
                   onClick={() => { this.props.history.push("/issue-milestone", { projectId: this.state.projectId }); }}>Set New Milestone</Button>
-                <br />
-
+              </Grid>
+              :
+              <></>
+              }
+              <br />
+              {this.state.isMember ? 
+                <Grid item sm={12} style={{ minHeight: "10vh" }}>
+                <Paper elevation={6}
+                  style={{ width: "90%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
+                  borderColor="primary"
+                  border={1}>
+                    <>
+                      <Input
+                        type="text"
+                        color='primary'
+                        style={{ width: "90%", textTransform: "capitalize" }}
+                        placeholder="Please enter a collaborator"
+                        onChange={(e) => { this.handleColabQuery(e); }}
+                        value={this.state.colabQuery}
+                      />
+                      {this.renderDesiredCollaborators()}
+                      <br />
+                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitColabInviteQuery}>Invite Collaborator</Button>
+                    </>
+                    :
+                </Paper>
               </Grid>
               :
               <></>
@@ -425,6 +449,10 @@ export default class HomePage extends Component {
           <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
         </Grid>
       </Container>);
+  }
+
+  submitColabInviteQuery = () => {
+
   }
   
 

@@ -315,6 +315,7 @@ export default class ProjectPage extends Component {
           logout={() => { this.props.history.push(config.Login_Path) }}
           pushProfile={() => { this.props.history.push("/profile") }}
           goHome={() => { this.props.history.push(config.Homepage_Path) }}
+          history ={this.props.history}
         />
         <FormWrapper>
           <h1 style={{ color: "black" }}> Edit Project </h1>

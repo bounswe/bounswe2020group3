@@ -17,8 +17,6 @@ import kotlinx.android.synthetic.main.fragment_project_create.*
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
-import kotlin.properties.Delegates
-
 
 class ProjectCreateFragment : Fragment(), ProjectCreateContract.View {
 
@@ -130,7 +128,6 @@ class ProjectCreateFragment : Fragment(), ProjectCreateContract.View {
                             name = editTextProjectName.text.toString(),
                             description = editTextDescription.text.toString(),
                             requirements = editTextRequirements.text.toString(),
-                            members = null,
                             is_public = isPublic,
                             state = projectState,
                             project_type = projectType,
@@ -211,8 +208,6 @@ class ProjectCreateFragment : Fragment(), ProjectCreateContract.View {
                 Timber.d("Nothing selected")
             }
         }
-
-
     }
 
     override fun createTagSelectDialog() {

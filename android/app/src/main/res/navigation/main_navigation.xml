@@ -163,6 +163,9 @@
         <action
             android:id="@+id/navigateToProjectDetailsFromInvite"
             app:destination="@id/projectFragment" />
+        <action
+            android:id="@+id/navigateToUserFromInvite"
+            app:destination="@id/userFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventFragment"

@@ -44,6 +44,7 @@ export default class HomePage extends Component {
             projects:[],
             events:[],
             milestones:[],
+            page_num: 0,
         }
     };
 
@@ -72,7 +73,8 @@ export default class HomePage extends Component {
     componentDidMount() {
       axios.get(`${config.API_URL}${config.Create_Project_Url}`, { headers:{ 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
         .then(res => {
-          const projects = res.data;
+          const projects = res.data.reverse();
+          console.log(projects)
           console.log(projects);
           this.setState({ projects:projects });
         });
@@ -106,7 +108,7 @@ export default class HomePage extends Component {
     renderProject(){
       var projects = this.state.projects;
       return projects.map((item) => {return (
-        item.id < 15 ? 
+
       <Paper elevation={6}  style={{border: "solid 1px blue", padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
         <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Typography>
         <Typography  style={{textAlign:"left", color:"black"}}>{this.renderTags(item.tags)}</Typography>
@@ -114,8 +116,7 @@ export default class HomePage extends Component {
           {item.description}
         </Typography>
         </Paper>
-        :
-        <></>
+
         )});
   };
                           
@@ -209,7 +210,7 @@ export default class HomePage extends Component {
               <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEventCreation}>Create an Event</Button>
               
               <Typography variant="h5" color="primary" style={{marginTop:"10px"}}>Milestones</Typography>
-              <Grid style={{maxHeight:"40vh", overflowY:"scroll"}} item sm={12}>
+              <Grid style={{maxHeight:"50vh", overflowY:"scroll"}} item sm={12}>
                   {this.renderMilestones()}
               </Grid>
             </Grid>

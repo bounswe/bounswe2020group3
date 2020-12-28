@@ -19,12 +19,11 @@ class MilestoneAdaptor(var clickListener: OnCardClickListenerForMilestones) : Re
         var projectTitle = layout.findViewById<TextView>(R.id.projectTitle)
         var description = layout.findViewById<TextView>(R.id.description)
         var date = layout.findViewById<TextView>(R.id.date)
-        var viewButton  = layout.findViewById<Button>(R.id.buttonViewProject)
         fun bind(item : MilestoneCard, action: OnCardClickListenerForMilestones) {
             projectTitle.text = item.projectTitle
             description.text = item.description
             date.text = item.date
-            viewButton.setOnClickListener{
+            itemView.setOnClickListener{
                 action.onViewButtonClick(item,adapterPosition)
             }
         }

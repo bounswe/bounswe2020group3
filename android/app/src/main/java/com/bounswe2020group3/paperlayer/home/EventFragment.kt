@@ -119,7 +119,7 @@ class EventFragment : Fragment(), HomeContract.EventView, OnCardClickListenerFor
 
     }
 
-    override fun onViewButtonClick(item: EventCard, position: Int) {
+    override fun onCardClick(item: EventCard, position: Int) {
         val bundle = bundleOf("eventID" to item.id )
 
         Navigation.findNavController(fragment_view).navigate(R.id.navigateToEventDetailFromEvents,bundle)

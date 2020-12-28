@@ -151,7 +151,7 @@ export default class ProjectPage extends Component {
         if(prof.event == null){
           this.setState({event:[]});
         }else{
-          this.setState({event:[prof.event.id]});
+          this.setState({event:prof.event.id});
         }
       });
     axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers:{'Content-Type':'Application/json', 'Authorization': `Token ${getAccessToken()}`}})

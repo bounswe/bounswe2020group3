@@ -360,7 +360,7 @@ export default class HomePage extends Component {
               goToEventCreation={() => {this.props.history.push(config.Event_Creation_Path);}}
               goToProfile={this.goToProfile}
             />
-        <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{ height:"calc(91vh - 48px)", marginLeft: "225px", marginTop: "10px", width: `calc(100% - 225px)` }}>
+        <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{ height:"calc(91vh - 40px)",   marginLeft: "225px", marginTop: "10px", width: `calc(100% - 225px)` }}>
           <Grid container direction="row" justify="space-evenly" alignItems="baseline">
             <Grid item sm={7}>
               <Typography variant="h4" color="primary">{this.state.name}</Typography>
@@ -388,6 +388,29 @@ export default class HomePage extends Component {
                   </Grid>
                   :
                   <></>
+              }
+              {this.state.isMember ? 
+                <Grid item sm={12} style={{marginTop:"20px"}}>
+                <Paper elevation={6}
+                  style={{ width: "40%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
+                  borderColor="primary"
+                  border={1}>
+                    <>
+                      <Input
+                        type="text"
+                        color='primary'
+                        style={{ width: "90%", textTransform: "capitalize" }}
+                        placeholder="Please enter a collaborator"
+                        onChange={(e) => { this.handleColabQuery(e); }}
+                        value={this.state.colabQuery}
+                      />
+                      <br />
+                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitColabInviteQuery}>Invite Collaborator</Button>
+                    </>
+                </Paper>
+              </Grid>
+              :
+              <></>
               }
               <p></p>
             </Grid>
@@ -435,40 +458,7 @@ export default class HomePage extends Component {
               :
               <></>
                 }
-                {this.state.isMember ? 
-                <Grid item sm={12} style={{ minHeight: "10vh" }}>
-                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.goToEditProjectPage(project_id)}>Edit Project</Button>
-                <br />
-                <Button variant="contained" color="primary" style={{ marginTop: "10px" }}
-                  onClick={() => { this.props.history.push("/issue-milestone", { projectId: this.state.projectId }); }}>Set New Milestone</Button>
-              </Grid>
-              :
-              <></>
-              }
               <br />
-              {this.state.isMember ? 
-                <Grid item sm={12} style={{ minHeight: "10vh" }}>
-                <Paper elevation={6}
-                  style={{ width: "90%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
-                  borderColor="primary"
-                  border={1}>
-                    <>
-                      <Input
-                        type="text"
-                        color='primary'
-                        style={{ width: "90%", textTransform: "capitalize" }}
-                        placeholder="Please enter a collaborator"
-                        onChange={(e) => { this.handleColabQuery(e); }}
-                        value={this.state.colabQuery}
-                      />
-                      <br />
-                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitColabInviteQuery}>Invite Collaborator</Button>
-                    </>
-                </Paper>
-              </Grid>
-              :
-              <></>
-              }
               <br />
               {this.state.isNotMember ? 
                 <Grid item sm={12} style={{ minHeight: "10vh" }}>

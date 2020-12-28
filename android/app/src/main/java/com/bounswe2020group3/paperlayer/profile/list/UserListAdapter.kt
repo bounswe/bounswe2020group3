@@ -38,7 +38,6 @@ class UserListAdapter(
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val userFullName: TextView = view.findViewById(R.id.userFullName)
-        private val userBio: TextView = view.findViewById(R.id.userBio)
         private val imageViewProfileAvatar: ImageView = view.findViewById(R.id.imageViewProfileAvatar)
 
         override fun toString(): String {
@@ -48,7 +47,6 @@ class UserListAdapter(
         fun bind(user: User, clickListener: OnUserClickListener) {
             val fullName = "${user.profile[0].name} ${user.profile[0].lastName}"
             userFullName.text = fullName
-            userBio.text = user.profile[0].bio
             itemView.setOnClickListener {
                 clickListener.onUserClick(user)
             }

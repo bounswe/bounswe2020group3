@@ -27,7 +27,7 @@ enum class ProjectState(val key: Int,val value: String) {
                 PUBLISHED.value.toLowerCase(Locale.ROOT) -> PUBLISHED
                 CANCELLED.value.toLowerCase(Locale.ROOT) -> CANCELLED
                 REOPENED.value.toLowerCase(Locale.ROOT) -> REOPENED
-                else -> null
+                else -> INVITING
             }
         }
 

@@ -56,8 +56,6 @@ export default class HomePage extends Component {
       showInviteColab: false,
       tagQuery: "",
       colabQuery: "",
-      allColabs: [],
-      currColab: [],
       currTag: [],
       allTags: [],
       isMember: false,
@@ -152,6 +150,7 @@ export default class HomePage extends Component {
     this.getProject(project_id);
     this.getProfile();
     this.getTags();
+    this.getColabs();
   };
 
   renderContributor() {
@@ -261,34 +260,15 @@ export default class HomePage extends Component {
     
   }
 
-  renderDesiredCollaborators = () => {
-    const { colabQuery, allColabs } = this.state;
-    if (colabQuery === "") return;
-
-    return allColabs.map((item) => {
-      let colab = item.name;
-      return (<>
-        {colab.toLowerCase().includes(colabQuery.toLowerCase()) && !this.inColabs(colab) ?
-          <Chip
-            style={{ background: colorCodes[item.color], margin: "3px", cursor: "pointer", textTransform: "capitalize" }}
-            onClick={() => { this.setState({ currColab: item, colabQuery: item.name }) }}
-            label={item.name} />
-          :
-          <></>
-        }
-      </>
-      )
-
-    });
-  }
-
   renderColabRequest = () => {
-
-
-  }
-
-  renderColabInvite = () => {
-
+    var proj_id = this.props.location.pathname.split('/')[2];
+    axios.post(`${config.API_URL}/api/collaboration_requests/`, { from_user: this.username, to_project: proj_id }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            .then(res => {
+              this.getProject(this.state.projectId);
+            })
+        }); 
   }
 
   renderRelatedEvents = () => {
@@ -425,11 +405,9 @@ export default class HomePage extends Component {
                         onChange={(e) => { this.handleColabQuery(e); }}
                         value={this.state.colabQuery}
                       />
-                      {this.renderDesiredCollaborators()}
                       <br />
                       <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitColabInviteQuery}>Invite Collaborator</Button>
                     </>
-                    :
                 </Paper>
               </Grid>
               :
@@ -549,14 +527,12 @@ export default class HomePage extends Component {
     }
   }
 
-  inColabs = (query) => {
-    const { colabs } = this.state;
-    let colab = query.trim().toLowerCase();
-    for (let i = 0; i < colabs.length; i++) {
-      if (colabs[i].name.toLowerCase() === colab) {
-        return true;
-      }
-    }
+  getColabs = () => {
+    axios.get(`${config.API_URL}/api/collaboration_invites/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let colabs = res.data;
+        this.setState({ allColabs: colabs });
+      })
   }
   
   //Delete this particular tag.

@@ -22,20 +22,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="@dimen/padding_md"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textViewEventTitle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/margin_md"
-            android:gravity="center"
-            android:text="@string/event_title_placeholder"
-            android:textColor="@color/colorBlack"
-            android:textSize="32sp" />
+            android:padding="@dimen/padding_lg"
+            android:background="@drawable/gradient"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewEventTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/margin_lg"
+                android:gravity="center"
+                android:text="@string/event_title_placeholder"
+                android:textColor="@color/colorBlack"
+                android:textSize="32sp" />
+
+            <TextView
+                android:id="@+id/textViewEventDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/event_description_placeholder"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,17 +60,6 @@
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/padding_lg"
             android:paddingVertical="@dimen/padding_md">
-
-            <TextView
-                android:id="@+id/textViewEventDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/margin_lg"
-                android:gravity="center"
-                android:text="@string/event_description_placeholder"
-                android:textColor="@color/colorBlack"
-                android:textSize="16sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"

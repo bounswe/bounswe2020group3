@@ -54,14 +54,6 @@
             android:textColor="@color/colorBlack"
             android:textSize="16sp"
             android:textAppearance="?attr/textAppearanceListItem" />
-
-        <TextView
-            android:id="@+id/userBio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack"
-            android:textSize="12sp"
-            android:textAppearance="?attr/textAppearanceListItem" />
     </LinearLayout>
 
 </LinearLayout>

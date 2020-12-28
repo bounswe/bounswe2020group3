@@ -1,6 +1,5 @@
 from django.db import models
 from api.models.project import Project
-import os
 
 
 class File(models.Model):
@@ -17,7 +16,6 @@ class File(models.Model):
         ordering = ['project']
 
     def delete(self, *args, **kwargs):
-        if os.path.isfile(self.file.path):
-            os.remove(self.file.path)
-
+        if self.file:
+            self.file.delete()
         super(File, self).delete(*args, **kwargs)

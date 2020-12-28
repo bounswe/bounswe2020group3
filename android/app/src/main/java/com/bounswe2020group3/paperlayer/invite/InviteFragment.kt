@@ -78,7 +78,7 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
         this.presenter.bind(this)
 
         view.findViewById<Button>(R.id.buttonOK).setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.navigateToProjectDetailsFromInvite)
+            Navigation.findNavController(view).navigateUp()
         }
         return view
     }
@@ -137,7 +137,7 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
 
 
 
-    override fun addUserCard(username: String, name : String, expertise: String, photoURL : String, id : Int, invited : Boolean) {
+    override fun addUserCard(username: String, name : String, expertise: String?, photoURL : String?, id : Int, invited : Boolean) {
         inviteCardList.add(
                 InviteCard(
                         username,name,

@@ -168,7 +168,7 @@ class ProjectEditFragment : Fragment(), ProjectEditContract.View {
                     requirements = editTextRequirements.text.toString(),
                     is_public = isPublic,
                     state = projectState,
-                    project_type = null, //TODO dont forget to revert
+                    project_type = projectType,
                     due_date = textViewDate.text.toString(),
                     event = eventID,
                     tags = tagIdList,

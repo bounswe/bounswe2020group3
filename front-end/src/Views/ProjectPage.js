@@ -152,7 +152,7 @@ export default class HomePage extends Component {
     this.getProject(project_id);
     this.getProfile();
     this.getTags();
-    this.getColabRequests();
+    this.getColabRequests(project_id);
   };
 
   renderContributor() {
@@ -552,14 +552,11 @@ export default class HomePage extends Component {
     }
   }
 
-  getColabRequests = () => {
-    const { colabRequests } = this.state;
-    axios.get(`${config.API_URL}/api/collaboration_requests/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+  getColabRequests = (project_id) => {
+    axios.get(`${config.API_URL}/api/collaboration_requests/${project_id}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
-        let allColabRequests = res.data;
-        for(let i =0; i< allColabRequests.length; i++){
-          colabRequests.push(allColabRequests[i]);
-        }
+        let allColabRequests = [res.data];
+        this.setState({ colabRequests: allColabRequests}); 
       })
   }
   

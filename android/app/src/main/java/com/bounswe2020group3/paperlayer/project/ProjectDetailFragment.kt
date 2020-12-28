@@ -10,6 +10,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -92,6 +93,9 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
 
         view.findViewById<Button>(R.id.buttonInvite).setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToInviteFromProjectDetails,bundle)
+        }
+        view.findViewById<ImageView>(R.id.imageViewCollabRequests).setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToCollabRequestsFromProject,bundle)
         }
         writeLogMessage("i",TAG,"ProjectFragment view created")
         return view

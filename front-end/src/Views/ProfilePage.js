@@ -100,7 +100,11 @@ export default class ProfilePage extends Component {
       projects: [],
       file : undefined,
       showUpload: false,
-      loading: true // For eradicating glitches due to request delays
+      loading: true,
+      isFollow: [{
+        otherProfileId: "",
+        isFollowing: false,
+      }] // For eradicating glitches due to request delays
     }
   };
 
@@ -499,6 +503,7 @@ export default class ProfilePage extends Component {
       <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
     </SelfContainer>);
   }
+
   renderOtherProfile() {
     return (<Container style={{backgroundColor: '#f7f7f5'}}>
       <UserNavbar
@@ -538,6 +543,31 @@ export default class ProfilePage extends Component {
                   <Typography style={{textTransform:"capitalize"}}>{this.state.name + " " + this.state.middle_name} <br />
                     {this.state.last_name.toUpperCase()}</Typography>
                 </Paper>
+                <Grid>
+                 
+                  <>
+                    
+                    {!this.handleCheckCurrentlyNotFollow(getUserId()) ?
+                        <>
+                        
+                        {this.state.isPublic ?
+                          
+                          <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderFollow()}>Follow</Button>
+                      
+                      :
+                          <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderFollowRequest()}>Send Follow Request</Button>
+                        }
+
+                      </>
+                    :
+                          
+                          <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderUnfollow()}>Unfollow</Button>
+    
+                    }
+                  </>
+                  
+                  
+              </Grid>
               </Grid>
 
               {(this.state.self || this.state.isPublic) ? this.renderMidLeftColumn() : <></>}
@@ -608,4 +638,274 @@ export default class ProfilePage extends Component {
     else
       return false;
   }
+
+  handleCheckCurrentlyNotFollow = (id) => {
+
+    var check = 0;
+    
+    axios.get(`${config.API_URL}${config.User_Path}${id}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+
+          var nameName = res.data.profile[0].name + " " +res.data.profile[0].middle_name + " " + res.data.profile[0].last_name;
+
+          this.state.followers.forEach(item => {
+            const member = item;
+            if(member.name + " " + member.last_name === nameName){
+              check = 1;
+              
+            }
+            
+          });
+        });
+
+        console.log("1")
+        if(check === 1){
+          console.log("2")
+          return false
+        }
+        else{
+          console.log("3")
+          return true
+        }
+  } 
+
+  renderFollow() {
+
+    axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(resUser => {
+          
+          const profUser = resUser.data.profile[0];
+          let windowUserId = resUser.data.id; //28
+          const userState = resUser.data;
+          console.log(userState)
+          console.log(userState.profile[0])
+          
+          var userId = this.props.location.pathname.split('/')[2];
+          axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+          .then(res => {
+            const prof = res.data;
+            let windowUserId = res.data.id; //28
+            const profileState = res.data;
+
+            console.log(profileState.id)
+
+            const follow_create = {
+              to_user: profileState.id,
+              created: "datatime-local"
+            }
+
+            axios.post(`${config.API_URL}${config.Follow_url}`, follow_create, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            .then(resCreate => {
+
+              let newFollowers = []
+              this.state.followers.forEach(item => {
+                const member = item;
+                newFollowers.push(member.name + " " + member.last_name); // ATTENTION : WE may want to add the middle names as well.
+              });
+              newFollowers.push(userState.profile[0].name +" "+ userState.profile[0].middle_name +" "+ userState.profile[0].lastname)
+              
+              this.setState({followers: newFollowers})
+
+              console.log(this.state.followers)
+
+              //userState.following.push(profileState.profile[0].name +" "+ profileState.profile[0].middle_name +" "+ profileState.profile[0].lastname)
+              
+
+            });
+
+            const followAction = {
+              id: profileState.id,
+              from_user: {
+                id: userState.id,
+                username: userState.username,
+                profile: [
+                  {
+                    id: userState.id,
+                    name: userState.profile[0].name,
+                    middle_name: userState.profile[0].middle_name,
+                    last_name: userState.profile[0].lastname,
+                    owner: "string",
+                    profile_picture: "string",
+                    is_public: true,
+                    my_rating: "string",
+                    my_rating_id: "string",
+                    is_commentable: "string"
+                  }
+                ],
+                is_follower: "true",
+                is_following: userState.is_following,
+                is_follow_request_sent: userState.is_follow_request_sent,
+                is_follow_request_received: userState.is_follow_request_received,
+                count_of_followers: userState.count_of_followers,
+                count_of_followings: userState.count_of_followings,
+                count_of_follow_requests: userState.count_of_follow_requests
+              },
+              to_user: {
+                id: profileState.id,
+                username: profileState.username,
+                profile: [
+                  {
+                    id: profileState.id,
+                    name: profileState.profile[0].name,
+                    middle_name: profileState.profile[0].middle_name,
+                    last_name: profileState.profile[0].lastname,
+                    owner: "string",
+                    profile_picture: "string",
+                    is_public: true,
+                    my_rating: "string",
+                    my_rating_id: "string",
+                    is_commentable: "string"
+                  }
+                ],
+                is_follower: profileState.is_follower,
+                is_following: "true",
+                is_follow_request_sent: profileState.is_follow_request_sent,
+                is_follow_request_received: profileState.is_follow_request_received,
+                count_of_followers: profileState.count_of_followers,
+                count_of_followings: profileState.count_of_followings,
+                count_of_follow_requests: profileState.count_of_follow_requests
+              },
+              created: "datetime-local"
+            }
+
+            axios.put(`${config.API_URL}${config.Follow_url}${followAction.id}/`, followAction, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            .then(res => {
+
+
+            });
+
+
+
+            console.log(followAction)
+
+          });
+
+
+        });
+
+  }
+
+  renderUnfollow() {
+    axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(resUser => {
+          
+          const profUser = resUser.data.profile[0];
+          let windowUserId = resUser.data.id; //28
+          const userState = resUser.data;
+          console.log(userState)
+          console.log(userState.profile[0])
+          
+          var userId = this.props.location.pathname.split('/')[2];
+          axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+          .then(res => {
+            const prof = res.data;
+            let windowUserId = res.data.id; //28
+            const profileState = res.data;
+
+            console.log(profileState.id)
+
+            
+
+            const unfollowAction = {
+              id: profileState.id,
+              from_user: {
+                id: userState.id,
+                username: userState.username,
+                profile: [
+                  {
+                    id: userState.id,
+                    name: userState.profile[0].name,
+                    middle_name: userState.profile[0].middle_name,
+                    last_name: userState.profile[0].lastname,
+                    owner: "string",
+                    profile_picture: "string",
+                    is_public: true,
+                    my_rating: "string",
+                    my_rating_id: "string",
+                    is_commentable: "string"
+                  }
+                ],
+                is_follower: "false",
+                is_following: userState.is_following,
+                is_follow_request_sent: userState.is_follow_request_sent,
+                is_follow_request_received: userState.is_follow_request_received,
+                count_of_followers: userState.count_of_followers,
+                count_of_followings: userState.count_of_followings,
+                count_of_follow_requests: userState.count_of_follow_requests
+              },
+              to_user: {
+                id: profileState.id,
+                username: profileState.username,
+                profile: [
+                  {
+                    id: profileState.id,
+                    name: profileState.profile[0].name,
+                    middle_name: profileState.profile[0].middle_name,
+                    last_name: profileState.profile[0].lastname,
+                    owner: "string",
+                    profile_picture: "string",
+                    is_public: true,
+                    my_rating: "string",
+                    my_rating_id: "string",
+                    is_commentable: "string"
+                  }
+                ],
+                is_follower: profileState.is_follower,
+                is_following: "false  ",
+                is_follow_request_sent: profileState.is_follow_request_sent,
+                is_follow_request_received: profileState.is_follow_request_received,
+                count_of_followers: profileState.count_of_followers,
+                count_of_followings: profileState.count_of_followings,
+                count_of_follow_requests: profileState.count_of_follow_requests
+              },
+              created: "datetime-local"
+            }
+
+            axios.post(`${config.API_URL}${config.Follow_url}${unfollowAction.id}${config.Unfollow_Path}`, unfollowAction, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            .then(resUnf => {
+
+              let newFollowers = []
+              this.state.followers.forEach(item => {
+                const member = item;
+                if(member.name + " " + member.last_name !== userState.profile[0].name +" "+ userState.profile[0].middle_name +" "+ userState.profile[0].lastname){
+
+                  newFollowers.push(member.name + " " + member.last_name); // ATTENTION : WE may want to add the middle names as well.
+                }
+                
+              });
+              
+              this.setState({followers: newFollowers})
+
+              console.log(this.state.followers)
+                
+
+            });
+
+            axios.delete(`${config.API_URL}${config.Follow_url}${profileState.id}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            .then(resDelete => {
+
+              
+            });
+
+
+
+            console.log(unfollowAction)
+
+          });
+
+
+        });
+
+
+  }
+
+  renderFollowRequest() {
+
+
+
+
+
+
+  }
+
 }

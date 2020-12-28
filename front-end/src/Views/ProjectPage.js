@@ -325,6 +325,7 @@ export default class HomePage extends Component {
             logout={() => { this.props.history.push(config.Login_Path) }}
             pushProfile={this.goToProfile}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
+            history ={this.props.history}
           />
             <Profilebar
               name={this.state.username}

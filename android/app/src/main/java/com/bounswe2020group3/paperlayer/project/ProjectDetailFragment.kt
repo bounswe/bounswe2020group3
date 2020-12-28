@@ -192,12 +192,11 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
             this.fragmentView.textViewEvents.text=project.event.title
         }
 
-
-//        //Adding Members
-//        for (member in project.members!!){
-//                addMemberCard(member.username)
-//                submitMemberCardList()
-//        }
+        //Adding Members
+        for (member in project.members.orEmpty()){
+                addMemberCard(member.username)
+                submitMemberCardList()
+        }
 
         //Tag Field Text
         if(project.tags.isEmpty()) {
@@ -220,6 +219,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         {
             this.fragmentView.buttonEditProject.visibility= GONE
             this.fragmentView.buttonInvite.visibility= GONE
+            this.fragmentView.imageViewCollabRequests.visibility = GONE
         }
 
         writeLogMessage("i",TAG,"Project UI Updated")

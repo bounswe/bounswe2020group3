@@ -158,7 +158,7 @@
     <fragment
         android:id="@+id/inviteFragment"
         android:name="com.bounswe2020group3.paperlayer.invite.InviteFragment"
-        android:label="fragment_invite"
+        android:label="Invite"
         tools:layout="@layout/fragment_invite" >
         <action
             android:id="@+id/navigateToProjectDetailsFromInvite"
@@ -225,7 +225,7 @@
     <fragment
         android:id="@+id/collabFragment"
         android:name="com.bounswe2020group3.paperlayer.collaborationRequests.CollabFragment"
-        android:label="CollabFragment" >
+        android:label="Collaboration Requests" >
         <action
             android:id="@+id/navigateToUserFromCollabs"
             app:destination="@id/userFragment" />

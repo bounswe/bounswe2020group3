@@ -7,65 +7,68 @@
     android:background="@drawable/border_with_corner_radius"
     android:clickable="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         style="@style/Block"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="@dimen/padding_sm"
+        android:paddingHorizontal="@dimen/padding_md"
         android:background="@drawable/gradient">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/username"
-            android:layout_width="325dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/border_with_corner_radius"
-            android:text="username"
-            android:textSize="20dp"
-            app:layout_constraintStart_toEndOf="@+id/image"
-            app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/materialCardView"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center"
+            app:cardBackgroundColor="@color/colorWhite"
+            app:cardCornerRadius="250dp">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/name"
-            android:layout_width="325dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/border_with_corner_radius"
-            android:text="name"
-            android:textSize="16dp"
-            app:layout_constraintStart_toEndOf="@+id/image"
-            app:layout_constraintTop_toBottomOf="@+id/username" />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                app:cardCornerRadius="250dp">
 
-        <TextView
-            android:id="@+id/expertise"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
-            android:text="expertise"
-            app:layout_constraintStart_toEndOf="@+id/image"
-            app:layout_constraintTop_toBottomOf="@+id/name" />
+                <ImageView
+                    android:id="@+id/imageViewInviteAvatar"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:contentDescription="@string/profile_avatar_description"
+                    android:padding="0dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_avatar" />
 
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="91dp"
-            android:layout_height="103dp"
-            android:layout_marginStart="2dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            </com.google.android.material.card.MaterialCardView>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/margin_md"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/colorBlack"
+                android:text="name"
+                android:textSize="16dp"/>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/inviteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="136dp"
-            android:layout_marginTop="8dp"
-            android:text="INVITE"
-            app:layout_constraintStart_toEndOf="@+id/expertise"
-            app:layout_constraintTop_toBottomOf="@+id/name" />
+            android:layout_gravity="center_vertical"
+            android:text="INVITE"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

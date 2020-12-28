@@ -17,6 +17,7 @@ const config = {
   User_Path: "/api/users/",
   Event_Path: "/events",
   Follow_url:"/api/follow/",
+  Unfollow_Path: "/unfollow/",
   Follow_request_url:"/api/follow_request/",
   Milestone_url:"/api/milestones/",
   OwnMilestoneUrl : "/api/milestones/get_user_milestones/",

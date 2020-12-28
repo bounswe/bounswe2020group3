@@ -25,7 +25,7 @@ class RegisterGenericAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
-        sendConfirm(user)
+        #sendConfirm(user)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

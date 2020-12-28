@@ -3,7 +3,11 @@ from api.serializers.notification import Notification, \
     NotificationSerializer, \
     NotificationRequestSerializer, \
     NotificationInviteSerializer, \
-    NotificationProjectSerializer
+    NotificationProjectSerializer, \
+    NotificationFollowSerializer, \
+    NotificationFollowRequestSerializer, \
+    NotificationUserSerializer
+
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -25,22 +29,50 @@ class NotificationViewSet(viewsets.GenericViewSet,
             filter(description='Request')
         project_queryset = self.request.user.notifications. \
             filter(description='Project')
+
+        follow_queryset = self.request.user.notifications. \
+            filter(description='Follow')
+
+        follow_request_queryset = self.request.user.notifications. \
+            filter(description='Follow Request')
+
+        user_queryset = self.request.user.notifications. \
+            filter(description='User')
+
+        '''
         invite_serializer = NotificationInviteSerializer(invite_queryset,
                                                          many=True)
         request_serializer = NotificationRequestSerializer(request_queryset,
-                                                           many=True)
+                                                         many=True)
+        '''
         project_serializer = NotificationProjectSerializer(project_queryset,
                                                            many=True)
+        '''
+        follow_serializer = NotificationFollowSerializer(follow_queryset,
+                                                         many=True)
+        follow_request_serializer = NotificationFollowRequestSerializer(follow_request_queryset,
+                                                                        many=True)
+        user_serializer = NotificationUserSerializer(user_queryset,
+                                                     many=True)
+        '''
 
         notifications = []
+        '''
         for invite in invite_serializer.data:
             notifications.append(invite)
         for request in request_serializer.data:
             notifications.append(request)
         for project in project_serializer.data:
             notifications.append(project)
+        for follow in follow_serializer.data:
+            notifications.append(follow)
+        for follow_request in follow_request_serializer.data:
+            notifications.append(follow_request)
+        for user in user_serializer.data:
+            notifications.append(user)
+        '''
         return Response(data={
-            'result': notifications
+            'result': project_serializer.data
         })
 
     @action(detail=False, methods=['GET'], name='all notifications',

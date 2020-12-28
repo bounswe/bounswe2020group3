@@ -1,7 +1,7 @@
 from api.models.notification import Notification
 from rest_framework import serializers
 from api.serializers.project import Project, ProjectPrivateSerializer
-from api.serializers.profile import Profile, ProfilePrivateSerializer
+from api.serializers.profile import Profile, ProfilePrivateNotificationSerializer
 from api.serializers.user import User, UserPrivateSerializer
 from api.serializers.collaboration_request import CollaborationRequest, \
     CollaborationRequestSerializer
@@ -11,6 +11,8 @@ from api.serializers.event import Event, EventSerializer
 from api.serializers.file import File, FileSerializer
 from api.serializers.milestone import Milestone, MilestoneSerializer
 from api.serializers.tag import Tag, TagSerializer
+from api.serializers.following import Following, FollowRequest, \
+    FollowerSerializer, FollowRequestSerializer
 
 
 class GenericNotificationRelatedField(serializers.RelatedField):
@@ -18,7 +20,7 @@ class GenericNotificationRelatedField(serializers.RelatedField):
         if isinstance(value, Project):
             serializer = ProjectPrivateSerializer(value)
         if isinstance(value, Profile):
-            serializer = ProfilePrivateSerializer(value)
+            serializer = ProfilePrivateNotificationSerializer(value)
         if isinstance(value, User):
             serializer = UserPrivateSerializer(value)
         if isinstance(value, CollaborationRequest):
@@ -33,6 +35,10 @@ class GenericNotificationRelatedField(serializers.RelatedField):
             serializer = MilestoneSerializer(value)
         if isinstance(value, Tag):
             serializer = TagSerializer(value)
+        if isinstance(value, Following):
+            serializer = FollowerSerializer(value)
+        if isinstance(value, FollowRequest):
+            serializer = FollowRequestSerializer(value)
 
         return serializer.data
 
@@ -94,4 +100,49 @@ class NotificationProjectSerializer(serializers.ModelSerializer):
         model = Notification
         fields = ['id', 'actor', 'description',
                   'recipient', 'project',
+                  'unread', 'verb', 'timestamp']
+
+
+class NotificationFollowSerializer(serializers.ModelSerializer):
+    """
+    Notification serializer
+    """
+    actor = GenericNotificationRelatedField(read_only=True)
+    recipient = GenericNotificationRelatedField(read_only=True)
+    following = GenericNotificationRelatedField(read_only=True)
+
+    class Meta:
+        model = Notification
+        fields = ['id', 'actor', 'description',
+                  'recipient', 'following',
+                  'unread', 'verb', 'timestamp']
+
+
+class NotificationFollowRequestSerializer(serializers.ModelSerializer):
+    """
+    Notification serializer
+    """
+    actor = GenericNotificationRelatedField(read_only=True)
+    recipient = GenericNotificationRelatedField(read_only=True)
+    follow_request = GenericNotificationRelatedField(read_only=True)
+
+    class Meta:
+        model = Notification
+        fields = ['id', 'actor', 'description',
+                  'recipient', 'follow_request',
+                  'unread', 'verb', 'timestamp']
+
+
+class NotificationUserSerializer(serializers.ModelSerializer):
+    """
+    Notification serializer
+    """
+    actor = GenericNotificationRelatedField(read_only=True)
+    recipient = GenericNotificationRelatedField(read_only=True)
+    user = GenericNotificationRelatedField(read_only=True)
+
+    class Meta:
+        model = Notification
+        fields = ['id', 'actor', 'description',
+                  'recipient', 'user',
                   'unread', 'verb', 'timestamp']

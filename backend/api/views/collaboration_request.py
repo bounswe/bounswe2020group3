@@ -59,6 +59,7 @@ class CollaborationRequestViewSet(viewsets.ModelViewSet):
                         verb="wants to join your Project {}".
                         format(project.name),
                         recipient=user,
+                        target=col_request,
                         description="Request"
                         )
 

@@ -43,27 +43,7 @@ class MilestonePresenter @Inject constructor(private var model: HomeContract.Mod
         },{error->
         this.view?.writeLogMessage("e", TAG,"Error in fetching all milestones of owner $ownerId, $error")
     })
-    /*
-        this.view?.writeLogMessage("i", TAG, "Fetching all projects of owner $ownerId ...")
-        val getProjectObservable = model.getAllProjects(ownerId).subscribe(
-                { projectList ->
-                    for (project in projectList){
-                        var list = project.milestones
-                        this.view?.writeLogMessage("i", TAG,"Project Fetched + " + project.project_type)
-                        for(milestone in list){
-                            this.view?.writeLogMessage("i", TAG,"milestone Fetched + " + milestone.description)
 
-                            this.view?.addCard(MilestoneCard(project.name,milestone.description,project.id,milestone.date))
-                        }
-                        this.view?.writeLogMessage("i", TAG,"Project Fetched + " + project.project_type)
-                    }
-                    this.view?.writeLogMessage("i", TAG,"Fetching finished.")
-                    this.view?.submitCardList()
-                },
-                { error ->
-                    this.view?.writeLogMessage("e", TAG,"Error in fetching all projects of owner $ownerId")
-                }
-        )*/
         disposable.add(getMilestonesObservable)
     }
 

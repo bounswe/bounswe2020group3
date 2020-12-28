@@ -20,14 +20,14 @@
             android:id="@+id/tabItemProject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Project"
+            android:text="@string/project_detail_tab_title_project"
             android:icon="@drawable/ic_project"
             />
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItemMembers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Members"
+            android:text="@string/project_detail_tab_title_member"
             android:icon="@drawable/ic_groups"
             />
     </com.google.android.material.tabs.TabLayout>
@@ -39,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <LinearLayout
                 android:id="@+id/linearLayoutProperties"
                 android:layout_width="match_parent"
@@ -50,56 +51,70 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardViewTitleSettings"
                         android:layout_width="match_parent"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        app:cardElevation="5dp"
-                        android:layout_margin="2dp">
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        app:cardElevation="5dp">
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
                             android:background="@drawable/gradient"
+                            android:orientation="horizontal"
                             android:padding="16dp">
+
                             <TextView
                                 android:id="@+id/projectTitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:text="Project Title"
-                                android:gravity="center_vertical"
                                 android:layout_weight="8"
-                                android:textAppearance="?attr/textAppearanceHeadline5"
-                                />
+                                android:gravity="center_vertical"
+                                android:text="Project Title"
+                                android:textAppearance="?attr/textAppearanceHeadline5" />
+
+                            <ImageView
+                                android:id="@+id/imageViewCollabRequests"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="8"
+                                android:src="@drawable/ic_group_white" />
+
                             <ImageButton
                                 android:id="@+id/buttonEditProject"
-                                android:background="@null"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_weight="2"
-                                android:tooltipText="Edit Project"
+                                android:background="@null"
                                 android:src="@drawable/ic_baseline_settings_24"
-                                android:tint="#000000" />
+                                android:tint="#000000"
+                                android:tooltipText="Edit Project" />
 
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardViewOwnerDateTypeState"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardElevation="5dp"
-                        android:layout_margin="2dp">
+                        android:layout_margin="2dp"
+                        app:cardElevation="5dp">
+
                         <TableLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
                             android:background="@drawable/gradient"
+                            android:orientation="vertical"
                             android:padding="16dp">
+
                             <TableRow
                                 android:id="@+id/firstRow"
                                 android:layout_width="wrap_content"
@@ -108,18 +123,18 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/project_owner_title"
                                     android:layout_weight="0.5"
-                                    android:textAppearance="?attr/textAppearanceHeadline6"
-                                    />
+                                    android:text="@string/project_owner_title"
+                                    android:textAppearance="?attr/textAppearanceHeadline6" />
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/project_due_date_title"
                                     android:layout_weight="0.5"
-                                    android:textAppearance="?attr/textAppearanceHeadline6"
-                                    />
+                                    android:text="@string/project_due_date_title"
+                                    android:textAppearance="?attr/textAppearanceHeadline6" />
                             </TableRow>
+
                             <TableRow
                                 android:id="@+id/secondRow"
                                 android:layout_width="wrap_content"
@@ -133,8 +148,8 @@
                                     android:layout_weight="0.5"
                                     android:text="User"
                                     android:textAppearance="?attr/textAppearanceBody2"
-                                    android:textColor="?android:attr/textColorSecondary"
-                                    />
+                                    android:textColor="?android:attr/textColorSecondary" />
+
                                 <TextView
                                     android:id="@+id/projectDue"
                                     android:layout_width="wrap_content"
@@ -143,9 +158,9 @@
                                     android:layout_weight="0.5"
                                     android:text="20.11.2020"
                                     android:textAppearance="?attr/textAppearanceBody2"
-                                    android:textColor="?android:attr/textColorSecondary"
-                                    />
+                                    android:textColor="?android:attr/textColorSecondary" />
                             </TableRow>
+
                             <TableRow
                                 android:id="@+id/thirdRow"
                                 android:layout_width="wrap_content"
@@ -157,17 +172,17 @@
                                     android:layout_marginTop="16dp"
                                     android:layout_weight="0.5"
                                     android:text="@string/project_type_title"
-                                    android:textAppearance="?attr/textAppearanceHeadline6"
-                                    />
+                                    android:textAppearance="?attr/textAppearanceHeadline6" />
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="16dp"
                                     android:layout_weight="0.5"
                                     android:text="@string/project_state_title"
-                                    android:textAppearance="?attr/textAppearanceHeadline6"
-                                    />
+                                    android:textAppearance="?attr/textAppearanceHeadline6" />
                             </TableRow>
+
                             <TableRow
                                 android:id="@+id/fourthRow"
                                 android:layout_width="wrap_content"
@@ -181,8 +196,8 @@
                                     android:layout_weight="0.5"
                                     android:text="Journal"
                                     android:textAppearance="?attr/textAppearanceBody2"
-                                    android:textColor="?android:attr/textColorSecondary"
-                                    />
+                                    android:textColor="?android:attr/textColorSecondary" />
+
                                 <TextView
                                     android:id="@+id/projectState"
                                     android:layout_width="wrap_content"
@@ -191,8 +206,7 @@
                                     android:layout_weight="0.5"
                                     android:text="Done"
                                     android:textAppearance="?attr/textAppearanceBody2"
-                                    android:textColor="?android:attr/textColorSecondary"
-                                    />
+                                    android:textColor="?android:attr/textColorSecondary" />
                             </TableRow>
                         </TableLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -207,9 +221,10 @@
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardViewDescription"
                         android:layout_width="match_parent"
-                        app:cardElevation="5dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="2dp">
+                        android:layout_margin="2dp"
+                        app:cardElevation="5dp">
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -221,13 +236,56 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/project_description_title"
                                 android:layout_gravity="left"
                                 android:gravity="center_vertical"
-                                android:textAppearance="?attr/textAppearanceHeadline5"
-                                />
+                                android:text="@string/project_description_title"
+                                android:textAppearance="?attr/textAppearanceHeadline5" />
+
                             <TextView
                                 android:id="@+id/projectDescription"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:layout_marginTop="8dp"
+                                android:gravity="center_vertical"
+                                android:text=""
+                                android:textAppearance="?attr/textAppearanceBody2"
+                                android:textColor="?android:attr/textColorSecondary" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardViewRequirements"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        app:cardElevation="5dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/gradient"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <!-- Title, secondary and supporting text -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/project_requirements_title"
+                                android:layout_gravity="left"
+                                android:gravity="center_vertical"
+                                android:textAppearance="?attr/textAppearanceHeadline5" />
+
+                            <TextView
+                                android:id="@+id/projectRequirements"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
@@ -235,8 +293,56 @@
                                 android:layout_gravity="left"
                                 android:text=""
                                 android:textAppearance="?attr/textAppearanceBody2"
+                                android:textColor="?android:attr/textColorSecondary" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardViewTag"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        app:cardElevation="5dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/gradient"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <!-- Title, secondary and supporting text -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/project_detail_tag_title"
+                                android:gravity="center_vertical"
+                                android:textAppearance="?attr/textAppearanceHeadline5" />
+
+                            <TextView
+                                android:id="@+id/textViewTags"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:gravity="center_vertical"
+                                android:text="@string/project_detail_tag_not_found"
+                                android:textAppearance="?attr/textAppearanceBody2"
                                 android:textColor="?android:attr/textColorSecondary"
                                 />
+
+                            <com.google.android.material.chip.ChipGroup
+                                android:id="@+id/chipGroupTags"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                            </com.google.android.material.chip.ChipGroup>
+
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
@@ -264,7 +370,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Events"
+                                android:text="@string/project_detail_event_title"
                                 android:gravity="center_vertical"
                                 android:textAppearance="?attr/textAppearanceHeadline5"
                                 />
@@ -276,8 +382,7 @@
                                 android:gravity="center_vertical"
                                 android:text=""
                                 android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
+                                android:textColor="?android:attr/textColorSecondary" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
@@ -291,9 +396,10 @@
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardViewMilestone"
                         android:layout_width="match_parent"
-                        app:cardElevation="5dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="2dp">
+                        android:layout_margin="2dp"
+                        app:cardElevation="5dp">
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -305,10 +411,10 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Milestones"
+                                android:text="@string/project_detail_milestone_title"
                                 android:gravity="center_vertical"
-                                android:textAppearance="?attr/textAppearanceHeadline5"
-                                />
+                                android:textAppearance="?attr/textAppearanceHeadline5" />
+
                             <TextView
                                 android:id="@+id/textViewMilestones"
                                 android:layout_width="wrap_content"
@@ -317,52 +423,11 @@
                                 android:gravity="center_vertical"
                                 android:text=""
                                 android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
+                                android:textColor="?android:attr/textColorSecondary" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cardViewTag"
-                        android:layout_width="match_parent"
-                        app:cardElevation="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/gradient"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-
-                            <!-- Title, secondary and supporting text -->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Tags"
-                                android:gravity="center_vertical"
-                                android:textAppearance="?attr/textAppearanceHeadline5"
-                                />
-                            <TextView
-                                android:id="@+id/textViewTags"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:gravity="center_vertical"
-                                android:text=""
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -372,18 +437,19 @@
                 android:orientation="vertical"
                 android:visibility="gone"
                 tools:visibility="gone">
-                <com.google.android.material.textview.MaterialTextView
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewProjectMembers"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Members Layout"/>
+                    android:layout_height="match_parent" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonInvite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Invite Member"/>
+                    android:text="Invite Member" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

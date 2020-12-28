@@ -6,8 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.MainActivity
@@ -69,15 +71,15 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        //projectId = arguments?.getInt("projectID")!!
-        projectId =2;
+        projectId = arguments?.getInt("projectID")!!
         val view = inflater.inflate(R.layout.fragment_invite, container, false)
         this.fragment_view=view
         initRecyclerView()
         this.presenter.bind(this)
-        //if (projectId != null && projectId != -1) {
-            //this.presenter.fetchAllInvited(projectId) //fetch project and update ui
-        //}
+
+        view.findViewById<Button>(R.id.buttonOK).setOnClickListener {
+            Navigation.findNavController(view).navigateUp()
+        }
         return view
     }
 
@@ -86,7 +88,7 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
         inviteCardList.clear()
         inviteAdapter.submitList(this.inviteCardList)
         inviteAdapter.notifyDataSetChanged() //notify to update recyclerview
-        }
+    }
     override fun submitUserCardList() {
         var message : String =""
         for (invite in inviteCardList){
@@ -123,12 +125,7 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
             layoutManager = viewManager
             adapter = inviteAdapter
         }
-        /*
-        this.recyclerView= fragmentView.findViewById(R.id.recyclerViewInviteUsers)!!
-        this.recyclerView.layoutManager= LinearLayoutManager(this.context)
-        this.inviteAdapter= UserInviteAdapter(this)
-        this.recyclerView.adapter=inviteAdapter
-        */
+
 
     }
 
@@ -138,16 +135,14 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
     }
 
 
-    override fun addInvited(id: Int) {
-        TODO("Not yet implemented")
-    }
 
-    override fun addUserCard(username: String, name : String, expertise: String, photoURL : String, id : Int, invited : Boolean) {
+
+    override fun addUserCard(username: String, name : String, expertise: String?, photoURL : String?, id : Int, invited : Boolean) {
         inviteCardList.add(
-            InviteCard(
-                username,name,
-                expertise,
-                 photoURL,id,invited)
+                InviteCard(
+                        username,name,
+                        expertise,
+                        photoURL,id,invited)
         )
     }
 

@@ -12,12 +12,13 @@ data class Project (
         @field:Json(name = "description") var description: String,
         @field:Json(name = "requirements") var requirements: String,
         @field:Json(name = "owner") var owner: String,
-        @field:Json(name = "members") var members: List<User>,
+        @field:Json(name = "members") var members: List<User>?,
         @field:Json(name = "is_public") var is_public: Boolean,
         @field:Json(name = "state") var state: String,
         @field:Json(name = "project_type") var project_type: String,
         @field:Json(name = "due_date") var due_date: String,
         @field:Json(name = "event") var event: Event,
         @field:Json(name = "tags") var tags: List<Tag>,
-        @field:Json(name = "milestones") var milestones: List<Milestone>
+        @field:Json(name = "milestones") var milestones: List<Milestone>,
+        @field:Json(name = "owner_id") var ownerId: Int
 ) : Parcelable

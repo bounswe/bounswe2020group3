@@ -62,8 +62,10 @@ class ProjectAdaptor (var clickListener: OnCardClickListener) : RecyclerView.Ada
                     action.onCollabButtonClick(item, adapterPosition)
                 }
             }
-            else if(item.projectState !="open for collaborators" )
+            else if(item.projectState !="open for collaborators" ) {
                 buttonCollab.text = "Not looking for new collaborators"
+                buttonCollab.visibility = View.GONE
+            }
             else {
                 buttonCollab.text = "Collaborate"
 

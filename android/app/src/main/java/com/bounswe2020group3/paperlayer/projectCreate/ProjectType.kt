@@ -6,7 +6,7 @@ import kotlin.collections.ArrayList
 enum class ProjectType(val key: Int, val value: String) {
     CONFERENCE(0, "Conference"),
     INSTITUTION(1, "Instutution"), // Tell backend to fix typo
-    JOURNAL(3, "Journal");
+    JOURNAL(2, "Journal");
 
     companion object {
 
@@ -15,7 +15,7 @@ enum class ProjectType(val key: Int, val value: String) {
                 CONFERENCE.value.toLowerCase(Locale.ROOT) -> CONFERENCE
                 INSTITUTION.value.toLowerCase(Locale.ROOT) -> INSTITUTION
                 JOURNAL.value.toLowerCase(Locale.ROOT) -> JOURNAL
-                else -> null
+                else -> CONFERENCE
             }
         }
 

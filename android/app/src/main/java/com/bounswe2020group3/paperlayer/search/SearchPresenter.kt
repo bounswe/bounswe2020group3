@@ -5,6 +5,7 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
+import com.bounswe2020group3.paperlayer.project.data.Tag
 import com.bounswe2020group3.paperlayer.search.data.Search
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -47,8 +48,7 @@ class SearchPresenter @Inject constructor(private var model:SearchContract.Model
 
     override fun navigateToEvent(eventID: Int) {
         val bundle = bundleOf("eventID" to eventID )
-        //FIX After Event page added
-        //view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectFromProjectMainFragment,bundle) }
+        view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToEventDetailFromSearch,bundle) }
     }
 
     override fun searchRequest(searchFilter: Search) {
@@ -66,7 +66,7 @@ class SearchPresenter @Inject constructor(private var model:SearchContract.Model
                                     "journal" -> projectIconType = 2
                                     else -> projectIconType = 3
                                 }
-                                this.view?.addSearchCard(0, projectIconType, project.name, project.description, project.owner, listOf<String>(), project.id)
+                                this.view?.addSearchCard(0, projectIconType, project.name, project.description, project.owner, project.tags, project.id)
                                 this.view?.writeLogMessage("i", TAG, "Project Fetched + " + project.name)
                             }
                         }
@@ -77,14 +77,14 @@ class SearchPresenter @Inject constructor(private var model:SearchContract.Model
                                 var owner= "No owner"
                                 title = profile.name + profile.lastName
                                 owner= profile.owner.toString()
-                                this.view?.addSearchCard(1, 0, title, "", owner, listOf<String>(), profile.id)
+                                this.view?.addSearchCard(1, 0, title, "", owner, listOf<Tag>(), profile.ownerId)
                                 this.view?.writeLogMessage("i", TAG, "User Fetched + ")
                             }
                         }
                         "event" -> {
                             //event search
                             for (event in searchResponse.events!!) {
-                                this.view?.addSearchCard(2,0,event.title,event.description,event.date,listOf<String>(),event.id)
+                                this.view?.addSearchCard(2,0,event.title,event.description,event.date,listOf<Tag>(),event.id)
                                 this.view?.writeLogMessage("i", TAG,"Event Fetched")
                             }
                         }

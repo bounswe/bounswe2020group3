@@ -48,10 +48,10 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
             true
         }
 
-        initRecycler()
-        resetCardList()
         this.presenter.bind(this)
         initRecyclerView()
+        resetCardList()
+
         writeLogMessage("i",TAG,"event fragment has been created.")
         return view
     }
@@ -63,7 +63,6 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
     override fun showToast(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
-    fun initRecycler(){}
     override fun writeLogMessage(type: String, tag: String, message: String) {
         when(type){
             "e"-> Log.e(tag,message) //error
@@ -111,7 +110,8 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
     override fun submitCardList() {
         viewAdapter.submitList(this.projectslist)
         viewAdapter.notifyDataSetChanged() //notify to update recyclerview
-        writeLogMessage("i", TAG,"Project Card List Updated! " + projectslist.size)    }
+        writeLogMessage("i", TAG,"Project Card List Updated! " + projectslist.size)
+    }
 
     override fun addCard(card: ProjectUpdateCard) {
         projectslist.add(card)

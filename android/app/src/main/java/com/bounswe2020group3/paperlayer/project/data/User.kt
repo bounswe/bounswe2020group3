@@ -9,8 +9,21 @@ data class User (
     var id: Int,
     @field:Json(name = "username")
     var username: String,
-    @field:Json(name = "email")
-    var email: String,
     @field:Json(name = "profile")
-    var members: List<Profile>
+    var profile: List<Profile>,
+    @field:Json(name = "is_follower")
+    var is_follower: Boolean,
+    @field:Json(name = "is_following")
+    var is_following: Boolean,
+    @field:Json(name = "is_follow_request_sent")
+    var is_follow_request_sent: Boolean,
+    @field:Json(name = "is_follow_request_received")
+    var is_follow_request_received: Boolean,
+    @field:Json(name = "count_of_followers")
+    var count_of_followers: Int,
+    @field:Json(name = "count_of_followings")
+    var count_of_followings: Int,
+    @field:Json(name = "count_of_follow_requests")
+    var count_of_follow_requests: Int
+
 ) : Parcelable

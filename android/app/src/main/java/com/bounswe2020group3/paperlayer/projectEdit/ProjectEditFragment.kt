@@ -9,11 +9,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.core.os.bundleOf
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.project.data.Event
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.projectCreate.ProjectState
 import com.bounswe2020group3.paperlayer.projectCreate.ProjectType
@@ -40,6 +40,9 @@ class ProjectEditFragment : Fragment(), ProjectEditContract.View {
     lateinit var presenter: ProjectEditContract.Presenter
 
     private var project: Project? = null
+    private var tagIdList = mutableListOf<Int>()
+    private var eventID: Int? = null
+    private var events = listOf<Event>()
 
     companion object {
         const val project_key = "PROJECT"
@@ -139,6 +142,12 @@ class ProjectEditFragment : Fragment(), ProjectEditContract.View {
         textViewDate.text = project?.due_date
         textViewDate.setTextColor(resources.getColor(R.color.colorBlack))
 
+        presenter.fetchEvents()
+
+        buttonShowTags.setOnClickListener {
+            presenter.fetchTags()
+        }
+
         val builder = MaterialDatePicker.Builder.datePicker()
         builder.setTitleText("Select a date")
         val datePicker = builder.build()
@@ -157,13 +166,12 @@ class ProjectEditFragment : Fragment(), ProjectEditContract.View {
                     name = editTextProjectName.text.toString(),
                     description = editTextDescription.text.toString(),
                     requirements = editTextRequirements.text.toString(),
-                    members = null,
                     is_public = isPublic,
                     state = projectState,
                     project_type = projectType,
                     due_date = textViewDate.text.toString(),
-                    events = null,
-                    tags = null,
+                    event = eventID,
+                    tags = tagIdList,
             )
             if(project != null) {
                 presenter.editProject(project!!.id, projectEditRequest)
@@ -183,8 +191,6 @@ class ProjectEditFragment : Fragment(), ProjectEditContract.View {
         layoutSuccess.visibility = View.VISIBLE
     }
 
-
-
     override fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
@@ -198,6 +204,73 @@ class ProjectEditFragment : Fragment(), ProjectEditContract.View {
     private fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
+    }
+
+    override fun createEventSpinner() {
+        events = presenter.getEventList()
+
+        val eventTitleList = arrayListOf<String>()
+        events.forEach {
+            eventTitleList.add(it.title)
+        }
+
+        val projectEventAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, eventTitleList)
+        projectEventAdapter.setDropDownViewResource(R.layout.spinner_item)
+        spinnerProjectEvent.adapter = projectEventAdapter
+
+        spinnerProjectEvent.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+            ) {
+                eventID = events.find {
+                    it.title == parent?.getItemAtPosition(position)
+                }?.id
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Timber.d("Nothing selected")
+            }
+        }
+
+        project?.event?.title?.let {
+            spinnerProjectEvent.setSelection(eventTitleList.indexOf(it))
+        }
+    }
+
+    override fun createTagSelectDialog() {
+        val tags = presenter.getTagList()
+        val tagTitles = arrayOfNulls<String>(tags.size)
+        val arrayChecked = BooleanArray(tags.size)
+        tags.forEachIndexed { index, tag ->
+            tagTitles[index] = tag.name
+            arrayChecked[index] = false
+        }
+
+        presenter.getCurrentTagIndex(project?.tags).forEachIndexed { index, i ->
+            arrayChecked[i] = true
+        }
+
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(resources.getString(R.string.select_tag_title))
+
+        builder.setMultiChoiceItems(tagTitles, arrayChecked) { _, _, _ -> }
+
+        builder.setPositiveButton("OK") { _, _ ->
+            var numberOfChecked = 0
+            arrayChecked.forEachIndexed { index, item ->
+                if (item) {
+                    numberOfChecked += 1
+                    tagIdList.add(tags[index].id)
+                }
+            }
+            textViewTags.text = resources.getString(R.string.selected_tag).format(numberOfChecked)
+        }
+
+        val dialog = builder.create()
+        dialog.show()
     }
 
     override fun showProgress(show: Boolean) {

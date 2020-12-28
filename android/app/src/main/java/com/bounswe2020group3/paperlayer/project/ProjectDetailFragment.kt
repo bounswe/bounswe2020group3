@@ -192,11 +192,12 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
             this.fragmentView.textViewEvents.text=project.event.title
         }
 
-        //Adding Members
-        for (member in project.members!!){
-                addMemberCard(member.username)
-                submitMemberCardList()
-        }
+
+//        //Adding Members
+//        for (member in project.members!!){
+//                addMemberCard(member.username)
+//                submitMemberCardList()
+//        }
 
         //Tag Field Text
         if(project.tags.isEmpty()) {

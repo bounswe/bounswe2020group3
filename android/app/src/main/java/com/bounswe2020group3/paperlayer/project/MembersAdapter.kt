@@ -3,9 +3,11 @@ package com.bounswe2020group3.paperlayer.project
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.R
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.layout_list_item_project_member.view.*
 
 interface OnMemberCardClickListener {
@@ -45,12 +47,19 @@ class MembersAdapter(val clickListener: OnMemberCardClickListener): RecyclerView
     ): RecyclerView.ViewHolder(itemView) {
 
         var memberUsername: TextView =itemView.textViewProjectMemberUsername
+        var memberAvatar: ImageView = itemView.imageViewMemberAvatar
 
         fun bind(memberCard: MemberCard, clickListener: OnMemberCardClickListener){
-            memberUsername.setText(memberCard.username)
+            val fullName = "${memberCard.user.profile[0].name} ${memberCard.user.profile[0].lastName}"
+            memberUsername.text = fullName
+
+            val imageUrl = memberCard.user.profile[0].profilePicture
+            if (imageUrl != null && imageUrl != "") {
+                Picasso.get().load(imageUrl).into(memberAvatar)
+            }
 
             itemView.setOnClickListener {
-                clickListener.onCardClickListener(memberCard.userId)
+                clickListener.onCardClickListener(memberCard.user.id)
             }
         }
 

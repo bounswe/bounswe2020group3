@@ -516,6 +516,7 @@ export default class ProfilePage extends Component {
             lastName={this.state.selfLastName}
             photoUrl={getPhoto()}
             goToProjectCreation={this.goToProjectCreation}
+            goToEventCreation={() => {this.props.history.push(config.Event_Creation_Path);}}
             goToProfile={() => {
               this.props.history.push("/profile/" + getUserId()); 
               window.location.reload(false);

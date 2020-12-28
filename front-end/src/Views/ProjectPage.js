@@ -56,6 +56,7 @@ export default class HomePage extends Component {
       showInviteColab: false,
       tagQuery: "",
       colabQuery: "",
+      colabRequests: [],
       currTag: [],
       allTags: [],
       isMember: false,
@@ -128,7 +129,8 @@ export default class HomePage extends Component {
         name = name + " " + mname;
         this.setState({ username: name, userlastname: lastname });
         });
-  };
+  }
+
   isMember = () =>{
       const { membersData } = this.state;
       let ids = []
@@ -150,7 +152,7 @@ export default class HomePage extends Component {
     this.getProject(project_id);
     this.getProfile();
     this.getTags();
-    this.getColabs();
+    this.getColabRequests();
   };
 
   renderContributor() {
@@ -267,6 +269,27 @@ export default class HomePage extends Component {
         }); 
   }
 
+  renderColabRequests = () => {
+    const { isMember, colabRequests } = this.state;
+    if (colabRequests.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaboration Requests</Typography>)
+    if(isMember){
+      return colabRequests.map((item) => {
+        return (
+          <Typography variant="h6" color="primary" style={{ cursor: "pointer", width: "100%", textAlign: "left", textTransform:"capitalize" }}>{item}</Typography>
+        )
+      });
+
+    }
+  }
+
+  submitColabAccept = () => {
+
+  }
+
+  submitColabReject = () => {
+
+  }
+
   renderRelatedEvents = () => {
     const { isPublic } = this.state;
     if (isPublic)
@@ -349,6 +372,12 @@ export default class HomePage extends Component {
               {this.state.isMember ? 
                 <Grid item sm={12} style={{ minHeight: "10vh" }}>
                 {/* <Typography variant="h5" color="primary">Tags</Typography> */}
+                <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: 'scroll', margin: "5px 0" }}>
+                <Typography variant="h6" color="primary">Collaboration Requests</Typography>
+                <Paper elevation={6} style={{ width: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+                {this.renderColabRequests()}
+                </Paper>
+              </Grid>
                 <Paper elevation={6}
                   style={{ width: "90%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
                   borderColor="primary"
@@ -523,11 +552,14 @@ export default class HomePage extends Component {
     }
   }
 
-  getColabs = () => {
-    axios.get(`${config.API_URL}/api/collaboration_invites/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+  getColabRequests = () => {
+    const { colabRequests } = this.state;
+    axios.get(`${config.API_URL}/api/collaboration_requests/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
-        let colabs = res.data;
-        this.setState({ allColabs: colabs });
+        let allColabRequests = res.data;
+        for(let i =0; i< allColabRequests.length; i++){
+          colabRequests.push(allColabRequests[i]);
+        }
       })
   }
   

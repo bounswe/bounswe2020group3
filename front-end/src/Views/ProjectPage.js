@@ -53,10 +53,13 @@ export default class HomePage extends Component {
       photoUrl: "",
       projectId: "",
       showAddTag: false,
+      showInviteColab: false,
       tagQuery: "",
+      colabQuery: "",
       currTag: [],
       allTags: [],
       isMember: false,
+      isNotMember: true,
       isPublic: false,
       owner: ""
     }
@@ -70,6 +73,9 @@ export default class HomePage extends Component {
   };
   handleTagQuery = (e) => {
     this.setState({ tagQuery: e.target.value })
+  };
+  handleColabQuery = (e) => {
+    this.setState({ colabQuery: e.target.value })
   };
   goToProfile = () => {
     this.props.history.push("/profile/" + getUserId());
@@ -122,8 +128,8 @@ export default class HomePage extends Component {
         name = name + " " + mname;
         this.setState({ username: name, userlastname: lastname });
         });
-    };
-    isMember = () =>{
+  };
+  isMember = () =>{
       const { membersData } = this.state;
       let ids = []
       for(let i = 0 ; i < membersData.length ; i++){
@@ -133,7 +139,10 @@ export default class HomePage extends Component {
       if( ids.includes(parseInt(getProfileId() ) ) ){
         this.setState({isMember :true})
       }
-    }
+      if( ids.includes(parseInt(getProfileId() ) ) ){
+        this.setState({isNotMember :false})
+      }
+  }
 
   componentDidMount() {
     var project_id = this.props.location.pathname.split('/')[2];
@@ -141,6 +150,7 @@ export default class HomePage extends Component {
     this.getProject(project_id);
     this.getProfile();
     this.getTags();
+    this.getColabs();
   };
 
   renderContributor() {
@@ -151,6 +161,7 @@ export default class HomePage extends Component {
       )
     });
   };
+
   renderEvents() {
     const { events } = this.state;
     if (events.length === 0) return (  <Typography variant='h6' color="textPrimary">No Related Events</Typography>)
@@ -161,6 +172,7 @@ export default class HomePage extends Component {
       </>)
     });
   };
+
   renderDeadlines() {
     const deadlines = JSON.parse(JSON.stringify(this.state.events));
     deadlines.push({ "deadline": this.state.due });
@@ -171,6 +183,7 @@ export default class HomePage extends Component {
       )
     });
   };
+
   renderTags() {
     const { tags } = this.state;
     return tags.map((item) => {
@@ -204,6 +217,7 @@ export default class HomePage extends Component {
 
     });
   }
+
   renderCollabQualifications = () => {
     const { isPublic } = this.state;
     return(
@@ -223,6 +237,7 @@ export default class HomePage extends Component {
       </>
     )
   }
+
   renderMembers = () => {
     const { isPublic } = this.state;
     if (isPublic)
@@ -244,6 +259,18 @@ export default class HomePage extends Component {
     </>)
     
   }
+
+  renderColabRequest = () => {
+    var proj_id = this.props.location.pathname.split('/')[2];
+    axios.post(`${config.API_URL}/api/collaboration_requests/`, { from_user: this.username, to_project: proj_id }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            .then(res => {
+              this.getProject(this.state.projectId);
+            })
+        }); 
+  }
+
   renderRelatedEvents = () => {
     const { isPublic } = this.state;
     if (isPublic)
@@ -362,12 +389,48 @@ export default class HomePage extends Component {
               :
               <></>
               }
+              <br />
+              {this.state.isMember ? 
+                <Grid item sm={12} style={{ minHeight: "10vh" }}>
+                <Paper elevation={6}
+                  style={{ width: "90%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
+                  borderColor="primary"
+                  border={1}>
+                    <>
+                      <Input
+                        type="text"
+                        color='primary'
+                        style={{ width: "90%", textTransform: "capitalize" }}
+                        placeholder="Please enter a collaborator"
+                        onChange={(e) => { this.handleColabQuery(e); }}
+                        value={this.state.colabQuery}
+                      />
+                      <br />
+                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitColabInviteQuery}>Invite Collaborator</Button>
+                    </>
+                </Paper>
+              </Grid>
+              :
+              <></>
+              }
+              <br />
+              {this.state.isNotMember ? 
+                <Grid item sm={12} style={{ minHeight: "10vh" }}>
+                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderColabRequest}>Send Colab Request</Button>
+                </Grid>
+              :
+              <></>
+              }
               
             </Grid>
           </Grid>
           <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
         </Grid>
       </Container>);
+  }
+
+  submitColabInviteQuery = () => {
+
   }
   
 
@@ -463,6 +526,15 @@ export default class HomePage extends Component {
       }
     }
   }
+
+  getColabs = () => {
+    axios.get(`${config.API_URL}/api/collaboration_invites/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let colabs = res.data;
+        this.setState({ allColabs: colabs });
+      })
+  }
+  
   //Delete this particular tag.
   deleteTag = (tag) => {
     const { tags } = this.state;

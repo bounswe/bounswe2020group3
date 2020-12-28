@@ -64,45 +64,60 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/gradient"
-                            android:orientation="horizontal"
-                            android:padding="16dp">
+                            android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/projectTitle"
-                                android:layout_width="0dp"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical"
-                                android:text="Project Title"
-                                style="@style/TextAppearance.MaterialComponents.Headline5"/>
+                                android:orientation="horizontal"
+                                android:padding="16dp">
 
-                            <ImageView
-                                android:id="@+id/imageViewCollabRequests"
-                                android:layout_width="wrap_content"
+                                <TextView
+                                    android:id="@+id/projectTitle"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center_vertical"
+                                    android:text="Project Title"
+                                    style="@style/TextAppearance.MaterialComponents.Headline5"/>
+
+                                <ImageView
+                                    android:id="@+id/imageViewCollabRequests"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginHorizontal="@dimen/margin_md"
+                                    android:src="@drawable/ic_group_white" />
+
+                                <ImageButton
+                                    android:id="@+id/buttonEditProject"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:background="@null"
+                                    android:src="@drawable/ic_baseline_settings_24"
+                                    android:tint="#000000"
+                                    android:tooltipText="Edit Project" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginHorizontal="@dimen/margin_md"
-                                android:src="@drawable/ic_group_white" />
-
-                            <ImageButton
-                                android:id="@+id/buttonEditProject"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:background="@null"
-                                android:src="@drawable/ic_baseline_settings_24"
-                                android:tint="#000000"
-                                android:tooltipText="Edit Project" />
-
-                            <Button
-                                android:id="@+id/buttonCollab"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Collaborate"
-                                android:visibility="gone"
-                                tools:visibility="gone" />
+                                android:gravity="end"
+                                android:orientation="horizontal">
+                                <Button
+                                    android:id="@+id/buttonCollab"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="end"
+                                    android:layout_margin="@dimen/margin_sm"
+                                    android:visibility="gone"
+                                    tools:visibility="gone"
+                                    android:text="Collaborate" />
+                            </LinearLayout>
 
                         </LinearLayout>
+
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
 

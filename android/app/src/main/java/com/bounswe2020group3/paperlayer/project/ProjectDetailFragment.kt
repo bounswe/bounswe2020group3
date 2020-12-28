@@ -193,7 +193,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         }
 
         //Adding Members
-        for (member in project.members!!){
+        for (member in project.members.orEmpty()){
                 addMemberCard(member.username)
                 submitMemberCardList()
         }
@@ -219,6 +219,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         {
             this.fragmentView.buttonEditProject.visibility= GONE
             this.fragmentView.buttonInvite.visibility= GONE
+            this.fragmentView.imageViewCollabRequests.visibility = GONE
         }
 
         writeLogMessage("i",TAG,"Project UI Updated")

@@ -272,6 +272,7 @@ export default class HomePage extends Component {
               lastName={this.state.userlastname}
               photoUrl={getPhoto()}
               goToProjectCreation={this.goToProjectCreation}
+              goToEventCreation={() => {this.props.history.push(config.Event_Creation_Path);}}
               goToProfile={this.goToProfile}
             />
             <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{marginLeft:"225px",marginTop:"10px", width:`calc(100% - 225px)`}}>

@@ -89,7 +89,7 @@ export default class HomePage extends Component {
                 photoUrl={getPhoto()}
                 goToProjectCreation={this.goToProjectCreation}
                 goToEventCreation={() => {this.props.history.push(config.Event_Creation_Path);}}
-                goToProfile={() => { this.props.history.push("/profile"); }}
+                goToProfile={() => { this.props.history.push(`/profile/${getUserId()}`); }}
             />
           <Grid container direction="row" justify="space-evenly" alignItems="baseline" style={{marginLeft:"200px", width:`calc(100% - 200px)`}}>
             <Grid item sm={8}>

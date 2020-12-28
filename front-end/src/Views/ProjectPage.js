@@ -19,7 +19,7 @@ const Container = styled(Box)({
   borderRadius: 3,
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
   color: 'white',
-  height: "calc(100vh - 60px)",
+  height: "calc(98vh -64px)",
   paddingBottom: "60px",
   top: "0",
   bottom: "0",
@@ -360,7 +360,7 @@ export default class HomePage extends Component {
               goToEventCreation={() => {this.props.history.push(config.Event_Creation_Path);}}
               goToProfile={this.goToProfile}
             />
-            <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{marginLeft:"225px",marginTop:"10px", width:`calc(100% - 225px)`}}>
+        <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{ height:"calc(91vh - 48px)", marginLeft: "225px", marginTop: "10px", width: `calc(100% - 225px)` }}>
           <Grid container direction="row" justify="space-evenly" alignItems="baseline">
             <Grid item sm={7}>
               <Typography variant="h4" color="primary">{this.state.name}</Typography>

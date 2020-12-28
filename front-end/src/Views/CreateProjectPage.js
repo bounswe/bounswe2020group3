@@ -34,13 +34,11 @@ const eventTypes = {
   institution: "funded project"
 }
 const projectStates = {
-  seekingForCollab: "seeking for collaborators",
   openForCollab: "open for collaborators",
   inProg: "in progress",
   done: "done",
   draft: "draft",
-  inviting: "inviting",
-  collaborators: "collaborators", 
+  inviting: "inviting collaborators",
   submitted_to_event:"submitted to event", 
   published: "published",
   cancelled: "cancelled", 
@@ -341,15 +339,15 @@ export default class CreateProjectPage extends Component {
                   onChange={this.handleProjectStateChange}
                   labelId="projectState"
                 >
-                  <MenuItem value={projectStates.seekingForCollab}>Seeking For Collaborators</MenuItem>
                   <MenuItem value={projectStates.openForCollab}>Open for Collaboration</MenuItem>
                   <MenuItem value={projectStates.inProg}>In Progress</MenuItem>
                   <MenuItem value={projectStates.done}>Done</MenuItem>
-                  <MenuItem value={projectStates.draft}>In Draft</MenuItem>
-                  <MenuItem value={projectStates.cancelled}>Canceled</MenuItem>
-                  <MenuItem value={projectStates.inviting}>Inviting</MenuItem>
+                  <MenuItem value={projectStates.draft}>Draft</MenuItem>
+                  <MenuItem value={projectStates.cancelled}>Cancelled</MenuItem>
+                  <MenuItem value={projectStates.inviting}>Inviting Collaborators</MenuItem>
                   <MenuItem value={projectStates.submitted_to_event}>Submitted to Event</MenuItem>
                   <MenuItem value={projectStates.reopened}>Reopened</MenuItem>
+                  <MenuItem value={projectStates.published}>Published</MenuItem>
                 </Select>
               </FormControl>
             </div>

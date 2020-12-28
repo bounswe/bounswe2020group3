@@ -37,7 +37,14 @@ const projectStates = {
   seekingForCollab: "seeking for collaborators",
   openForCollab: "open for collaborators",
   inProg: "in progress",
-  done: "done"
+  done: "done",
+  draft: "draft",
+  inviting: "inviting",
+  collaborators: "collaborators", 
+  submitted_to_event:"submitted to event", 
+  published: "published",
+  cancelled: "cancelled", 
+  reopened: "reopened"
 }
 
 const leftDiv = {
@@ -338,6 +345,11 @@ export default class CreateProjectPage extends Component {
                   <MenuItem value={projectStates.openForCollab}>Open for Collaboration</MenuItem>
                   <MenuItem value={projectStates.inProg}>In Progress</MenuItem>
                   <MenuItem value={projectStates.done}>Done</MenuItem>
+                  <MenuItem value={projectStates.draft}>In Draft</MenuItem>
+                  <MenuItem value={projectStates.cancelled}>Canceled</MenuItem>
+                  <MenuItem value={projectStates.inviting}>Inviting</MenuItem>
+                  <MenuItem value={projectStates.submitted_to_event}>Submitted to Event</MenuItem>
+                  <MenuItem value={projectStates.reopened}>Reopened</MenuItem>
                 </Select>
               </FormControl>
             </div>

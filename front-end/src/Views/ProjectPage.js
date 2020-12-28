@@ -19,7 +19,7 @@ const Container = styled(Box)({
   borderRadius: 3,
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
   color: 'white',
-  height: "calc(100vh - 60px)",
+  height: "calc(98vh -64px)",
   paddingBottom: "60px",
   top: "0",
   bottom: "0",
@@ -54,10 +54,13 @@ export default class HomePage extends Component {
       photoUrl: "",
       projectId: "",
       showAddTag: false,
+      showInviteColab: false,
       tagQuery: "",
+      colabQuery: "",
       currTag: [],
       allTags: [],
       isMember: false,
+      isNotMember: true,
       isPublic: false,
       owner: ""
     }
@@ -71,6 +74,9 @@ export default class HomePage extends Component {
   };
   handleTagQuery = (e) => {
     this.setState({ tagQuery: e.target.value })
+  };
+  handleColabQuery = (e) => {
+    this.setState({ colabQuery: e.target.value })
   };
   goToProfile = () => {
     this.props.history.push("/profile/" + getUserId());
@@ -136,8 +142,8 @@ export default class HomePage extends Component {
         name = name + " " + mname;
         this.setState({ username: name, userlastname: lastname });
         });
-    };
-    isMember = () =>{
+  };
+  isMember = () =>{
       const { membersData } = this.state;
       let ids = []
       for(let i = 0 ; i < membersData.length ; i++){
@@ -147,7 +153,10 @@ export default class HomePage extends Component {
       if( ids.includes(parseInt(getProfileId() ) ) ){
         this.setState({isMember :true})
       }
-    }
+      if( ids.includes(parseInt(getProfileId() ) ) ){
+        this.setState({isNotMember :false})
+      }
+  }
 
   componentDidMount() {
     var project_id = this.props.location.pathname.split('/')[2];
@@ -155,6 +164,7 @@ export default class HomePage extends Component {
     this.getProject(project_id);
     this.getProfile();
     this.getTags();
+    // this.getColabs();
   };
 
   renderContributor() {
@@ -165,6 +175,7 @@ export default class HomePage extends Component {
       )
     });
   };
+
   renderEvents() {
     const { events } = this.state;
     if (events.length === 0) return (  <Typography variant='h6' color="textPrimary">No Related Events</Typography>)
@@ -218,6 +229,7 @@ export default class HomePage extends Component {
       )
     });
   };
+
   renderTags() {
     const { tags } = this.state;
     return tags.map((item) => {
@@ -251,6 +263,7 @@ export default class HomePage extends Component {
 
     });
   }
+
   renderCollabQualifications = () => {
     const { isPublic } = this.state;
     return(
@@ -270,6 +283,7 @@ export default class HomePage extends Component {
       </>
     )
   }
+
   renderMembers = () => {
     const { isPublic } = this.state;
     if (isPublic)
@@ -291,6 +305,18 @@ export default class HomePage extends Component {
     </>)
     
   }
+
+  renderColabRequest = () => {
+    var proj_id = this.props.location.pathname.split('/')[2];
+    axios.post(`${config.API_URL}/api/collaboration_requests/`, { from_user: this.username, to_project: proj_id }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            .then(res => {
+              this.getProject(this.state.projectId);
+            })
+        }); 
+  }
+
   renderRelatedEvents = () => {
     const { isPublic } = this.state;
     if (isPublic)
@@ -335,7 +361,7 @@ export default class HomePage extends Component {
               goToEventCreation={() => {this.props.history.push(config.Event_Creation_Path);}}
               goToProfile={this.goToProfile}
             />
-            <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{marginLeft:"225px",marginTop:"10px", width:`calc(100% - 225px)`}}>
+        <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{ height:"calc(91vh - 40px)",   marginLeft: "225px", marginTop: "10px", width: `calc(100% - 225px)` }}>
           <Grid container direction="row" justify="space-evenly" alignItems="baseline">
             <Grid item sm={7}>
               <Typography variant="h4" color="primary">{this.state.name}</Typography>
@@ -364,6 +390,29 @@ export default class HomePage extends Component {
                   :
                   <></>
               }
+              {/* {this.state.isMember ? 
+                <Grid item sm={12} style={{marginTop:"20px"}}>
+                <Paper elevation={6}
+                  style={{ width: "40%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
+                  borderColor="primary"
+                  border={1}>
+                    <>
+                      <Input
+                        type="text"
+                        color='primary'
+                        style={{ width: "90%", textTransform: "capitalize" }}
+                        placeholder="Please enter a collaborator"
+                        onChange={(e) => { this.handleColabQuery(e); }}
+                        value={this.state.colabQuery}
+                      />
+                      <br />
+                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitColabInviteQuery}>Invite Collaborator</Button>
+                    </>
+                </Paper>
+              </Grid>
+              :
+              <></>
+              } */}
               <p></p>
             </Grid>
             <Grid item sm={4}>
@@ -410,13 +459,25 @@ export default class HomePage extends Component {
               :
               <></>
                 }
-
+              <br />
+              <br />
+              {/* {this.state.isNotMember ? 
+                <Grid item sm={12} style={{ minHeight: "10vh" }}>
+                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderColabRequest}>Send Colab Request</Button>
+                </Grid>
+              :
+              <></>
+              } */}
               
             </Grid>
           </Grid>
           <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
         </Grid>
       </Container>);
+  }
+
+  submitColabInviteQuery = () => {
+
   }
   
 
@@ -512,6 +573,15 @@ export default class HomePage extends Component {
       }
     }
   }
+
+  // getColabs = () => {
+  //   axios.get(`${config.API_URL}/api/collaboration_invites/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+  //     .then(res => {
+  //       let colabs = res.data;
+  //       this.setState({ allColabs: colabs });
+  //     })
+  // }
+  
   //Delete this particular tag.
   deleteTag = (tag) => {
     const { tags } = this.state;

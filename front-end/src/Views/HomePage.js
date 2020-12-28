@@ -113,7 +113,7 @@ export default class HomePage extends Component {
         <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Typography>
         <Typography  style={{textAlign:"left", color:"black"}}>{this.renderTags(item.tags)}</Typography>
         <Typography  style={{textAlign:"left", color:"black"}}>
-          {item.description}
+          {item.description.trim().substr(0, 120) +  (item.description.length > 120 ?  "..." : "") }
         </Typography>
         </Paper>
 

@@ -34,13 +34,11 @@ const eventTypes = {
   institution: "funded project"
 }
 const projectStates = {
-  seekingForCollab: "seeking for collaborators",
   openForCollab: "open for collaborators",
   inProg: "in progress",
   done: "done",
   draft: "draft",
-  inviting: "inviting",
-  collaborators: "collaborators", 
+  inviting: "inviting collaborators",
   submitted_to_event:"submitted to event", 
   published: "published",
   cancelled: "cancelled", 
@@ -123,7 +121,7 @@ export default class CreateProjectPage extends Component {
       message: "",
       messageType: "",
       projectTitle: "",
-      projectType: "",
+      projectType: projectTypes.conference,
       projectDescription: "",
       projectRequirements: "",
       dueDate: format(new Date(), 'yyyy-MM-dd'),
@@ -135,6 +133,9 @@ export default class CreateProjectPage extends Component {
       event : ""
     }
   };
+  componentDidMount(){
+    this.fetchRelatedEvents()
+  }
   handleDateChange = (date) => {
     this.setState({ dueDate: date });
   };
@@ -214,7 +215,7 @@ export default class CreateProjectPage extends Component {
           {events.length !== 0
             ?
             Object.keys(events).map((id, i) => (
-              <MenuItem value={`${config.API_URL}${config.Event_Creation_Url}${id}/`}>{events[i]["title"]}</MenuItem>
+              <MenuItem value={`${events[i].id}`}>{events[i]["title"]}</MenuItem>
             ))
             :
             <MenuItem disabled value="">{errorMsg}</MenuItem>
@@ -242,12 +243,11 @@ export default class CreateProjectPage extends Component {
       is_public: isPublic,
       // state: projectState,
       // project_type: projectType,
-      due_date: dueDate
+      due_date: dueDate,
+      event: parseInt(event[0])
     };
     if(projectType !== "" )
       project.project_type = projectType;
-    if(event !== "")
-      project.events = [event]
     if (projectState !== "")
       project.state = projectState
 
@@ -342,15 +342,15 @@ export default class CreateProjectPage extends Component {
                   onChange={this.handleProjectStateChange}
                   labelId="projectState"
                 >
-                  <MenuItem value={projectStates.seekingForCollab}>Seeking For Collaborators</MenuItem>
                   <MenuItem value={projectStates.openForCollab}>Open for Collaboration</MenuItem>
                   <MenuItem value={projectStates.inProg}>In Progress</MenuItem>
                   <MenuItem value={projectStates.done}>Done</MenuItem>
-                  <MenuItem value={projectStates.draft}>In Draft</MenuItem>
-                  <MenuItem value={projectStates.cancelled}>Canceled</MenuItem>
-                  <MenuItem value={projectStates.inviting}>Inviting</MenuItem>
+                  <MenuItem value={projectStates.draft}>Draft</MenuItem>
+                  <MenuItem value={projectStates.cancelled}>Cancelled</MenuItem>
+                  <MenuItem value={projectStates.inviting}>Inviting Collaborators</MenuItem>
                   <MenuItem value={projectStates.submitted_to_event}>Submitted to Event</MenuItem>
                   <MenuItem value={projectStates.reopened}>Reopened</MenuItem>
+                  <MenuItem value={projectStates.published}>Published</MenuItem>
                 </Select>
               </FormControl>
             </div>

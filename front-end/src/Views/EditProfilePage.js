@@ -32,8 +32,7 @@ const dropdownMenuStyle = {
     marginTop: "10px"
 }
 const width = {
-    width: "60%",
-    minWidth: "450px"
+    width: "90%",
 }
 const FormWrapper = styled(Box)({
     backgroundColor: "#E0E0E0",

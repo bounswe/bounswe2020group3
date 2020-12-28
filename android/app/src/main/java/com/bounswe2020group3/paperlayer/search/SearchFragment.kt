@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.project.data.Tag
 import com.bounswe2020group3.paperlayer.search.data.Search
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.material.tabs.TabLayout
@@ -130,10 +131,10 @@ class SearchFragment: Fragment(),SearchContract.View ,OnCardClickListener{
         writeLogMessage("i", TAG,"Search Card List Updated! " + searchCardList.size)
     }
 
-    override fun addSearchCard(searchType: Int, titleIconType: Int, title: String, body: String, supportText: String, tags: List<String>,id:Int) {
+    override fun addSearchCard(searchType: Int, titleIconType: Int, title: String, body: String, supportText: String, tags: List<Tag>,id:Int) {
         searchCardList.add(
                 SearchCard(searchType,titleIconType,title,body,supportText,tags,id))
-        writeLogMessage("i", TAG,"Project Card Added! Type: $searchType Title: $title" )
+        writeLogMessage("i", TAG,"Project Card Added! Type: $searchType Title: $title ${tags.size}" )
     }
 
     private fun initRecyclerView(){

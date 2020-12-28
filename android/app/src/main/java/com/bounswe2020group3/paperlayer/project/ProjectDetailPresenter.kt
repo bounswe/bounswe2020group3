@@ -28,6 +28,15 @@ class ProjectPresenter  @Inject constructor(private var model: ProjectDetailCont
         super.bind(view)
         this.view?.writeLogMessage("i",TAG,"Project Presenter Created")
         this.view?.resetProjectUI()
+        subscribeAuthToken()
+    }
+
+    override fun subscribeAuthToken() {
+        this.view?.writeLogMessage("i",TAG, "##1##")
+        val userProfileSub = model.getAuthToken().subscribe { token ->
+            this.view?.updateCurrentUser(token.id)
+        }
+        disposable.add(userProfileSub)
     }
 
     override fun unbind() {

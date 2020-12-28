@@ -117,7 +117,7 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.bounswe2020group3.paperlayer.search.SearchFragment"
-        android:label="fragment_search"
+        android:label="Search"
         tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/navigateToUserFromSearch"

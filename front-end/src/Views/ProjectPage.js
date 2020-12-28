@@ -164,7 +164,7 @@ export default class HomePage extends Component {
     this.getProject(project_id);
     this.getProfile();
     this.getTags();
-    this.getColabs();
+    // this.getColabs();
   };
 
   renderContributor() {
@@ -389,7 +389,7 @@ export default class HomePage extends Component {
                   :
                   <></>
               }
-              {this.state.isMember ? 
+              {/* {this.state.isMember ? 
                 <Grid item sm={12} style={{marginTop:"20px"}}>
                 <Paper elevation={6}
                   style={{ width: "40%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
@@ -411,7 +411,7 @@ export default class HomePage extends Component {
               </Grid>
               :
               <></>
-              }
+              } */}
               <p></p>
             </Grid>
             <Grid item sm={4}>
@@ -460,13 +460,13 @@ export default class HomePage extends Component {
                 }
               <br />
               <br />
-              {this.state.isNotMember ? 
+              {/* {this.state.isNotMember ? 
                 <Grid item sm={12} style={{ minHeight: "10vh" }}>
                 <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderColabRequest}>Send Colab Request</Button>
                 </Grid>
               :
               <></>
-              }
+              } */}
               
             </Grid>
           </Grid>
@@ -573,13 +573,13 @@ export default class HomePage extends Component {
     }
   }
 
-  getColabs = () => {
-    axios.get(`${config.API_URL}/api/collaboration_invites/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-      .then(res => {
-        let colabs = res.data;
-        this.setState({ allColabs: colabs });
-      })
-  }
+  // getColabs = () => {
+  //   axios.get(`${config.API_URL}/api/collaboration_invites/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+  //     .then(res => {
+  //       let colabs = res.data;
+  //       this.setState({ allColabs: colabs });
+  //     })
+  // }
   
   //Delete this particular tag.
   deleteTag = (tag) => {

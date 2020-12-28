@@ -189,6 +189,7 @@ export default class HomePage extends Component {
               photoUrl={getPhoto()}
               goToProjectCreation={this.goToProjectCreation}
               goToProfile={() => { this.props.history.push( "/profile/" + getUserId() ); }}
+              goToEventCreation ={this.goToEventCreation}
             />
 
           <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{overflowY:"scroll", marginLeft:"200px", width:`calc(100% - 200px)`}}>
@@ -202,7 +203,6 @@ export default class HomePage extends Component {
                 <Typography variant="h5" color="primary">Upcoming Events</Typography>
                 {this.renderEvents()}
               </Grid>
-              <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEventCreation}>Create an Event</Button>
               
               <Typography variant="h5" color="primary" style={{marginTop:"10px"}}>Milestones</Typography>
               <Grid style={{maxHeight:"40vh", overflowY:"scroll"}} item sm={12}>

@@ -1,4 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
+export const colorCodes = ["#D2B4DE", "#F8C471", "#76D7C4", "#AED6F1", "#DAF7A6", "#FA8072", "#FEC8D8", "#85EE85", "#FDFD96", "#89AED8"]
 
 export const theme = createMuiTheme({
   palette: {

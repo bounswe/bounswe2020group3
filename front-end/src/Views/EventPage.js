@@ -9,9 +9,10 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import Profilebar from "../Components/ProfileBar/Profilebar";
-import {getAccessToken, getUserId, setPhotoCookie} from "../Components/Auth/Authenticate";
+import {getAccessToken, getUserId, getPhoto} from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
+    backgroundColor: '#f7f7f5',
     background: "#f9f9eb",
     border: 0,
     borderRadius: 3,
@@ -69,7 +70,6 @@ export default class HomePage extends Component {
             let lastname = res.data.profile[0].last_name;
             name = name + " " + mname;
             let photoUrl = (res.data.profile[0].photo_url)
-            setPhotoCookie(photoUrl)
             this.setState({ username:name , userlastname: lastname, photoUrl:photoUrl });
         });
     };
@@ -86,7 +86,7 @@ export default class HomePage extends Component {
             <Profilebar
                 name={this.state.username}
                 lastName={this.state.userlastname}
-                photoUrl={this.state.photoUrl}
+                photoUrl={getPhoto()}
                 goToProjectCreation={this.goToProjectCreation}
                 goToProfile={() => { this.props.history.push("/profile"); }}
             />
@@ -94,20 +94,20 @@ export default class HomePage extends Component {
             <Grid item sm={8}>
               <Typography variant="h5" color="primary">{this.state.name}</Typography>
               <Typography variant="h5" color="primary">Brief Description</Typography>
-              <Paper elevation={6} style={{minHeight: "100px"}}>
+              <Paper elevation={6} style={{border: "solid 1px blue", minHeight: "100px"}}>
                   <Typography variant="body1">{this.state.desc}</Typography>
               </Paper>
             </Grid>
             <Grid item sm={3} >
               <Typography variant="h5" color="primary">Important Dates</Typography>
-              <Paper elevation={6} style={{minHeight: "100px", marginBottom:"10px"}}>
+              <Paper elevation={6} style={{border: "solid 1px blue", minHeight: "100px", marginBottom:"10px"}}>
                   <Typography variant="body1" color="secondary">Event Date is:</Typography>
                   <Typography variant="body1">{this.state.date}</Typography>
                   <Typography variant="body1" color="secondary">Deadline of Event:</Typography>
                   <Typography variant="body1">{this.state.deadline}</Typography>
               </Paper>
               <Typography variant="h5" color="primary">Event Details</Typography>
-              <Paper elevation={6} style={{minHeight: "100px", marginBottom:"10px"}}>
+              <Paper elevation={6} style={{border: "solid 1px blue", minHeight: "100px", marginBottom:"10px"}}>
                 <Typography variant="body1" color="secondary">{this.state.type.toUpperCase()}</Typography>
                 <Link href={this.state.url}>{this.state.name}</Link>
               </Paper>

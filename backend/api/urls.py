@@ -3,7 +3,7 @@ from django.conf.urls import include
 from rest_framework.routers import DefaultRouter
 
 from .views.following import FollowingViewSet, FollowRequestViewSet
-from .views.profile import ProfileViewSet
+from .views.profile import ProfileViewSet, ProfilePictureViewSet
 from .views.auth import RegisterGenericAPIView, LogoutGenericAPIView, AuthView
 from .views.project import ProjectViewSet
 from .views.milestone import MilestoneViewSet
@@ -16,9 +16,14 @@ from .views.collaboration_invite import CollaborationInviteViewSet
 from .views.notification import NotificationViewSet
 from .views.search import SearchGenericAPIView
 from django.contrib.auth import views as auth_views
+from .views.comment import CommentViewSet
+from .views.rating import RatingViewSet
+from django.contrib import admin
+from django_email_verification import urls as mail_urls
 
 router = DefaultRouter()
 router.register(r'profiles', ProfileViewSet)
+router.register(r'profile_picture', ProfilePictureViewSet)
 router.register(r'users', UserViewSet)
 router.register(r'projects', ProjectViewSet)
 router.register(r'milestones', MilestoneViewSet)
@@ -30,6 +35,8 @@ router.register(r'follow_request', FollowRequestViewSet)
 router.register(r'collaboration_requests', CollaborationRequestViewSet)
 router.register(r'collaboration_invites', CollaborationInviteViewSet)
 router.register(r'notifications', NotificationViewSet, basename='notification')
+router.register(r'comments', CommentViewSet)
+router.register(r'ratings', RatingViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -46,7 +53,8 @@ urlpatterns = [
     path('reset_password_complete/',
          auth_views.PasswordResetCompleteView.as_view(),
          name="password_reset_complete"),
-
+    path('admin/', admin.site.urls),
+    path('email/', include(mail_urls)),
     path('search/', SearchGenericAPIView.as_view(), name='search'),
 
 ]

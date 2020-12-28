@@ -1,11 +1,13 @@
 package com.bounswe2020group3.paperlayer.invite
 
+import com.bounswe2020group3.paperlayer.data.user.AuthToken
+import com.bounswe2020group3.paperlayer.data.user.User
 import com.bounswe2020group3.paperlayer.invite.data.InviteRequest
 import com.bounswe2020group3.paperlayer.invite.data.InviteResponse
 import com.bounswe2020group3.paperlayer.invite.data.CollaborationInvite
-import com.bounswe2020group3.paperlayer.profile.data.data.AuthToken
-import com.bounswe2020group3.paperlayer.profile.data.User
+
 import com.bounswe2020group3.paperlayer.util.Session
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -16,7 +18,7 @@ import javax.inject.Inject
 
 class InviteModel @Inject constructor(private var sessionManager: Session, retrofit: Retrofit): InviteContract.Model {
     private var userService: InviteContract.UserService = retrofit.create(InviteContract.UserService::class.java)
-    override fun inviteUsers(inviteRequest: InviteRequest): Single<InviteResponse> {
+    override fun inviteUsers(inviteRequest: InviteRequest): Observable<CollaborationInvite> {
         val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
 
         return userService.inviteUsers(authToken,inviteRequest)
@@ -39,7 +41,7 @@ class InviteModel @Inject constructor(private var sessionManager: Session, retro
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun uninvite(invite_id: Int) : Single<InviteResponse> {
+    override fun uninvite(invite_id: Int) : Completable {
         val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
 
         return userService.deleteInvite(authToken,invite_id)

@@ -19,7 +19,7 @@
     <string name="err_not_unique_username">Username is either not unique or not in a suitable format.</string>
     <string name="text_username">Username</string>
     <string name="text_password_confirm">Password Confirm</string>
-    <string name="text_birthday_example">Birthday (DD/MM/YYYY)</string>
+    <string name="text_birthday_example">Birthday (YYYY-MM-DD)</string>
     <string name="text_first_name">First name</string>
     <string name="text_last_name">Last name</string>
     <string name="err_invalid_name">Please enter a valid name.</string>
@@ -28,6 +28,7 @@
     <string name="profile_settings_description">Settings button</string>
     <string name="profile_email">Email</string>
     <string name="profile_age">Age</string>
+    <string name="profile_birthday">Birthday</string>
     <string name="profile_interests">Interests</string>
     <string name="profile_gender">Gender</string>
     <string name="profile_expertise">Expertise</string>
@@ -53,8 +54,29 @@
     <string name="date">Date</string>
     <string name="project_successfully_created">Project successfully created!</string>
     <string name="follow">Follow</string>
+    <string name="unfollow">Unfollow</string>
+    <string name="report">Report</string>
+    <string name="rating">Rating</string>
+    <string name="give_rating">Give Rating</string>
+    <string name="request_sent">Request sent</string>
     <string name="edit_project">Edit Project</string>
     <string name="text_edit_project">EDIT PROJECT</string>
     <string name="project_edit_success">Project successfully edited!</string>
     <string name="done">DONE</string>
+    <string name="event_deadline_date_header">Submission Deadline</string>
+    <string name="event_date_header">Event Date</string>
+    <string name="event_type_header">Event Type</string>
+    <string name="event_title_placeholder">ISAECT 2020</string>
+    <string name="event_description_placeholder">ISAECT 2020 - International Symposium on Advanced Electrical and Communication Technologies</string>
+    <string name="event_deadline_date_placeholder">2020–10–27</string>
+    <string name="event_date_placeholder">2020–10–25</string>
+    <string name="event_type_placeholder">academic conference</string>
+    <string name="project_detail_tag_not_found">There is no tags in this project. You can add tags to project from project edit page.</string>
+    <string name="project_detail_tag_title">Tags</string>
+    <string name="project_detail_milestone_title">Milestones</string>
+    <string name="project_detail_event_title">Events</string>
+    <string name="project_detail_tab_title_project">Project</string>
+    <string name="project_detail_tab_title_member">Members</string>
+    <string name="project_requirements_title">Project Requirements</string>
+
 </resources>

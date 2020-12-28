@@ -3,19 +3,31 @@ package com.bounswe2020group3.paperlayer.home.adaptors
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.home.cards.EventCard
 import com.bounswe2020group3.paperlayer.home.cards.MilestoneCard
-
-class MilestoneAdaptor : RecyclerView.Adapter<MilestoneAdaptor.milestoneViewHolder>() {
+interface OnCardClickListenerForMilestones{
+    fun onViewButtonClick(item : MilestoneCard, position: Int)
+}
+class MilestoneAdaptor(var clickListener: OnCardClickListenerForMilestones) : RecyclerView.Adapter<MilestoneAdaptor.milestoneViewHolder>() {
     private var milestones: List<MilestoneCard> = ArrayList()
 
     class milestoneViewHolder(val layout: View) : RecyclerView.ViewHolder(layout){
         var projectTitle = layout.findViewById<TextView>(R.id.projectTitle)
         var description = layout.findViewById<TextView>(R.id.description)
         var date = layout.findViewById<TextView>(R.id.date)
+        var viewButton  = layout.findViewById<Button>(R.id.buttonViewProject)
+        fun bind(item : MilestoneCard, action: OnCardClickListenerForMilestones) {
+            projectTitle.text = item.projectTitle
+            description.text = item.description
+            date.text = item.date
+            viewButton.setOnClickListener{
+                action.onViewButtonClick(item,adapterPosition)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): milestoneViewHolder {
@@ -25,12 +37,17 @@ class MilestoneAdaptor : RecyclerView.Adapter<MilestoneAdaptor.milestoneViewHold
     }
 
     override fun onBindViewHolder(holder: milestoneViewHolder, position: Int) {
-        holder.projectTitle.text = milestones[position].projectTitle
-        holder.description.text = milestones[position].description
-        holder.date.text = milestones[position].date
+        when(holder){
+            is MilestoneAdaptor.milestoneViewHolder ->{
+                holder.bind(milestones[position],clickListener)
+            }
+        }
+
+
     }
     fun submitList(milestoneCardlist: List<MilestoneCard>){
         milestones=milestoneCardlist
+
     }
     override fun getItemCount(): Int {
         return milestones.size

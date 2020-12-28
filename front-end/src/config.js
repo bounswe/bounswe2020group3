@@ -13,10 +13,14 @@ const config = {
   Projectpage_url: "/api/projects/",
   Profilepage_url: "/api/profiles/",
   Edit_Profile_Url :"/api/profiles/",
+  Edit_Project_Url : "/api/projects/", 
   User_Path: "/api/users/",
   Event_Path: "/events",
+  Follow_url:"/api/follow/",
+  Follow_request_url:"/api/follow_request/",
   Milestone_url:"/api/milestones/",
   OwnMilestoneUrl : "/api/milestones/get_user_milestones/",
-  Issue_Milestone_Path : "/issue-milestone"
+  Issue_Milestone_Path : "/issue-milestone",
+  Profille_Page_Path : "/profile"
 }
 export default config;

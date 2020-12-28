@@ -12,12 +12,3 @@ class CollaborationRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = CollaborationRequest
         fields = '__all__'
-
-
-class CollaborationRequestPOSTSerializer(serializers.ModelSerializer):
-    """
-    Post serializer, includes only user
-    """
-    class Meta:
-        model = CollaborationRequest
-        fields = ['to_project', 'message']

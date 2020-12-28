@@ -1,6 +1,7 @@
 package com.bounswe2020group3.paperlayer.home
 
 import com.bounswe2020group3.paperlayer.home.cards.MilestoneCard
+import com.bounswe2020group3.paperlayer.home.cards.ProjectUpdateCard
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -31,27 +32,19 @@ class MilestonePresenter @Inject constructor(private var model: HomeContract.Mod
     }
 
     override fun fetchMilestones(ownerId: Int) {
-        this.view?.writeLogMessage("i", TAG, "Fetching all projects of owner $ownerId ...")
-        val getProjectObservable = model.getallprojectsOfTheOwner(ownerId).subscribe(
-                { projectList ->
-                    for (project in projectList){
-                        var list = project.milestones
-                        this.view?.writeLogMessage("i", TAG,"Project Fetched + " + project.project_type)
-                        for(milestone in list){
-                            this.view?.writeLogMessage("i", TAG,"milestone Fetched + " + milestone.description)
+    val getMilestonesObservable = model.getMilestones().subscribe(
+        {list->
+            for(milestone in list.result){
+                this.view?.addCard(MilestoneCard(milestone.id,milestone.project_name,milestone.description,milestone.project,milestone.date))
 
-                            this.view?.addCard(MilestoneCard(project.name,milestone.description,project.id,milestone.date))
-                        }
-                        this.view?.writeLogMessage("i", TAG,"Project Fetched + " + project.project_type)
-                    }
-                    this.view?.writeLogMessage("i", TAG,"Fetching finished.")
-                    this.view?.submitCardList()
-                },
-                { error ->
-                    this.view?.writeLogMessage("e", TAG,"Error in fetching all projects of owner $ownerId")
-                }
-        )
-        disposable.add(getProjectObservable)
+            }
+            this.view?.writeLogMessage("i", TAG,"Fetching finished.")
+            this.view?.submitCardList()
+        },{error->
+        this.view?.writeLogMessage("e", TAG,"Error in fetching all milestones of owner $ownerId, $error")
+    })
+
+        disposable.add(getMilestonesObservable)
     }
 
     override fun subscribeAuthToken() {
@@ -62,4 +55,5 @@ class MilestonePresenter @Inject constructor(private var model: HomeContract.Mod
         }
         disposable.add(userProfileSub)
     }
+
 }

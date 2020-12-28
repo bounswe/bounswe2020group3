@@ -4,9 +4,12 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.profile.data.User
+import com.bounswe2020group3.paperlayer.data.user.User
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_profile_edit.*
 
 interface OnUserClickListener {
     fun onUserClick(user: User)
@@ -36,6 +39,7 @@ class UserListAdapter(
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val userFullName: TextView = view.findViewById(R.id.userFullName)
         private val userBio: TextView = view.findViewById(R.id.userBio)
+        private val imageViewProfileAvatar: ImageView = view.findViewById(R.id.imageViewProfileAvatar)
 
         override fun toString(): String {
             return super.toString() + " '" + userFullName.text + "'"
@@ -47,6 +51,11 @@ class UserListAdapter(
             userBio.text = user.profile[0].bio
             itemView.setOnClickListener {
                 clickListener.onUserClick(user)
+            }
+
+            val imageUrl = user.profile[0].profile_picture
+            if(imageUrl != null && imageUrl != "") {
+                Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
             }
         }
     }

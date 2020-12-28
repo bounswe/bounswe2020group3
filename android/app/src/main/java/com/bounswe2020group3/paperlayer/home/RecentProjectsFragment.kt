@@ -6,19 +6,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.home.adaptors.MilestoneAdaptor
-import com.bounswe2020group3.paperlayer.home.cards.MilestoneCard
 import com.bounswe2020group3.paperlayer.home.cards.ProjectUpdateCard
-import com.bounswe2020group3.paperlayer.invite.InviteCard
 import com.bounswe2020group3.paperlayer.home.adaptors.OnCardClickListener
 import com.bounswe2020group3.paperlayer.home.adaptors.ProjectAdaptor
-import com.bounswe2020group3.paperlayer.invite.UserInviteAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import javax.inject.Inject
 private const val TAG = "RecentProjectsFragment"
@@ -53,6 +51,8 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
         initRecycler()
         this.presenter.bind(this)
         initRecyclerView()
+        resetCardList()
+
         writeLogMessage("i",TAG,"event fragment has been created.")
         return view
     }
@@ -62,7 +62,7 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
     }
 
     override fun showToast(message: String) {
-        TODO("Not yet implemented")
+        Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
     fun initRecycler(){}
     override fun writeLogMessage(type: String, tag: String, message: String) {
@@ -83,13 +83,24 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
             layoutManager = viewManager
             adapter = viewAdapter
         }
-        /*
-        this.recyclerView= fragmentView.findViewById(R.id.recyclerViewInviteUsers)!!
-        this.recyclerView.layoutManager= LinearLayoutManager(this.context)
-        this.inviteAdapter= UserInviteAdapter(this)
-        this.recyclerView.adapter=inviteAdapter
-        */
 
+
+    }
+
+    override fun cardCheck(id: Int, position: Int) {
+        projectslist[position].requestSent = true
+
+
+        submitCardList()
+        viewAdapter.notifyDataSetChanged()
+    }
+
+    override fun cardUncheck(id: Int, position: Int) {
+        projectslist[position].requestSent = false
+
+
+        submitCardList()
+        viewAdapter.notifyDataSetChanged()
     }
 
     override fun resetCardList() {
@@ -113,7 +124,14 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
         mContext=context
     }
 
-    override fun onInviteButtonClick(item: ProjectUpdateCard, position: Int) {
-        this.presenter.OnInviteButtonClicked(item,position)
+    override fun onCollabButtonClick(item: ProjectUpdateCard, position: Int) {
+        this.presenter.OnCollabButtonClicked(item,position)
     }
+
+    override fun onViewButtonClick(item: ProjectUpdateCard, position: Int) {
+        val bundle = bundleOf("projectID" to item.projectId )
+
+        Navigation.findNavController(fragment_view).navigate(R.id.navigateToProjectFromRecentProjects,bundle)    }
+
+
 }

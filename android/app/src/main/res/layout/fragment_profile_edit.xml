@@ -257,16 +257,16 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="@dimen/margin_sm"
-                            android:hint="@string/profile_age"
+                            android:hint="@string/text_birthday_example"
                             android:textSize="14sp">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/editTextAge"
+                                android:id="@+id/editTextBirthday"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:singleLine="true"
-                                android:inputType="number"
-                                android:text="65"
+                                android:inputType="date"
+                                android:text="01/01/1960"
                                 android:textSize="14sp" />
                         </com.google.android.material.textfield.TextInputLayout>
 

@@ -10,5 +10,18 @@
     <color name="colorBlack">#000000</color>
     <color name="colorBlackLowAlpha">#34000000</color>
     <color name="colorGray">#E5E5E5</color>
+    <color name="colorDarkGray">#252525</color>
     <color name="colorTransparent">#00FFFFFF</color>
+
+    <color name="tagColor0">#D2B4DE</color>
+    <color name="tagColor1">#F8C471</color>
+    <color name="tagColor2">#76D7C4</color>
+    <color name="tagColor3">#AED6F1</color>
+    <color name="tagColor4">#DAF7A6</color>
+    <color name="tagColor5">#FA8072</color>
+    <color name="tagColor6">#FEC8D8</color>
+    <color name="tagColor7">#85EE85</color>
+    <color name="tagColor8">#FDFD96</color>
+    <color name="tagColor9">#89AED8</color>
+
 </resources>

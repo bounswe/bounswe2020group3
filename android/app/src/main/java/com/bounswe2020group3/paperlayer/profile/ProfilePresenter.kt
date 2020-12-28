@@ -1,8 +1,12 @@
 package com.bounswe2020group3.paperlayer.profile
 
+import android.net.Uri
 import android.util.Log
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import io.reactivex.disposables.CompositeDisposable
+import okhttp3.MediaType
+import java.io.File
+import java.io.InputStream
 import javax.inject.Inject
 
 class ProfilePresenter @Inject constructor(private var model: ProfileContract.Model) : BasePresenter<ProfileContract.View>(), ProfileContract.Presenter {

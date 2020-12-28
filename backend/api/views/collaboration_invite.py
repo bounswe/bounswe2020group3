@@ -12,7 +12,8 @@ from django.shortcuts import get_object_or_404
 from api.models.project import Project
 from django.contrib.auth.models import User
 from notifications.signals import notify
-
+from django.utils import timezone
+from rest_framework.exceptions import PermissionDenied
 
 class CollaborationInviteViewSet(viewsets.ModelViewSet):
     """
@@ -30,6 +31,7 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        serializer.validated_data['created'] = timezone.now()
         serializer.validated_data['from_user'] = self.request.user
         project = Project.objects.get(
             id=serializer.validated_data['to_project'].id)
@@ -39,8 +41,17 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
         if (project.state == 'open for collaborators' or
             project.state == 'inviting collaborators') and \
                 self.request.user.id != to_user.id:
-            invite = CollaborationInvite.objects.\
-                create(**serializer.validated_data)
+            old_invite = CollaborationInvite.objects.filter(
+                from_user=self.request.user,
+                to_project=project,
+                to_user=to_user)
+            if old_invite.count() > 0:
+                raise AlreadyInvitedException(
+                    status_code=status.HTTP_400_BAD_REQUEST)
+            col_invite = CollaborationInvite.objects.create(
+                **serializer.validated_data)
+            changed_data = {'id': col_invite.id}
+            changed_data.update(serializer.data)
 
             ''' Invite Notification '''
             ''' Target --> Invite '''
@@ -48,11 +59,11 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
                         verb="invited you to the Project {}"
                         .format(project.name),
                         recipient=to_user,
-                        target=invite,
+                        target=col_invite,
                         description="Invite"
                         )
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(changed_data, status=status.HTTP_201_CREATED)
         else:
             return Response(data={
                 'error': 'Unauthorized'
@@ -113,3 +124,13 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
         if self.request.method == 'POST':
             return CollaborationInvitePOSTSerializer
         return super().get_serializer_class()
+
+
+class AlreadyInvitedException(PermissionDenied):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "This user has already been invited."
+    status_code = 'invalid'
+
+    def __init__(self, status_code=None):
+        if status_code is not None:
+            self.status_code = status_code

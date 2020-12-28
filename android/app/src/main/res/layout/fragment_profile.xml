@@ -30,8 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/gradient"
-            android:padding="@dimen/padding_sm"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/padding_sm">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -84,9 +84,9 @@
                     android:id="@+id/textViewBio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
-                    android:layout_gravity="center"
                     android:text="Ali Mehmet Celâl Şengör is a Turkish geologist."
                     android:textColor="@color/colorBlack"
                     android:textSize="16sp" />
@@ -95,8 +95,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/colorBlackLowAlpha"
-                android:layout_margin="@dimen/margin_sm"/>
+                android:layout_margin="@dimen/margin_sm"
+                android:background="@color/colorBlackLowAlpha" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -106,65 +106,71 @@
                 <LinearLayout
                     android:id="@+id/linearLayoutFollowers"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textColor="@color/colorBlack"
-                        android:text="Followers"/>
+                        android:text="Followers"
+                        android:textColor="@color/colorBlack" />
+
                     <TextView
                         android:id="@+id/textViewProfileFollowers"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textColor="@color/colorBlack"
-                        android:text="0"/>
+                        android:text="0"
+                        android:textColor="@color/colorBlack" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/linearLayoutFollowings"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:paddingHorizontal="@dimen/padding_sm">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textColor="@color/colorBlack"
-                        android:text="Following"/>
+                        android:text="Following"
+                        android:textColor="@color/colorBlack" />
+
                     <TextView
                         android:id="@+id/textViewProfileFollowings"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textColor="@color/colorBlack"
-                        android:text="0"/>
+                        android:text="0"
+                        android:textColor="@color/colorBlack" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:paddingHorizontal="@dimen/padding_sm">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textColor="@color/colorBlack"
-                        android:text="Rating"/>
+                        android:text="Rating"
+                        android:textColor="@color/colorBlack" />
+
                     <TextView
                         android:id="@+id/textViewProfileRating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textColor="@color/colorBlack"
-                        android:text="0"/>
+                        android:text="0"
+                        android:textColor="@color/colorBlack" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -283,16 +289,16 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/profile_age"
+                        android:text="@string/profile_birthday"
                         android:textColor="@color/primaryDarkColor"
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/textViewAge"
+                        android:id="@+id/textViewBirthday"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
-                        android:text="65"
+                        android:text="01/01/1960"
                         android:textColor="#000000"
                         android:textSize="16sp" />
 
@@ -347,14 +353,48 @@
 
     </LinearLayout>
 
-    <ImageButton
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutFollowRequests"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_md"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="24dp"
+            android:minHeight="36dp"
+            android:src="@drawable/ic_group_white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:cardBackgroundColor="@color/colorWhite"
+            app:cardCornerRadius="100dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/textViewProfileFollowRequestCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="10"
+                android:textColor="@color/colorDarkGray" />
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <ImageView
         android:id="@+id/imageButtonSettings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_md"
         android:layout_marginVertical="@dimen/margin_md"
-        android:background="@color/colorTransparent"
-        android:contentDescription="@string/profile_settings_description"
         android:src="@drawable/ic_baseline_settings_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -3,7 +3,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { Button, Typography, Box, styled } from '@material-ui/core';
 
 const Side = styled(Box)({
-    backgroundColor: "#123321",
+    backgroundColor: "#183761",
     paddingTop: "60px",
     height: '100%',
     minWidth: "200px",
@@ -21,7 +21,7 @@ function Profilebar(props) {
             <Avatar src={props.photoUrl}
                 style={{ marginRight: "10px", width: "100px", height: "100px", cursor: "pointer", marginBottom: "25px" }}
                 onClick={props.goToProfile} />
-            <Typography variant="h6">{props.name} <br /> {props.lastName}</Typography>
+            <Typography variant="h6" style={{textTransform:"capitalize"}}>{props.name} <br /> {props.lastName}</Typography>
 
             <Button color="secondary" variant="outlined" style={{ margin: "10px" }}>Google Scholar</Button>
             <Button color="secondary" variant="outlined" style={{ margin: "10px" }}>Projects</Button>

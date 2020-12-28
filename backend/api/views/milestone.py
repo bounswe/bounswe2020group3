@@ -8,6 +8,7 @@ from api.permission import IsMilestoneMemberOrReadOnly
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class MilestoneViewSet(viewsets.ModelViewSet):
@@ -19,9 +20,11 @@ class MilestoneViewSet(viewsets.ModelViewSet):
     serializer_class = MilestoneSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsMilestoneMemberOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['project__id']
 
     @action(detail=False, methods=['GET'], url_name='get_user_milestones')
-    def get_user_milestones(self, request):
+    def get_user_milestones(self, request, *args):
         username = self.request.user.username
         list_of_milestones = []
         if username:

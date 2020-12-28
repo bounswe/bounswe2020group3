@@ -48,6 +48,7 @@ export default class HomePage extends Component {
       due: "",
       events: [],
       tags: [],
+      milestones: [],
       username: "",
       userlastname: "",
       photoUrl: "",
@@ -112,6 +113,19 @@ export default class HomePage extends Component {
       }, (error) => {
         this.props.history.push("/"); // Forwards from unexisting profiles to homepage
       });
+    axios.get(`${config.API_URL}${config.Milestone_url}?project__id=${project_id}`, { headers: { 'Content-Type': 'Application/json' } })
+        .then(res => {
+          const prof = res.data
+          console.log(prof)
+          if (prof == null) {
+            this.setState({ milestones: [] });
+          } else {
+            this.setState({ milestones: prof }); // ATTENTION : May cause bugs later ! ! !
+            console.log(this.state.milestones)
+          }
+        }, (error) => {
+          this.props.history.push("/"); // Forwards from unexisting profiles to homepage
+        });
   }
   getProfile = () => {
     axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
@@ -156,8 +170,41 @@ export default class HomePage extends Component {
     if (events.length === 0) return (  <Typography variant='h6' color="textPrimary">No Related Events</Typography>)
 
     return events.map((item) => {
+      console.log(item)
       return (<>
         <Typography variant="h6" color="primary" style={{ cursor: "pointer", width: "100%", textAlign: "center" }} onClick={() => this.goToEvent(item.id)}>{item.title}</Typography>
+      </>)
+    });
+  };
+  renderMilestones() {
+    const milestones = JSON.parse(JSON.stringify(this.state.milestones));
+    if (milestones.length === 0) return (
+        <Paper elevation={6}
+               style={{ border: "solid 1px blue",
+                 padding: "15px", maxHeight: "80px",
+                 background: "white", margin: "auto", marginBottom: "10px", textAlign: "middle", overflow: "clip"
+               }}
+               borderColor="primary" border={1}>
+        <Typography variant='h6' color="textPrimary">No Related Milestones</Typography>
+        </Paper>)
+
+    return milestones.map((item) => {
+      return (<>
+        <Paper elevation={6}
+               style={{ border: "solid 1px blue",
+                 padding: "15px", maxHeight: "80px",
+                 background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+               }}
+               borderColor="primary" border={1}>
+          <Typography variant="h6" color="primary"
+                      style={{ cursor: "pointer", display:"inline-block" }}
+          >{item.date}</Typography>
+          <hr />
+          <Typography nowrap variant="body2" style={{ textAlign: "left", color: "black" }}>
+            {item.description.substr(0, 120)}
+            {/*May need more fine tuning as a future work.*/}
+          </Typography>
+        </Paper>
       </>)
     });
   };
@@ -229,7 +276,7 @@ export default class HomePage extends Component {
       return (
         <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
           <Typography variant="h6" color="primary">Contributors</Typography>
-          <Paper elevation={6} style={{ padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+          <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
             {this.renderContributor()}
           </Paper>
         </Grid>
@@ -250,10 +297,22 @@ export default class HomePage extends Component {
       return (
         <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
           <Typography variant="h6" color="primary">Related Events</Typography>
-          <Paper elevation={6} style={{ padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+          <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
             {this.renderEvents()}
           </Paper>
         </Grid>
+      )
+    else return (<></>)
+  }
+
+  renderRelatedMilestones = () => {
+    const { isPublic } = this.state;
+    if (isPublic)
+      return (
+          <Grid item sm={12} style={{ maxHeight: "35vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
+            <Typography variant="h6" color="primary">Milestones</Typography>
+              {this.renderMilestones()}
+          </Grid>
       )
     else return (<></>)
   }
@@ -293,30 +352,27 @@ export default class HomePage extends Component {
               <Paper elevation={6} style={{ border: "solid 1px blue", borderRadius: '5px', padding: "10px", minHeight: "40px", marginTop: '20px', textAlign: "left" }}>
                 {this.renderTags()}
               </Paper>
+              {this.state.isMember ?
+                  <Grid item sm={12} style={{ minHeight: "10vh" }}>
+                    <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.goToEditProjectPage(project_id)}>Edit Project</Button>
+                    <br />
+                    <Button variant="contained" color="primary" style={{ marginTop: "10px" }}
+                            onClick={() => { this.props.history.push("/issue-milestone", { projectId: this.state.projectId }); }}>Set New Milestone</Button>
+                  </Grid>
+                  :
+                  <></>
+              }
               <p></p>
-              <Grid container direction="row" justify="space-evenly" alignItems="baseline">
-                <Grid item sm={5}>
-                  <Typography variant="h6" color="primary">Recommended Users</Typography>
-                  <Paper elevation={6} style={{ minHeight: "100px" }}>
-                    <p></p>
-                  </Paper>
-                </Grid>
-                <Grid item sm={5}>
-                  <Typography variant="h6" color="primary">Similar Projects</Typography>
-                  <Paper elevation={6} style={{ minHeight: "100px" }}>
-                    <p></p>
-                  </Paper>
-                </Grid>
-              </Grid>
             </Grid>
             <Grid item sm={4}>
 
               {this.renderMembers()}
               {this.renderRelatedEvents()}
+              {this.renderRelatedMilestones()}
               {this.state.isMember ? 
               <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: 'scroll', margin: "5px 0" }}>
                 <Typography variant="h6" color="primary">Upcoming Deadlines</Typography>
-                <Paper elevation={6} style={{ width: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+                <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
                 {this.renderDeadlines()}
                 </Paper>
               </Grid>
@@ -327,7 +383,7 @@ export default class HomePage extends Component {
                 <Grid item sm={12} style={{ minHeight: "10vh" }}>
                 {/* <Typography variant="h5" color="primary">Tags</Typography> */}
                 <Paper elevation={6}
-                  style={{ width: "90%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
+                  style={{border: "solid 1px blue", width: "90%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
                   borderColor="primary"
                   border={1}>
                   {this.state.showAddTag ?
@@ -352,16 +408,7 @@ export default class HomePage extends Component {
               :
               <></>
                 }
-                {this.state.isMember ? 
-                <Grid item sm={12} style={{ minHeight: "10vh" }}>
-                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.goToEditProjectPage(project_id)}>Edit Project</Button>
-                <br />
-                <Button variant="contained" color="primary" style={{ marginTop: "10px" }}
-                  onClick={() => { this.props.history.push("/issue-milestone", { projectId: this.state.projectId }); }}>Set New Milestone</Button>
-              </Grid>
-              :
-              <></>
-              }
+
               
             </Grid>
           </Grid>

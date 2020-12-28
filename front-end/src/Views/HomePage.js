@@ -45,6 +45,7 @@ export default class HomePage extends Component {
             projects:[],
             events:[],
             milestones:[],
+            page_num: 0,
         }
     };
 
@@ -73,7 +74,7 @@ export default class HomePage extends Component {
     componentDidMount() {
       axios.get(`${config.API_URL}${config.Create_Project_Url}`, { headers:{ 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
         .then(res => {
-          const projects = res.data;
+          const projects = res.data.reverse();
           console.log(projects);
           this.setState({ projects:projects });
         });
@@ -205,7 +206,7 @@ export default class HomePage extends Component {
               <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEventCreation}>Create an Event</Button>
               
               <Typography variant="h5" color="primary" style={{marginTop:"10px"}}>Milestones</Typography>
-              <Grid style={{maxHeight:"40vh", overflowY:"scroll"}} item sm={12}>
+              <Grid style={{maxHeight:"50vh", overflowY:"scroll"}} item sm={12}>
                   {this.renderMilestones()}
               </Grid>
             </Grid>

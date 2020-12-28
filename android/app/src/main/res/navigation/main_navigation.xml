@@ -87,6 +87,9 @@
         <action
             android:id="@+id/navigateToCollabRequestsFromProject"
             app:destination="@id/collabFragment" />
+        <action
+            android:id="@+id/navigateToUserFromProject"
+            app:destination="@id/userFragment" />
     </fragment>
 
     <fragment
@@ -163,6 +166,9 @@
         <action
             android:id="@+id/navigateToProjectDetailsFromInvite"
             app:destination="@id/projectFragment" />
+        <action
+            android:id="@+id/navigateToUserFromInvite"
+            app:destination="@id/userFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventFragment"

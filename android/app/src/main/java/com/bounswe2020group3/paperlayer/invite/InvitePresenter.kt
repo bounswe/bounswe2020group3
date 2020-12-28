@@ -57,7 +57,9 @@ class InvitePresenter @Inject constructor(private var model: InviteContract.Mode
                                 for (user in userlist){
                                     val invited : Boolean =  user.id.toString() in invitedIds
                                     if (user.profile.isNotEmpty()) {
-                                        this.view?.addUserCard(user.username,
+                                        this.view?.addUserCard(
+                                                user.id,
+                                                user.username,
                                                 "${user.profile[0].name} ${user.profile[0].lastName}",
                                                 user.profile[0].expertise,
                                                 user.profile[0].profile_picture,

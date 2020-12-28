@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
@@ -50,7 +51,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
 
     //Current OwnerID
     private var ownerID = 0
-
+    var collabbed = -1
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (context as MainActivity).getAppComponent().inject(this)
@@ -80,6 +81,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         var projectID = arguments?.getInt("projectID")
         if (projectID != null) {
             this.presenter.fetchProject(projectID) //fetch project and update ui
+            this.presenter.fetchRequestOfMine(projectID)
         }
         else{
             writeLogMessage("e",TAG,"projectID null")
@@ -92,6 +94,9 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         }
         view.findViewById<ImageView>(R.id.imageViewCollabRequests).setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToCollabRequestsFromProject,bundle)
+        }
+        view.findViewById<Button>(R.id.buttonCollab).setOnClickListener{
+            presenter.OnClickCollab(projectID!!,collabbed)
         }
         writeLogMessage("i",TAG,"ProjectFragment view created")
         return view
@@ -216,6 +221,11 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
             this.fragmentView.buttonEditProject.visibility= GONE
             this.fragmentView.buttonInvite.visibility= GONE
             this.fragmentView.imageViewCollabRequests.visibility = GONE
+            if(project.state == "open for collaborators") {
+                this.fragmentView.findViewById<Button>(R.id.buttonCollab).visibility = VISIBLE
+                if(collabbed != -1)
+                    this.fragmentView.findViewById<Button>(R.id.buttonCollab).text = "WITHDRAW"
+            }
         }
 
         writeLogMessage("i",TAG,"Project UI Updated")
@@ -236,5 +246,13 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         val bundle = bundleOf("userID" to userId)
         Navigation.findNavController(requireView()).navigate(R.id.navigateToUserFromProject, bundle)
     }
+    override fun collabCheck(index: Int) {
+        collabbed = index
+        fragmentView.findViewById<Button>(R.id.buttonCollab).text = "WITHDRAW"
+    }
 
+    override fun collabUncheck() {
+        collabbed = -1
+        fragmentView.findViewById<Button>(R.id.buttonCollab).text = "COLLABORATE"
+    }
 }

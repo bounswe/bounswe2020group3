@@ -56,4 +56,11 @@ class ProjectModel @Inject constructor(private var sessionManager: Session,retro
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
+
+    override fun fetchRequestofMine(projectId: Int) : Observable<List<CollaborationRequest>>{
+        val ownerId = sessionManager.getToken().value?.id
+
+        return collabService.fetchRequests(ownerId!!,projectId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())    }
 }

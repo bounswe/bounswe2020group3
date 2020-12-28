@@ -23,13 +23,14 @@ function Profilebar(props) {
                 onClick={props.goToProfile} />
             <Typography variant="h6" style={{textTransform:"capitalize"}}>{props.name} <br /> {props.lastName}</Typography>
 
-            <Button color="secondary" variant="outlined" style={{ margin: "10px" }}>Google Scholar</Button>
-            <Button color="secondary" variant="outlined" style={{ margin: "10px" }}>Projects</Button>
+            {/*<Button color="secondary" variant="outlined" style={{ margin: "10px" }}>Google Scholar</Button>*/}
             <Button color="secondary" variant="outlined"
                 style={{ margin: "10px" }}
                 onClick={props.goToProjectCreation}
-            >Create a Project</Button>
-            <Button color="secondary" variant="outlined" style={{ margin: "10px" }}>Settings</Button>
+            >Create a Project</Button><Button color="secondary" variant="outlined"
+                style={{ margin: "10px" }}
+                onClick={props.goToEventCreation}
+            >Create an Event</Button>
         </Side>);
 }
 export default Profilebar;

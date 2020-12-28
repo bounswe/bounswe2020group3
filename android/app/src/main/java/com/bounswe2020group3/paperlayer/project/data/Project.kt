@@ -19,5 +19,6 @@ data class Project (
         @field:Json(name = "due_date") var due_date: String,
         @field:Json(name = "event") var event: Event,
         @field:Json(name = "tags") var tags: List<Tag>,
-        @field:Json(name = "milestones") var milestones: List<Milestone>
+        @field:Json(name = "milestones") var milestones: List<Milestone>,
+        @field:Json(name = "owner_id") var ownerId: Int
 ) : Parcelable

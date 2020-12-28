@@ -10,6 +10,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,7 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.google.android.material.chip.Chip
 import com.google.android.material.tabs.TabLayout
@@ -24,6 +26,7 @@ import kotlinx.android.synthetic.main.fragment_invite.*
 import kotlinx.android.synthetic.main.fragment_project_detail.*
 import kotlinx.android.synthetic.main.fragment_project_detail.view.*
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 private const val TAG = "ProjectFragment"
 
@@ -31,7 +34,6 @@ private const val TAG = "ProjectFragment"
 val tagColors = arrayOf(R.color.tagColor0, R.color.tagColor1, R.color.tagColor2, R.color.tagColor3,
     R.color.tagColor4,R.color.tagColor5,R.color.tagColor6,R.color.tagColor7,
     R.color.tagColor8,R.color.tagColor9)
-
 
 class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
 
@@ -50,6 +52,8 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
     //Member Card List
     private val memberCardList = ArrayList<MemberCard>()
 
+    //Current OwnerID
+    private var ownerID = 0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -73,7 +77,6 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         this.presenter.setView(this)
         this.presenter.bind(this)
 
-
         initRecyclerView()
         resetMemberCardList()
 
@@ -90,6 +93,9 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
 
         view.findViewById<Button>(R.id.buttonInvite).setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToInviteFromProjectDetails,bundle)
+        }
+        view.findViewById<ImageView>(R.id.imageViewCollabRequests).setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToCollabRequestsFromProject,bundle)
         }
         writeLogMessage("i",TAG,"ProjectFragment view created")
         return view
@@ -132,6 +138,11 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         writeLogMessage("i", TAG, "Member Card Added $username")
     }
 
+    override fun updateCurrentUser(ownerID: Int) {
+        this.ownerID=ownerID
+        this.presenter.getProject()?.let { updateProjectUI(it) }
+    }
+
     private fun initRecyclerView() {
         this.recyclerView = fragmentView.findViewById(R.id.recyclerViewProjectMembers)!!
         this.recyclerView.layoutManager = LinearLayoutManager(this.context)
@@ -139,9 +150,6 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         this.recyclerView.adapter = membersAdapter
         writeLogMessage("i", TAG, "RecyclerView initialized.")
     }
-
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -171,7 +179,6 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
 
     //Update project UI
     override fun updateProjectUI(project: Project) {
-
         this.fragmentView.projectTitle.text=project.name
         this.fragmentView.projectDescription.text=project.description
         this.fragmentView.projectOwner.text=project.owner
@@ -180,19 +187,16 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         this.fragmentView.projectState.text=project.state
         this.fragmentView.projectRequirements.text=project.requirements
 
-
         if(project.event!=null)
         {
             this.fragmentView.textViewEvents.text=project.event.title
         }
 
-
         //Adding Members
-        for (member in project.members!!){
+        for (member in project.members.orEmpty()){
                 addMemberCard(member.username)
                 submitMemberCardList()
         }
-
 
         //Tag Field Text
         if(project.tags.isEmpty()) {
@@ -201,12 +205,21 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         else{
             this.fragmentView.textViewTags.visibility=GONE
         }
+
         //Adding tags to dynamically to project tags
         for (tag in project.tags){
             val chip = Chip(this.fragmentView.chipGroupTags.context)
             chip.text=tag.name
             chip.setChipBackgroundColorResource(tagColors[tag.color])
             this.fragmentView.chipGroupTags.addView(chip)
+        }
+
+        //Hide elements if project owner is not current user
+        if(ownerID!=project.ownerId)
+        {
+            this.fragmentView.buttonEditProject.visibility= GONE
+            this.fragmentView.buttonInvite.visibility= GONE
+            this.fragmentView.imageViewCollabRequests.visibility = GONE
         }
 
         writeLogMessage("i",TAG,"Project UI Updated")

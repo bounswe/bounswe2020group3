@@ -48,7 +48,7 @@ class RecentProjectsPresenter @Inject constructor(private var model: HomeContrac
         this.view?.writeLogMessage("i", TAG, "Fetching all projects of owner $ownerId ...")
         val getProjectObservable = model.getAllProjects(ownerId).subscribe(
                 { projectList ->
-
+                    val projectListReversed = projectList.reversed()
                     val getRequestsObservable = model.fetchRequests(ownerId).subscribe(
                             { requests ->
                                 var requested : ArrayList<Int> = ArrayList()
@@ -56,7 +56,7 @@ class RecentProjectsPresenter @Inject constructor(private var model: HomeContrac
                                     requested.add(request.to_project)
                                     requestSent.add(request)
                                 }
-                                for (project in projectList) {
+                                for (project in projectListReversed) {
                                     if (project.isPublic)
                                         if(project.owner_id.toInt() != ownerId)
                                             if(project.id in requested)

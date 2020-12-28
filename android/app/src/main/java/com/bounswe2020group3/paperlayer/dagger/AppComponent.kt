@@ -1,5 +1,6 @@
 package com.bounswe2020group3.paperlayer.dagger
 
+import com.bounswe2020group3.paperlayer.collaborationRequests.CollabFragment
 import com.bounswe2020group3.paperlayer.event.EventDetailFragment
 import com.bounswe2020group3.paperlayer.home.EventFragment
 import com.bounswe2020group3.paperlayer.home.MilestoneFragment
@@ -22,6 +23,7 @@ import javax.inject.Singleton
 
 
 @Component(modules = [
+    CollaborationRequestModule::class,
     HomeModule::class,
     InviteModule::class,
     RegisterModule::class,
@@ -55,4 +57,5 @@ interface AppComponent {
     fun inject(fragment: UserFragment)
     fun inject(fragment: FollowListFragment)
     fun inject(fragment: EventDetailFragment)
+    fun inject(fragment: CollabFragment)
 }

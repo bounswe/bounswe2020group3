@@ -1,16 +1,20 @@
 package com.bounswe2020group3.paperlayer.search
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
+import android.view.View.*
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.project.tagColors
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import kotlinx.android.synthetic.main.fragment_project_detail.view.*
 import kotlinx.android.synthetic.main.layout_list_item_search.view.*
+import kotlinx.android.synthetic.main.layout_list_item_search.view.chipGroupTags
 
 
 //Interface to communicate between fragment and recyclerview items
@@ -70,11 +74,40 @@ class SearchAdapter(var clickListener: OnCardClickListener): RecyclerView.Adapte
                             titleIcon.setImageResource(R.drawable.ic_project) //default project
                         }
                     }
-                    //adding tags to search card
-                    for (tag in searchCard.tags){
-                        val chip = Chip(chipGroupTag.context)
-                        chip.text=tag
-                        chipGroupTag.addView(chip)
+                    //Updating Tags
+                    when(searchCard.tags.size){
+                        0->{
+                            chipGroupTag.visibility= GONE
+                        }
+                        1->{
+                            itemView.chip1.text=searchCard.tags[0].name
+                            itemView.chip1.setChipBackgroundColorResource(tagColors[searchCard.tags[0].color])
+                            itemView.chip2.visibility= INVISIBLE
+                            itemView.chip3.visibility= INVISIBLE
+                        }
+                        2->{
+                            itemView.chip1.text=searchCard.tags[0].name
+                            itemView.chip1.setChipBackgroundColorResource(tagColors[searchCard.tags[0].color])
+                            itemView.chip2.text=searchCard.tags[1].name
+                            itemView.chip2.setChipBackgroundColorResource(tagColors[searchCard.tags[1].color])
+                            itemView.chip3.visibility= INVISIBLE
+                        }
+                        3->{
+                            itemView.chip1.text=searchCard.tags[0].name
+                            itemView.chip1.setChipBackgroundColorResource(tagColors[searchCard.tags[0].color])
+                            itemView.chip2.text=searchCard.tags[1].name
+                            itemView.chip2.setChipBackgroundColorResource(tagColors[searchCard.tags[1].color])
+                            itemView.chip3.text=searchCard.tags[2].name
+                            itemView.chip3.setChipBackgroundColorResource(tagColors[searchCard.tags[2].color])
+                        }
+                        else->{
+                            itemView.chip1.text=searchCard.tags[0].name
+                            itemView.chip1.setChipBackgroundColorResource(tagColors[searchCard.tags[0].color])
+                            itemView.chip2.text=searchCard.tags[1].name
+                            itemView.chip2.setChipBackgroundColorResource(tagColors[searchCard.tags[1].color])
+                            itemView.chip3.text=searchCard.tags[2].name
+                            itemView.chip3.setChipBackgroundColorResource(tagColors[searchCard.tags[2].color])
+                        }
                     }
                 }
 

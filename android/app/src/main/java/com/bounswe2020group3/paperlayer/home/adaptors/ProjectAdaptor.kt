@@ -56,8 +56,10 @@ class ProjectAdaptor (var clickListener: OnCardClickListener) : RecyclerView.Ada
             projectBody.text = item.projectBody
             projectCreator.text = item.projectCreator
             projectType.text = item.projectType
-            if(item.requestSent) {
+            if(item.requestSent != -1) {
                 buttonCollab.text = "WITHDRAW REQUEST"
+                buttonCollab.visibility = View.VISIBLE
+
                 buttonCollab.setOnClickListener {
                     action.onCollabButtonClick(item, adapterPosition)
                 }
@@ -68,6 +70,7 @@ class ProjectAdaptor (var clickListener: OnCardClickListener) : RecyclerView.Ada
             }
             else {
                 buttonCollab.text = "Collaborate"
+                buttonCollab.visibility = View.VISIBLE
 
                 Log.i(TAG, "${item.projectTitle} binded") //information
                 //Listeners for each project cards

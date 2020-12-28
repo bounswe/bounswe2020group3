@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
@@ -25,6 +26,7 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_invite.*
 import kotlinx.android.synthetic.main.fragment_project_detail.*
 import kotlinx.android.synthetic.main.fragment_project_detail.view.*
+import kotlinx.android.synthetic.main.layout_list_item_projectupdate.view.*
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -54,7 +56,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
 
     //Current OwnerID
     private var ownerID = 0
-
+    var collabbed = -1
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (context as MainActivity).getAppComponent().inject(this)
@@ -81,7 +83,9 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         resetMemberCardList()
 
         //Getting bundle arguments
+
         var projectID = arguments?.getInt("projectID")
+        collabbed = arguments?.getInt("requestSent")!!
         if (projectID != null) {
             this.presenter.fetchProject(projectID) //fetch project and update ui
         }
@@ -96,6 +100,9 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         }
         view.findViewById<ImageView>(R.id.imageViewCollabRequests).setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToCollabRequestsFromProject,bundle)
+        }
+        view.findViewById<Button>(R.id.buttonCollab).setOnClickListener{
+            presenter.OnClickCollab(projectID!!,collabbed)
         }
         writeLogMessage("i",TAG,"ProjectFragment view created")
         return view
@@ -220,6 +227,11 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
             this.fragmentView.buttonEditProject.visibility= GONE
             this.fragmentView.buttonInvite.visibility= GONE
             this.fragmentView.imageViewCollabRequests.visibility = GONE
+            if(project.state == "open for collaborators") {
+                this.fragmentView.findViewById<Button>(R.id.buttonCollab).visibility = VISIBLE
+                if(collabbed != -1)
+                    this.fragmentView.findViewById<Button>(R.id.buttonCollab).text = "WITHDRAW"
+            }
         }
 
         writeLogMessage("i",TAG,"Project UI Updated")
@@ -236,4 +248,13 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         writeLogMessage("i",TAG,"Project UI Reset")
     }
 
+    override fun collabCheck(index: Int) {
+        collabbed = index
+        fragmentView.findViewById<Button>(R.id.buttonCollab).text = "WITHDRAW"
+    }
+
+    override fun collabUncheck() {
+        collabbed = -1
+        fragmentView.findViewById<Button>(R.id.buttonCollab).text = "COLLABORATE"
+    }
 }

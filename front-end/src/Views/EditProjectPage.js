@@ -144,14 +144,15 @@ export default class ProjectPage extends Component {
       .then(res => {
         const prof = res.data;
         //const temp_members = prof.members;
-        this.setState({projectTitle:prof.name, projectDescription:prof.description, projectRequirements:prof.requirements,  projectState:prof.state, age:prof.age, projectType:prof.project_type, dueDate:prof.due_date, tags:prof.tags});
+        this.setState({projectTitle:prof.name, projectDescription:prof.description, projectRequirements:prof.requirements,  
+          projectState:prof.state, age:prof.age, projectType:prof.project_type,  dueDate:prof.due_date, tags:prof.tags}, () => {
+            this.fetchRelatedEvents();
+          });
         if(prof.event == null){
-          this.setState({events:[]});
+          this.setState({event:[]});
         }else{
-          this.setState({events:[prof.event]});
+          this.setState({event:[prof.event.id]});
         }
-        this.setState({tags:[{name:"alpha",color:"#F8C471"}]});
-
       });
     axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers:{'Content-Type':'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
       .then(res => {
@@ -244,7 +245,7 @@ export default class ProjectPage extends Component {
           {events.length !== 0
             ?
             Object.keys(events).map((id, i) => (
-              <MenuItem value={`${config.API_URL}${config.Event_Creation_Url}${id}/`}>{events[i]["title"]}</MenuItem>
+              <MenuItem value={`${events[i].id}`}>{events[i]["title"]}</MenuItem>
             ))
             :
             <MenuItem disabled value="">{errorMsg}</MenuItem>
@@ -274,12 +275,10 @@ export default class ProjectPage extends Component {
       stat: projectState,
       type: projectType,
       due_date: dueDate,
-      events: event
+      event: event
     };
     if(projectType !== "" )
       project.project_type = projectType;
-    if(event !== "")
-      project.events = [event]
     if (projectState !== "")
       project.state = projectState
 

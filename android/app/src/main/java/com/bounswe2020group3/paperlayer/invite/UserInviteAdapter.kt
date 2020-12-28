@@ -17,6 +17,7 @@ private const val TAG = "InviteAdapter"
 //Interface to communicate between fragment and recyclerview items
 interface OnCardClickListener {
     fun onInviteButtonClick(item: InviteCard, position: Int)
+    fun onCardClick(userId: Int)
 }
 
 class UserInviteAdapter(var clickListener: OnCardClickListener) : RecyclerView.Adapter<UserInviteAdapter.UserViewHolder>() {
@@ -57,6 +58,10 @@ class UserInviteAdapter(var clickListener: OnCardClickListener) : RecyclerView.A
             val imageUrl = inviteCard.photo_url
             if (imageUrl != null && imageUrl != "") {
                 Picasso.get().load(imageUrl).into(inviteAvatar)
+            }
+
+            itemView.setOnClickListener {
+                action.onCardClick(inviteCard.userId)
             }
 
             Log.i(TAG, "${inviteCard.username} binded") //information

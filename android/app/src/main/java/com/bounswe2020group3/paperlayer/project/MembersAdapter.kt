@@ -8,7 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.R
 import kotlinx.android.synthetic.main.layout_list_item_project_member.view.*
 
-class MembersAdapter: RecyclerView.Adapter<MembersAdapter.MemberViewHolder>() {
+interface OnMemberCardClickListener {
+    fun onCardClickListener(userId: Int)
+}
+
+class MembersAdapter(val clickListener: OnMemberCardClickListener): RecyclerView.Adapter<MembersAdapter.MemberViewHolder>() {
 
     private var members: List<MemberCard> = ArrayList()
 
@@ -22,7 +26,7 @@ class MembersAdapter: RecyclerView.Adapter<MembersAdapter.MemberViewHolder>() {
     override fun onBindViewHolder(holder: MembersAdapter.MemberViewHolder, position: Int) {
         when(holder){
             is MembersAdapter.MemberViewHolder ->{
-                holder.bind(members.get(position))
+                holder.bind(members.get(position), clickListener)
             }
         }
     }
@@ -42,8 +46,12 @@ class MembersAdapter: RecyclerView.Adapter<MembersAdapter.MemberViewHolder>() {
 
         var memberUsername: TextView =itemView.textViewProjectMemberUsername
 
-        fun bind(memberCard: MemberCard){
+        fun bind(memberCard: MemberCard, clickListener: OnMemberCardClickListener){
             memberUsername.setText(memberCard.username)
+
+            itemView.setOnClickListener {
+                clickListener.onCardClickListener(memberCard.userId)
+            }
         }
 
     }

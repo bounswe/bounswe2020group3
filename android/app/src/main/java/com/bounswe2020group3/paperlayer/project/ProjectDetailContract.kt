@@ -34,7 +34,7 @@ interface ProjectDetailContract {
 
         fun resetMemberCardList()
         fun submitMemberCardList()
-        fun addMemberCard(username: String)
+        fun addMemberCard(username: String, userId: Int)
         fun updateCurrentUser(ownerID:Int)
 
         fun collabCheck(index : Int)

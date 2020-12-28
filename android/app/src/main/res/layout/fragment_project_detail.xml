@@ -69,25 +69,25 @@
 
                             <TextView
                                 android:id="@+id/projectTitle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_weight="8"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:gravity="center_vertical"
                                 android:text="Project Title"
-                                android:textAppearance="?attr/textAppearanceHeadline5" />
+                                style="@style/TextAppearance.MaterialComponents.Headline5"/>
 
                             <ImageView
                                 android:id="@+id/imageViewCollabRequests"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="8"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginHorizontal="@dimen/margin_md"
                                 android:src="@drawable/ic_group_white" />
 
                             <ImageButton
                                 android:id="@+id/buttonEditProject"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_weight="2"
                                 android:background="@null"
                                 android:src="@drawable/ic_baseline_settings_24"
                                 android:tint="#000000"
@@ -97,10 +97,8 @@
                                 android:id="@+id/buttonCollab"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="8"
-                                android:text="Collaborate"
-                                android:visibility="gone"
-                                tools:visibility="gone" />
+                                android:layout_marginLeft="@dimen/margin_md"
+                                android:text="Collaborate" />
 
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>

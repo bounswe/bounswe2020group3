@@ -137,7 +137,7 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
 
 
 
-    override fun addUserCard(username: String, name : String, expertise: String, photoURL : String, id : Int, invited : Boolean) {
+    override fun addUserCard(username: String, name : String, expertise: String?, photoURL : String?, id : Int, invited : Boolean) {
         inviteCardList.add(
                 InviteCard(
                         username,name,

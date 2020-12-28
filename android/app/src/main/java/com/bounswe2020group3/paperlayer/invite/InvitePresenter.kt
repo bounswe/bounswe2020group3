@@ -55,14 +55,15 @@ class InvitePresenter @Inject constructor(private var model: InviteContract.Mode
                                 view?.writeLogMessage("i", TAG,message)
 
                                 for (user in userlist){
-                                    var invited : Boolean =  user.id.toString() in invitedIds
-                                    if (user.profile.size >0)
-                                        this.view?.addUserCard(user.username,"user.profile.get(0).name + user.profile.get(0).lastName",
-                                                "", "it",user.id,invited)
-                                    else
-                                        this.view?.addUserCard(user.username,"asd",
-                                                "asd", "it",user.id,invited)
-
+                                    val invited : Boolean =  user.id.toString() in invitedIds
+                                    if (user.profile.isNotEmpty()) {
+                                        this.view?.addUserCard(user.username,
+                                                "${user.profile[0].name} ${user.profile[0].lastName}",
+                                                user.profile[0].expertise,
+                                                user.profile[0].profile_picture,
+                                                user.id,
+                                                invited)
+                                    }
                                 }
                                 this.view?.submitUserCardList()
                                 this.view?.writeLogMessage("i", TAG," submit fun is Called")

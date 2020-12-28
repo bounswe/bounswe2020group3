@@ -105,8 +105,7 @@ export default class HomePage extends Component {
   };
     renderProject(){
       var projects = this.state.projects;
-      return projects.map((item) => {return (
-        item.id < 15 ? 
+      return projects.map((item) => {return ( 
       <Paper elevation={6}  style={{border: "solid 1px blue", padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
         <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Typography>
         <Typography  style={{textAlign:"left", color:"black"}}>{this.renderTags(item.tags)}</Typography>
@@ -114,8 +113,6 @@ export default class HomePage extends Component {
           {item.description}
         </Typography>
         </Paper>
-        :
-        <></>
         )});
   };
                           

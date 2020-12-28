@@ -260,14 +260,10 @@ export default class HomePage extends Component {
     
   }
 
-  renderColabRequest = () => {
-    var proj_id = this.props.location.pathname.split('/')[2];
-    axios.post(`${config.API_URL}/api/collaboration_requests/`, { from_user: this.username, to_project: proj_id }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+  submitColabRequest = () => {
+    axios.post(`${config.API_URL}/api/collaboration_requests/`, { from_user: this.state.username, to_project: this.state.projectId }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
         .then(res => {
-          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-            .then(res => {
               this.getProject(this.state.projectId);
-            })
         }); 
   }
 
@@ -306,7 +302,7 @@ export default class HomePage extends Component {
             <Grid item sm={7}>
               <Typography variant="h4" color="primary">{this.state.name}</Typography>
 
-              {this.state.isPublic && !this.state.isMember ?
+              {!this.state.isPublic && !this.state.isMember ?
                 <Typography variant="h6" color="error">(Private Project)</Typography>
                 :
                 <></>
@@ -401,7 +397,7 @@ export default class HomePage extends Component {
                         type="text"
                         color='primary'
                         style={{ width: "90%", textTransform: "capitalize" }}
-                        placeholder="Please enter a collaborator"
+                        placeholder="Invite a collaborator"
                         onChange={(e) => { this.handleColabQuery(e); }}
                         value={this.state.colabQuery}
                       />
@@ -414,9 +410,9 @@ export default class HomePage extends Component {
               <></>
               }
               <br />
-              {this.state.isNotMember ? 
+              {!this.state.isMember && this.state.isPublic  ? 
                 <Grid item sm={12} style={{ minHeight: "10vh" }}>
-                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderColabRequest}>Send Colab Request</Button>
+                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => {this.submitColabRequest() }}>Send Colab Request</Button>
                 </Grid>
               :
               <></>

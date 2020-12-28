@@ -662,6 +662,7 @@ export default class ProfilePage extends Component {
         logout={() => { this.props.history.push(config.Login_Path) }}
         pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
         goHome={() => { this.props.history.push(config.Homepage_Path) }}
+        history ={this.props.history}
       />
 
       <Grid container direction="row" justify="center" alignItems="center" >
@@ -737,6 +738,7 @@ export default class ProfilePage extends Component {
           window.location.reload(false);
         }}
         goHome={() => { this.props.history.push(config.Homepage_Path) }}
+        history ={this.props.history}
       />
       <Box>
         {!this.state.self && !this.state.loading ?  // So that re-render doesn't cause any glitch-like graphics.

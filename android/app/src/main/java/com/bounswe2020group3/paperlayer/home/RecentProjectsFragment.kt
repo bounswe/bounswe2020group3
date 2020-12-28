@@ -56,6 +56,7 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
         return view
     }
 
+    
     override fun getLayout(): View {
         TODO("Not yet implemented")
     }
@@ -85,8 +86,8 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
 
     }
 
-    override fun cardCheck(id: Int, position: Int) {
-        projectslist[position].requestSent = true
+    override fun cardCheck(id: Int,collabId: Int, position: Int) {
+        projectslist[position].requestSent = collabId
 
 
         submitCardList()
@@ -94,7 +95,7 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
     }
 
     override fun cardUncheck(id: Int, position: Int) {
-        projectslist[position].requestSent = false
+        projectslist[position].requestSent = -1
 
 
         submitCardList()
@@ -128,7 +129,7 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
     }
 
     override fun onViewButtonClick(item: ProjectUpdateCard, position: Int) {
-        val bundle = bundleOf("projectID" to item.projectId )
+        val bundle = bundleOf(("projectID" to item.projectId),("requestSent" to item.requestSent) )
 
         Navigation.findNavController(fragment_view).navigate(R.id.navigateToProjectFromRecentProjects,bundle)    }
 

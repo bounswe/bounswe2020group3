@@ -93,6 +93,13 @@
                                 android:tint="#000000"
                                 android:tooltipText="Edit Project" />
 
+                            <Button
+                                android:id="@+id/buttonCollab"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/margin_md"
+                                android:text="Collaborate" />
+
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>

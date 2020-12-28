@@ -2,9 +2,12 @@ package com.bounswe2020group3.paperlayer.project
 
 
 import com.bounswe2020group3.paperlayer.data.user.AuthToken
+import com.bounswe2020group3.paperlayer.home.data.CollaborateRequest
+import com.bounswe2020group3.paperlayer.home.data.CollaborationRequest
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.ProjectShort
 import com.bounswe2020group3.paperlayer.util.Session
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -16,6 +19,7 @@ import javax.inject.Inject
 class ProjectModel @Inject constructor(private var sessionManager: Session,retrofit: Retrofit):ProjectsContract.Model,ProjectDetailContract.Model{
 
     private var projectService: ProjectsContract.ProjectService = retrofit.create(ProjectsContract.ProjectService::class.java)
+    private var collabService: ProjectDetailContract.CollaborationRequestService = retrofit.create(ProjectDetailContract.CollaborationRequestService::class.java)
 
     //ProjectContract.Model
     //Get given project
@@ -37,4 +41,19 @@ class ProjectModel @Inject constructor(private var sessionManager: Session,retro
         return sessionManager.getToken()
     }
 
+    override fun collaborationRequest(request : CollaborateRequest) : Observable<CollaborationRequest> {
+        val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
+
+        return collabService.collaborationRequest(authToken,request)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun deleteRequest(collabId: Int): Completable {
+        val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
+
+        return collabService.deleteRequest(authToken,collabId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
 }

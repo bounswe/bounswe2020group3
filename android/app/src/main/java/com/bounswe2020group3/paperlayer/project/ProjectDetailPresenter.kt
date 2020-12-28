@@ -3,6 +3,7 @@ package com.bounswe2020group3.paperlayer.project
 import android.os.Bundle
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.home.data.CollaborateRequest
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import com.bounswe2020group3.paperlayer.project.data.Project
 import io.reactivex.disposables.CompositeDisposable
@@ -75,4 +76,41 @@ class ProjectPresenter  @Inject constructor(private var model: ProjectDetailCont
         view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectEditFromProjectFragment, bundle) }
     }
 
+    override fun OnClickCollab(projectId: Int,collabbed : Int) {
+        if(collabbed == -1) {
+            val collaborateObservable = model.collaborationRequest(CollaborateRequest(projectId, "hello")).subscribe({ request->
+
+                view?.writeLogMessage("i", TAG, "request sent")
+                view?.showToast("Request sent.")
+                view?.collabCheck(request.id)
+                view?.writeLogMessage("i",TAG,"request to project ${request.to_project} with the requestid ${request.id}")
+                //view?.cardInviteCheck(item.id,position)
+                disposable.clear()
+
+            }, {
+                view?.writeLogMessage("i",TAG, "Error while sending a request to project  with the id ${projectId} " + it)
+
+                view?.showToast("Error while sending a request to project with the id ${projectId} " + it)
+                disposable.clear()
+
+            })
+            disposable.add(collaborateObservable)
+        }
+        else{
+
+            view?.writeLogMessage("i", TAG,"request withdrawal for $collabbed sent")
+
+            val uninviteUserObservable = model.deleteRequest(collabbed).subscribe({
+                view?.writeLogMessage("i",TAG,"request withdrawal successful")
+                view?.collabUncheck()
+                disposable.clear()
+                //item.called = false
+            },
+                    {
+                        view?.writeLogMessage("e", TAG,"request withdrawal unsuccessful $it")
+                        disposable.clear()
+                    })
+            disposable.add(uninviteUserObservable)
+        }
+    }
 }

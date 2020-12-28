@@ -148,6 +148,7 @@ export default class IssueMilestonePage extends Component {
           logout={() => { this.props.history.push(config.Login_Path) }}
           pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }} 
           goHome={() => { this.props.history.push(config.Homepage_Path) }}
+          history ={this.props.history}
           />
         <FormWrapper>
           <h1 style={{ color: "black" }}> Set a Milestone </h1>

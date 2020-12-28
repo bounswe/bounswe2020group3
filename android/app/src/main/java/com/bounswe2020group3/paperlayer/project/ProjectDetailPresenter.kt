@@ -70,6 +70,25 @@ class ProjectPresenter  @Inject constructor(private var model: ProjectDetailCont
         disposable.add(getProjectObservable)
     }
 
+    override fun fetchRequestOfMine(projectId: Int) {
+        this.view?.writeLogMessage("i",TAG,"Fetching the request...")
+
+        val getRequestObservable = model.fetchRequestofMine(projectId).subscribe(
+                { list ->
+                    this.view?.writeLogMessage("i",TAG,"Fetching Successful.")
+                    if(list.size != 0)
+                        view?.collabCheck(list[0].id)
+                    else
+                        view?.collabUncheck()
+                },
+                { error ->
+                    this.view?.writeLogMessage("e",TAG,"Error in fetching requests")
+                }
+        )
+        if(getRequestObservable != null)
+            disposable.add(getRequestObservable)
+    }
+
     override fun navigateToEditProject() {
         val bundle = Bundle()
         bundle.putParcelable("PROJECT", getProject())

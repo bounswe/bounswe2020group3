@@ -22,7 +22,7 @@ interface ProjectDetailContract {
         fun navigateToEditProject()
         fun subscribeAuthToken()
         fun OnClickCollab(projectId: Int,collabbed : Int)
-
+        fun fetchRequestOfMine(projectId: Int)
     }
 
     interface View: Mvp.View{
@@ -44,7 +44,7 @@ interface ProjectDetailContract {
     interface Model {
         fun collaborationRequest(request : CollaborateRequest) : Observable<CollaborationRequest>
         fun deleteRequest(collabId: Int) : Completable
-
+        fun fetchRequestofMine(projectId: Int): Observable<List<CollaborationRequest>>
         fun getProject(projectId: Int): Single<Project>
         fun getAuthToken(): BehaviorSubject<AuthToken>
     }
@@ -52,6 +52,8 @@ interface ProjectDetailContract {
         @POST("/api/collaboration_requests/")
         fun collaborationRequest(@Header("Authorization") authorization: String, @Body collaborate: CollaborateRequest): Observable<CollaborationRequest>
 
+        @GET("/api/collaboration_requests/")
+        fun fetchRequests(@Query("from_user__id") userId: Int,@Query("to_project__id") projectId: Int) : Observable<List<CollaborationRequest>>
         @DELETE("api/collaboration_requests/{id}/")
         fun deleteRequest(@Header("Authorization") authorization: String,@Path("id") collabId : Int ) : Completable
     }

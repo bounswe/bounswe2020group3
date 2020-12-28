@@ -78,11 +78,10 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         resetMemberCardList()
 
         //Getting bundle arguments
-
         var projectID = arguments?.getInt("projectID")
-        collabbed = arguments?.getInt("requestSent")!!
         if (projectID != null) {
             this.presenter.fetchProject(projectID) //fetch project and update ui
+            this.presenter.fetchRequestOfMine(projectID)
         }
         else{
             writeLogMessage("e",TAG,"projectID null")
@@ -243,6 +242,10 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         writeLogMessage("i",TAG,"Project UI Reset")
     }
 
+    override fun onCardClickListener(userId: Int) {
+        val bundle = bundleOf("userID" to userId)
+        Navigation.findNavController(requireView()).navigate(R.id.navigateToUserFromProject, bundle)
+    }
     override fun collabCheck(index: Int) {
         collabbed = index
         fragmentView.findViewById<Button>(R.id.buttonCollab).text = "WITHDRAW"
@@ -251,10 +254,5 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
     override fun collabUncheck() {
         collabbed = -1
         fragmentView.findViewById<Button>(R.id.buttonCollab).text = "COLLABORATE"
-    }
-
-    override fun onCardClickListener(userId: Int) {
-        val bundle = bundleOf("userID" to userId)
-        Navigation.findNavController(requireView()).navigate(R.id.navigateToUserFromProject, bundle)
     }
 }

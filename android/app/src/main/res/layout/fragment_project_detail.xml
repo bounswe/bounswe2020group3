@@ -95,10 +95,12 @@
 
                             <Button
                                 android:id="@+id/buttonCollab"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/margin_md"
-                                android:text="Collaborate" />
+                                android:layout_weight="1"
+                                android:text="Collaborate"
+                                android:visibility="gone"
+                                tools:visibility="gone" />
 
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>

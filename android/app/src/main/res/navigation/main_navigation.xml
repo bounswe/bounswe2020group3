@@ -87,6 +87,9 @@
         <action
             android:id="@+id/navigateToCollabRequestsFromProject"
             app:destination="@id/collabFragment" />
+        <action
+            android:id="@+id/navigateToUserFromProject"
+            app:destination="@id/userFragment" />
     </fragment>
 
     <fragment

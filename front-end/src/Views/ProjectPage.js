@@ -553,11 +553,10 @@ export default class HomePage extends Component {
   }
 
   getColabRequests = () => {
-    axios.get(`${config.API_URL}/api/collaboration_requests/?to_project_id=this.state.projectId`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}/api/collaboration_requests/?to_project_id=${this.state.projectId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
-        let allColabRequests = [res.data];
-        this.setState({ colabRequests: allColabRequests}); 
-      })
+        this.setState({ colabRequests: res.data ?? []}); 
+      });
   }
   
   //Delete this particular tag.

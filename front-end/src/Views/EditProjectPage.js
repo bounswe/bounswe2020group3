@@ -310,7 +310,7 @@ export default class ProjectPage extends Component {
       <Container>
         <UserNavbar
           logout={() => { this.props.history.push(config.Login_Path) }}
-          pushProfile={() => { this.props.history.push("/profile") }}
+          pushProfile={() => { this.props.history.push(`/profile/${getUserId()} `) }}
           goHome={() => { this.props.history.push(config.Homepage_Path) }}
           history ={this.props.history}
         />

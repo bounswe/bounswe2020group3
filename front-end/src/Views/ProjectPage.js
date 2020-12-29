@@ -91,13 +91,14 @@ export default class HomePage extends Component {
     this.props.history.push("/edit-project/" + pid);
   };
   getProject = (project_id) => {
-    axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}/`, { headers: { 'Content-Type': 'Application/json' } })
+    axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}/`, { headers: {  'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         const prof = res.data;
         const temp_members = (prof.members ? prof.members : [])
         this.setState({
           name: prof.name, desc: prof.description,
-          membersData: (prof.members ? prof.members : []), reqs: prof.requirements,
+          membersData: (prof.members ? prof.members : []), 
+          reqs: prof.requirements,
           stat: prof.state, age: prof.age, type: prof.project_type,
           due: prof.due_date, tags: prof.tags, isPublic: prof.is_public,
           owner: prof.owner
@@ -119,7 +120,7 @@ export default class HomePage extends Component {
       }, (error) => {
         this.props.history.push("/"); // Forwards from unexisting profiles to homepage
       });
-    axios.get(`${config.API_URL}${config.Milestone_url}?project__id=${project_id}`, { headers: { 'Content-Type': 'Application/json' } })
+    axios.get(`${config.API_URL}${config.Milestone_url}?project__id=${project_id}`, { headers: {  'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
         .then(res => {
           const prof = res.data
           console.log(prof)
@@ -150,6 +151,7 @@ export default class HomePage extends Component {
         ids.push(membersData[i].profile[0].id);
       }
       console.log(ids, membersData);
+      console.log(ids, getProfileId())
       if( ids.includes(parseInt(getProfileId() ) ) ){
         this.setState({isMember :true})
       }
@@ -380,7 +382,7 @@ export default class HomePage extends Component {
               <Paper elevation={6} style={{ border: "solid 1px blue", borderRadius: '5px', padding: "10px", minHeight: "40px", marginTop: '20px', textAlign: "left" }}>
                 {this.renderTags()}
               </Paper>
-              {this.state.isMember ?
+              {this.state.isMember  ?
                   <Grid item sm={12} style={{ minHeight: "10vh" }}>
                     <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.goToEditProjectPage(project_id)}>Edit Project</Button>
                     <br />

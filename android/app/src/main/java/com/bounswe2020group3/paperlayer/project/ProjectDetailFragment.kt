@@ -19,6 +19,7 @@ import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.project.data.Project
+import com.bounswe2020group3.paperlayer.project.data.User
 import com.google.android.material.chip.Chip
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_project_detail.*
@@ -133,10 +134,10 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         writeLogMessage("i", TAG, "Member Card List Updated! " + memberCardList.size)
     }
 
-    override fun addMemberCard(username: String, userId: Int) {
+    override fun addMemberCard(user: User) {
         memberCardList.add(
-            MemberCard(username, userId))
-        writeLogMessage("i", TAG, "Member Card Added $username")
+            MemberCard(user))
+        writeLogMessage("i", TAG, "Member Card Added ${user.username}")
     }
 
     override fun updateCurrentUser(ownerID: Int) {
@@ -195,7 +196,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
 
         //Adding Members
         for (member in project.members.orEmpty()){
-                addMemberCard(member.username, member.id)
+                addMemberCard(member)
                 submitMemberCardList()
         }
 

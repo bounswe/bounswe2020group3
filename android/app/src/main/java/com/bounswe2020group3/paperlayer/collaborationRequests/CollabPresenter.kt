@@ -97,7 +97,7 @@ class CollabPresenter  @Inject constructor(private var model: CollabContract.Mod
     }
 
     override fun onRejectButtonClick(item: CollabCard, position: Int) {
-        val rejectrequestObservable  = model.acceptRequest(item.id).subscribe(
+        val rejectrequestObservable  = model.rejectRequest(item.id).subscribe(
                 {
                     view?.writeLogMessage("i",TAG,"Collaboration Request Rejected successfully")
                     view?.removeCard(item)

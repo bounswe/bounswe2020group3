@@ -873,9 +873,7 @@ export default class ProfilePage extends Component {
 
     axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
         .then(resUser => {
-          
-          const profUser = resUser.data.profile[0];
-          let windowUserId = resUser.data.id; //28
+
           const userState = resUser.data;
           console.log(userState)
           console.log(userState.profile[0])
@@ -883,8 +881,7 @@ export default class ProfilePage extends Component {
           var userId = this.props.location.pathname.split('/')[2];
           axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
           .then(res => {
-            const prof = res.data;
-            let windowUserId = res.data.id; //28
+
             const profileState = res.data;
 
             console.log(profileState.id)
@@ -897,23 +894,7 @@ export default class ProfilePage extends Component {
             axios.post(`${config.API_URL}${config.Follow_url}`, follow_create, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
             .then(resCreate => {
 
-              let newFollowers = []
-              this.state.followers.forEach(item => {
-                const member = item;
-                newFollowers.push(member.name + " " + member.last_name); // ATTENTION : WE may want to add the middle names as well.
               });
-              newFollowers.push(userState.profile[0].name +" "+ userState.profile[0].middle_name +" "+ userState.profile[0].lastname)
-              
-              this.setState({followers: newFollowers})
-
-              console.log(this.state.followers)
-
-              
-
-              
-
-              //userState.following.push(profileState.profile[0].name +" "+ profileState.profile[0].middle_name +" "+ profileState.profile[0].lastname)  
-            });
 
             const followAction = {
               id: profileState.id,
@@ -986,22 +967,14 @@ export default class ProfilePage extends Component {
   renderUnfollow() {
     axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
         .then(resUser => {
-          
-          const profUser = resUser.data.profile[0];
-          let windowUserId = resUser.data.id; //28
+
           const userState = resUser.data;
-      //    console.log(userState)
-      //    console.log(userState.profile[0])
-          
           var userId = this.props.location.pathname.split('/')[2];
+          
           axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
           .then(res => {
-            const prof = res.data;
-            let windowUserId = res.data.id; //28
-            const profileState = res.data;
 
-       //     console.log(profileState.id)
-            
+            const profileState = res.data;
             axios.get(`${config.API_URL}${config.Follow_url}?to_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
               .then(resId=>{
 
@@ -1009,13 +982,13 @@ export default class ProfilePage extends Component {
                 var unfId = 0
                 resId.data.forEach((item) => {
 
-                  if(item.from_user.id == getUserId()){
+                  if("" + item.from_user.id === getUserId()){
                     unfId = item.id
                   }
                   
                 })
 
-                console.log("unfId      " + unfId)
+        //        console.log("unfId      " + unfId)
                 
                const unfollowAction = {
                 id: unfId,
@@ -1076,30 +1049,17 @@ export default class ProfilePage extends Component {
               axios.post(`${config.API_URL}${config.Follow_url}${unfId}${config.Unfollow_Path}`, unfollowAction, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
               .then(resUnf => {
 
-                let newFollowers = []
-                this.state.followers.forEach(item => {
-                  const member = item;
-                  if(member.name + " " + member.last_name !== userState.profile[0].name +" "+ userState.profile[0].middle_name +" "+ userState.profile[0].lastname){
-
-                    newFollowers.push(member.name + " " + member.last_name); // ATTENTION : WE may want to add the middle names as well.
-                  }
-                  
-                });
                 
-                this.setState({followers: newFollowers})
-
-        //        console.log(this.state.followers)
-                  
 
               });
 
-         /*     axios.delete(`${config.API_URL}${config.Follow_url}${profileState.id}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+              axios.delete(`${config.API_URL}${config.Follow_url}${unfId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
               .then(resDelete => {
 
                 
               });
             
-          */
+          
 
 
       //        console.log(unfollowAction)

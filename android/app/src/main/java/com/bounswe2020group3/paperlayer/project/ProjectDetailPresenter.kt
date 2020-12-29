@@ -103,7 +103,6 @@ class ProjectPresenter  @Inject constructor(private var model: ProjectDetailCont
                 view?.showToast("Request sent.")
                 view?.collabCheck(request.id)
                 view?.writeLogMessage("i",TAG,"request to project ${request.to_project} with the requestid ${request.id}")
-                //view?.cardInviteCheck(item.id,position)
                 disposable.clear()
 
             }, {
@@ -123,7 +122,6 @@ class ProjectPresenter  @Inject constructor(private var model: ProjectDetailCont
                 view?.writeLogMessage("i",TAG,"request withdrawal successful")
                 view?.collabUncheck()
                 disposable.clear()
-                //item.called = false
             },
                     {
                         view?.writeLogMessage("e", TAG,"request withdrawal unsuccessful $it")

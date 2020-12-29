@@ -20,6 +20,7 @@ import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.User
+import com.bounswe2020group3.paperlayer.projectCreate.ProjectState
 import com.google.android.material.chip.Chip
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_project_detail.*
@@ -79,7 +80,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         resetMemberCardList()
 
         //Getting bundle arguments
-        var projectID = arguments?.getInt("projectID")
+        val projectID = arguments?.getInt("projectID")
         if (projectID != null) {
             this.presenter.fetchProject(projectID) //fetch project and update ui
             this.presenter.fetchRequestOfMine(projectID)
@@ -159,12 +160,12 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
                     0 -> {
-                        linearLayoutProperties.visibility = View.VISIBLE
-                        linearLayoutMembers.visibility = View.GONE
+                        linearLayoutProperties.visibility = VISIBLE
+                        linearLayoutMembers.visibility = GONE
                     }
                     1 -> {
-                        linearLayoutProperties.visibility = View.GONE
-                        linearLayoutMembers.visibility = View.VISIBLE
+                        linearLayoutProperties.visibility = GONE
+                        linearLayoutMembers.visibility = VISIBLE
                     }
                 }
             }
@@ -209,12 +210,15 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         }
 
         //Adding tags to dynamically to project tags
-        for (tag in project.tags){
-            val chip = Chip(this.fragmentView.chipGroupTags.context)
-            chip.text=tag.name
-            chip.setChipBackgroundColorResource(tagColors[tag.color])
-            this.fragmentView.chipGroupTags.addView(chip)
+        if (chipGroupTags?.childCount != project.tags.size) {
+            for (tag in project.tags){
+                val chip = Chip(this.fragmentView.chipGroupTags.context)
+                chip.text=tag.name
+                chip.setChipBackgroundColorResource(tagColors[tag.color])
+                this.fragmentView.chipGroupTags.addView(chip)
+            }
         }
+
 
         //Hide elements if project owner is not current user
         if(ownerID!=project.ownerId)
@@ -222,13 +226,14 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
             this.fragmentView.buttonEditProject.visibility= GONE
             this.fragmentView.buttonInvite.visibility= GONE
             this.fragmentView.imageViewCollabRequests.visibility = GONE
-            if(project.state == "open for collaborators") {
-                this.fragmentView.findViewById<Button>(R.id.buttonCollab).visibility = VISIBLE
-                if(collabbed != -1)
-                    this.fragmentView.findViewById<Button>(R.id.buttonCollab).text = "WITHDRAW"
+            if(project.state == ProjectState.OPEN.value) {
+                buttonCollab.apply {
+                    visibility = VISIBLE
+                    if (collabbed != -1) text = "WITHDRAW"
+                }
+
             }
         }
-
         writeLogMessage("i",TAG,"Project UI Updated")
     }
 
@@ -249,11 +254,11 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
     }
     override fun collabCheck(index: Int) {
         collabbed = index
-        fragmentView.findViewById<Button>(R.id.buttonCollab).text = "WITHDRAW"
+        buttonCollab.text = "WITHDRAW"
     }
 
     override fun collabUncheck() {
         collabbed = -1
-        fragmentView.findViewById<Button>(R.id.buttonCollab).text = "COLLABORATE"
+        buttonCollab.text = "COLLABORATE"
     }
 }

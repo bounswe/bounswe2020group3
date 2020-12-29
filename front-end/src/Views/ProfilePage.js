@@ -204,8 +204,8 @@ export default class ProfilePage extends Component {
             rating: (prof.rating ? parseFloat(prof.rating) : 0),
             isCommentable: prof.is_commentable,
             currentUserId: windowUserId,
-            isFollowing: prof.is_following, // ben onu followluyor muyum
-            isFollower: prof.is_follower // o beni mi followluyor
+            isFollowing: res.data.is_following, // ben onu followluyor muyum
+            isFollower: res.data.is_follower // o beni mi followluyor
           }, () => {
             // this.getComments();
           })

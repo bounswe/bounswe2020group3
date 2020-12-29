@@ -226,7 +226,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
             this.fragmentView.buttonEditProject.visibility= GONE
             this.fragmentView.buttonInvite.visibility= GONE
             this.fragmentView.imageViewCollabRequests.visibility = GONE
-            if(project.state == ProjectState.OPEN.value) {
+            if(project.state.equals(ProjectState.OPEN.value, true)) {
                 buttonCollab.apply {
                     visibility = VISIBLE
                     if (collabbed != -1) text = "WITHDRAW"

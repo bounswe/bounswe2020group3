@@ -108,7 +108,11 @@ export default class ProfilePage extends Component {
       showAddNewComment: false,
       ratedBefore : false, 
       myRatingId : -1,
-      isCommentable: false
+      isCommentable: false,
+      isFollowing: false, // ben onu followluyor muyum
+      isFollower: false, // o beni mi followluyor
+      isFollowReqSent: false,
+      isFollowReqReceived: false
     }
   };
 
@@ -155,7 +159,11 @@ export default class ProfilePage extends Component {
             currentUserId: windowUserId,
             ratedBefore: (prof.my_rating && typeof(prof.my_rating) !== 'string'),
             myRatingId : (prof.my_rating_id && typeof(prof.my_rating_id) !== 'string' ? prof.my_rating_id : -1),
-            isCommentable: prof.is_commentable
+            isCommentable: prof.is_commentable,
+            isFollowing: res.data.is_following, // ben onu followluyor muyum
+            isFollower: res.data.is_follower, // o beni mi followluyor
+            isFollowReqSent: res.data.is_follow_request_sent,
+            isFollowReqReceived: res.data.is_follow_request_received
           }, () => {
             this.getComments();
             axios.get(`${config.API_URL}${config.Follow_url}?from_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
@@ -197,7 +205,11 @@ export default class ProfilePage extends Component {
             loading: false,
             rating: (prof.rating ? parseFloat(prof.rating) : 0),
             isCommentable: prof.is_commentable,
-            currentUserId: windowUserId
+            currentUserId: windowUserId,
+            isFollowing: res.data.is_following, // ben onu followluyor muyum
+            isFollower: res.data.is_follower, // o beni mi followluyor
+            isFollowReqSent: res.data.is_follow_request_sent,
+            isFollowReqReceived: res.data.is_follow_request_received
           }, () => {
             // this.getComments();
           })
@@ -558,6 +570,8 @@ export default class ProfilePage extends Component {
         :
         <></>
         }
+        {this.state.self ? 
+        <>
          <Accordion>
                     <AccordionSummary disabled={!this.state.follow_reqs.length>0} expandIcon={<ExpandMoreIcon />}>
                         <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}>
@@ -571,6 +585,8 @@ export default class ProfilePage extends Component {
                                     padding: "15px", maxHeight: "160px", width: "80%", cursor:"pointer",
                                     background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"}} borderColor="primary" border={1} alignItems="flex-start">
                                     <Typography onClick={()=>{  this.props.history.push("/profile/"+(req.owner_id)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
+                                    <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.acceptFollowRequest(req.owner_id)}>Approve</Button>
+                                    <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.rejectFollowRequest(req.owner_id)}>Reject</Button>
                                 </Paper>)
                             })}
                         </Box>
@@ -612,6 +628,11 @@ export default class ProfilePage extends Component {
                         </Box>
                     </AccordionDetails>
                 </Accordion>
+            </>
+                
+              :
+              <></>
+          }
         {this.state.isPublic || this.state.self ? 
           <>
         <Typography variant='h6' color='primary' style={{ margin: "10px 0" }}>Comments</Typography>
@@ -776,6 +797,38 @@ export default class ProfilePage extends Component {
                     :
                     <Typography variant="h5" color="error"> ( Private ) </Typography>
                 }
+                <Grid>
+
+                    
+                    {!this.state.isFollowing ?
+                        <>
+                        
+                      {!this.state.isPublic ?
+
+                         <>
+                         {!this.state.isFollowReqSent ?
+                         
+                         <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderSentFollowRequest()}>Send Follow Request</Button>
+                        
+                         :
+
+                         <Button variant="contained" color="primary" style={{ marginTop: "10px" }} >Waiting for Answer</Button>
+
+                        }
+                         
+                         </> 
+                                           
+                      :
+                          <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderFollow()}>Follow</Button>
+                        }
+                      </>
+                    :
+                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderUnfollow()}>Unfollow</Button>
+    
+                    }
+                    
+
+                </Grid>
               </Grid>
 
               {(this.state.self || this.state.isPublic) ? this.renderMidLeftColumn() : <></>}
@@ -841,4 +894,370 @@ export default class ProfilePage extends Component {
     else
       return false;
   }
+  acceptFollowRequest = (req_id) => {
+
+    var userId = this.props.location.pathname.split('/')[2];
+    axios.get(`${config.API_URL}${config.Follow_request_url}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    .then(resId=>{
+
+      console.log(resId.data)
+      console.log(userId)
+      console.log(req_id)
+
+      
+      var unfId = 0
+      resId.data.forEach((item) => {
+
+        if(item.req_from_user.id === req_id && "" + item.req_to_user.id === "" +   userId){
+          unfId = item.id
+        }
+        
+      })
+
+      axios.get(`${config.API_URL}${config.Follow_request_url}${unfId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(resp=>{
+
+        console.log(resp.data)
+        console.log(resp.data.id)
+
+        const fromUser = resp.data.req_from_user
+        const toUser = resp.data.req_to_user
+
+        var newId = unfId + ""
+
+        console.log(newId + "              newId")
+
+        const action = {
+          req_from_user: {
+            username: fromUser.username
+          },
+          req_to_user: {
+            username: toUser.username
+          }
+        }
+
+        axios.post(`${config.API_URL}${config.Follow_request_url}${newId}${config.Accept_Path}`, action , { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(resAcc=>{ 
+
+        });
+        
+      });
+    });
+}
+
+rejectFollowRequest = (req_id) => {
+
+    var userId = this.props.location.pathname.split('/')[2];
+    axios.get(`${config.API_URL}${config.Follow_request_url}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    .then(resId=>{
+
+      console.log(resId.data)
+      console.log(userId)
+      console.log(req_id)
+
+      
+      var unfId = 0
+      resId.data.forEach((item) => {
+
+        if(item.req_from_user.id === req_id && "" + item.req_to_user.id === "" +   userId){
+          unfId = item.id
+        }
+        
+      })
+
+      axios.get(`${config.API_URL}${config.Follow_request_url}${unfId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(resp=>{
+
+        console.log(resp.data)
+        console.log(resp.data.id)
+
+        const fromUser = resp.data.req_from_user
+        const toUser = resp.data.req_to_user
+
+        var newId = unfId + ""
+
+        console.log(newId + "              newId")
+
+        const action = {
+          req_from_user: {
+            username: fromUser.username
+          },
+          req_to_user: {
+            username: toUser.username
+          }
+        }
+
+        axios.post(`${config.API_URL}${config.Follow_request_url}${newId}${config.Reject_Path}`, action , { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(resAcc=>{ 
+
+        });
+      
+      });
+  });   
+}
+
+renderFollow() {
+
+  axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+  .then(resUser => {
+
+  const userState = resUser.data;
+  console.log(userState)
+  console.log(userState.profile[0])
+
+    var userId = this.props.location.pathname.split('/')[2];
+    axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    .then(res => {
+
+      const profileState = res.data;
+
+      console.log(profileState.id)
+
+      const follow_create = {
+        to_user: profileState.id,
+        created: "datatime-local"
+      }
+
+      axios.post(`${config.API_URL}${config.Follow_url}`, follow_create, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(resCreate => {
+
+        });
+
+      const followAction = {
+        id: profileState.id,
+        from_user: {
+          id: userState.id,
+          username: userState.username,
+          profile: [
+            {
+              id: userState.profile[0].id,
+              name: userState.profile[0].name,
+              middle_name: userState.profile[0].middle_name,
+              last_name: userState.profile[0].lastname,
+              owner: "string",
+              profile_picture: "string",
+              is_public: true,
+              my_rating: "string",
+              my_rating_id: "string",
+              is_commentable: "string",
+              owner_id: "string"
+            }
+          ],
+          is_follower: true,
+          is_following: userState.is_following,
+          is_follow_request_sent: userState.is_follow_request_sent,
+          is_follow_request_received: userState.is_follow_request_received,
+          count_of_followers: userState.count_of_followers,
+          count_of_followings: userState.count_of_followings,
+          count_of_follow_requests: userState.count_of_follow_requests
+        },
+        to_user: {
+          id: profileState.id,
+          username: profileState.username,
+          profile: [
+            {
+              id: profileState.profile[0].id,
+              name: profileState.profile[0].name,
+              middle_name: profileState.profile[0].middle_name,
+              last_name: profileState.profile[0].lastname,
+              owner: "string",
+              profile_picture: "string",
+              is_public: true,
+              my_rating: "string",
+              my_rating_id: "string",
+              is_commentable: "string",
+              owner_id: "string"
+            }
+          ],
+          is_follower: profileState.is_follower,
+          is_following: true,
+          is_follow_request_sent: profileState.is_follow_request_sent,
+          is_follow_request_received: profileState.is_follow_request_received,
+          count_of_followers: profileState.count_of_followers,
+          count_of_followings: profileState.count_of_followings,
+          count_of_follow_requests: profileState.count_of_follow_requests
+        },
+        created: "datetime-local"
+      }
+
+      axios.patch(`${config.API_URL}${config.Follow_url}${followAction.id}/`, followAction, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+
+      });
+
+    });
+  });
+}
+
+renderUnfollow() {
+  axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+  .then(resUser => {
+
+    const userState = resUser.data;
+    var userId = this.props.location.pathname.split('/')[2];
+
+    axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    .then(res => {
+
+      const profileState = res.data;
+      axios.get(`${config.API_URL}${config.Follow_url}?to_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(resId=>{
+
+          console.log(resId.data)
+          var unfId = 0
+          resId.data.forEach((item) => {
+
+            if("" + item.from_user.id === getUserId()){
+              unfId = item.id
+            }
+            
+          })
+          
+        const unfollowAction = {
+          id: unfId,
+          from_user: {
+            id: userState.id,
+            username: userState.username,
+            profile: [
+              {
+                id: userState.profile[0].id,
+                name: userState.profile[0].name,
+                middle_name: userState.profile[0].middle_name,
+                last_name: userState.profile[0].lastname,
+                owner: "string",
+                profile_picture: "string",
+                is_public: true,
+                my_rating: "string",
+                my_rating_id: "string",
+                is_commentable: "string",
+                owner_id: "string"
+              }
+            ],
+            is_follower: false,
+            is_following: userState.is_following,
+            is_follow_request_sent: userState.is_follow_request_sent,
+            is_follow_request_received: userState.is_follow_request_received,
+            count_of_followers: userState.count_of_followers,
+            count_of_followings: userState.count_of_followings,
+            count_of_follow_requests: userState.count_of_follow_requests
+          },
+          to_user: {
+            id: profileState.id,
+            username: profileState.username,
+            profile: [
+              {
+                id: profileState.profile[0].id,
+                name: profileState.profile[0].name,
+                middle_name: profileState.profile[0].middle_name,
+                last_name: profileState.profile[0].lastname,
+                owner: "string",
+                profile_picture: "string",
+                is_public: true,
+                my_rating: "string",
+                my_rating_id: "string",
+                is_commentable: "string",
+                owner_id: "string"
+              }
+            ],
+            is_follower: profileState.is_follower,
+            is_following: false,
+            is_follow_request_sent: profileState.is_follow_request_sent,
+            is_follow_request_received: profileState.is_follow_request_received,
+            count_of_followers: profileState.count_of_followers,
+            count_of_followings: profileState.count_of_followings,
+            count_of_follow_requests: profileState.count_of_follow_requests
+          },
+          created: "datetime-local"
+        }
+        
+
+        axios.post(`${config.API_URL}${config.Follow_url}${unfId}${config.Unfollow_Path}`, unfollowAction, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(resUnf => {
+
+        });
+
+        axios.delete(`${config.API_URL}${config.Follow_url}${unfId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(resDelete => {
+          
+        });
+      });
+    });
+  });
+}
+
+renderSentFollowRequest() {
+
+  axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+  .then(resUser => {
+
+  const userState = resUser.data;
+  console.log(userState)
+  console.log(userState.profile[0])
+
+  var userId = this.props.location.pathname.split('/')[2];
+  axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+  .then(res => {
+
+    const profileState = res.data;
+
+    console.log(profileState.id)
+    console.log("reqId")
+    const followReq_create = {
+      req_to_user: profileState.id,
+      created: "datatime-local"
+    }
+
+    console.log(followReq_create)
+
+    axios.post(`${config.API_URL}${config.Follow_request_url}`, followReq_create, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    .then(resCreate => {
+
+      });
+
+        axios.get(`${config.API_URL}${config.Follow_request_url}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(resId=>{
+
+        console.log(resId.data)
+        console.log(userState.id)
+        var unfId = 0
+        resId.data.forEach((item) => {
+
+          if(item.req_from_user.id === userState.id && item.req_to_user.id === profileState.id){
+            unfId = item.id
+          }
+          
+        })
+        console.log("unfIdSonra      " + unfId)
+
+      });
+  });
+  });
+}
+
+renderWithdrawFollowRequest(){
+  var userId = this.props.location.pathname.split('/')[2];
+  axios.get(`${config.API_URL}${config.Follow_request_url}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+  .then(resId=>{
+
+    console.log(resId.data)
+
+    var unfId = 0
+
+    resId.data.forEach((item) => {
+
+      if("" + item.req_from_user.id === getUserId() && "" + item.req_to_user.id === userId){
+        unfId = item.id
+        
+      }
+            
+    })
+
+    var newId = parseInt(unfId + "")
+
+    axios.delete(`${config.API_URL}${config.Follow_request_url}${newId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    .then(resDelete => {
+
+    });            
+  });
+}
 }

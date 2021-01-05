@@ -4,9 +4,9 @@ import { Button, Typography, Box, styled } from '@material-ui/core';
 
 const Side = styled(Box)({
     backgroundColor: "#183761",
-    paddingTop: "60px",
     height: '100%',
     minWidth: "200px",
+    // paddingTop:"100px",
     width: '200px',
     top: '64px',
     position: "fixed",
@@ -19,17 +19,18 @@ function Profilebar(props) {
     return (
         <Side item>
             <Avatar src={props.photoUrl}
-                style={{ marginRight: "10px", width: "100px", height: "100px", cursor: "pointer", marginBottom: "25px" }}
+                style={{ marginRight: "10px", marginTop:'60px', width: "100px", height: "100px", cursor: "pointer", marginBottom: "25px" }}
                 onClick={props.goToProfile} />
             <Typography variant="h6" style={{textTransform:"capitalize"}}>{props.name} <br /> {props.lastName}</Typography>
 
-            <Button color="secondary" variant="outlined" style={{ margin: "10px" }}>Google Scholar</Button>
-            <Button color="secondary" variant="outlined" style={{ margin: "10px" }}>Projects</Button>
+            {/*<Button color="secondary" variant="outlined" style={{ margin: "10px" }}>Google Scholar</Button>*/}
             <Button color="secondary" variant="outlined"
                 style={{ margin: "10px" }}
                 onClick={props.goToProjectCreation}
-            >Create a Project</Button>
-            <Button color="secondary" variant="outlined" style={{ margin: "10px" }}>Settings</Button>
+            >Create a Project</Button><Button color="secondary" variant="outlined"
+                style={{ margin: "10px" }}
+                onClick={props.goToEventCreation}
+            >Create an Event</Button>
         </Side>);
 }
 export default Profilebar;

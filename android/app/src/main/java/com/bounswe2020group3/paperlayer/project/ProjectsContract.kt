@@ -8,6 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -42,10 +43,10 @@ interface       ProjectsContract {
 
     interface ProjectService {
         @GET("/api/projects/{projectId}/")
-        fun getProject(@Path("projectId") projectId: Int): Single<Project>
+        fun getProject(@Header("Authorization") authorization: String, @Path("projectId") projectId: Int): Single<Project>
 
         @GET("/api/projects/")
-        fun getAllProjectsOfOwner(@Query("owner__id") ownerId: Int): Observable<List<ProjectShort>>
+        fun getAllProjectsOfOwner(@Header("Authorization") authorization: String, @Query("owner__id") ownerId: Int): Observable<List<ProjectShort>>
     }
 
 }

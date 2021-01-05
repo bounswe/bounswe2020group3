@@ -81,6 +81,7 @@ export default class HomePage extends Component {
             logout={() => { this.props.history.push(config.Login_Path) }}
             pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
+            history ={this.props.history}
           />
             <Box style={{marginTop:"8px"}}>
             <Profilebar
@@ -88,7 +89,8 @@ export default class HomePage extends Component {
                 lastName={this.state.userlastname}
                 photoUrl={getPhoto()}
                 goToProjectCreation={this.goToProjectCreation}
-                goToProfile={() => { this.props.history.push("/profile"); }}
+                goToEventCreation={() => {this.props.history.push(config.Event_Creation_Path);}}
+                goToProfile={() => { this.props.history.push(`/profile/${getUserId()}`); }}
             />
           <Grid container direction="row" justify="space-evenly" alignItems="baseline" style={{marginLeft:"200px", width:`calc(100% - 200px)`}}>
             <Grid item sm={8}>

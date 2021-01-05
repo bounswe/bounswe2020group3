@@ -1,15 +1,16 @@
 package com.bounswe2020group3.paperlayer.project
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,9 +19,10 @@ import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.project.data.Project
+import com.bounswe2020group3.paperlayer.project.data.User
+import com.bounswe2020group3.paperlayer.projectCreate.ProjectState
 import com.google.android.material.chip.Chip
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.fragment_invite.*
 import kotlinx.android.synthetic.main.fragment_project_detail.*
 import kotlinx.android.synthetic.main.fragment_project_detail.view.*
 import javax.inject.Inject
@@ -32,8 +34,7 @@ val tagColors = arrayOf(R.color.tagColor0, R.color.tagColor1, R.color.tagColor2,
     R.color.tagColor4,R.color.tagColor5,R.color.tagColor6,R.color.tagColor7,
     R.color.tagColor8,R.color.tagColor9)
 
-
-class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
+class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCardClickListener {
 
     //Presenter object
     @Inject
@@ -50,7 +51,9 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
     //Member Card List
     private val memberCardList = ArrayList<MemberCard>()
 
-
+    //Current OwnerID
+    private var ownerID = 0
+    var collabbed = -1
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (context as MainActivity).getAppComponent().inject(this)
@@ -73,14 +76,14 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         this.presenter.setView(this)
         this.presenter.bind(this)
 
-
         initRecyclerView()
         resetMemberCardList()
 
         //Getting bundle arguments
-        var projectID = arguments?.getInt("projectID")
+        val projectID = arguments?.getInt("projectID")
         if (projectID != null) {
             this.presenter.fetchProject(projectID) //fetch project and update ui
+            this.presenter.fetchRequestOfMine(projectID)
         }
         else{
             writeLogMessage("e",TAG,"projectID null")
@@ -90,6 +93,12 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
 
         view.findViewById<Button>(R.id.buttonInvite).setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToInviteFromProjectDetails,bundle)
+        }
+        view.findViewById<ImageView>(R.id.imageViewCollabRequests).setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToCollabRequestsFromProject,bundle)
+        }
+        view.findViewById<Button>(R.id.buttonCollab).setOnClickListener{
+            presenter.OnClickCollab(projectID!!,collabbed)
         }
         writeLogMessage("i",TAG,"ProjectFragment view created")
         return view
@@ -126,22 +135,24 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         writeLogMessage("i", TAG, "Member Card List Updated! " + memberCardList.size)
     }
 
-    override fun addMemberCard(username: String) {
+    override fun addMemberCard(user: User) {
         memberCardList.add(
-            MemberCard(username))
-        writeLogMessage("i", TAG, "Member Card Added $username")
+            MemberCard(user))
+        writeLogMessage("i", TAG, "Member Card Added ${user.username}")
+    }
+
+    override fun updateCurrentUser(ownerID: Int) {
+        this.ownerID=ownerID
+        this.presenter.getProject()?.let { updateProjectUI(it) }
     }
 
     private fun initRecyclerView() {
         this.recyclerView = fragmentView.findViewById(R.id.recyclerViewProjectMembers)!!
         this.recyclerView.layoutManager = LinearLayoutManager(this.context)
-        this.membersAdapter = MembersAdapter()
+        this.membersAdapter = MembersAdapter(this)
         this.recyclerView.adapter = membersAdapter
         writeLogMessage("i", TAG, "RecyclerView initialized.")
     }
-
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -149,12 +160,12 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
                     0 -> {
-                        linearLayoutProperties.visibility = View.VISIBLE
-                        linearLayoutMembers.visibility = View.GONE
+                        linearLayoutProperties.visibility = VISIBLE
+                        linearLayoutMembers.visibility = GONE
                     }
                     1 -> {
-                        linearLayoutProperties.visibility = View.GONE
-                        linearLayoutMembers.visibility = View.VISIBLE
+                        linearLayoutProperties.visibility = GONE
+                        linearLayoutMembers.visibility = VISIBLE
                     }
                 }
             }
@@ -171,7 +182,6 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
 
     //Update project UI
     override fun updateProjectUI(project: Project) {
-
         this.fragmentView.projectTitle.text=project.name
         this.fragmentView.projectDescription.text=project.description
         this.fragmentView.projectOwner.text=project.owner
@@ -180,19 +190,16 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         this.fragmentView.projectState.text=project.state
         this.fragmentView.projectRequirements.text=project.requirements
 
-
         if(project.event!=null)
         {
             this.fragmentView.textViewEvents.text=project.event.title
         }
 
-
         //Adding Members
-        for (member in project.members!!){
-                addMemberCard(member.username)
+        for (member in project.members.orEmpty()){
+                addMemberCard(member)
                 submitMemberCardList()
         }
-
 
         //Tag Field Text
         if(project.tags.isEmpty()) {
@@ -201,14 +208,32 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         else{
             this.fragmentView.textViewTags.visibility=GONE
         }
+
         //Adding tags to dynamically to project tags
-        for (tag in project.tags){
-            val chip = Chip(this.fragmentView.chipGroupTags.context)
-            chip.text=tag.name
-            chip.setChipBackgroundColorResource(tagColors[tag.color])
-            this.fragmentView.chipGroupTags.addView(chip)
+        if (chipGroupTags?.childCount != project.tags.size) {
+            for (tag in project.tags){
+                val chip = Chip(this.fragmentView.chipGroupTags.context)
+                chip.text=tag.name
+                chip.setChipBackgroundColorResource(tagColors[tag.color])
+                this.fragmentView.chipGroupTags.addView(chip)
+            }
         }
 
+
+        //Hide elements if project owner is not current user
+        if(ownerID!=project.ownerId)
+        {
+            this.fragmentView.buttonEditProject.visibility= GONE
+            this.fragmentView.buttonInvite.visibility= GONE
+            this.fragmentView.imageViewCollabRequests.visibility = GONE
+            if(project.state.equals(ProjectState.OPEN.value, true)) {
+                buttonCollab.apply {
+                    visibility = VISIBLE
+                    if (collabbed != -1) text = "WITHDRAW"
+                }
+
+            }
+        }
         writeLogMessage("i",TAG,"Project UI Updated")
     }
 
@@ -223,4 +248,17 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View {
         writeLogMessage("i",TAG,"Project UI Reset")
     }
 
+    override fun onCardClickListener(userId: Int) {
+        val bundle = bundleOf("userID" to userId)
+        Navigation.findNavController(requireView()).navigate(R.id.navigateToUserFromProject, bundle)
+    }
+    override fun collabCheck(index: Int) {
+        collabbed = index
+        buttonCollab.text = "WITHDRAW"
+    }
+
+    override fun collabUncheck() {
+        collabbed = -1
+        buttonCollab.text = "COLLABORATE"
+    }
 }

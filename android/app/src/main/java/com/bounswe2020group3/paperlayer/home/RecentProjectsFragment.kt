@@ -48,7 +48,6 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
             true
         }
 
-        initRecycler()
         this.presenter.bind(this)
         initRecyclerView()
         resetCardList()
@@ -57,6 +56,7 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
         return view
     }
 
+    
     override fun getLayout(): View {
         TODO("Not yet implemented")
     }
@@ -64,7 +64,6 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
     override fun showToast(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
-    fun initRecycler(){}
     override fun writeLogMessage(type: String, tag: String, message: String) {
         when(type){
             "e"-> Log.e(tag,message) //error
@@ -87,8 +86,8 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
 
     }
 
-    override fun cardCheck(id: Int, position: Int) {
-        projectslist[position].requestSent = true
+    override fun cardCheck(id: Int,collabId: Int, position: Int) {
+        projectslist[position].requestSent = collabId
 
 
         submitCardList()
@@ -96,7 +95,7 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
     }
 
     override fun cardUncheck(id: Int, position: Int) {
-        projectslist[position].requestSent = false
+        projectslist[position].requestSent = -1
 
 
         submitCardList()
@@ -112,7 +111,8 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
     override fun submitCardList() {
         viewAdapter.submitList(this.projectslist)
         viewAdapter.notifyDataSetChanged() //notify to update recyclerview
-        writeLogMessage("i", TAG,"Project Card List Updated! " + projectslist.size)    }
+        writeLogMessage("i", TAG,"Project Card List Updated! " + projectslist.size)
+    }
 
     override fun addCard(card: ProjectUpdateCard) {
         projectslist.add(card)
@@ -129,7 +129,7 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
     }
 
     override fun onViewButtonClick(item: ProjectUpdateCard, position: Int) {
-        val bundle = bundleOf("projectID" to item.projectId )
+        val bundle = bundleOf(("projectID" to item.projectId),("requestSent" to item.requestSent) )
 
         Navigation.findNavController(fragment_view).navigate(R.id.navigateToProjectFromRecentProjects,bundle)    }
 

@@ -1,11 +1,8 @@
 import React, { Component } from "react";
-import { Button, Input, styled,Accordion,AccordionSummary,AccordionDetails } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
-import Box from '@material-ui/core/Box';
+import { Button, Input, styled, Avatar, Box, Grid, Paper, Typography,Accordion,AccordionSummary,AccordionDetails } from '@material-ui/core';
+import { Rating } from '@material-ui/lab';
+import AlertTypes from "../Common/AlertTypes.json";
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from "@material-ui/core/Typography";
 import { getUserId, getAccessToken, getPhoto } from '../Components/Auth/Authenticate';
 import axios from 'axios';
 import config from '../config';
@@ -60,7 +57,7 @@ const Container = styled(Box)({
   bottom: "0",
   left: "0",
   right: "0",
-  height:"calc(98vh - 60px)",
+  height: "calc(98vh - 60px)",
   margin: "auto",
   '& .MuiTextField-root': {
     margin: "10px",
@@ -74,6 +71,8 @@ export default class ProfilePage extends Component {
     super(props);
     this.SnackbarRef = React.createRef();
     this.state = {
+      message: "",
+      messageType: "",
       profileId: "",
       name: "",
       middle_name: "",
@@ -93,19 +92,42 @@ export default class ProfilePage extends Component {
       self: false,
       selfName: "",
       selfLastName: "",
-      follow_reqs:[],
-      followers:[],
-      following:[],
+      follow_reqs: [],
+      followers: [],
+      following: [],
       milestones: [],
       projects: [],
-      file : undefined,
+      file: undefined,
       showUpload: false,
-      loading: true // For eradicating glitches due to request delays
+      loading: true, // For eradicating glitches due to request delays
+      rating: 0,
+      currentRating: 0,
+      currentUserId: -1,
+      comments: [],
+      newComment: "",
+      showAddNewComment: false,
+      ratedBefore : false, 
+      myRatingId : -1,
+      isCommentable: false,
+      isFollowing: false, // ben onu followluyor muyum
+      isFollower: false, // o beni mi followluyor
+      isFollowReqSent: false,
+      isFollowReqReceived: false
     }
   };
 
   componentDidMount() {
+    this.getProfile();
+    axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        this.setState({
+          selfName: res.data.profile[0].name + " " + res.data.profile[0].middle_name,
+          selfLastName: res.data.profile[0].last_name
+        });
+      });
+  };
 
+  getProfile = () => {
     var userId = this.props.location.pathname.split('/')[2];
     axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
@@ -114,14 +136,14 @@ export default class ProfilePage extends Component {
         let windowUserId = res.data.id;
         if (windowUserId === parseInt(getUserId()) || res.data.profile[0].is_public) {
           this.setState({
-            isPublic: prof.is_public,
+            isPublic: prof.is_public || res.data.is_following,
             profileId: prof.id,
             name: prof.name,
             middle_name: prof.middle_name,
             last_name: prof.last_name,
             bio: prof.bio,
             img: prof.photo_url,
-            birthday: prof.birthday, 
+            birthday: prof.birthday,
             expertise: prof.expertise,
             gender: prof.gender,
             interests: prof.interests,
@@ -131,64 +153,206 @@ export default class ProfilePage extends Component {
             shareAffiliations: prof.share_affiliations,
             shareBirthday: prof.share_birthday,
             self: windowUserId === parseInt(getUserId()),
-            loading: false
-          });
-          if(windowUserId === parseInt(getUserId())){
-          axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-            .then(res => {
-              this.setState({ milestones: res.data.result });
-            });
-          axios.get(`${config.API_URL}${config.Projectpage_url}?owner__id=${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-            .then(res => {
-              this.setState({ projects: res.data });
-            });
-
-          axios.get(`${config.API_URL}${config.Follow_url}?from_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-              .then(res=>{
+            loading: false,
+            rating: (prof.rating ? parseFloat(prof.rating) : 0),
+            currentRating: (prof.my_rating && typeof(prof.my_rating) !== 'string' ? parseFloat(prof.my_rating) : 0),
+            currentUserId: windowUserId,
+            ratedBefore: (prof.my_rating && typeof(prof.my_rating) !== 'string'),
+            myRatingId : (prof.my_rating_id && typeof(prof.my_rating_id) !== 'string' ? prof.my_rating_id : -1),
+            isCommentable: prof.is_commentable,
+            isFollowing: res.data.is_following, // ben onu followluyor muyum
+            isFollower: res.data.is_follower, // o beni mi followluyor
+            isFollowReqSent: res.data.is_follow_request_sent,
+            isFollowReqReceived: res.data.is_follow_request_received
+          }, () => {
+            this.getComments();
+            axios.get(`${config.API_URL}${config.Follow_url}?from_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+              .then(res => {
                 const temp_followings = res.data.map(f => f.to_user.profile[0]);
-                this.setState({following:temp_followings});
+                this.setState({ following: temp_followings });
               });
-          axios.get(`${config.API_URL}${config.Follow_url}?to_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-              .then(res=>{
+            axios.get(`${config.API_URL}${config.Follow_url}?to_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+              .then(res => {
                 const temp_followers = res.data.map(f => f.from_user.profile[0]);
-                this.setState({followers:temp_followers});
+                this.setState({ followers: temp_followers });
               });
-          axios.get(`${config.API_URL}${config.Follow_request_url}?req_to_user=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-              .then(res=>{
+            axios.get(`${config.API_URL}${config.Follow_request_url}?req_to_user=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+              .then(res => {
                 const temp_follow_reqs = res.data.map(f => f.req_from_user.profile[0]);
-                this.setState({follow_reqs:temp_follow_reqs});
+                this.setState({ follow_reqs: temp_follow_reqs });
               });
-
+          });
+          if (windowUserId === parseInt(getUserId())) {
+            axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+              .then(res => {
+                this.setState({ milestones: res.data.result });
+              });
+            axios.get(`${config.API_URL}${config.Projectpage_url}?owner__id=${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+              .then(res => {
+                this.setState({ projects: res.data });
+              });
           }
         }
         else if (prof.is_public === false) {
           this.setState({
             self: false,
-            isPublic: prof.is_public,
+            isPublic: prof.is_public || res.data.is_following,
             profileId: prof.id,
             name: prof.name,
             middle_name: prof.middle_name,
             last_name: prof.last_name,
             img: prof.photo_url,
-            loading:false
+            loading: false,
+            rating: (prof.rating ? parseFloat(prof.rating) : 0),
+            isCommentable: prof.is_commentable,
+            currentUserId: windowUserId,
+            isFollowing: res.data.is_following, // ben onu followluyor muyum
+            isFollower: res.data.is_follower, // o beni mi followluyor
+            isFollowReqSent: res.data.is_follow_request_sent,
+            isFollowReqReceived: res.data.is_follow_request_received
+          }, () => {
+            // this.getComments();
           })
         }
 
-      },(error) => {
+      }, (error) => {
         this.props.history.push("/"); // Forwards from unexisting profiles to homepage
       }
-      
+
       );
-    
-      axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+  }
+  getComments = () => {
+    const { currentUserId } = this.state;
+    axios.get(`${config.API_URL}/api/comments/?to_user=${currentUserId}`,
+      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
-        this.setState({ selfName: res.data.profile[0].name +" " +  res.data.profile[0].middle_name,
-          selfLastName: res.data.profile[0].last_name
-        });
+        this.setState({ comments: (res.data ? res.data : []) });
       });
-      
-    
-  };
+  }
+  renderComments = () => {
+    const { comments } = this.state;
+    return (
+      <>
+        {comments.length !== 0 ?
+          comments.map((item) => {
+            let fullName = item.name + " " + (item.middle_name ? item.middle_name + " " : "") + item.last_name + ":";
+            return (
+              <>
+                <Typography variant="caption" color="primary"
+                  style={{ textAlign: "left", width: "100%", textTransform: "capitalize", cursor:"pointer"}}
+                  onClick={() => {
+                    this.props.history.push(`${config.Profille_Page_Path}/${item.from_user}`);
+                    window.location.reload(false);
+                }}
+                >{fullName}</Typography>
+
+                <Paper elevation={6} style={{ textAlign: "center" }}>
+                  <Typography
+                    variant="caption"
+                    color="primary"
+                    style={{ textAlign: "left", display: "inline-block", width: "85%" }}
+                  >{item.comment}</Typography>
+                  {item.from_user === parseInt(getUserId()) ?
+                    <Typography variant="caption" color="error"
+                      style={{ textAlign: "right", display: "inline-block", width: "10%", cursor: "pointer", fontSize: "10px" }}
+                      onClick={() => { this.deleteComment(item.id) }}
+                    >delete</Typography>
+                    : <></>}
+
+                </Paper>
+                <hr />
+              </>
+            )
+          })
+          :
+          <>
+            <Typography variant='h6' color='textPrimary' style={{ textAlign: 'center' }}>No comments found</Typography>
+          </>
+        }
+      </>
+    )
+  }
+
+  postComment = () => {
+    const { currentUserId, newComment } = this.state;
+
+    if (newComment.trim() === "") {
+      this.setState({ message: "Comment Can't Be Empty", messageType: AlertTypes.Warning }, () => {
+        this.handleSnackbarOpen();
+      });
+      return;
+    }
+
+    let data = { from_user: parseInt(getUserId()), to_user: currentUserId, comment: newComment };
+    axios.post(`${config.API_URL}/api/comments/`, data,
+      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        this.setState({ message: "Comment Posted", messageType: AlertTypes.Success, newComment: "", showAddNewComment: false }, () => {
+          this.handleSnackbarOpen();
+          this.getComments();
+        })
+      }, (error) => {
+        this.setState({ message: "Error while posting comment, please try again.", messageType: AlertTypes.Error }, () => {
+          this.handleSnackbarOpen();
+        })
+      })
+  }
+  deleteComment = (id) => {
+    axios.delete(`${config.API_URL}/api/comments/`, { id: id },
+      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        this.setState({ message: "Comment Deleted", messageType: AlertTypes.Success }, () => {
+          this.handleSnackbarOpen();
+          this.getComments();
+        })
+      }, (error) => {
+        this.setState({ message: "Error while deleting comment, please try again.", messageType: AlertTypes.Error }, () => {
+          this.handleSnackbarOpen();
+        })
+      })
+  }
+
+
+
+  postRating = () => {
+    const { currentUserId, currentRating, ratedBefore, myRatingId, rating } = this.state;
+    let ratingm = { rating: currentRating, from_user: getUserId(), to_user: currentUserId };
+
+    console.log(currentRating , ratedBefore, myRatingId, rating)
+    if (!ratedBefore) {
+      axios.post(`${config.API_URL}/api/ratings/`, ratingm,
+        { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          this.getProfile();
+        }, (error) => {
+          this.setState({ messageType: AlertTypes.Error, message: "Error while rating please try again later." }, () => {
+            this.handleSnackbarOpen();
+          })
+        });
+    } else {
+      axios.patch(`${config.API_URL}/api/ratings/${myRatingId}/`, {rating: currentRating},
+        { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          this.setState({ messageType: AlertTypes.Success, message: "Rating Updated." }, () => {
+            this.handleSnackbarOpen();
+          })
+          this.getProfile();
+        }, (error) => {
+          this.setState({ messageType: AlertTypes.Error, message: "Rating update failed. Please try again." }, () => {
+            this.handleSnackbarOpen();
+          });
+        });
+    }
+  }
+
+  handleRatingChange = (e) => {
+    this.setState({ currentRating: e.target.value * 2 }, () => {
+      this.postRating();
+    });
+  }
+  handleCommentChange = (e) => {
+    this.setState({ newComment: e.target.value });
+  }
 
   handleSnackbarOpen = () => {
     this.SnackbarRef.current.turnOnSnackbar();
@@ -219,7 +383,7 @@ export default class ProfilePage extends Component {
                 borderColor="primary" border={1}>
                 <Typography variant="h6" color="primary"
                   style={{ cursor: "pointer", width: "50%", textAlign: "left" }}
-                  onClick={()=>{    this.props.history.push("/project/" + item.id);}}
+                  onClick={() => { this.props.history.push("/project/" + item.id); }}
                 >{item.name}</Typography>
               </Paper>
             )
@@ -252,11 +416,11 @@ export default class ProfilePage extends Component {
                 }}
                 borderColor="primary" border={1}>
                 <Typography variant="h6" color="primary"
-                  style={{ cursor: "pointer", width: "50%", textAlign: "left", display:"inline-block"}}
+                  style={{ cursor: "pointer", width: "50%", textAlign: "left", display: "inline-block" }}
                   onClick={() => { this.props.history.push(`${config.Projectpage_Path}/${item.project}`) }}
                 >{item.project_name}</Typography>
                 <Typography variant="h6" color="primary"
-                  style={{ cursor: "pointer", width: "50%", textAlign: "right", display:"inline-block" }}
+                  style={{ cursor: "pointer", width: "50%", textAlign: "right", display: "inline-block" }}
                 >{item.date}</Typography>
                 <hr />
                 <Typography nowrap variant="body2" style={{ textAlign: "left", color: "black" }}>
@@ -338,19 +502,77 @@ export default class ProfilePage extends Component {
     </Grid>
     );
   }
-  renderGraph(){
-        return (
-            <div>
-                {this.state.self ?
-                    <Button variant="outlined" color="primary" style={{width: "50", fontSize: '10px', marginBottom: "50px"}}
-                            onClick={() => {
-                                this.deletePhoto(this.getUserPhoto(this.state.profileId))
-                                window.location.reload(false);
-                            }}> Delete Photo </Button>
-                    :
-                    <></>
-                }
-                <Accordion>
+  renderAddComment() {
+    if(!this.state.isPublic && !this.state.isCommentable) return (<></>);
+
+    return (
+      <>
+        {this.state.showAddNewComment ?
+          <>
+            <Input
+              multiline={true}
+              value={this.state.newComment}
+              placeholder="Your Comment"
+              style={{ width: "80%", marginBottom: "10px" }}
+              onChange={(e) => { this.handleCommentChange(e) }}
+            />
+            <br />
+            <Button variant="outlined" color="primary" onClick={() => { this.postComment() }}>Post</Button>
+          </>
+          :
+          <Button variant="outlined" color="primary" onClick={() => { this.setState({ showAddNewComment: true }) }}>Comment</Button>
+        }
+      </>
+    )
+  }
+
+  renderGraph() {
+    return (
+      <>{this.state.self ?
+        <Button variant="outlined" color="primary" style={{ width: "50", fontSize: '10px', marginBottom: "20px" }} onClick={() => {
+          this.deletePhoto(this.getUserPhoto(this.state.profileId))
+          window.location.reload(false);
+        }}> Delete Profile Picture </Button>
+        :
+        <></>
+      }
+        {!this.state.self && this.state.isPublic ?
+          <div style={{ textAlign: 'left', width: "90%", paddingLeft: "10%" }}>
+            <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">{"Your Rating :     "}</Typography>
+            <Rating
+              defaultValue={0}
+              precision={0.5}
+              name="pristine"
+              size="small"
+              style={{ top: "3px", paddingLeft: "13px" }}
+              value={this.state.currentRating / 2.0}
+              onChange={(e) => { this.handleRatingChange(e) }}
+            />
+          </div>
+          :
+          <></>
+        }
+        {this.state.isPublic || this.state.self ? 
+        <div style={{ textAlign: 'left', width: "90%", paddingLeft: "10%" }}>
+          <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">Overall Rating :</Typography>
+          <Rating
+            defaultValue={0}
+            precision={0.5}
+            name="pristine"
+            size="small"
+            style={{ top: "3px", paddingRight: "5px" }}
+            value={this.state.rating / 2.0}
+            disabled
+          />
+          <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">{this.state.rating.toPrecision(2)}</Typography>
+
+        </div>
+        :
+        <></>
+        }
+        {this.state.self ? 
+        <>
+         <Accordion>
                     <AccordionSummary disabled={!this.state.follow_reqs.length>0} expandIcon={<ExpandMoreIcon />}>
                         <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}}>
                             <b>{this.state.follow_reqs?this.state.follow_reqs.length:0}</b> following request
@@ -362,7 +584,9 @@ export default class ProfilePage extends Component {
                                 return (<Paper style={{
                                     padding: "15px", maxHeight: "160px", width: "80%", cursor:"pointer",
                                     background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"}} borderColor="primary" border={1} alignItems="flex-start">
-                                    <Typography onClick={()=>{  this.props.history.push("/profile/"+(req.id+1)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
+                                    <Typography onClick={()=>{  this.props.history.push("/profile/"+(req.owner_id)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
+                                    <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.acceptFollowRequest(req.owner_id)}>Approve</Button>
+                                    <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.rejectFollowRequest(req.owner_id)}>Reject</Button>
                                 </Paper>)
                             })}
                         </Box>
@@ -380,7 +604,7 @@ export default class ProfilePage extends Component {
                                 return (<Paper style={{
                                     padding: "15px", maxHeight: "160px", width: "80%", cursor:"pointer",
                                     background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"}} borderColor="primary" border={1} alignItems="flex-start">
-                                    <Typography onClick={()=>{  this.props.history.push("/profile/"+(req.id+1)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
+                                    <Typography onClick={()=>{  this.props.history.push("/profile/"+(req.owner_id)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
                                 </Paper>)
                             })}
                         </Box>
@@ -398,14 +622,40 @@ export default class ProfilePage extends Component {
                                 return (<Paper style={{
                                     padding: "15px", maxHeight: "160px", width: "80%", cursor:"pointer",
                                     background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"}} borderColor="primary" border={1} alignItems="flex-start">
-                                    <Typography onClick={()=>{this.props.history.push("/profile/"+(req.id+1)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
+                                    <Typography onClick={()=>{this.props.history.push("/profile/"+(req.owner_id)); window.location.reload(false);}}>{req.name+" "+req.last_name}</Typography>
                                 </Paper>)
                             })}
                         </Box>
                     </AccordionDetails>
                 </Accordion>
-            </div>);
-    };
+            </>
+                
+              :
+              <></>
+          }
+        {this.state.isPublic || this.state.self ? 
+          <>
+        <Typography variant='h6' color='primary' style={{ margin: "10px 0" }}>Comments</Typography>
+        <Paper elevation={6}
+          style={{
+            padding: "15px",
+            width: "80%",
+            background: "white",
+            margin: "auto",
+            marginBottom: "10px",
+            textAlign: 'left',
+            maxHeight: "500px",
+            overflowY: "scroll"
+          }}
+          borderColor="primary" border={1}>
+          {this.renderComments()}
+        </Paper>
+        </>
+        :
+        <></>
+        }
+      </>);
+  };
   handleProfilePictureChange = (e) => {
     this.setState({ file: e.target.files[0] });
   }
@@ -415,16 +665,16 @@ export default class ProfilePage extends Component {
   submitPhoto = () => {
     const { file } = this.state;
     console.log(file);
-    if(file === undefined){
+    if (file === undefined) {
       return;
     }
     const data = new FormData();
     data.append("profile_picture", file);
-    axios.put(`${config.API_URL}/api/profile_picture/${this.state.profileId}/`, data, 
-    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } } )
-    .then(res => {
-      window.location.reload(false);
-    })
+    axios.put(`${config.API_URL}/api/profile_picture/${this.state.profileId}/`, data,
+      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        window.location.reload(false);
+      })
   }
 
   renderSelfProfile() {
@@ -433,6 +683,7 @@ export default class ProfilePage extends Component {
         logout={() => { this.props.history.push(config.Login_Path) }}
         pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
         goHome={() => { this.props.history.push(config.Homepage_Path) }}
+        history ={this.props.history}
       />
 
       <Grid container direction="row" justify="center" alignItems="center" >
@@ -456,15 +707,15 @@ export default class ProfilePage extends Component {
               <Avatar src={this.getUserPhoto(this.state.profileId)} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
               {this.state.showUpload ?
                 <><Input type="file" onChange={this.handleProfilePictureChange}></Input>
-                {this.state.file !== undefined ?
-                  <Button color='primary'
-                    type='outlined'
-                    style={{ width: '40px', fontSize: "8px" }}
-                    onClick={this.submitPhoto}
-                  > Save Picture </Button>
-                :
-                <></>
-                }
+                  {this.state.file !== undefined ?
+                    <Button color='primary'
+                      type='outlined'
+                      style={{ width: '40px', fontSize: "8px" }}
+                      onClick={this.submitPhoto}
+                    > Save Picture </Button>
+                    :
+                    <></>
+                  }
                 </>
                 :
                 <Button color='primary'
@@ -474,7 +725,7 @@ export default class ProfilePage extends Component {
                 >Change Picture</Button>
               }
               <Paper elevation={6} style={{ border: "solid 1px blue", padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
-                <Typography style={{textTransform:"capitalize "}}>{this.state.name + " " + this.state.middle_name} <br />
+                <Typography style={{ textTransform: "capitalize " }}>{this.state.name + " " + this.state.middle_name} <br />
                   {this.state.last_name.toUpperCase()}</Typography>
               </Paper>
             </Grid>
@@ -496,7 +747,7 @@ export default class ProfilePage extends Component {
           }
         </Grid>
       </Grid>
-      <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
+      <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpen} type={this.state.messageType} message={this.state.message} />
     </SelfContainer>);
   }
   renderOtherProfile() {
@@ -508,6 +759,7 @@ export default class ProfilePage extends Component {
           window.location.reload(false);
         }}
         goHome={() => { this.props.history.push(config.Homepage_Path) }}
+        history ={this.props.history}
       />
       <Box>
         {!this.state.self && !this.state.loading ?  // So that re-render doesn't cause any glitch-like graphics.
@@ -516,8 +768,9 @@ export default class ProfilePage extends Component {
             lastName={this.state.selfLastName}
             photoUrl={getPhoto()}
             goToProjectCreation={this.goToProjectCreation}
+            goToEventCreation={() => {this.props.history.push(config.Event_Creation_Path);}}
             goToProfile={() => {
-              this.props.history.push("/profile/" + getUserId()); 
+              this.props.history.push("/profile/" + getUserId());
               window.location.reload(false);
             }}
           />
@@ -527,17 +780,55 @@ export default class ProfilePage extends Component {
         <Grid container direction="row" justify="center" alignItems="center" >
           <Grid container spacing={2} direction="row" justify="space-evenly" alignItems="baseline">
 
-            <Grid item sm={3}>
-{/* Burasi bos kalacak */}
+            <Grid item sm={2}>
+              {/* Burasi bos kalacak */}
             </Grid>
 
-            <Grid container spacing={2} item sm={6}>
+            <Grid container spacing={2} item sm={7}>
               <Grid item sm={12} >
                 <Avatar src={this.getUserPhoto(this.state.profileId)} style={{ width: "150px", height: '150px', margin: 'auto', marginTop: '10px' }} />
-                <Paper elevation={6} style={{ padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
-                  <Typography style={{textTransform:"capitalize"}}>{this.state.name + " " + this.state.middle_name} <br />
+                <Paper elevation={6} style={{ border: "solid 1px blue", padding: "10px", minHeight: '30px', maxWidth: "300px", margin: '15px auto 20px auto' }}>
+                  <Typography style={{ textTransform: "capitalize" }}>{this.state.name + " " + this.state.middle_name} <br />
                     {this.state.last_name.toUpperCase()}</Typography>
                 </Paper>
+                {
+                  this.state.isPublic ?
+                    <></>
+                    :
+                    <Typography variant="h5" color="error"> ( Private ) </Typography>
+                }
+                <Grid>
+
+                    
+                    {!this.state.isFollowing ?
+                        <>
+                        
+                      {!this.state.isPublic ?
+
+                         <>
+                         {!this.state.isFollowReqSent ?
+                         
+                         <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderSentFollowRequest()}>Send Follow Request</Button>
+                        
+                         :
+
+                         <Button variant="contained" color="primary" style={{ marginTop: "10px" }} >Waiting for Answer</Button>
+
+                        }
+                         
+                         </> 
+                                           
+                      :
+                          <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderFollow()}>Follow</Button>
+                        }
+                      </>
+                    :
+                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderUnfollow()}>Unfollow</Button>
+    
+                    }
+                    
+
+                </Grid>
               </Grid>
 
               {(this.state.self || this.state.isPublic) ? this.renderMidLeftColumn() : <></>}
@@ -545,17 +836,12 @@ export default class ProfilePage extends Component {
 
             </Grid>
             <Grid item sm={3}>
-{ /* Buraya bir seyler gelecek - recommendation vb. */ }
+              {this.renderGraph()}
+              {this.renderAddComment()}
             </Grid>
-            {
-              this.state.isPublic ?
-              <></>
-              :
-                <Typography variant="h5" color="error"> This Profile is Private </Typography>
-            }
           </Grid>
         </Grid>
-        <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
+        <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpen} type={this.state.messageType} message={this.state.message} />
       </Box>
     </Container>);
   }
@@ -568,11 +854,11 @@ export default class ProfilePage extends Component {
 
   }
 
-  getUserPhoto = (profileId) =>{
+  getUserPhoto = (profileId) => {
     return `${config.API_URL}/api/profile_picture/${profileId}/`;
   }
-  
-  deletePhoto = (url) =>{
+
+  deletePhoto = (url) => {
     axios.delete(url, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } });
   }
 
@@ -608,4 +894,201 @@ export default class ProfilePage extends Component {
     else
       return false;
   }
+  acceptFollowRequest = (req_id) => {
+
+    var userId = this.props.location.pathname.split('/')[2];
+    axios.get(`${config.API_URL}${config.Follow_request_url}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    .then(resId=>{
+      var unfId = 0
+      resId.data.forEach((item) => {
+
+        if(item.req_from_user.id === req_id && "" + item.req_to_user.id === "" +   userId){
+          unfId = item.id
+        }
+        
+      })
+
+      axios.get(`${config.API_URL}${config.Follow_request_url}${unfId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(resp=>{
+
+        console.log(resp.data)
+        console.log(resp.data.id)
+
+        const fromUser = resp.data.req_from_user
+        const toUser = resp.data.req_to_user
+
+        var newId = unfId + ""
+
+        console.log(newId + "              newId")
+
+        const action = {
+          req_from_user: {
+            username: fromUser.username
+          },
+          req_to_user: {
+            username: toUser.username
+          }
+        }
+
+        axios.post(`${config.API_URL}${config.Follow_request_url}${newId}${config.Accept_Path}`, action , { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(resAcc=>{ 
+          window.location.reload(false);
+        });
+        
+      });
+    });
+}
+
+rejectFollowRequest = (req_id) => {
+
+    var userId = this.props.location.pathname.split('/')[2];
+    axios.get(`${config.API_URL}${config.Follow_request_url}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    .then(resId=>{
+
+      console.log(resId.data)
+      console.log(userId)
+      console.log(req_id)
+
+      
+      var unfId = 0
+      resId.data.forEach((item) => {
+
+        if(item.req_from_user.id === req_id && "" + item.req_to_user.id === "" +   userId){
+          unfId = item.id
+        }
+        
+      })
+
+      axios.get(`${config.API_URL}${config.Follow_request_url}${unfId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(resp=>{
+
+        console.log(resp.data)
+        console.log(resp.data.id)
+
+        const fromUser = resp.data.req_from_user
+        const toUser = resp.data.req_to_user
+
+        var newId = unfId + ""
+
+        console.log(newId + "              newId")
+
+        const action = {
+          req_from_user: {
+            username: fromUser.username
+          },
+          req_to_user: {
+            username: toUser.username
+          }
+        }
+
+        axios.post(`${config.API_URL}${config.Follow_request_url}${newId}${config.Reject_Path}`, action , { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(resAcc=>{ 
+            window.location.reload(false);
+        });
+      
+      });
+  });   
+}
+
+  renderFollow() {
+
+  axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    .then(resUser => {
+      var userId = this.props.location.pathname.split('/')[2];
+      axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          const profileState = res.data;
+          const follow_create = {
+            to_user: profileState.id,
+            created: "datatime-local"
+          }
+          axios.post(`${config.API_URL}${config.Follow_url}`, follow_create, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            .then(resCreate => {
+              window.location.reload(false);
+            });
+        });
+    });
+}
+
+  renderUnfollow() {
+    var userId = this.props.location.pathname.split('/')[2];
+    axios.get(`${config.API_URL}${config.Follow_url}?to_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(resId => {
+
+        let unfId = 0
+        resId.data.forEach((item) => {
+
+          if ("" + item.from_user.id === getUserId()) {
+            unfId = item.id
+          }
+
+        })
+
+        axios.delete(`${config.API_URL}${config.Follow_url}${unfId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+          .then(resDelete => {
+            window.location.reload(false);
+          });
+      });
+
+  }
+
+  renderSentFollowRequest() {
+
+    axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(resUser => {
+
+        const userState = resUser.data;
+        console.log(userState)
+        console.log(userState.profile[0])
+
+        var userId = this.props.location.pathname.split('/')[2];
+        axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+          .then(res => {
+
+            const profileState = res.data;
+
+            console.log(profileState.id)
+            console.log("reqId")
+            const followReq_create = {
+              req_to_user: profileState.id,
+              created: "datatime-local"
+            }
+
+            console.log(followReq_create)
+
+            axios.post(`${config.API_URL}${config.Follow_request_url}`, followReq_create, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+              .then(resCreate => {
+                window.location.reload(false);
+              });
+
+          });
+      });
+  }
+
+  renderWithdrawFollowRequest() {
+    var userId = this.props.location.pathname.split('/')[2];
+    axios.get(`${config.API_URL}${config.Follow_request_url}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(resId => {
+
+        console.log(resId.data)
+
+        var unfId = 0
+
+        resId.data.forEach((item) => {
+
+          if ("" + item.req_from_user.id === getUserId() && "" + item.req_to_user.id === userId) {
+            unfId = item.id
+
+          }
+            
+    })
+
+    var newId = parseInt(unfId + "")
+
+    axios.delete(`${config.API_URL}${config.Follow_request_url}${newId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    .then(resDelete => {
+
+    });            
+  });
+}
 }

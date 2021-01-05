@@ -84,6 +84,12 @@
         <action
             android:id="@+id/navigateToInviteFromProjectDetails"
             app:destination="@id/inviteFragment" />
+        <action
+            android:id="@+id/navigateToCollabRequestsFromProject"
+            app:destination="@id/collabFragment" />
+        <action
+            android:id="@+id/navigateToUserFromProject"
+            app:destination="@id/userFragment" />
     </fragment>
 
     <fragment
@@ -117,7 +123,7 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.bounswe2020group3.paperlayer.search.SearchFragment"
-        android:label="fragment_search"
+        android:label="Search"
         tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/navigateToUserFromSearch"
@@ -155,11 +161,14 @@
     <fragment
         android:id="@+id/inviteFragment"
         android:name="com.bounswe2020group3.paperlayer.invite.InviteFragment"
-        android:label="fragment_invite"
+        android:label="Invite"
         tools:layout="@layout/fragment_invite" >
         <action
             android:id="@+id/navigateToProjectDetailsFromInvite"
             app:destination="@id/projectFragment" />
+        <action
+            android:id="@+id/navigateToUserFromInvite"
+            app:destination="@id/userFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventFragment"
@@ -219,4 +228,12 @@
         android:name="com.bounswe2020group3.paperlayer.event.EventDetailFragment"
         android:label="Event Detail"
         tools:layout="@layout/fragment_event" />
+    <fragment
+        android:id="@+id/collabFragment"
+        android:name="com.bounswe2020group3.paperlayer.collaborationRequests.CollabFragment"
+        android:label="Collaboration Requests" >
+        <action
+            android:id="@+id/navigateToUserFromCollabs"
+            app:destination="@id/userFragment" />
+    </fragment>
 </navigation>

@@ -57,7 +57,7 @@ interface HomeContract {
         fun showToast(message: String)
         fun writeLogMessage(type:String ,tag: String,message: String)
 
-        fun cardCheck(id : Int,position : Int)
+        fun cardCheck(id : Int,collabid:Int,position : Int)
         fun cardUncheck(id : Int,position : Int)
         fun resetCardList()
         fun submitCardList()

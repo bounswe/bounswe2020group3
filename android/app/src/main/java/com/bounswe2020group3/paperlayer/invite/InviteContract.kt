@@ -34,7 +34,7 @@ interface InviteContract {
         fun cardUnInviteCheck(id : Int,position : Int)
         fun resetUserCardlist()
         fun submitUserCardList()
-        fun addUserCard(username: String,name : String,expertise: String,photoURL: String,id : Int,invited : Boolean)
+        fun addUserCard(userId: Int, username: String,name : String,expertise: String?,photoURL: String?,id : Int,invited : Boolean)
     }
 
     interface Model {

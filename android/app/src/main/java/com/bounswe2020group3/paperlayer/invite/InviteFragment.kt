@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -78,7 +79,7 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
         this.presenter.bind(this)
 
         view.findViewById<Button>(R.id.buttonOK).setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.navigateToProjectDetailsFromInvite)
+            Navigation.findNavController(view).navigateUp()
         }
         return view
     }
@@ -134,15 +135,22 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
         this.presenter.OnInviteButtonClicked(item,position)
     }
 
+    override fun onCardClick(userId: Int) {
+        val bundle = bundleOf("userID" to userId )
+        Navigation.findNavController(requireView()).navigate(R.id.navigateToUserFromInvite, bundle)
+    }
 
 
-
-    override fun addUserCard(username: String, name : String, expertise: String, photoURL : String, id : Int, invited : Boolean) {
+    override fun addUserCard(userId: Int, username: String, name : String, expertise: String?, photoURL : String?, id : Int, invited : Boolean) {
         inviteCardList.add(
                 InviteCard(
-                        username,name,
+                        userId,
+                        username,
+                        name,
                         expertise,
-                        photoURL,id,invited)
+                        photoURL,
+                        id,
+                        invited)
         )
     }
 

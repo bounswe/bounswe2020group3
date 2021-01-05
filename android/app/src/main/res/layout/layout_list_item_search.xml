@@ -77,14 +77,20 @@
                     android:id="@+id/chip1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:chipSurfaceColor="#FEC8D8"
+                    android:visibility="visible"
                     android:text="tag 1"/>
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:chipSurfaceColor="#FA8072"
+                    android:visibility="visible"
                     android:text="tag 2"/>
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:text="tag 3"/>
 
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>

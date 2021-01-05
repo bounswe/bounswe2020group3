@@ -3,15 +3,13 @@ package com.bounswe2020group3.paperlayer.home.adaptors
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.home.cards.EventCard
-import com.bounswe2020group3.paperlayer.home.cards.MilestoneCard
-import com.bounswe2020group3.paperlayer.project.ProjectCard
+
 interface OnCardClickListenerForEvents{
-    fun onViewButtonClick(item : EventCard, position: Int)
+    fun onCardClick(item : EventCard, position: Int)
 }
 class EventAdaptor(var clickListener: OnCardClickListenerForEvents) : RecyclerView.Adapter<EventAdaptor.eventViewHolder>(){
     private var events: List<EventCard> = ArrayList()
@@ -22,7 +20,6 @@ class EventAdaptor(var clickListener: OnCardClickListenerForEvents) : RecyclerVi
         val deadline = layout.findViewById<TextView>(R.id.deadline)
         val date= layout.findViewById<TextView>(R.id.date)
         val event_type= layout.findViewById<TextView>(R.id.event_type)
-        val viewButton= layout.findViewById<Button>(R.id.buttonView)
 
         fun bind(item : EventCard, action: OnCardClickListenerForEvents) {
 
@@ -32,8 +29,8 @@ class EventAdaptor(var clickListener: OnCardClickListenerForEvents) : RecyclerVi
             event_type.text = item.event_type
             deadline.text = item.deadline
 
-            viewButton.setOnClickListener{
-                action.onViewButtonClick(item,adapterPosition)
+            itemView.setOnClickListener{
+                action.onCardClick(item,adapterPosition)
             }
         }
     }

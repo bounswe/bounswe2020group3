@@ -3,6 +3,7 @@ package com.bounswe2020group3.paperlayer.project
 import android.os.Bundle
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.home.data.CollaborateRequest
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import com.bounswe2020group3.paperlayer.project.data.Project
 import io.reactivex.disposables.CompositeDisposable
@@ -28,6 +29,15 @@ class ProjectPresenter  @Inject constructor(private var model: ProjectDetailCont
         super.bind(view)
         this.view?.writeLogMessage("i",TAG,"Project Presenter Created")
         this.view?.resetProjectUI()
+        subscribeAuthToken()
+    }
+
+    override fun subscribeAuthToken() {
+        this.view?.writeLogMessage("i",TAG, "##1##")
+        val userProfileSub = model.getAuthToken().subscribe { token ->
+            this.view?.updateCurrentUser(token.id)
+        }
+        disposable.add(userProfileSub)
     }
 
     override fun unbind() {
@@ -60,10 +70,64 @@ class ProjectPresenter  @Inject constructor(private var model: ProjectDetailCont
         disposable.add(getProjectObservable)
     }
 
+    override fun fetchRequestOfMine(projectId: Int) {
+        this.view?.writeLogMessage("i",TAG,"Fetching the request...")
+
+        val getRequestObservable = model.fetchRequestofMine(projectId).subscribe(
+                { list ->
+                    this.view?.writeLogMessage("i",TAG,"Fetching Successful.")
+                    if(list.size != 0)
+                        view?.collabCheck(list[0].id)
+                    else
+                        view?.collabUncheck()
+                },
+                { error ->
+                    this.view?.writeLogMessage("e",TAG,"Error in fetching requests")
+                }
+        )
+        if(getRequestObservable != null)
+            disposable.add(getRequestObservable)
+    }
+
     override fun navigateToEditProject() {
         val bundle = Bundle()
         bundle.putParcelable("PROJECT", getProject())
         view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectEditFromProjectFragment, bundle) }
     }
 
+    override fun OnClickCollab(projectId: Int,collabbed : Int) {
+        if(collabbed == -1) {
+            val collaborateObservable = model.collaborationRequest(CollaborateRequest(projectId, "hello")).subscribe({ request->
+
+                view?.writeLogMessage("i", TAG, "request sent")
+                view?.showToast("Request sent.")
+                view?.collabCheck(request.id)
+                view?.writeLogMessage("i",TAG,"request to project ${request.to_project} with the requestid ${request.id}")
+                disposable.clear()
+
+            }, {
+                view?.writeLogMessage("i",TAG, "Error while sending a request to project  with the id ${projectId} " + it)
+
+                view?.showToast("Error while sending a request to project with the id ${projectId} " + it)
+                disposable.clear()
+
+            })
+            disposable.add(collaborateObservable)
+        }
+        else{
+
+            view?.writeLogMessage("i", TAG,"request withdrawal for $collabbed sent")
+
+            val uninviteUserObservable = model.deleteRequest(collabbed).subscribe({
+                view?.writeLogMessage("i",TAG,"request withdrawal successful")
+                view?.collabUncheck()
+                disposable.clear()
+            },
+                    {
+                        view?.writeLogMessage("e", TAG,"request withdrawal unsuccessful $it")
+                        disposable.clear()
+                    })
+            disposable.add(uninviteUserObservable)
+        }
+    }
 }

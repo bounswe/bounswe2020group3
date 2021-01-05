@@ -994,7 +994,6 @@ rejectFollowRequest = (req_id) => {
 
   axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
     .then(resUser => {
-      const userState = resUser.data;
       var userId = this.props.location.pathname.split('/')[2];
       axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
         .then(res => {

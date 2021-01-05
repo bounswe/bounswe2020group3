@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 
-class FollowingTests(APITestCase):
+class FollowRequestTests(APITestCase):
     """
     Tests for the following model.
     """

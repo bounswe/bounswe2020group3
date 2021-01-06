@@ -2,7 +2,7 @@ from api.models.notification import Notification
 from rest_framework import serializers
 from api.serializers.project import Project, ProjectPrivateSerializer
 from api.serializers.profile import Profile, ProfilePrivateNotificationSerializer
-from api.serializers.user import User, UserPrivateSerializer
+from api.serializers.user import User, UserNotificationSerializer
 from api.serializers.collaboration_request import CollaborationRequest, \
     CollaborationRequestSerializer
 from api.serializers.collaboration_invite import CollaborationInvite, \
@@ -19,10 +19,11 @@ class GenericNotificationRelatedField(serializers.RelatedField):
     def to_representation(self, value):
         if isinstance(value, Project):
             serializer = ProjectPrivateSerializer(value)
+            return serializer.data
         if isinstance(value, Profile):
             serializer = ProfilePrivateNotificationSerializer(value)
         if isinstance(value, User):
-            serializer = UserPrivateSerializer(value)
+            serializer = UserNotificationSerializer(value)
         if isinstance(value, CollaborationRequest):
             serializer = CollaborationRequestSerializer(value)
         if isinstance(value, CollaborationInvite):
@@ -130,6 +131,21 @@ class NotificationFollowRequestSerializer(serializers.ModelSerializer):
         model = Notification
         fields = ['id', 'actor', 'description',
                   'recipient', 'follow_request',
+                  'unread', 'verb', 'timestamp']
+
+
+class NotificationMilestoneSerializer(serializers.ModelSerializer):
+    """
+    Notification serializer
+    """
+    actor = GenericNotificationRelatedField(read_only=True)
+    recipient = GenericNotificationRelatedField(read_only=True)
+    milestone = GenericNotificationRelatedField(read_only=True)
+
+    class Meta:
+        model = Notification
+        fields = ['id', 'actor', 'description',
+                  'recipient', 'milestone',
                   'unread', 'verb', 'timestamp']
 
 

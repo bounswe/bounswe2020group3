@@ -103,17 +103,6 @@ class CollaborationRequestViewSet(viewsets.ModelViewSet):
         if collaboration_request.to_user == self.request.user:
             collaboration_request.reject()
 
-            ''' Accept Request Notification '''
-            ''' Target --> Project'''
-            project = Project.objects.get(
-                id=collaboration_request.to_project_id)
-            notify.send(sender=self.request.user,
-                        verb="rejected your request for Project {}"
-                        .format(project.name),
-                        recipient=collaboration_request.from_user,
-                        target=project,
-                        description="Project"
-                        )
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data={

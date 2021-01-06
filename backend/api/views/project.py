@@ -59,4 +59,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
                         recipient=self.request.user,
                         target=project,
                         description='Project')
+        if self.action == 'update':
+            pass
+        if self.action == 'destroy':
+            pass
         return response

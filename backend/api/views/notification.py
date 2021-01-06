@@ -6,6 +6,7 @@ from api.serializers.notification import Notification, \
     NotificationProjectSerializer, \
     NotificationFollowSerializer, \
     NotificationFollowRequestSerializer, \
+    NotificationMilestoneSerializer, \
     NotificationUserSerializer
 
 from rest_framework.response import Response
@@ -17,8 +18,7 @@ from django.shortcuts import get_object_or_404
 
 
 class NotificationViewSet(viewsets.GenericViewSet,
-                          mixins.ListModelMixin,
-                          mixins.CreateModelMixin):
+                          mixins.ListModelMixin):
     queryset = Notification.objects.all()
     permission_classes = [IsAuthenticated]
 
@@ -36,28 +36,32 @@ class NotificationViewSet(viewsets.GenericViewSet,
         follow_request_queryset = self.request.user.notifications. \
             filter(description='Follow Request')
 
+        milestone_queryset = self.request.user.notifications. \
+            filter(description='Milestone')
+
         user_queryset = self.request.user.notifications. \
             filter(description='User')
 
-        '''
         invite_serializer = NotificationInviteSerializer(invite_queryset,
                                                          many=True)
         request_serializer = NotificationRequestSerializer(request_queryset,
-                                                         many=True)
-        '''
+                                                           many=True)
+
         project_serializer = NotificationProjectSerializer(project_queryset,
                                                            many=True)
-        '''
+
         follow_serializer = NotificationFollowSerializer(follow_queryset,
                                                          many=True)
         follow_request_serializer = NotificationFollowRequestSerializer(follow_request_queryset,
                                                                         many=True)
+
+        milestone_serializer = NotificationMilestoneSerializer(milestone_queryset,
+                                                               many=True)
         user_serializer = NotificationUserSerializer(user_queryset,
                                                      many=True)
-        '''
 
         notifications = []
-        '''
+
         for invite in invite_serializer.data:
             notifications.append(invite)
         for request in request_serializer.data:
@@ -68,11 +72,16 @@ class NotificationViewSet(viewsets.GenericViewSet,
             notifications.append(follow)
         for follow_request in follow_request_serializer.data:
             notifications.append(follow_request)
+        for milestone in milestone_serializer.data:
+            notifications.append(milestone)
         for user in user_serializer.data:
             notifications.append(user)
-        '''
+
+        notifications.sort(key=lambda x: x.get('timestamp'),reverse=True)
+
         return Response(data={
-            'result': project_serializer.data
+            'count': len(notifications),
+            'result': notifications
         })
 
     @action(detail=False, methods=['GET'], name='all notifications',

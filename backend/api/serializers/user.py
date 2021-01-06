@@ -160,3 +160,9 @@ class UserPrivateSerializer(serializers.ModelSerializer):
                   'count_of_followings',
                   'count_of_follow_requests'
                   ]
+
+
+class UserNotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username']

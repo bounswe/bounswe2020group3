@@ -140,7 +140,8 @@ class ProfilePictureSerializer(serializers.ModelSerializer):
         fields = ['id', 'profile_picture']
 
 
-class ProfilePrivateNotificationSerializer(serializers.HyperlinkedModelSerializer):
+class ProfilePrivateNotificationSerializer(serializers.
+                                           HyperlinkedModelSerializer):
     """
     Private profile serializer.
     """

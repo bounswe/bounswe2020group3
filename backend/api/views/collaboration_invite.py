@@ -15,6 +15,7 @@ from notifications.signals import notify
 from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied
 
+
 class CollaborationInviteViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,

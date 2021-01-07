@@ -10,7 +10,8 @@ class Notification(AbstractNotification):
     project = GenericForeignKey('target_content_type', 'target_object_id')
     milestone = GenericForeignKey('target_content_type', 'target_object_id')
     following = GenericForeignKey('target_content_type', 'target_object_id')
-    follow_request = GenericForeignKey('target_content_type', 'target_object_id')
+    follow_request = GenericForeignKey('target_content_type',
+                                       'target_object_id')
     comment = GenericForeignKey('target_content_type', 'target_object_id')
     rating = GenericForeignKey('target_content_type', 'target_object_id')
 

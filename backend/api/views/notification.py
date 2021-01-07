@@ -7,7 +7,9 @@ from api.serializers.notification import Notification, \
     NotificationFollowSerializer, \
     NotificationFollowRequestSerializer, \
     NotificationMilestoneSerializer, \
-    NotificationUserSerializer, NotificationCommentSerializer, NotificationRatingSerializer
+    NotificationUserSerializer, \
+    NotificationCommentSerializer, \
+    NotificationRatingSerializer
 
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -58,11 +60,13 @@ class NotificationViewSet(viewsets.GenericViewSet,
 
         follow_serializer = NotificationFollowSerializer(follow_queryset,
                                                          many=True)
-        follow_request_serializer = NotificationFollowRequestSerializer(follow_request_queryset,
-                                                                        many=True)
+        follow_request_serializer = NotificationFollowRequestSerializer(
+            follow_request_queryset,
+            many=True)
 
-        milestone_serializer = NotificationMilestoneSerializer(milestone_queryset,
-                                                               many=True)
+        milestone_serializer = NotificationMilestoneSerializer(
+            milestone_queryset,
+            many=True)
 
         comment_serializer = NotificationCommentSerializer(comment_queryset,
                                                            many=True)

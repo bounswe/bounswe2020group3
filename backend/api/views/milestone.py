@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from api.models.milestone import Milestone
 from api.models.project import Project
-from api.serializers.project import ProjectMilestonesSerializer, ProjectGETPublicSerializer
+from api.serializers.project import ProjectMilestonesSerializer
 from api.serializers.milestone import MilestoneSerializer
 from api.permission import IsMilestoneMemberOrReadOnly
 from rest_framework.decorators import action
@@ -51,7 +51,8 @@ class MilestoneViewSet(viewsets.ModelViewSet):
         response = super().dispatch(request, *args, **kwargs)
         if self.action == 'create':
             milestone = Milestone.objects.get(id=response.data['id'])
-            members = UserNotificationSerializer(milestone.project.members, many=True)
+            members = UserNotificationSerializer(milestone.project.members,
+                                                 many=True)
             for member in members.data:
                 user = User.objects.get(id=member['id'])
                 notify.send(sender=self.request.user,

@@ -1,7 +1,8 @@
 from api.models.notification import Notification
 from rest_framework import serializers
 from api.serializers.project import Project, ProjectPrivateSerializer
-from api.serializers.profile import Profile, ProfilePrivateNotificationSerializer
+from api.serializers.profile import Profile, \
+    ProfilePrivateNotificationSerializer
 from api.serializers.user import User, UserNotificationSerializer
 from api.serializers.collaboration_request import CollaborationRequest, \
     CollaborationRequestSerializer

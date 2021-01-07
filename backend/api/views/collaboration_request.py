@@ -15,6 +15,7 @@ from django.contrib.auth.models import User
 from notifications.signals import notify
 from django.utils import timezone
 
+
 class CollaborationRequestViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,

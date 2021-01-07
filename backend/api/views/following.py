@@ -88,7 +88,8 @@ class FollowRequestViewSet(viewsets.ModelViewSet):
         to_user = User.objects.get(
             id=serializer.validated_data['req_to_user']['id'])
         serializer.validated_data['req_to_user'] = to_user
-        follow_request = FollowRequest.objects.create(**serializer.validated_data)
+        follow_request = FollowRequest.objects.create(
+            **serializer.validated_data)
 
         ''' Follow Request  Notification '''
         ''' Target --> Follow Request '''

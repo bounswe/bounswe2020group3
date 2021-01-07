@@ -7,7 +7,7 @@ from api.serializers.notification import Notification, \
     NotificationFollowSerializer, \
     NotificationFollowRequestSerializer, \
     NotificationMilestoneSerializer, \
-    NotificationUserSerializer
+    NotificationUserSerializer, NotificationCommentSerializer, NotificationRatingSerializer
 
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -39,6 +39,12 @@ class NotificationViewSet(viewsets.GenericViewSet,
         milestone_queryset = self.request.user.notifications. \
             filter(description='Milestone')
 
+        comment_queryset = self.request.user.notifications. \
+            filter(description='Comment')
+
+        rating_queryset = self.request.user.notifications. \
+            filter(description='Rating')
+
         user_queryset = self.request.user.notifications. \
             filter(description='User')
 
@@ -57,6 +63,13 @@ class NotificationViewSet(viewsets.GenericViewSet,
 
         milestone_serializer = NotificationMilestoneSerializer(milestone_queryset,
                                                                many=True)
+
+        comment_serializer = NotificationCommentSerializer(comment_queryset,
+                                                           many=True)
+
+        rating_serializer = NotificationRatingSerializer(rating_queryset,
+                                                         many=True)
+
         user_serializer = NotificationUserSerializer(user_queryset,
                                                      many=True)
 
@@ -74,10 +87,14 @@ class NotificationViewSet(viewsets.GenericViewSet,
             notifications.append(follow_request)
         for milestone in milestone_serializer.data:
             notifications.append(milestone)
+        for comment in comment_serializer.data:
+            notifications.append(comment)
+        for rating in rating_serializer.data:
+            notifications.append(rating)
         for user in user_serializer.data:
             notifications.append(user)
 
-        notifications.sort(key=lambda x: x.get('timestamp'),reverse=True)
+        notifications.sort(key=lambda x: x.get('timestamp'), reverse=True)
 
         return Response(data={
             'count': len(notifications),

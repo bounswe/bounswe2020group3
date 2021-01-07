@@ -14,6 +14,9 @@ from api.serializers.tag import Tag, TagSerializer
 from api.serializers.following import Following, FollowRequest, \
     FollowerSerializer, FollowRequestSerializer
 
+from api.serializers.comment import Comment, CommentUpdateSerializer
+from api.serializers.rating import Rating, RatingSerializer
+
 
 class GenericNotificationRelatedField(serializers.RelatedField):
     def to_representation(self, value):
@@ -40,6 +43,10 @@ class GenericNotificationRelatedField(serializers.RelatedField):
             serializer = FollowerSerializer(value)
         if isinstance(value, FollowRequest):
             serializer = FollowRequestSerializer(value)
+        if isinstance(value, Comment):
+            serializer = CommentUpdateSerializer(value)
+        if isinstance(value, Rating):
+            serializer = RatingSerializer(value)
 
         return serializer.data
 
@@ -146,6 +153,36 @@ class NotificationMilestoneSerializer(serializers.ModelSerializer):
         model = Notification
         fields = ['id', 'actor', 'description',
                   'recipient', 'milestone',
+                  'unread', 'verb', 'timestamp']
+
+
+class NotificationCommentSerializer(serializers.ModelSerializer):
+    """
+    Notification serializer
+    """
+    actor = GenericNotificationRelatedField(read_only=True)
+    recipient = GenericNotificationRelatedField(read_only=True)
+    comment = GenericNotificationRelatedField(read_only=True)
+
+    class Meta:
+        model = Notification
+        fields = ['id', 'actor', 'description',
+                  'recipient', 'comment',
+                  'unread', 'verb', 'timestamp']
+
+
+class NotificationRatingSerializer(serializers.ModelSerializer):
+    """
+    Notification serializer
+    """
+    actor = GenericNotificationRelatedField(read_only=True)
+    recipient = GenericNotificationRelatedField(read_only=True)
+    rating = GenericNotificationRelatedField(read_only=True)
+
+    class Meta:
+        model = Notification
+        fields = ['id', 'actor', 'description',
+                  'recipient', 'rating',
                   'unread', 'verb', 'timestamp']
 
 

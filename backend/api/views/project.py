@@ -8,6 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from notifications.signals import notify
 from api.models.project import Project
+from api.mail import send_mail
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -59,6 +60,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
                         recipient=self.request.user,
                         target=project,
                         description='Project')
+            # send_mail(self.request.user)
+
         if self.action == 'update':
             pass
         if self.action == 'destroy':

@@ -139,16 +139,6 @@ class FollowRequestViewSet(viewsets.ModelViewSet):
         if follow_request.req_to_user == self.request.user:
             follow_request.reject()
 
-            ''' Follow Request Reject Notification '''
-            ''' Target --> User '''
-            user = User.objects.get(id=follow_request.req_from_user)
-            notify.send(sender=self.request.user,
-                        verb="rejected your follow request.",
-                        recipient=user,
-                        target=user,
-                        description="User"
-                        )
-
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data={

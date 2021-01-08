@@ -275,7 +275,7 @@ export default class ProjectPage extends Component {
       stat: projectState,
       type: projectType,
       due_date: dueDate,
-      event: event
+      event: parseInt(event[0])
     };
     if(projectType !== "" )
       project.project_type = projectType;

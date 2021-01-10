@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import "../App.css"
 import axios from 'axios';
 import { styled } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import AlertTypes from '../Common/AlertTypes.json';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
@@ -11,7 +9,6 @@ import config from "../config";
 import Box from '@material-ui/core/Box';
 import { theme } from "../Common/ColorTheme";
 import Typography from '@material-ui/core/Typography';
-import CheckBox from '@material-ui/core/Checkbox';
 
 
 const Messages = {
@@ -149,94 +146,21 @@ export default class RegistrationPage extends Component {
 
     render() {
         console.log(theme.palette)
+        console.log("baby")
         return (
             <Container color="secondary">
                 <PrimarySearchAppBar loginNav={this.goToLogin} />
                 <form className="" onSubmit={this.handleSubmit}>
-                    <Typography variant="h5" color="primary">Registration</Typography>
+                    <Typography variant="h5" color="primary"></Typography>
                     <div className="">
-                        <TextField
-                            color="primary"
-                            error=""
-                            id="standard-error-helper-text"
-                            label="Username"
-                            onChange={this.handleUsername}
-                            defaultValue=""
-                            helperText=""
-                        />
+                        <h1>Terms and Conditions</h1>
+                        <p>
+                            YAZI BURAYA YAZILACAK AMA NE YAZILMASI VE NASIL YAZILMASI GEREKTİĞİ KONUSUNDA KALAKALDIM !!!
+                        </p>
+                        
                     </div>
-                    <div className="">
-                        <TextField
-                            color="primary"
-                            type="email"
-                            error=""
-                            id="standard-error-helper-text"
-                            label="Email"
-                            onChange={this.handleEmail}
-                            defaultValue=""
-                            helperText=""
-                        />
-                    </div>
-                    <div>
-                        <TextField
-                            type="text"
-                            error=""
-                            id="standard-error-helper-text"
-                            label="First Name"
-                            onChange={this.handleFirstName}
-                            defaultValue=""
-                            helperText=""
-                        />
-                    </div>
-                    <div>
-                        <TextField
-                            type="text"
-                            error=""
-                            id="standard-error-helper-text"
-                            label="Middle Name (optional)"
-                            onChange={this.handleMiddleName}
-                            defaultValue=""
-                            helperText=""
-                        />
-                    </div>
-                    <div>
-                        <TextField
-                            type="text"
-                            error=""
-                            id="standard-error-helper-text"
-                            label="Lastname"
-                            onChange={this.handleLastName}
-                            defaultValue=""
-                            helperText=""
-                        />
-                    </div>
-                    <div className="">
-                        <TextField
-                            color="primary"
-                            type="password"
-                            error=""
-                            id="standard-error-helper-text"
-                            label="Password"
-                            onChange={this.handlePassword}
-                            defaultValue=""
-                            helperText=""
-                        />
-                    </div>
-                    
-                    <p className="">
-                        <Typography variant="inherit" color="primary">
-                        <CheckBox value ={this.state.check} onChange={() => this.checkBoxTest()}></CheckBox>
-                            Your use of PaperLayer indicates your acceptance of the <a href="/terms-of-services/" target = "_blank">Terms of Conditions</a> of Use.
-                        </Typography>
-                    </p>
-                    
-                    <Button type="submit" variant="contained" color="primary" className="" disabled={!this.state.check}  /*style={{color: "#c3fdff", backgroundColor:"#90caf9"}}*/ >Register</Button>
 
-                    <p className="">
-                        <Typography variant="inherit" color="primary">
-                            Already registered? <a href="/login">Login.</a>
-                        </Typography>
-                    </p>
+                    
                 </form>
                 <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
             </Container>);

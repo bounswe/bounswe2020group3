@@ -17,6 +17,7 @@ import SearchPage from "./Views/SearchPage";
 import EventPage from "./Views/EventPage";
 import EditProjectPage from "./Views/EditProjectPage";
 import IssueMilestonePage from "./Views/IssueMilestonePage";
+import TermsOfServicesPage from './Views/TermsOfServicesPage';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <AuthenticatedRoute exact path="/profile/:profileId" component={ProfilePage} />
             <AuthenticatedRoute exact path="/edit-profile" component={EditProfilePage} />
             <AuthenticatedRoute exact path={config.Issue_Milestone_Path} component={IssueMilestonePage} />
+            <Route exact path={config.Terms_Of_Services_Page_Url} component={TermsOfServicesPage} />
           </Switch>
         </BrowserRouter>
       </ThemeProvider>

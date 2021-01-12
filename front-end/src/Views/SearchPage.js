@@ -112,6 +112,16 @@ export default class SearchPage extends Component {
     }
 
     componentDidMount() {
+        axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers:{'Content-Type':'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
+            .then(res => {
+                let name = res.data.profile[0].name;
+                let mname = res.data.profile[0].middle_name;
+                let lastname = res.data.profile[0].last_name;
+                name = name + " " + mname;
+                let profileId = res.data.profile[0].id;
+                setProfileId(profileId);
+                this.setState({ name:name , lastName: lastname });
+            });    
         const query = { keyword: this.props.location.pathname.split('/')[2]};
         axios.post(`${config.API_URL}${config.Search_url}`,query, { headers:{ 'Content-Type': 'Application/json'}}).then(res=>{
             this.setState(res.data);

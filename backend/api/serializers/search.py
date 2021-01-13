@@ -15,6 +15,8 @@ class SearchRequestSerializer(serializers.Serializer):
     search_type = serializers.ChoiceField(
         choices=SEARCH_TYPE_CHOICES, allow_null=True, required=False,
         default="all")
+    tags = serializers.ListField(
+        child=serializers.IntegerField(), allow_null=True, required=False)
 
     profile_affiliations = serializers.CharField(allow_null=True,
                                                  required=False)

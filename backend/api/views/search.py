@@ -64,7 +64,8 @@ class SearchGenericAPIView(generics.GenericAPIView):
             query_following = list(map(lambda following: following.to_user,
                                        Following.objects.
                                        filter(from_user=request.user)))
-
+    
+        # Query the database for each keyword
         for keyword in keywords:
             if search_events:
                 q = Q(title__icontains=keyword) | Q(
@@ -100,6 +101,8 @@ class SearchGenericAPIView(generics.GenericAPIView):
                     q &= Q(event__id=req_data["project_event"])
                 if "project_state" in req_data:
                     q &= Q(state=req_data["project_state"])
+                if "tags" in req_data:
+                    q &= Q(tags__in=req_data["tags"])
 
                 q &= (Q(name__icontains=keyword) |
                       Q(description__icontains=keyword) |
@@ -176,6 +179,7 @@ class SearchGenericAPIView(generics.GenericAPIView):
 
                     query_private_profiles += Profile.objects.filter(q)
 
+        # Fill the Response
         if search_events:
             query_events = list(set(query_events))
 

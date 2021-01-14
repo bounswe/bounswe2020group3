@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework import permissions
 from api.permission import IsMemberOrReadOnly
@@ -8,6 +9,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from notifications.signals import notify
 from api.models.project import Project
+from api.views.feed import add_activity_to_feed
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -60,6 +62,17 @@ class ProjectViewSet(viewsets.ModelViewSet):
                         target=project,
                         description='Project')
             # send_mail(self.request.user)
+
+            '''
+                Adds the project to the user feed
+            '''
+            activity_data = {'actor': str(self.request.user),
+                             'verb': 'create',
+                             'object': project.id,
+                             'foreign_id': 'project:' + str(project.id),
+                             'project': ProjectPublicSerializer(project).data,
+                             }
+            add_activity_to_feed(self.request.user, activity_data)
 
         if self.action == 'update':
             pass

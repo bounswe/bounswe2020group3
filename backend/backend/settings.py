@@ -201,5 +201,5 @@ AWS_STORAGE_BUCKET_NAME = 'paperlayerbucket'
 AWS_S3_REGION_NAME = 'eu-central-1'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
-STREAM_API_KEY = os.environ.get('STREAM_API_KEY','')
-STREAM_API_SECRET = os.environ.get('STREAM_API_SECRET','')
+STREAM_API_KEY = os.environ.get('STREAM_API_KEY', '')
+STREAM_API_SECRET = os.environ.get('STREAM_API_SECRET', '')

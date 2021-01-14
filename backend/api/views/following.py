@@ -7,7 +7,7 @@ from api.models.following import Following, FollowRequest
 from api.permission import IsRequestSenderOrReceiver
 from api.serializers.following import FollowSerializer, \
     FollowRequestSerializer, FollowPostSerializer, \
-    FollowRequestPostSerializer, FollowerSerializer, FollowBasicSerializer
+    FollowRequestPostSerializer, FollowBasicSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
@@ -55,7 +55,8 @@ class FollowingViewSet(viewsets.ModelViewSet):
         activity_data = {'actor': str(self.request.user),
                          'verb': 'follow',
                          'object': follow_serializer['id'],
-                         'foreign_id': 'follow:' + str(follow_serializer['id']),
+                         'foreign_id': 'follow:' +
+                                       str(follow_serializer['id']),
                          'follow': follow_serializer,
                          }
 

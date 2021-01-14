@@ -7,11 +7,13 @@ from api.models.following import Following, FollowRequest
 from api.permission import IsRequestSenderOrReceiver
 from api.serializers.following import FollowSerializer, \
     FollowRequestSerializer, FollowPostSerializer, \
-    FollowRequestPostSerializer
+    FollowRequestPostSerializer, FollowerSerializer, FollowBasicSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 from notifications.signals import notify
+
+from api.views.feed import add_activity_to_feed
 
 
 class FollowingViewSet(viewsets.ModelViewSet):
@@ -45,6 +47,19 @@ class FollowingViewSet(viewsets.ModelViewSet):
                     description="Follow"
                     )
 
+        '''
+            Adds the follow to the user feed
+        '''
+        follow_serializer = FollowBasicSerializer(follow).data
+        print(follow_serializer)
+        activity_data = {'actor': str(self.request.user),
+                         'verb': 'follow',
+                         'object': follow_serializer['id'],
+                         'foreign_id': 'follow:' + str(follow_serializer['id']),
+                         'follow': follow_serializer,
+                         }
+
+        add_activity_to_feed(self.request.user, activity_data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def get_serializer_class(self, *args, **kwargs):

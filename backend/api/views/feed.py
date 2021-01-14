@@ -32,14 +32,16 @@ class FeedViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             'results': user_feed.get()['results']
         })
 
-    @action(detail=False, methods=['POST'], url_name='follow_timeline', serializer_class=FeedSerializer)
+    @action(detail=False, methods=['POST'], url_name='follow_timeline',
+            serializer_class=FeedSerializer)
     def follow_timeline(self, request):
         follow_user_id = self.request.data['user_id']
         user_feed = self.get_feed()
         response = user_feed.follow('user', follow_user_id)
         return Response(data=response, status=status.HTTP_200_OK)
 
-    @action(detail=False, methods=['POST'], url_name='unfollow_timeline', serializer_class=FeedSerializer)
+    @action(detail=False, methods=['POST'], url_name='unfollow_timeline',
+            serializer_class=FeedSerializer)
     def unfollow_timeline(self, request):
         unfollow_user_id = self.request.data['user_id']
         user_feed = self.get_feed()

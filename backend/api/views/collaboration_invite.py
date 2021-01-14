@@ -11,6 +11,7 @@ from api.permission import CollaborationPermissions
 from django.shortcuts import get_object_or_404
 from api.models.project import Project
 from django.contrib.auth.models import User
+from notifications.signals import notify
 from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied
 
@@ -52,6 +53,17 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
                 **serializer.validated_data)
             changed_data = {'id': col_invite.id}
             changed_data.update(serializer.data)
+
+            ''' Invite Notification '''
+            ''' Target --> Invite '''
+            notify.send(sender=self.request.user,
+                        verb="invited you to the Project {}"
+                        .format(project.name),
+                        recipient=to_user,
+                        target=col_invite,
+                        description="Invite"
+                        )
+
             return Response(changed_data, status=status.HTTP_201_CREATED)
         else:
             return Response(data={
@@ -65,6 +77,18 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
             CollaborationInvite, pk=pk)
         if collaboration_invite.to_user == self.request.user:
             collaboration_invite.accept()
+
+            ''' Accept Invite Notification '''
+            ''' Target --> Project'''
+            project = Project.objects.get(
+                id=collaboration_invite.to_project_id)
+            notify.send(sender=self.request.user,
+                        verb="accepted your invitation to Project {}"
+                        .format(project.name),
+                        recipient=collaboration_invite.from_user,
+                        target=project,
+                        description="Project"
+                        )
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data={
@@ -79,6 +103,7 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
             CollaborationInvite, pk=pk)
         if collaboration_invite.to_user == self.request.user:
             collaboration_invite.reject()
+
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data={

@@ -8,6 +8,7 @@ from api.permission import RatingPermission
 from api.serializers.rating import RatingSerializer, RatingUpdateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
+from notifications.signals import notify
 from rest_framework import status
 
 
@@ -33,10 +34,10 @@ class RatingViewSet(viewsets.ModelViewSet):
         serializer.save(from_user=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        '''
+        """
         Rating can be an integer in [0,10].
         The from_user field is automatically the requesting user.
-        '''
+        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.validated_data['from_user'] = self.request.user
@@ -53,7 +54,19 @@ class RatingViewSet(viewsets.ModelViewSet):
 
         if (is_public or is_following) and \
                 self.request.user.id != to_user.id:
-            Rating.objects.create(**serializer.validated_data)
+            rating = Rating.objects.create(**serializer.validated_data)
+
+            """
+                Rating Notification
+            """
+
+            notify.send(sender=self.request.user,
+                        verb="rated about you",
+                        recipient=to_user,
+                        target=rating,
+                        description="Rating"
+                        )
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(data={
@@ -61,9 +74,9 @@ class RatingViewSet(viewsets.ModelViewSet):
             }, status=status.HTTP_401_UNAUTHORIZED)
 
     def list(self, request, *args, **kwargs):
-        '''
+        """
         Users can only see the ratings they created.
-        '''
+        """
         user = request.user
         queryset = self.filter_queryset(self.get_queryset())
         if user.is_anonymous:

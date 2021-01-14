@@ -9,6 +9,10 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
+from notifications.signals import notify
+from django.contrib.auth.models import User
+
+from api.serializers.user import UserNotificationSerializer
 
 
 class MilestoneViewSet(viewsets.ModelViewSet):
@@ -42,3 +46,23 @@ class MilestoneViewSet(viewsets.ModelViewSet):
             return Response(data={
                 'result': 'Not found'
             }, status=status.HTTP_404_NOT_FOUND)
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super().dispatch(request, *args, **kwargs)
+        if self.action == 'create':
+            milestone = Milestone.objects.get(id=response.data['id'])
+            members = UserNotificationSerializer(milestone.project.members,
+                                                 many=True)
+            for member in members.data:
+                user = User.objects.get(id=member['id'])
+                notify.send(sender=self.request.user,
+                            verb="created a new Milestone with description {}".
+                            format(response.data['description']),
+                            recipient=user,
+                            target=milestone,
+                            description='Milestone')
+        if self.action == 'update':
+            pass
+        if self.action == 'destroy':
+            pass
+        return response

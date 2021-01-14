@@ -1,18 +1,16 @@
 from django.contrib.auth.models import User
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, viewsets, status
-import datetime
 
 import stream
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import serializers
 
-from api.serializers.user import UserNotificationSerializer
+from backend import settings
 
 
 def client():
-    return stream.connect('5k797hfvn633', 'pg9jt8ssktpegfd8782xxvqztpax9smejc98f4scb9x93sgpkjh42v9fsu7aq4ux')
+    return stream.connect(settings.STREAM_API_KEY, settings.STREAM_API_SECRET)
 
 
 def add_activity_to_feed(username, activity_data):

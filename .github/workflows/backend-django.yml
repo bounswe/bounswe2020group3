@@ -27,6 +27,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install --no-cache-dir poetry
         poetry install
+        echo "STREAM_API_KEY=5kb93qkmexcq" >> $GITHUB_ENV
+        echo "STREAM_API_SECRET=bfs8nbd5p7r62m6tsqzzhnv4katefpfvw6gysmykmde5ce6bx3rse8ha2cxkqjrk" >> $GITHUB_ENV
     - name: Lint with flake8
       run: |
         cd backend
@@ -35,6 +37,3 @@ jobs:
       run: |
         cd backend
         poetry run pytest --cov
-      env:
-        STREAM_API_KEY: 5kb93qkmexcq
-        STREAM_API_SECRET: bfs8nbd5p7r62m6tsqzzhnv4katefpfvw6gysmykmde5ce6bx3rse8ha2cxkqjrk

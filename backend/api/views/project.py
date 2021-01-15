@@ -62,9 +62,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
                         description='Project')
             # send_mail(self.request.user)
 
-            '''
+            """
                 Adds the project to the user feed
-            '''
+            """
             activity_data = {'actor': str(self.request.user),
                              'verb': 'create',
                              'object': project.id,

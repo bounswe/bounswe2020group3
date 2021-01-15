@@ -27,6 +27,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install --no-cache-dir poetry
         poetry install
+    - name: set many environment variables
+      uses: allenevans/set-env@v2.0.0
+      with:
+        STREAM_API_KEY: 5kb93qkmexcq
+        STREAM_API_SECRET: bfs8nbd5p7r62m6tsqzzhnv4katefpfvw6gysmykmde5ce6bx3rse8ha2cxkqjrk
     - name: Lint with flake8
       run: |
         cd backend

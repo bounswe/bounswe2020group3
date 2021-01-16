@@ -15,3 +15,7 @@ class EventViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['event_type']
+
+    '''
+        TODO: new event in feed ???
+    '''

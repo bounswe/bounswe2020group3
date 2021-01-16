@@ -11,6 +11,7 @@ from api.serializers.following import FollowSerializer, \
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
+from notifications.signals import notify
 
 
 class FollowingViewSet(viewsets.ModelViewSet):
@@ -33,7 +34,17 @@ class FollowingViewSet(viewsets.ModelViewSet):
         to_user = User.objects.get(
             id=serializer.validated_data['to_user']['id'])
         serializer.validated_data['to_user'] = to_user
-        Following.objects.create(**serializer.validated_data)
+        follow = Following.objects.create(**serializer.validated_data)
+
+        ''' Follow Notification '''
+        ''' Target --> Follow '''
+        notify.send(sender=self.request.user,
+                    verb="followed you.",
+                    recipient=to_user,
+                    target=follow,
+                    description="Follow"
+                    )
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def get_serializer_class(self, *args, **kwargs):
@@ -77,7 +88,18 @@ class FollowRequestViewSet(viewsets.ModelViewSet):
         to_user = User.objects.get(
             id=serializer.validated_data['req_to_user']['id'])
         serializer.validated_data['req_to_user'] = to_user
-        FollowRequest.objects.create(**serializer.validated_data)
+        follow_request = FollowRequest.objects.create(
+            **serializer.validated_data)
+
+        ''' Follow Request  Notification '''
+        ''' Target --> Follow Request '''
+        notify.send(sender=self.request.user,
+                    verb="wants to follow you.",
+                    recipient=to_user,
+                    target=follow_request,
+                    description="Follow Request"
+                    )
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def get_serializer_class(self):
@@ -92,6 +114,17 @@ class FollowRequestViewSet(viewsets.ModelViewSet):
             FollowRequest, pk=pk)
         if follow_request.req_to_user == self.request.user:
             follow_request.accept()
+
+            ''' Follow Request Accept Notification '''
+            ''' Target --> User '''
+            user = User.objects.get(id=follow_request.req_from_user)
+            notify.send(sender=self.request.user,
+                        verb="accepted your follow request.",
+                        recipient=user,
+                        target=user,
+                        description="User"
+                        )
+
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data={
@@ -106,6 +139,7 @@ class FollowRequestViewSet(viewsets.ModelViewSet):
             FollowRequest, pk=pk)
         if follow_request.req_to_user == self.request.user:
             follow_request.reject()
+
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data={

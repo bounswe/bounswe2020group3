@@ -134,6 +134,20 @@ class ProfilePictureSerializer(serializers.ModelSerializer):
     """
     Profile serializer for owner and admin.
     """
+
     class Meta:
         model = Profile
         fields = ['id', 'profile_picture']
+
+
+class ProfilePrivateNotificationSerializer(serializers.
+                                           HyperlinkedModelSerializer):
+    """
+    Private profile serializer.
+    """
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = Profile
+        fields = ['id', 'name', 'middle_name', 'last_name',
+                  'owner', 'is_public']

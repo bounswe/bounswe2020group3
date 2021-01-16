@@ -181,7 +181,6 @@ class SearchGenericAPIView(generics.GenericAPIView):
                     if isGuest:
                         q = Q(is_public=False)
                     else:
-                        
                         q = (Q(is_public=False) & ~Q(
                             owner__in=query_following))
                     q &= (Q(name__icontains=keyword) |

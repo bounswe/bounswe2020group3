@@ -1,6 +1,8 @@
 from api.models.rating import Rating
 from rest_framework import serializers
 
+from api.serializers.user import UserNotificationSerializer
+
 
 class RatingSerializer(serializers.ModelSerializer):
     """
@@ -20,3 +22,16 @@ class RatingUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = ['id', 'rating']
+
+class RatingFeedSerializer(serializers.ModelSerializer):
+    """
+    Rating update serializer
+    """
+
+    from_user = UserNotificationSerializer(read_only=True)
+    to_user = UserNotificationSerializer(read_only=True)
+
+    class Meta:
+        model = Rating
+        fields = ['id', 'rating', 'from_user', 'to_user']
+

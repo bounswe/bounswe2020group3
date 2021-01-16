@@ -51,7 +51,6 @@ class FollowingViewSet(viewsets.ModelViewSet):
             Adds the follow to the user feed
         '''
         follow_serializer = FollowBasicSerializer(follow).data
-        print(follow_serializer)
         activity_data = {'actor': str(self.request.user),
                          'verb': 'follow',
                          'object': follow_serializer['id'],

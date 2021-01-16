@@ -4,13 +4,15 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework import permissions
 from api.permission import CommentPermission
-from api.serializers.comment import CommentSerializer, CommentUpdateSerializer
+from api.serializers.comment import CommentSerializer, CommentUpdateSerializer, CommentFeedSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework import status
 from api.utils import get_is_following, get_is_collaborator
 from notifications.signals import notify
 from django.db.models import Q
+
+from api.views.feed import add_activity_to_feed
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -56,12 +58,27 @@ class CommentViewSet(viewsets.ModelViewSet):
                 Comment Notification
             """
 
+
             notify.send(sender=self.request.user,
                         verb="commented about you",
                         recipient=to_user,
                         target=comment,
                         description="Comment"
                         )
+
+            """
+                Adds the comment to user feed.
+            """
+
+            comment_serializer = CommentFeedSerializer(comment).data
+            activity_data = {'actor': str(self.request.user),
+                             'verb': 'comment',
+                             'object': comment_serializer['id'],
+                             'foreign_id': 'comment:' +
+                                           str(comment_serializer['id']),
+                             'comment': comment_serializer,
+                             }
+            add_activity_to_feed(self.request.user,activity_data)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:

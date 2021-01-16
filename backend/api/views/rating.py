@@ -5,7 +5,8 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework import permissions
 from api.permission import RatingPermission
-from api.serializers.rating import RatingSerializer, RatingUpdateSerializer, RatingFeedSerializer
+from api.serializers.rating import RatingSerializer, \
+    RatingUpdateSerializer, RatingFeedSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from notifications.signals import notify
@@ -82,7 +83,7 @@ class RatingViewSet(viewsets.ModelViewSet):
                              'rating': rating_serializer,
                              }
 
-            add_activity_to_feed(self.request.user,activity_data)
+            add_activity_to_feed(self.request.user, activity_data)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:

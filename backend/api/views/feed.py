@@ -18,6 +18,7 @@ def add_activity_to_feed(username, activity_data):
     user_feed = client().feed('user', user.id)
     user_feed.add_activity(activity_data)
 
+
 def follow_admin(username):
     user = User.objects.get(username=username)
     user_feed = client().feed('timeline', user.id)

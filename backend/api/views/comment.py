@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework import permissions
 from api.permission import CommentPermission
-from api.serializers.comment import CommentSerializer, CommentUpdateSerializer, CommentFeedSerializer
+from api.serializers.comment import CommentSerializer, \
+    CommentUpdateSerializer, CommentFeedSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework import status
@@ -58,7 +59,6 @@ class CommentViewSet(viewsets.ModelViewSet):
                 Comment Notification
             """
 
-
             notify.send(sender=self.request.user,
                         verb="commented about you",
                         recipient=to_user,
@@ -78,7 +78,7 @@ class CommentViewSet(viewsets.ModelViewSet):
                                            str(comment_serializer['id']),
                              'comment': comment_serializer,
                              }
-            add_activity_to_feed(self.request.user,activity_data)
+            add_activity_to_feed(self.request.user, activity_data)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:

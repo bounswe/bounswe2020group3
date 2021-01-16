@@ -23,6 +23,7 @@ class RatingUpdateSerializer(serializers.ModelSerializer):
         model = Rating
         fields = ['id', 'rating']
 
+
 class RatingFeedSerializer(serializers.ModelSerializer):
     """
     Rating update serializer
@@ -34,4 +35,3 @@ class RatingFeedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = ['id', 'rating', 'from_user', 'to_user']
-

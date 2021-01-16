@@ -53,6 +53,7 @@ class CommentUpdateSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ['id', 'comment']
 
+
 class CommentFeedSerializer(serializers.ModelSerializer):
     """
     Comment update serializer
@@ -60,7 +61,6 @@ class CommentFeedSerializer(serializers.ModelSerializer):
 
     from_user = UserNotificationSerializer(read_only=True)
     to_user = UserNotificationSerializer(read_only=True)
-
 
     class Meta:
         model = Comment

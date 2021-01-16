@@ -18,6 +18,12 @@ def add_activity_to_feed(username, activity_data):
     user_feed = client().feed('user', user.id)
     user_feed.add_activity(activity_data)
 
+def follow_admin(username):
+    user = User.objects.get(username=username)
+    user_feed = client().feed('timeline', user.id)
+    admin_id = User.objects.get(username='admin').id
+    user_feed.follow('user', admin_id)
+
 
 class FeedSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()

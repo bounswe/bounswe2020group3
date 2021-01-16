@@ -15,8 +15,6 @@ class SearchRequestSerializer(serializers.Serializer):
     search_type = serializers.ChoiceField(
         choices=SEARCH_TYPE_CHOICES, allow_null=True, required=False,
         default="all")
-    tags = serializers.ListField(
-        child=serializers.IntegerField(), allow_null=True, required=False)
 
     profile_affiliations = serializers.CharField(allow_null=True,
                                                  required=False)
@@ -38,6 +36,8 @@ class SearchRequestSerializer(serializers.Serializer):
     project_event = serializers.IntegerField(allow_null=True, required=False)
     project_state = serializers.ChoiceField(
         choices=STATE_CHOICES, allow_null=True, required=False)
+    project_tags = serializers.ListField(
+        child=serializers.IntegerField(), allow_null=True, required=False)
 
 
 class SearchResponseSerializer(serializers.Serializer):

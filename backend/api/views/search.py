@@ -51,20 +51,23 @@ class SearchGenericAPIView(generics.GenericAPIView):
         search_profiles = search_type in ["all", "profile"]
         search_events = search_type in ["all", "event"]
 
-        any_project_filter = len(set(["project_due_date_after",
+        public_project_filters = set(["project_due_date_after",
                                       "project_due_date_before",
-                                      "project_event", "project_state"])
-                                 .intersection(set(req_data.keys()))) > 0
-        any_profile_filter = len(set(["profile_affiliations",
+                                      "project_event"])
+        any_public_project_filter = len(
+            public_project_filters.intersection(set(req_data.keys()))) > 0
+
+        public_profile_filters = set(["profile_affiliations",
                                       "profile_expertise"])
-                                 .intersection(set(req_data.keys()))) > 0
+        any_public_profile_filter = len(
+            public_profile_filters.intersection(set(req_data.keys()))) > 0
 
         query_following = []
         if not isGuest:
             query_following = list(map(lambda following: following.to_user,
                                        Following.objects.
                                        filter(from_user=request.user)))
-    
+
         # Query the database for each keyword
         for keyword in keywords:
             if search_events:
@@ -101,8 +104,9 @@ class SearchGenericAPIView(generics.GenericAPIView):
                     q &= Q(event__id=req_data["project_event"])
                 if "project_state" in req_data:
                     q &= Q(state=req_data["project_state"])
-                if "tags" in req_data:
-                    q &= Q(tags__in=req_data["tags"])
+                if "project_tags" in req_data:
+                    print(req_data["project_tags"])
+                    q &= Q(tags__id__in=req_data["project_tags"])
 
                 q &= (Q(name__icontains=keyword) |
                       Q(description__icontains=keyword) |
@@ -112,13 +116,19 @@ class SearchGenericAPIView(generics.GenericAPIView):
 
                 query_projects += Project.objects.filter(q)
 
-                if not any_project_filter:
+                if not any_public_project_filter:
                     q = Q()
                     if isGuest:
                         q = Q(is_public=False)
                     else:
                         q = (Q(is_public=False) & ~Q(
                             members__id=request.user.id))
+
+                    if "project_state" in req_data:
+                        q &= Q(state=req_data["project_state"])
+                    if "project_tags" in req_data:
+                        q &= Q(tags__id__in=req_data["project_tags"])
+
                     q &= (Q(name__icontains=keyword) |
                           Q(description__icontains=keyword))
 
@@ -166,11 +176,12 @@ class SearchGenericAPIView(generics.GenericAPIView):
 
                     query_followed_profiles += Profile.objects.filter(q)
 
-                if not any_profile_filter:
+                if not any_public_profile_filter:
                     q = Q()
                     if isGuest:
                         q = Q(is_public=False)
                     else:
+                        
                         q = (Q(is_public=False) & ~Q(
                             owner__in=query_following))
                     q &= (Q(name__icontains=keyword) |

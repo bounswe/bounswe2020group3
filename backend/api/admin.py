@@ -11,6 +11,7 @@ from .models.collaboration_invite import CollaborationInvite
 from .models.collaboration_request import CollaborationRequest
 from .models.comment import Comment
 from .models.rating import Rating
+from .models.tag import Tag
 
 admin.site.register(Example)
 admin.site.register(Profile)
@@ -23,3 +24,4 @@ admin.site.register(CollaborationInvite)
 admin.site.register(CollaborationRequest)
 admin.site.register(Comment)
 admin.site.register(Rating)
+admin.site.register(Tag)

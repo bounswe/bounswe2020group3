@@ -65,6 +65,7 @@ export default class FileViewer extends Component {
       owner: "",
       files : [],
       currFile: undefined,
+      currFileName: "",
       showUpload: false,
       newFile: undefined,
       remark: ""
@@ -182,9 +183,24 @@ export default class FileViewer extends Component {
     this.getProfile();
     this.getFiles(project_id);
   };
-  renderFiles = () => {
+  deleteFile = (fileName , fileId) => {
+    const { projectId } = this.state;   
+    axios.delete(`${config.API_URL}${config.File_Path}${fileId}`,
+    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    .then(res => {
+      this.getFiles(projectId);
+      this.setState({message:`File ${fileName} Deleted.`, messageType:AlertTypes.Success}, () => {
+        this.handleSnackbarOpen();
+      });
+    }, (error) => {
+      this.setState({message:"Error While Deleting the File, Please Try Again.", messageType:AlertTypes.Error}, () => {
+        this.handleSnackbarOpen();
+      });
+    });
+  }
+
+  renderFileMenu = () => {
     const { files } = this.state;
-    
     return files.map((item) => {
       return <Paper elevation={6} style={{ textAlign: "left", minHeight:"30px", marginBottom:"10px",padding:"5px", width:"95%" }}>
         <Typography
@@ -197,7 +213,7 @@ export default class FileViewer extends Component {
             .then(res => {
               let file = res.data;
               console.log(file);
-              this.setState({currFile:file});
+              this.setState({currFile:file, currFileName:item.fileName});
             })
           }}
         >{item.fileName}</Typography>
@@ -214,9 +230,14 @@ export default class FileViewer extends Component {
     })
   }
   renderFileContent = () => {
-    const {currFile} = this.state;
+    const {currFile, currFileName} = this.state;
     if(currFile === undefined) return <Typography variant="h6" color="primary" style={{textAlign:"center"}}>You can choose a plain text file to display and edit here.</Typography> ;
-    return (<p style={{ minHeight:"50vh", overflowX:'scroll' }}>{currFile}</p>);
+    return (
+      <div>
+        <Typography variant="h6" color="primary">{currFileName}</Typography>
+        <p style={{ minHeight:"50vh", overflowX:'scroll' }}>{currFile}</p>
+      </div>
+    );
   }
   handleNewFile = (e) => {
     this.setState({ newFile: e.target.files[0] });
@@ -237,7 +258,7 @@ export default class FileViewer extends Component {
     data.append("file", newFile);
     data.append("remark", remark);
     data.append("project", parseInt(projectId));
-    axios.post(`${config.API_URL}/api/files/`, data,
+    axios.post(`${config.API_URL}${config.File_Path}`, data,
       { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         this.getFiles(projectId);
@@ -296,7 +317,7 @@ export default class FileViewer extends Component {
               <Typography variant="h6" color="primary">Files</Typography>
               <Box style={{ overflowY: 'scroll' }}>
                 <Paper elevation={6} style={{ border: "solid 1px blue", padding: "15px", minHeight: "50vh", width: "90%", background: "white", margin: "auto", marginBottom: "10px", marginTop: "40px", textAlign: "center" }} borderColor="primary" border={1} >
-                  {this.renderFiles()}
+                  {this.renderFileMenu()}
                 </Paper>
                 {this.state.showUpload ?
                     <>

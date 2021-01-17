@@ -7,7 +7,7 @@ from api.utils import get_my_rating, get_my_rating_id, \
     get_is_collaborator
 
 
-class ProfileFullSerializer(serializers.ModelSerializer):
+class ProfileFullSerializer(serializers.HyperlinkedModelSerializer):
     """
     Profile serializer for owner and admin.
     """
@@ -47,7 +47,7 @@ class ProfileFullSerializer(serializers.ModelSerializer):
         return get_is_collaborator(request.user, obj.owner)
 
 
-class ProfileBasicSerializer(serializers.ModelSerializer):
+class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
     """
     Public profile serializer for others.
     """
@@ -104,7 +104,7 @@ class ProfileBasicSerializer(serializers.ModelSerializer):
         return ret
 
 
-class ProfilePrivateSerializer(serializers.ModelSerializer):
+class ProfilePrivateSerializer(serializers.HyperlinkedModelSerializer):
     """
     Private profile serializer.
     """
@@ -134,7 +134,7 @@ class ProfilePrivateSerializer(serializers.ModelSerializer):
         return get_is_collaborator(request.user, obj.owner)
 
 
-class ProfilePictureSerializer(serializers.ModelSerializer):
+class ProfilePictureSerializer(serializers.HyperlinkedModelSerializer):
     """
     Profile serializer for owner and admin.
     """

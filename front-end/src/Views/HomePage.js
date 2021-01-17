@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from 'axios';
 import config from '../config';
-import { Button, styled } from '@material-ui/core';
+import {styled, Chip } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import Grid from '@material-ui/core/Grid';
@@ -9,16 +9,18 @@ import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import UserNavbar from '../Components/TopBar/UserNavbar';
 import Profilebar from '../Components/ProfileBar/Profilebar';
-import { getUserId, getAccessToken, setPhotoCookie } from "../Components/Auth/Authenticate";
+import { colorCodes } from "../Common/ColorTheme";
+import { getUserId, getAccessToken, getPhoto, setProfileId } from "../Components/Auth/Authenticate";
+
 const Container = styled(Box)({
+    backgroundColor: '#f7f7f5',
     background: "#f9f9eb",
     border: 0,
     borderRadius: 3,
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    height: "calc(98vh -64px)",
     color: 'white',
-    paddingBottom:"60px",
-    top:"0",
-    bottom:"0",
+    // paddingBottom:"60px",
     left:"0",
     right:"0",
     margin: "auto",
@@ -41,7 +43,8 @@ export default class HomePage extends Component {
             messageType: "",
             projects:[],
             events:[],
-            milestones:[]
+            milestones:[],
+            page_num: 0,
         }
     };
 
@@ -70,7 +73,8 @@ export default class HomePage extends Component {
     componentDidMount() {
       axios.get(`${config.API_URL}${config.Create_Project_Url}`, { headers:{ 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
         .then(res => {
-          const projects = res.data;
+          const projects = res.data.reverse();
+          console.log(projects)
           console.log(projects);
           this.setState({ projects:projects });
         });
@@ -78,9 +82,9 @@ export default class HomePage extends Component {
         .then(res => {
           this.setState({ events:res.data });
         });
-      axios.get(`${config.API_URL}${config.Milestone_url}`, { headers:{'Content-Type':'Application/json'}})
+        axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
         .then(res => {
-          this.setState({ milestones:res.data });
+          this.setState({ milestones: res.data.result });
         });
       axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers:{'Content-Type':'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
         .then(res => {
@@ -88,82 +92,127 @@ export default class HomePage extends Component {
           let mname = res.data.profile[0].middle_name;
           let lastname = res.data.profile[0].last_name;
           name = name + " " + mname;
-          let photoUrl = (res.data.profile[0].photo_url)
-          setPhotoCookie(photoUrl)
-          this.setState({ name:name , lastName: lastname, photoUrl:photoUrl });
-        });
-    }
+          let profileId = res.data.profile[0].id;
+          setProfileId(profileId);
+          this.setState({ name:name , lastName: lastname });
 
+        });
+  }
+  renderTags(tags) {
+    return tags.map((item) => {
+      return (
+        <Chip style={{ background: colorCodes[item.color], margin: "3px", textTransform: "capitalize" }} label={item.name} />
+      )
+    });
+  };
     renderProject(){
       var projects = this.state.projects;
       return projects.map((item) => {return (
-      <Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+
+      <Paper elevation={6}  style={{border: "solid 1px blue", padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
         <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Typography>
-        <Typography  style={{textAlign:"left", color:"black"}}>TAGS HERE</Typography>
+        <Typography  style={{textAlign:"left", color:"black"}}>{this.renderTags(item.tags)}</Typography>
         <Typography  style={{textAlign:"left", color:"black"}}>
-          {item.description}
+          {item.description.trim().substr(0, 120) +  (item.description.length > 120 ?  "..." : "") }
         </Typography>
-        </Paper>)});
+        </Paper>
+
+        )});
   };
                           
-    renderMilestones(){
-      var milestones = this.state.milestones;
-      return milestones.map((item) => {return (
-      <Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
-        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Typography>
-        <Typography noWrap style={{textAlign:"left", color:"black"}}>
-          {item.description}
-        </Typography>
-        </Paper>)
-         });
-    };
+  renderMilestones() {
+    const { milestones } = this.state;
+    return (
+      <Grid style={{ maxHeight: "500px", paddingTop: "10px", paddingBottom: "10px" }}>
+        {milestones.length !== 0
+          ?
+          milestones.map((item) => {
+            return (
+              <Paper elevation={6}
+                style={{ border: "solid 1px blue",
+                    padding: "15px", maxHeight: "160px", width: "80%",
+                  background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+                }}
+                borderColor="primary" border={1}>
+                <Typography variant="h6" color="primary"
+                  style={{ cursor: "pointer", width: "50%", textAlign: "left", display:"inline-block"}}
+                  onClick={() => { this.props.history.push(`${config.Projectpage_Path}/${item.project}`) }}
+                >{item.project_name}</Typography>
+                <Typography variant="h6" color="primary"
+                  style={{ cursor: "pointer", width: "50%", textAlign: "right", display:"inline-block" }}
+                >{item.date}</Typography>
+                <hr />
+                <Typography nowrap variant="body2" style={{ textAlign: "left", color: "black" }}>
+                  {item.description.substr(0, 120)}
+                  {/*May need more fine tuning as a future work.*/}
+                </Typography>
+              </Paper>
+            )
+          })
+          :
+          <Paper elevation={6}
+            style={{
+              padding: "15px", maxHeight: "160px", width: "80%",
+              background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+            }}
+            borderColor="primary" border={1}>
+            <Typography variant="h6" color="textPrimary" style={{ "textAlign": 'center' }}>No Upcoming Milestones</Typography>
+          </Paper>
+        }
+      </Grid>)
+
+  };
     renderFeed(){
       var news = [];
       return news.map((item) => {return (<p>{item}</p>)});
     };
     renderEvents(){
       var events = this.state.events;
-      return events.map((item) => {return (<Paper elevation={6}  style={{padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
-        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.this.goToEvent(item.id)}>{item.title}</Typography>
+      return events.map((item) => {return (<Paper elevation={6}  style={{border: "solid 1px blue", padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
+        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToEvent(item.id)}>{item.title}</Typography>
         <Typography noWrap style={{textAlign:"left", color:"black"}}>
           {item.description}
         </Typography>
         </Paper>)});
     };
+    
 
     render() {
       return (
         <Container>
         <UserNavbar
             logout={() => { this.props.history.push(config.Login_Path) }}
-            pushProfile={() => { this.props.history.push("/profile") }}
+            pushProfile={() => { this.props.history.push( "/profile/" + getUserId() ) }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
+            history ={this.props.history}
           />
           <Box style={{marginTop:"8px"}}>
 
             <Profilebar 
               name={this.state.name}
               lastName={this.state.lastName}
-              photoUrl={this.state.photoUrl}
+              photoUrl={getPhoto()}
               goToProjectCreation={this.goToProjectCreation}
-              goToProfile={() => { this.props.history.push("/profile"); }}
+              goToProfile={() => { this.props.history.push( "/profile/" + getUserId() ); }}
+              goToEventCreation ={this.goToEventCreation}
             />
 
-          <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{overflowY:"scroll", marginLeft:"200px", width:`calc(100% - 200px)`}}>
+          <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" 
+            style={{overflowY:"scroll", maxHeight:"calc(99vh - 55px)", marginLeft:"200px", width:`calc(100% - 200px)`}}>
             
-             <Grid item sm={9} style={{ maxHeight:"88vh"}}>
+             <Grid item sm={9} style={{paddingBottom:"50px"}}>
                <Typography variant="h3" color="primary">Home</Typography>
                {this.renderProject()}
              </Grid> 
             <Grid item sm={3} >
-              <Grid style={{ maxHeight: "40vh", overflowY: "scroll" }} item sm={12}>
+              <Grid style={{ maxHeight: "50vh", overflowY: "scroll" }} item sm={12}>
                 <Typography variant="h5" color="primary">Upcoming Events</Typography>
                 {this.renderEvents()}
               </Grid>
-              <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEventCreation}>Create an Event</Button>
-              <Typography variant="h5" color="primary">Milestones</Typography>
-              <Grid style={{maxHeight:"40vh", overflowY:"scroll"}} item sm={12}>
-                {this.renderMilestones()}
+              
+              <Typography variant="h5" color="primary" style={{marginTop:"10px"}}>Milestones</Typography>
+              <Grid style={{maxHeight:"50vh", overflowY:"scroll"}} item sm={12}>
+                  {this.renderMilestones()}
               </Grid>
             </Grid>
           </Grid>

@@ -11,12 +11,13 @@ class ProjectPublicSerializer(serializers.ModelSerializer):
     Project serializer, includes also profile owner
     """
     owner = serializers.ReadOnlyField(source='owner.username')
+    owner_id = serializers.ReadOnlyField(source='owner.id')
 
     class Meta:
         model = Project
         fields = ['id', 'name', 'description', 'requirements', 'owner',
                   'is_public', 'state', 'project_type', 'due_date',
-                  'event', 'tags']
+                  'event', 'tags', 'owner_id']
 
 
 class ProjectGETPublicSerializer(serializers.ModelSerializer):
@@ -24,6 +25,7 @@ class ProjectGETPublicSerializer(serializers.ModelSerializer):
     Project serializer, includes also profile owner
     """
     owner = serializers.ReadOnlyField(source='owner.username')
+    owner_id = serializers.ReadOnlyField(source='owner.id')
     event = EventSerializer(read_only=True)
     members = UserBasicSerializer(many=True, read_only=True)
     tags = TagSerializer(many=True, read_only=True)
@@ -33,7 +35,7 @@ class ProjectGETPublicSerializer(serializers.ModelSerializer):
         model = Project
         fields = ['id', 'name', 'description', 'requirements', 'owner',
                   'members', 'is_public', 'state', 'project_type', 'due_date',
-                  'event', 'tags', 'milestones']
+                  'event', 'tags', 'milestones', 'owner_id']
 
 
 class ProjectPrivateSerializer(serializers.ModelSerializer):
@@ -41,7 +43,26 @@ class ProjectPrivateSerializer(serializers.ModelSerializer):
     Project serializer, includes also profile owner
     """
     owner = serializers.ReadOnlyField(source='owner.username')
+    owner_id = serializers.ReadOnlyField(source='owner.id')
+    tags = TagSerializer(many=True, read_only=True)
 
     class Meta:
         model = Project
-        fields = ['id', 'name', 'description', 'owner', 'is_public']
+        fields = ['id', 'name', 'description', 'owner',
+                  'project_type', 'tags', 'is_public',
+                  'state', 'owner_id']
+
+
+class ProjectMilestonesSerializer(serializers.ModelSerializer):
+    """
+    Project serializer, includes also profile owner
+    """
+    owner = serializers.ReadOnlyField(source='owner.username')
+    owner_id = serializers.ReadOnlyField(source='owner.id')
+    milestones = MilestoneSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Project
+        fields = ['id', 'name', 'description', 'owner',
+                  'project_type', 'milestones', 'is_public',
+                  'state', 'owner_id']

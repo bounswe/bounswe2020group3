@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_with_corner_radius"
+    android:clickable="true">
+
+    <LinearLayout
+        style="@style/Block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="@dimen/padding_sm"
+        android:paddingHorizontal="@dimen/padding_md"
+        android:background="@drawable/gradient">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/materialCardView"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center"
+            app:cardBackgroundColor="@color/colorWhite"
+            app:cardCornerRadius="250dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                app:cardCornerRadius="250dp">
+
+                <ImageView
+                    android:id="@+id/imageViewInviteAvatar"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:contentDescription="@string/profile_avatar_description"
+                    android:padding="0dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_avatar" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/margin_md"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/colorBlack"
+                android:text="name"
+                android:textSize="16dp"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/inviteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="INVITE"/>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

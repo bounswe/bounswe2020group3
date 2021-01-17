@@ -2,21 +2,29 @@ import React, { Component } from "react";
 import { styled } from '@material-ui/core';
 import AlertTypes from '../Common/AlertTypes.json';
 import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
-import { getAccessToken } from '../Components/Auth/Authenticate';
+import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
 import axios from 'axios';
 import config from '../config';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
+import DateComponent from "../Components/Date/DateComponent";
+import UserNavbar from '../Components/TopBar/UserNavbar';
 
+const Messages = {
+  emptyFieldError: "Name and surname can not be empty!",
+  profileEditFail: "Profile Edit Failed. Please try again.",
+  profileEditSuccess: "Profile edited."
+}
 const genderTypes = {
-    male: "Male",
-    female: "Female",
-    non: "Do not want to share"
+    male: "male",
+    female: "female",
+    non: "do not want to share"
 }
 const dropdownMenuStyle = {
     minWidth: "150px",
@@ -24,16 +32,7 @@ const dropdownMenuStyle = {
     marginTop: "10px"
 }
 const width = {
-    width: "60%",
-    minWidth: "450px"
-}
-const middleDiv = {
-    margin: "auto",
-    width: "50%",
-    textAlign: "center",
-    minWidth: "500px",
-    verticalAlign: "middle",
-    lineHeight: "1"
+    width: "90%",
 }
 const FormWrapper = styled(Box)({
     backgroundColor: "#E0E0E0",
@@ -56,7 +55,7 @@ const Container = styled(Box)({
     borderRadius: 3,
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
     color: 'white',
-    height: "100vh",
+    height: "98vh",
     width: "100%",
   
     '& .MuiTextField-root': {
@@ -71,6 +70,7 @@ export default class EditProfilePage extends Component {
       super(props);
       this.SnackbarRef = React.createRef();
       this.state = {
+        profileId:-1,
         success: false,
         messageType: "",
         name:"",
@@ -80,11 +80,49 @@ export default class EditProfilePage extends Component {
         img:"",
         bio:"",
         age:"",
+        birthday: new Date(),
         expertise:"",
         gender:"",
-        interests:""
+        interests:"",
+        shareBirthday: false,
+        shareAffiliations: false,
+        shareGender : false,
+        shareBio: false,
+        isPublic: false
+ 
+
       }
     };
+    componentDidMount() {
+      axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`,
+      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let prof = res.data.profile[0];
+        this.setState({
+          isPublic: prof.is_public,
+          profileId: prof.id,
+          name: prof.name,
+          middle_name: prof.middle_name,
+          last_name: prof.last_name,
+          bio: prof.bio,
+          img: prof.photo_url,
+          birthday: prof.birthday, 
+          expertise: prof.expertise,
+          gender: prof.gender,
+          interests: prof.interests,
+          affiliations: prof.affiliations,
+          shareBio: prof.share_bio,
+          shareGender: prof.share_gender,
+          shareAffiliations: prof.share_affiliations,
+          shareBirthday: prof.share_birthday,
+        });
+      }
+      , (error) => {
+        this.setState({ success: false, message: "Error when fetching profile data.", messageType: AlertTypes.Error });
+        this.handleSnackbarOpen()
+        console.log(error);
+      }); 
+    }
 
     handleSnackbarOpen = () => {
         this.SnackbarRef.current.turnOnSnackbar();
@@ -107,42 +145,69 @@ export default class EditProfilePage extends Component {
     handleBioEdit = (e) => {
         this.setState({ bio: e.target.value });
     }
-    handleAgeEdit = (e) => {
-        this.setState({ age: e.target.value });
-    }
+    handleDateChange = (date) => {
+      this.setState({ birthday: date });
+    };
     handleExpertiseEdit = (e) => {
         this.setState({ expertise: e.target.value });
     }
     handleGenderEdit = (e) => {
         this.setState({ gender: e.target.value });
     }
+    handleShareBio = (e) => {
+      this.setState({ shareBio: e.target.value });
+  }
+  handleShareBirthday = (e) => {
+    this.setState({ shareBirthday: e.target.value });
+  }
+  handleShareAffiliations = (e) => {
+    this.setState({ shareAffiliations: e.target.value });
+  }
+  handleShareGender = (e) => {
+    this.setState({ shareGender: e.target.value });
+  }
+  handleProfilePrivacy = (e) => {
+    this.setState({ isPublic: e.target.value });
+  }
     handleInterestsEdit = (e) => {
         this.setState({ interests: e.target.value });
     }
     submitProfile = () => {
-        const { name, middle_name, last_name, email, img, bio, age, expertise, gender, interests } = this.state; 
+      const { name, middle_name, last_name, bio, birthday, expertise, gender, interests, isPublic, shareBio, shareBirthday, shareAffiliations, shareGender } = this.state;
+      if (name === "" || last_name === "") {
+        this.setState({ success: true, messageType: AlertTypes.Warning, message: Messages.emptyFieldError }, () => {
+          this.handleSnackbarOpen();
+          return;
+        });
+        return;
+      }
+        
         const profile = {
           name: name,
           middle_name: middle_name,
           last_name: last_name,
-          email: email,
-          img: img,
           bio: bio,
-          age: age,
+          birthday: birthday,
           expertise: expertise,
           gender: gender,
-          interests: interests
+          interests: interests,
+          is_public: isPublic,
+          share_birthday: shareBirthday,
+          share_gender : shareGender,
+          share_affiliations: shareAffiliations,
+          share_bio : shareBio
         };
-        axios.post(`${config.API_URL}${config.Edit_Profile_Url}`, profile, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        
+        axios.put(`${config.API_URL}${config.Edit_Profile_Url}${this.state.profileId}/`, profile, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
           .then(res => {
             console.log(res.data)
-            this.setState({ success: true, messageType: AlertTypes.Success }, () => {
+            this.setState({ success: true, messageType: AlertTypes.Success, message: Messages.profileEditSuccess }, () => {
               this.handleSnackbarOpen();
-              setTimeout(() => { this.props.history.push(config.Profilepage_Path); }, 3000);
+              setTimeout(() => { this.props.history.push(config.Profille_Page_Path + `/${getUserId()}`); }, 3000);
             });
     
           }, (error) => {
-            this.setState({ success: false, messageType: AlertTypes.Error });
+            this.setState({ success: false, messageType: AlertTypes.Error, message:Messages.profileEditFail });
             this.handleSnackbarOpen()
             console.log(error);
           })
@@ -150,17 +215,25 @@ export default class EditProfilePage extends Component {
 
     render() {
         const { gender } = this.state;
+        console.log(this.state.birthday)
         return (
           <Container>
+            <UserNavbar
+              logout={() => { this.props.history.push(config.Login_Path) }}
+              pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
+              goHome={() => { this.props.history.push(config.Homepage_Path) }}
+              history ={this.props.history}
+            />
             <FormWrapper>
               <h1 style={{ color: "black" }}> Edit Profile </h1>
-    
-              <div style={middleDiv}>
+              <Grid container direction="row" justify="center" alignItems="center">
+                <Grid sm={6} >
                 <div>
                   <TextField
                     type="text"
                     error=""
                     label="Name"
+                    value={this.state.name}
                     onChange={this.handleNameEdit}
                     defaultValue=""
                     helperText="Name"
@@ -173,6 +246,7 @@ export default class EditProfilePage extends Component {
                     type="text"
                     error=""
                     label="Midlle Name"
+                    value={this.state.middle_name}
                     onChange={this.handleMidNameEdit}
                     defaultValue=""
                     helperText="Middle Name"
@@ -184,20 +258,59 @@ export default class EditProfilePage extends Component {
                     type="text"
                     error=""
                     label="Last Name"
+                    value={this.state.last_name}
                     onChange={this.handleLastNameEdit}
                     defaultValue=""
                     helperText="Last Name"
                     style={width}
                     variant="filled" />
                 </div>
-                <div>
+                {/* <div>
                   <TextField
                     type="text"
                     error=""
                     label="email"
+
                     onChange={this.handleEmailEdit}
                     defaultValue=""
                     helperText="E-mail"
+                    style={width}
+                    variant="filled" />
+                </div> */}
+                <div>
+                  <TextField
+                    type="text"
+                    error=""
+                    label="Bio"
+                    value={this.state.bio}
+                    onChange={this.handleBioEdit}
+                    defaultValue=""
+                    helperText="Bio"
+                    style={width}
+                    variant="filled" />
+                </div> 
+                </Grid>
+
+                <Grid sm={6} >
+                <div>
+                  <DateComponent
+                    value={this.state.birthday}
+                    dateValue={this.state.birthday}
+                    handleDateChange={this.handleDateChange}
+                    helperText="Birthday"
+                    past={true}
+                    style={width}
+                  />
+                </div>
+                <div>
+                  <TextField
+                    type="text"
+                    error=""
+                    label="Interests"
+                    value={this.state.interests}
+                    onChange={this.handleInterestsEdit}
+                    defaultValue=""
+                    helperText="Interests"
                     style={width}
                     variant="filled" />
                 </div>
@@ -205,36 +318,28 @@ export default class EditProfilePage extends Component {
                   <TextField
                     type="text"
                     error=""
-                    label="Bio"
-                    onChange={this.handleBioEdit}
+                    label="Expertise"
+                    value={this.state.expertise}
+                    onChange={this.handleExpertiseEdit}
                     defaultValue=""
-                    helperText="Bio"
+                    helperText="Expertise"
                     style={width}
                     variant="filled" />
-                </div> 
-                <div>
-                  <TextField
-                    type="text"
-                    error=""
-                    label="Age"
-                    onChange={this.handleAgeEdit}
-                    defaultValue=""
-                    helperText="Age"
-                    style={width}
-                    variant="filled" />
-                </div> 
-                <div>
-                  <TextField
-                    type="text"
-                    error=""
-                    label="Interests"
-                    onChange={this.handleInterestsEdit}
-                    defaultValue=""
-                    helperText="Interests"
-                    style={width}
-                    variant="filled" />
-                </div>                    
+                </div>      
+                              
                 <div style={{ marginBottom: "10px" }}>
+                <FormControl>
+                    <InputLabel style={{ marginLeft: "12px" }} id="profilePriv">Profile Privacy</InputLabel>
+                    <Select
+                      style={dropdownMenuStyle}
+                      value={this.state.isPublic}
+                      onChange={this.handleProfilePrivacy}
+                      labelId="profilePriv"
+                    >
+                      <MenuItem value={true}>Public</MenuItem>
+                      <MenuItem value={false}>Private</MenuItem>
+                    </Select>
+                  </FormControl>
                   <FormControl>
                     <InputLabel style={{ marginLeft: "12px" }} id="gender">Gender</InputLabel>
                     <Select
@@ -249,10 +354,77 @@ export default class EditProfilePage extends Component {
                     </Select>
                   </FormControl>
                 </div>
+                <div>
+                <FormControl>
+                    <InputLabel style={{ marginLeft: "12px" }} id="sharebio">Share Bio</InputLabel>
+                    <Select
+                      style={dropdownMenuStyle}
+                      value={this.state.shareBio}
+                      onChange={this.handleShareBio}
+                      labelId="sharebio"
+                    >
+                      <MenuItem value={true}>Yes</MenuItem>
+                      <MenuItem value={false}>No</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <InputLabel style={{ marginLeft: "12px" }} id="shareBday">Share Birthday</InputLabel>
+                    <Select
+                      style={dropdownMenuStyle}
+                      value={this.state.shareBirthday}
+                      onChange={this.handleShareBirthday}
+                      labelId="shareBday"
+                    >
+                      <MenuItem value={true}>Yes</MenuItem>
+                      <MenuItem value={false}>No</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+                <div>
+                <FormControl>
+                    <InputLabel style={{ marginLeft: "12px" }} id="genderReveal">Share Gender</InputLabel>
+                    <Select
+                      style={dropdownMenuStyle}
+                      value={this.state.shareGender}
+                      onChange={this.handleShareGender}
+                      labelId="genderReveal"
+                    >
+                      <MenuItem value={true}>Yes</MenuItem>
+                      <MenuItem value={false}>No</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <InputLabel style={{ marginLeft: "12px" }} id="shareAff">Share Affiliations</InputLabel>
+                    <Select
+                      style={dropdownMenuStyle}
+                      value={this.state.shareAffiliations}
+                      onChange={this.handleShareAffiliations}
+                      labelId="shareAff"
+                    >
+                      <MenuItem value={true}>Yes</MenuItem>
+                      <MenuItem value={false}>No</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+                </Grid>
+                
+                {/* <div>
+                  <TextField
+                    type="text"
+                    error=""
+                    label="Age"
+                    value={this.state.birthday}
+                    onChange={this.handleAgeEdit}
+                    defaultValue=""
+                    helperText="Age"
+                    style={width}
+                    variant="filled" />
+                </div>  */}
+                
                 <Button color="primary" variant="contained" style={{ marginTop: "20px" }} onClick={this.submitProfile}>Submit Changes</Button>  
-              </div>
+              </Grid>
             </FormWrapper>
-            <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpen} type={this.state.messageType} />
+            <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpen} type={this.state.messageType} message={this.state.message} />
           </Container>);
     }
 

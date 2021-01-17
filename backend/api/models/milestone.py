@@ -8,7 +8,8 @@ class Milestone(models.Model):
     """
     description = models.TextField(default='')
     date = models.DateField()
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE,
+                                related_name='milestones')
 
     class Meta:
         ordering = ['project']

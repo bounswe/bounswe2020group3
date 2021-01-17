@@ -133,7 +133,8 @@
                     <View
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"/>
 
                     <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/spinnerProjectState"
@@ -162,7 +163,8 @@
                     <View
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"/>
 
                     <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/spinnerProjectType"
@@ -175,7 +177,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_md"
-                    android:layout_marginVertical="@dimen/margin_sm"
+                    android:layout_marginTop="@dimen/margin_md"
                     android:background="@drawable/border_with_corner_radius">
 
                     <com.google.android.material.textview.MaterialTextView
@@ -211,13 +213,94 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_md"
+                    android:layout_marginTop="@dimen/margin_md"
+                    android:background="@drawable/border_with_corner_radius"
+                    android:baselineAligned="true"
+                    android:orientation="horizontal"
+                    android:paddingVertical="@dimen/padding_sm"
+                    android:paddingStart="@dimen/padding_md">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/margin_sm"
+                        android:text="Event: " />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"/>
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/spinnerProjectEvent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginHorizontal="@dimen/margin_sm"
+                        android:text="or"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_sm"
+                        android:text="Add new"
+                        android:padding="2dp"
+                        android:layout_gravity="right"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_md"
+                    android:layout_marginVertical="@dimen/margin_md"
+                    android:background="@drawable/border_with_corner_radius"
+                    android:baselineAligned="true"
+                    android:orientation="horizontal"
+                    android:paddingVertical="@dimen/padding_sm"
+                    android:paddingStart="@dimen/padding_md">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Tags: " />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/textViewTags"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Please select..."
+                        android:layout_marginHorizontal="@dimen/margin_sm"
+                        android:layout_gravity="center_vertical"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonShowTags"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_sm"
+                        android:layout_gravity="end"
+                        android:text="Show Available Tags"/>
+
+                </LinearLayout>
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonCreateProject"
-        style="@style/ButtonDefault"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/text_create"

@@ -11,6 +11,9 @@ from api.permission import CollaborationPermissions
 from django.shortcuts import get_object_or_404
 from api.models.project import Project
 from django.contrib.auth.models import User
+from notifications.signals import notify
+from django.utils import timezone
+from rest_framework.exceptions import PermissionDenied
 
 
 class CollaborationInviteViewSet(viewsets.ModelViewSet):
@@ -29,6 +32,7 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        serializer.validated_data['created'] = timezone.now()
         serializer.validated_data['from_user'] = self.request.user
         project = Project.objects.get(
             id=serializer.validated_data['to_project'].id)
@@ -38,8 +42,29 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
         if (project.state == 'open for collaborators' or
             project.state == 'inviting collaborators') and \
                 self.request.user.id != to_user.id:
-            CollaborationInvite.objects.create(**serializer.validated_data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            old_invite = CollaborationInvite.objects.filter(
+                from_user=self.request.user,
+                to_project=project,
+                to_user=to_user)
+            if old_invite.count() > 0:
+                raise AlreadyInvitedException(
+                    status_code=status.HTTP_400_BAD_REQUEST)
+            col_invite = CollaborationInvite.objects.create(
+                **serializer.validated_data)
+            changed_data = {'id': col_invite.id}
+            changed_data.update(serializer.data)
+
+            ''' Invite Notification '''
+            ''' Target --> Invite '''
+            notify.send(sender=self.request.user,
+                        verb="invited you to the Project {}"
+                        .format(project.name),
+                        recipient=to_user,
+                        target=col_invite,
+                        description="Invite"
+                        )
+
+            return Response(changed_data, status=status.HTTP_201_CREATED)
         else:
             return Response(data={
                 'error': 'Unauthorized'
@@ -52,6 +77,18 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
             CollaborationInvite, pk=pk)
         if collaboration_invite.to_user == self.request.user:
             collaboration_invite.accept()
+
+            ''' Accept Invite Notification '''
+            ''' Target --> Project'''
+            project = Project.objects.get(
+                id=collaboration_invite.to_project_id)
+            notify.send(sender=self.request.user,
+                        verb="accepted your invitation to Project {}"
+                        .format(project.name),
+                        recipient=collaboration_invite.from_user,
+                        target=project,
+                        description="Project"
+                        )
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data={
@@ -66,6 +103,7 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
             CollaborationInvite, pk=pk)
         if collaboration_invite.to_user == self.request.user:
             collaboration_invite.reject()
+
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data={
@@ -76,3 +114,13 @@ class CollaborationInviteViewSet(viewsets.ModelViewSet):
         if self.request.method == 'POST':
             return CollaborationInvitePOSTSerializer
         return super().get_serializer_class()
+
+
+class AlreadyInvitedException(PermissionDenied):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "This user has already been invited."
+    status_code = 'invalid'
+
+    def __init__(self, status_code=None):
+        if status_code is not None:
+            self.status_code = status_code

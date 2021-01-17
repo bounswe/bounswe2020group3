@@ -1,10 +1,9 @@
 package com.bounswe2020group3.paperlayer.login
 
 import android.util.Log
-import com.bounswe2020group3.paperlayer.login.data.AuthToken
-import com.bounswe2020group3.paperlayer.login.data.UserCredentials
+import com.bounswe2020group3.paperlayer.data.user.AuthToken
+import com.bounswe2020group3.paperlayer.data.user.UserCredentials
 import com.bounswe2020group3.paperlayer.util.Session
-import com.bounswe2020group3.paperlayer.util.SessionManager
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

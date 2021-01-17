@@ -3,9 +3,11 @@ package com.bounswe2020group3.paperlayer.profile.edit
 import android.util.Log
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import com.bounswe2020group3.paperlayer.profile.ProfileContract
-import com.bounswe2020group3.paperlayer.profile.data.Profile
-import com.bounswe2020group3.paperlayer.profile.data.User
+import com.bounswe2020group3.paperlayer.data.user.Profile
+import com.bounswe2020group3.paperlayer.data.user.User
 import io.reactivex.disposables.CompositeDisposable
+import okhttp3.MediaType
+import java.io.File
 import javax.inject.Inject
 
 class ProfileEditPresenter @Inject constructor(private var model: ProfileContract.Model) : BasePresenter<ProfileEditContract.View>(), ProfileEditContract.Presenter {
@@ -20,7 +22,7 @@ class ProfileEditPresenter @Inject constructor(private var model: ProfileContrac
     }
 
     override fun subscribeUser() {
-        val userSub = model.getUser().subscribe { user ->
+        val userSub = model.getAuthUser().subscribe { user ->
             view?.updateProfileUI(user)
             this.userData = user
         }
@@ -28,10 +30,9 @@ class ProfileEditPresenter @Inject constructor(private var model: ProfileContrac
     }
 
     override fun loadUser() {
-        Log.d("Dagger", "Profile Presenter: $model")
         view?.showLoading()
         try {
-            val fetchSub = model.fetchUser().subscribe(
+            val fetchSub = model.fetchAuthUser().subscribe(
                     {
                         view?.hideLoading()
                     },
@@ -53,7 +54,7 @@ class ProfileEditPresenter @Inject constructor(private var model: ProfileContrac
     }
 
     override fun updateProfile(updatedProfile: Profile) {
-        val getProfileObservable = model.updateUserProfile(updatedProfile).subscribe(
+        val getProfileObservable = model.updateAuthUserProfile(updatedProfile).subscribe(
                 { profile ->
                     view?.updateProfileUIWithProfile(profile)
                     view?.navigateBack()
@@ -64,5 +65,25 @@ class ProfileEditPresenter @Inject constructor(private var model: ProfileContrac
                 }
         )
         disposable.add(getProfileObservable)
+    }
+
+    override fun updateProfilePicture(profileId: Int, file: File, type: MediaType) {
+        view?.showLoading()
+        try {
+            val fetchSub = model.updateProfilePicture(profileId, file, type).subscribe(
+                    {
+                        view?.hideLoading()
+                        view?.showInfoToast("Profile updated successfully")
+                        loadUser()
+                    },
+                    {
+                        view?.hideLoading()
+                        view?.showErrorToast("An error occurred while updating the profile picture. Please try again.")
+                    }
+            )
+            disposable.add(fetchSub)
+        } catch (e: Exception) {
+            view?.showErrorToast("Please log in first.")
+        }
     }
 }

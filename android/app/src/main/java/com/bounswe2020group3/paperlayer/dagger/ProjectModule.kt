@@ -12,17 +12,17 @@ abstract class ProjectModule{
 
 
     @Binds
-    abstract fun bindProjectMainPresenter(presenter: ProjectMainPresenter): ProjectMainContract.Presenter
+    abstract fun bindProjectMainPresenter(presenter: ProjectMainPresenter): ProjectsContract.Presenter
 
     @Binds
-    abstract fun bindProjectPresenter(presenter: ProjectPresenter): ProjectContract.Presenter
-
-    @Binds
-    @Singleton
-    abstract fun bindProjectMainModel(model: ProjectModel): ProjectMainContract.Model
+    abstract fun bindProjectPresenter(presenter: ProjectPresenter): ProjectDetailContract.Presenter
 
     @Binds
     @Singleton
-    abstract fun bindProjectModel(model: ProjectModel): ProjectContract.Model
+    abstract fun bindProjectMainModel(model: ProjectModel): ProjectsContract.Model
+
+    @Binds
+    @Singleton
+    abstract fun bindProjectModel(model: ProjectModel): ProjectDetailContract.Model
 
 }

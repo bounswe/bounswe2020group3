@@ -8,12 +8,17 @@ export const getAccessToken = () => Cookies.get('access_token')
 export const getRefreshToken = () => Cookies.get('refresh_token')
 export const getUserId = () => Cookies.get('user_id');
 export const isAuthenticated = () => !!getAccessToken()
-export const getPhoto = () => Cookies.get('user_photo')
+export const getProfileId = () => Cookies.get('user_prof_id')
+export const getPhoto = () => {
+    let id = Cookies.get('user_prof_id');
+    return `${config.API_URL}/api/profile_picture/${id}/`;
+}
 export const logout = () => {
     Cookies.remove('access_token');
     Cookies.remove('user_id');
-    Cookies.remove('user_photo');
+    Cookies.remove('user_prof_id');
 }
+
 
 export const setCookie = (token) => {
     Cookies.set("access_token", token);
@@ -21,8 +26,8 @@ export const setCookie = (token) => {
 export const setIdCookie = (id) => {
     Cookies.set("user_id", id);
 }
-export const setPhotoCookie = (url) => {
-    Cookies.set("user_photo", url);
+export const setProfileId = (url) => {
+    Cookies.set("user_prof_id", url);
 }
 
 export const authenticate = async () => {

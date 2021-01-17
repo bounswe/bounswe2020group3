@@ -1,18 +1,17 @@
 from rest_framework import viewsets
 from rest_framework import permissions
 from api.models.profile import Profile
-from api.models.following import Following
 from api.permission import IsOwnerOrReadOnly, ProfileDeletion
 from api.serializers.profile import ProfileFullSerializer
 from api.serializers.profile import ProfileBasicSerializer
 from api.serializers.profile import ProfilePrivateSerializer
+from api.serializers.profile import ProfilePictureSerializer
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.decorators import action
 from django.http import FileResponse
-from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
-import os
+from rest_framework.parsers import MultiPartParser, FormParser
+from api.utils import get_is_following
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
@@ -20,7 +19,6 @@ class ProfileViewSet(viewsets.ModelViewSet):
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions.
     """
-    parser_classes = (MultiPartParser, FormParser)
     queryset = Profile.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly, ProfileDeletion]
@@ -40,13 +38,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
             return ProfileFullSerializer
         elif is_get:
             is_public = self.accessed_profile.is_public
-            if this_user.is_anonymous:
-                is_following = False
-            else:
-                is_following = \
-                    Following.objects. \
-                    filter(from_user=this_user,
-                           to_user=self.accessed_profile.owner).exists()
+            accessed_user = self.accessed_profile.owner
+            is_following = get_is_following(this_user, accessed_user)
             if self.accessed_profile.owner == this_user:
                 return ProfileFullSerializer
             elif is_public or is_following:
@@ -58,35 +51,41 @@ class ProfileViewSet(viewsets.ModelViewSet):
         else:
             return ProfileFullSerializer
 
-    @action(detail=True, methods=['get'])
-    def retrieve_profile_picture(self, request, pk=None):
-        picture = self.get_object().profile_picture
-        return FileResponse(picture)
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
-    @action(detail=True, methods=['delete'])
-    def remove_profile_picture(self, request, pk=None):
+
+class ProfilePictureViewSet(viewsets.GenericViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfilePictureSerializer
+    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
+
+    def retrieve(self, request, pk=None):
+        picture = self.get_object().profile_picture
+        if picture:
+            return FileResponse(picture)
+        else:
+            return Response("Profile picture is not found.",
+                            status.HTTP_404_NOT_FOUND)
+
+    def update(self, request, pk=None):
+        data = {"profile_picture": request.data["profile_picture"]}
+        profile = self.get_object()
+        serializer = ProfilePictureSerializer(profile, data=data, partial=True)
+        if profile.profile_picture:
+            profile.profile_picture.delete()
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk=None):
         if self.get_object().profile_picture:
             self.get_object().profile_picture.delete()
             return Response("Profile picture is removed.", status.HTTP_200_OK)
         else:
             return Response("Profile picture is not found.",
                             status.HTTP_404_NOT_FOUND)
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data,
-                                         partial=partial)
-        serializer.is_valid(raise_exception=True)
-
-        if 'profile_picture' in request.data:
-            if instance.profile_picture:
-                if instance.profile_picture != request.data['profile_picture']:
-                    if os.path.isfile(instance.profile_picture.path):
-                        os.remove(instance.profile_picture.path)
-
-        self.perform_update(serializer)
-        return Response(serializer.data)

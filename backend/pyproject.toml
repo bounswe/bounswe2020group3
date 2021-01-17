@@ -17,7 +17,12 @@ django-filter = "^2.4.0"
 django-cors-headers = "^3.5.0"
 Pillow = "^8.0.1"
 python-datamuse = "^1.3.0"
-scholarly = "^1.0.2"
+django-storages = "^1.11.1"
+boto3 = "^1.16.43"
+django-email-verification = "^0.0.7"
+django-notifications-hq = "^1.6.0"
+sendgrid = "^6.4.8"
+scholarly = "^1.0.3"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.4"

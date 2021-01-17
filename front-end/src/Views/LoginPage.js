@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import AlertTypes from '../Common/AlertTypes.json';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import PrimarySearchAppBar from '../Components/TopBar/PrimarySearchAppBar';
-import { setCookie, setIdCookie, setPhotoCookie } from '../Components/Auth/Authenticate';
+import { setCookie, setIdCookie, setProfileId } from '../Components/Auth/Authenticate';
 
 
 const Messages = {
@@ -78,27 +78,28 @@ export default class LoginPage extends Component {
             username: username,
             password: password
         };
-
-        axios.post(`${config.API_URL}${config.Login_Url}`, user, { headers: { 'Content-Type': 'Application/json' } })
+        axios.post(`${config.API_URL}${config.Login_Url}`, user, 
+        { headers: { 'Content-Type': 'Application/json' } })
             .then(res => {
-                console.log(res.data.token, "ASD")
                 let token = res.data.token;
                 let user_id = res.data.id;
+                console.log(user_id)
                 this.setState({ success: true, message: Messages.loginSuccess, messageType: AlertTypes.Success }, () => {
                     setCookie(token);
                     setIdCookie(user_id);
                     this.handleSnackbarOpen();
                     axios.get(`${config.API_URL}/api/users/${user_id}/`)
                     .then(res => {
-                    let profile = res.data.profile
-                    if (profile && profile.photo_url) setPhotoCookie(profile.photo_url);
+                    let profile = res.data.profile[0]
+                    let profileId = profile.id;
+                    let profileURL = `${config.API_URL}/api/profile_picture/${profileId}/`;
+                    console.log(profileURL)
+                    if (profile && profile.photo_url) {setProfileId(profileURL)};
                     })
                     setTimeout(() => { this.props.history.push(config.Homepage_Path); }, 1500);
                 }, (error) =>{
                     console.log(error, "while fetching photo");
                 });
-                console.log(res);
-                console.log(res.data);
             }, (error) => {
                 this.setState({ success: false, message: Messages.loginFail, messageType: AlertTypes.Error });
                 this.handleSnackbarOpen();

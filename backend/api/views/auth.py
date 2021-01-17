@@ -23,6 +23,9 @@ class RegisterGenericAPIView(generics.GenericAPIView):
         serializer = auth.RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
+        # sendConfirm(user)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 

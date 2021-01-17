@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
-from api.models.profile import Profile
 from rest_framework import status
 
 

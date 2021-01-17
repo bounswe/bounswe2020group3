@@ -371,7 +371,7 @@ export default class HomePage extends Component {
             <Grid item sm={7}>
               <Typography variant="h4" color="primary">{this.state.name}</Typography>
 
-              {this.state.isPublic && !this.state.isMember ?
+              {!this.state.isPublic && !this.state.isMember ?
                 <Typography variant="h6" color="error">(Private Project)</Typography>
                 :
                 <></>

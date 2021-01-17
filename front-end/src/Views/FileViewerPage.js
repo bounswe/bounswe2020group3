@@ -353,17 +353,25 @@ export default class FileViewer extends Component {
   }
 
   downloadFile = (name,id) => {
-    axios.get(`${config.API_URL}/api/files/${id}/retrieve_file/`,
-      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-      .then(res => {
-        let blobb = new Blob([res.data], { type: "text/plain" });
-        let url = window.URL.createObjectURL(blobb);
-                    let a = document.createElement('a');
-                    a.href = url;
-                    a.download = name;
-                    a.click();
-      });
-  }
+      fetch(`${config.API_URL}/api/files/${id}/download_file/`, {
+        method: "GET",
+        headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } 
+      })
+        .then(response => {
+          response.arrayBuffer().then(function(buffer) {
+            const url = window.URL.createObjectURL(new Blob([buffer]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", name); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  
   editFile = () => {
     const { currFile, projectId, remark, currFileName, currFileId } = this.state;
     const file = new Blob([currFile], { type: 'text/plain' });
@@ -421,7 +429,7 @@ export default class FileViewer extends Component {
                     label="Remark"
                     onChange={this.handleRemark}
                     defaultValue=""
-                    helperText="20 characters maximum"
+                    helperText="100 characters maximum"
                   />
                   <br/>
                   {this.state.showNew ? 
@@ -455,7 +463,7 @@ export default class FileViewer extends Component {
                             value={this.state.uploadRemark}
                             onChange={this.handleUploadRemarkChange}
                             defaultValue=""
-                            helperText="20 characters maximum"
+                            helperText="100 characters maximum"
                         />
                       {this.state.newFile === undefined ?
                         <></>

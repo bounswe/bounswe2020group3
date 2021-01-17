@@ -11,7 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import Profilebar from '../Components/ProfileBar/Profilebar';
 import AlertTypes from "../Common/AlertTypes.json";
 import { getUserId, getAccessToken, getPhoto, getProfileId } from "../Components/Auth/Authenticate";
-
+const UnsupportedExtensions = ["jpg", "jpeg", "png", "pdf", "docx", "pptx"];
 const Container = styled(Box)({
   backgroundColor: '#f7f7f5',
   background: "#f9f9eb",
@@ -222,9 +222,20 @@ export default class FileViewer extends Component {
         });
       })  
   }
+  checkIfSupported = (extension) => {
+    for(let i = 0 ; i < UnsupportedExtensions.length ; i++){
+      if(extension === UnsupportedExtensions[i]) return true;
+    }
+    return false;
+  }
+
   renderFileMenu = () => {
     const { files } = this.state;
     return files.map((item) => {
+      let extension = "";
+      let extensionIndex = item.fileName.split(".").length - 1;
+      if (extensionIndex >= 0) { extension = item.fileName.split(".")[extensionIndex] }
+      console.log()
       return <Paper elevation={6} style={{ textAlign: "left", minHeight:"30px", marginBottom:"10px",padding:"5px", width:"95%" }}>
         <Typography
           variant="caption"
@@ -235,21 +246,37 @@ export default class FileViewer extends Component {
               { headers: {  'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
             .then(res => {
               let file = res.data;
-              console.log(file);
-              this.setState({ currFile: file, currFileName: item.fileName, remark:item.remark,  currFileId: item.id, showUpload: false });
+              if(this.checkIfSupported(extension)) { 
+                this.setState({message:`${extension} files aren't supported in the browser. You can download them instead.`, messageType:AlertTypes.Warning}, () => {
+                this.handleSnackbarOpen();
+                return;
+              }); }
+              else{  
+                this.setState({ currFile: file, currFileName: item.fileName, remark: item.remark, currFileId: item.id, showUpload: false, showEdit: false });
+              }
             })
           }}
         >{item.fileName}</Typography>
         <hr />
           <Typography variant="caption" color="textPrimary"
-            style={{ textAlign: "right", display: "inline-block", minWidth: "40px", marginRight:"20px", cursor: "pointer", fontSize: "14px" }}
-            onClick={() => { this.downloadFile(item.fileName, item.id) }}
+          style={{ textAlign: "right", display: "inline-block", minWidth: "40px", marginRight: "20px", cursor: "pointer", fontSize: "14px" }}
+          onClick={() => { this.downloadFile(item.fileName, item.id) }}
         >download</Typography>
         <Typography variant="caption" color="textPrimary"
           style={{ textAlign: "right", display: "inline-block", minWidth: "20px", marginRight: "20px", cursor: "pointer", fontSize: "14px" }}
-          onClick={() => { this.fetchFile(item.id , item.fileName, item.remark, () => {
-            this.setState({ showEdit: true })
-          } ) }}
+          onClick={() => {
+            if (this.checkIfSupported(extension)) {
+              this.setState({ message: `${extension} files aren't supported in the browser. You can download them instead.`, messageType: AlertTypes.Warning }, () => {
+                this.handleSnackbarOpen();
+                return;
+              });
+            }
+            else {
+              this.fetchFile(item.id, item.fileName, item.remark, () => {
+                this.setState({ showEdit: true })
+              })
+            }
+          }}
         >edit</Typography>
         <Typography variant="caption" color="error"
             style={{ textAlign: "right", display: "inline-block", minWidth: "40px", marginRight:"20px", cursor: "pointer", fontSize: "14px" }}

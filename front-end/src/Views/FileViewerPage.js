@@ -64,11 +64,15 @@ export default class FileViewer extends Component {
       isPublic: false,
       owner: "",
       files : [],
-      currFile: undefined,
+      currFile: "",
+      currFileId: -1,
       currFileName: "",
       showUpload: false,
       newFile: undefined,
-      remark: ""
+      remark: "",
+      showEdit: false,
+      showNew: false,
+      uploadRemark: ""
     }
   };
 
@@ -198,7 +202,26 @@ export default class FileViewer extends Component {
       });
     });
   }
-
+  handleFileContentChange = (e) =>{
+    this.setState({ currFile: e.target.value });
+  }
+  handleFileNameChange = (e) =>{
+    this.setState({ currFileName: e.target.value });
+  }
+  handleUploadRemarkChange = (e) =>{
+    this.setState({ uploadRemark: e.target.value });
+  }
+  fetchFile = (id, name, remark, callback) => {
+    axios.get(`${config.API_URL}/api/files/${id}/retrieve_file/`,
+      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let file = res.data;
+        console.log(file);
+        this.setState({ currFile: file, currFileName: name, remark: remark, currFileId: id, showUpload: false }, () =>{
+          callback();
+        });
+      })  
+  }
   renderFileMenu = () => {
     const { files } = this.state;
     return files.map((item) => {
@@ -213,7 +236,7 @@ export default class FileViewer extends Component {
             .then(res => {
               let file = res.data;
               console.log(file);
-              this.setState({currFile:file, currFileName:item.fileName});
+              this.setState({ currFile: file, currFileName: item.fileName, remark:item.remark,  currFileId: item.id, showUpload: false });
             })
           }}
         >{item.fileName}</Typography>
@@ -221,8 +244,14 @@ export default class FileViewer extends Component {
           <Typography variant="caption" color="textPrimary"
             style={{ textAlign: "right", display: "inline-block", minWidth: "40px", marginRight:"20px", cursor: "pointer", fontSize: "14px" }}
             onClick={() => { this.downloadFile(item.fileName, item.id) }}
-          >download</Typography> 
-          <Typography variant="caption" color="error"
+        >download</Typography>
+        <Typography variant="caption" color="textPrimary"
+          style={{ textAlign: "right", display: "inline-block", minWidth: "20px", marginRight: "20px", cursor: "pointer", fontSize: "14px" }}
+          onClick={() => { this.fetchFile(item.id , item.fileName, item.remark, () => {
+            this.setState({ showEdit: true })
+          } ) }}
+        >edit</Typography>
+        <Typography variant="caption" color="error"
             style={{ textAlign: "right", display: "inline-block", minWidth: "40px", marginRight:"20px", cursor: "pointer", fontSize: "14px" }}
             onClick={() => { this.deleteFile(item.fileName, item.id) }}
           >delete</Typography>
@@ -230,12 +259,42 @@ export default class FileViewer extends Component {
     })
   }
   renderFileContent = () => {
-    const {currFile, currFileName} = this.state;
-    if(currFile === undefined) return <Typography variant="h6" color="primary" style={{textAlign:"center"}}>You can choose a plain text file to display and edit here.</Typography> ;
+    const { currFile, currFileName, showEdit, showNew, remark } = this.state;
+    if(currFile === "" && showEdit === false && showNew === false ) return <Typography variant="h6" color="primary" style={{textAlign:"center"}}>You can choose a plain text file to display and edit here.</Typography> ;
     return (
-      <div>
+      <div>{showEdit || showNew ?
+        <TextField
+          type="text"
+          error=""
+          input value={currFileName}
+          onChange={this.handleFileNameChange}
+          defaultValue=""
+          placeholder="New File Name."
+          rows={1}  
+          multiline
+          style={{ width: "95%" }}
+          variant="filled" />
+        :
         <Typography variant="h6" color="primary">{currFileName}</Typography>
-        <p style={{ minHeight:"50vh", overflowX:'scroll' }}>{currFile}</p>
+      }
+        <hr />
+        <Typography variant="caption" color="primary">{remark}</Typography>
+        <br/>
+        {showEdit || showNew ?
+          <TextField
+            type="text"
+            error=""
+            input value={currFile}
+            onChange={this.handleFileContentChange}
+            defaultValue=""
+            placeholder="File Content"
+            rows={23}  // Can be changed later this looks good on my computer.
+            multiline
+            style={{ width: "95%" }}
+            variant="filled" />
+          :
+          <p style={{ minHeight: "50vh", maxHeight: "50vh", overflowX: 'scroll' }}>{currFile}</p>
+        }
       </div>
     );
   }
@@ -243,11 +302,11 @@ export default class FileViewer extends Component {
     this.setState({ newFile: e.target.files[0] });
   }
   submitFile = () => {
-    const { newFile, remark, projectId } = this.state;
+    const { newFile, uploadRemark, projectId } = this.state;
     if (newFile === undefined) {
       return;
     }
-    if (remark.length === 0) {
+    if (uploadRemark.length === 0) {
       this.setState({message:"Remark Can't Be Empty", messageType:AlertTypes.Error}, () => {
         this.handleSnackbarOpen();
         return;
@@ -256,13 +315,13 @@ export default class FileViewer extends Component {
     } 
     const data = new FormData();
     data.append("file", newFile);
-    data.append("remark", remark);
+    data.append("remark", uploadRemark);
     data.append("project", parseInt(projectId));
     axios.post(`${config.API_URL}${config.File_Path}`, data,
       { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         this.getFiles(projectId);
-        this.setState({message:"File Uploaded", messageType:AlertTypes.Success, newFile: undefined, showUpload: false}, () => {
+        this.setState({message:"File Uploaded", messageType:AlertTypes.Success, newFile: undefined, showUpload: false, uploadRemark:""}, () => {
           this.handleSnackbarOpen();
         });
       }, (error) => {
@@ -271,20 +330,61 @@ export default class FileViewer extends Component {
         });
       })
   }
+  uploadNewFile = () => {
+    const { currFile, projectId, remark, currFileName } = this.state;
+    const file = new Blob([currFile], { type: 'text/plain' });
+    const data = new FormData();
+    data.append("file", file, currFileName);
+    data.append("remark", remark);
+    data.append("project", parseInt(projectId));
+    
+    axios.post(`${config.API_URL}${config.File_Path}`, data,
+    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    .then(res => {
+      this.getFiles(projectId);
+      this.setState({message:"File Uploaded", messageType:AlertTypes.Success, newFile: undefined, showEdit: false, showNew:false}, () => {
+        this.handleSnackbarOpen();
+      });
+    }, (error) => {
+      this.setState({message:"Error While Uploading File, Please Try Again", messageType:AlertTypes.Error}, () => {
+        this.handleSnackbarOpen();
+      });
+    })
+  }
+
   downloadFile = (name,id) => {
     axios.get(`${config.API_URL}/api/files/${id}/retrieve_file/`,
       { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
-        let file = res.data;
-        console.log(typeof(file))
-          res.data.blob().then(blob => {
-            let url = window.URL.createObjectURL(blob);
-            let a = document.createElement('a');
-            a.href = url;
-            a.download = name;
-            a.click();
-        });
-      })
+        let blobb = new Blob([res.data], { type: "text/plain" });
+        let url = window.URL.createObjectURL(blobb);
+                    let a = document.createElement('a');
+                    a.href = url;
+                    a.download = name;
+                    a.click();
+      });
+  }
+  editFile = () => {
+    const { currFile, projectId, remark, currFileName, currFileId } = this.state;
+    const file = new Blob([currFile], { type: 'text/plain' });
+    const data = new FormData();
+    data.append("file", file, currFileName);
+    data.append("remark", remark);
+    data.append("project", parseInt(projectId));
+    
+    axios.patch(`${config.API_URL}${config.File_Path}${currFileId}/`, data,
+    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    .then(res => {
+      this.getFiles(projectId);
+      this.setState({message:"File Uploaded", messageType:AlertTypes.Success, newFile: undefined, showEdit: false, showNew:false}, () => {
+        this.handleSnackbarOpen();
+        this.setState({showEdit:false})
+      });
+    }, (error) => {
+      this.setState({message:"Error While Uploading File, Please Try Again", messageType:AlertTypes.Error}, () => {
+        this.handleSnackbarOpen();
+      });
+    })
   }
   render() {
     return (
@@ -308,18 +408,43 @@ export default class FileViewer extends Component {
           <Grid container direction="row" justify="space-evenly" alignItems="baseline">
             <Grid item sm={8}>
               <Typography variant="h4" color="primary">{this.state.name /*Project Name*/ }</Typography> 
-              <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", minHeight:"50vh", maxHeight:"75vh", overflowY:"scroll", width: "95%", background: "white", margin: "auto", marginBottom: "10px", marginTop:"40px",whiteSpace:"pre-wrap", textAlign:"left" }} borderColor="primary" border={1} >
+              <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", minHeight:"50vh", maxHeight:"75vh", width: "95%", background: "white", margin: "auto", marginBottom: "10px", marginTop:"40px",whiteSpace:"pre-wrap", textAlign:"left" }} borderColor="primary" border={1} >
               {this.renderFileContent()}
               </Paper>
-             
+              {this.state.showEdit || this.state.showNew ?
+                <>
+                  <TextField
+                    type="text"
+                    error=""
+                    id="standard-error-helper-text"
+                    value={this.state.remark}
+                    label="Remark"
+                    onChange={this.handleRemark}
+                    defaultValue=""
+                    helperText="20 characters maximum"
+                  />
+                  <br/>
+                  {this.state.showNew ? 
+                  <Button variant="contained" color="primary" onClick={() => { this.uploadNewFile(); }}>Save File</Button>                  
+                  :
+                  <Button variant="contained" color="primary" onClick={() => { this.editFile(); }}>Save Changes</Button>
+                  }
+                </>
+                :
+                <>
+                  <Button variant="contained" color="primary" onClick={() => { this.setState({ showNew:true, 
+                    showEdit: false, currFile:"", currFileName:"", remark:"" }) }}>Create New Text File</Button>
+                </>
+              }
               </Grid>
             <Grid item sm={3}>
-              <Typography variant="h6" color="primary">Files</Typography>
-              <Box style={{ overflowY: 'scroll' }}>
+              <Typography variant="h5" color="primary">Files</Typography>
+              <Box style={{ overflowY: 'scroll', paddingBottom:"10px", paddingRight:"20px", maxHeight:"65vh", marginBottom:"20px"}}>
                 <Paper elevation={6} style={{ border: "solid 1px blue", padding: "15px", minHeight: "50vh", width: "90%", background: "white", margin: "auto", marginBottom: "10px", marginTop: "40px", textAlign: "center" }} borderColor="primary" border={1} >
                   {this.renderFileMenu()}
                 </Paper>
-                {this.state.showUpload ?
+              </Box>
+              {this.state.showUpload ?
                     <>
                       <Input type="file" onChange={this.handleNewFile}></Input>
                       <TextField
@@ -327,7 +452,8 @@ export default class FileViewer extends Component {
                             error=""
                             id="standard-error-helper-text"
                             label="Remark"
-                            onChange={this.handleRemark}
+                            value={this.state.uploadRemark}
+                            onChange={this.handleUploadRemarkChange}
                             defaultValue=""
                             helperText="20 characters maximum"
                         />
@@ -345,7 +471,6 @@ export default class FileViewer extends Component {
                     <Button variant='contained' color='primary' onClick={() => { this.setState({ showUpload: true }) }} >Upload New File</Button>
 
                   }
-              </Box>
             </Grid>
           </Grid>
           <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />

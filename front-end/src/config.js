@@ -25,7 +25,7 @@ const config = {
   OwnMilestoneUrl : "/api/milestones/get_user_milestones/",
   Issue_Milestone_Path : "/issue-milestone",
   Profille_Page_Path : "/profile",
-  File_Path : "/api/files/"
-
+  File_Path : "/api/files/",
+  Terms_Of_Services_Page_Url: "/terms-of-services/"
 }
 export default config;

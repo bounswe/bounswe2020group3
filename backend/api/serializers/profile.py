@@ -1,6 +1,5 @@
 from api.models.profile import Profile
 from rest_framework import serializers
-from api.serializers.publication import PublicationSerializer
 from api.models.rating import Rating
 from django.db.models import Avg
 from api.utils import get_my_rating, get_my_rating_id, \
@@ -18,7 +17,6 @@ class ProfileFullSerializer(serializers.HyperlinkedModelSerializer):
     my_rating = serializers.SerializerMethodField('get_my_rating')
     my_rating_id = serializers.SerializerMethodField('get_my_rating_id')
     is_commentable = serializers.SerializerMethodField('get_is_commentable')
-    publications = PublicationSerializer(many=True, read_only=True)
 
     class Meta:
         model = Profile
@@ -27,7 +25,7 @@ class ProfileFullSerializer(serializers.HyperlinkedModelSerializer):
                   'expertise', 'gender', 'interests', 'affiliations',
                   'share_bio', 'share_gender', 'share_affiliations',
                   'is_public', 'rating', 'my_rating', 'my_rating_id',
-                  'is_commentable', 'owner_id', 'publications']
+                  'is_commentable', 'owner_id']
 
     def get_rating(self, obj):
         ratings = Rating.objects.filter(to_user__exact=obj.owner)
@@ -58,7 +56,6 @@ class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
     my_rating = serializers.SerializerMethodField('get_my_rating')
     my_rating_id = serializers.SerializerMethodField('get_my_rating_id')
     is_commentable = serializers.SerializerMethodField('get_is_commentable')
-    publications = PublicationSerializer(many=True, read_only=True)
 
     class Meta:
         model = Profile
@@ -68,7 +65,7 @@ class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
                   'gender', 'interests', 'affiliations', 'share_bio',
                   'share_gender', 'share_affiliations',
                   'is_public', 'rating', 'my_rating', 'my_rating_id',
-                  'is_commentable', 'owner_id', 'publications']
+                  'is_commentable', 'owner_id']
 
     def get_rating(self, obj):
         ratings = Rating.objects.filter(to_user__exact=obj.owner)
@@ -113,7 +110,6 @@ class ProfilePrivateSerializer(serializers.HyperlinkedModelSerializer):
     my_rating = serializers.SerializerMethodField('get_my_rating')
     my_rating_id = serializers.SerializerMethodField('get_my_rating_id')
     is_commentable = serializers.SerializerMethodField('get_is_commentable')
-    publications = PublicationSerializer(many=True, read_only=True)
 
     class Meta:
         model = Profile
@@ -154,4 +150,4 @@ class ProfilePrivateNotificationSerializer(serializers.
     class Meta:
         model = Profile
         fields = ['id', 'name', 'middle_name', 'last_name',
-                  'owner', 'is_public', 'publications']
+                  'owner', 'is_public']

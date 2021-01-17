@@ -63,3 +63,8 @@ class FileViewSet(viewsets.ModelViewSet):
     def retrieve_file(self, request, pk=None):
         filename = self.get_object().file
         return FileResponse(filename)
+
+    @action(detail=True)
+    def download_file(self, request, pk=None):
+        filename = self.get_object().file
+        return FileResponse(filename, as_attachment=True)

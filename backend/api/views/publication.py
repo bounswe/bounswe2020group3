@@ -1,7 +1,6 @@
 from rest_framework import viewsets
 from rest_framework import permissions
 from api.models.publication import Publication
-from api.models.profile import Profile
 from api.serializers.publication import PublicationSerializer
 from scholarly import scholarly
 from django.shortcuts import get_object_or_404
@@ -11,12 +10,15 @@ from rest_framework import status
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django_filters.rest_framework import DjangoFilterBackend
+from django.contrib.auth.models import User
 
 author_param = openapi.Parameter(
-    'author_id', openapi.IN_QUERY, description="Google Scholar id of author",
+    'author_id', openapi.IN_QUERY,
+    description="Google Scholar id of author",
     type=openapi.TYPE_STRING)
 profile_param = openapi.Parameter(
-    'profile_id', openapi.IN_QUERY, description="Profile id to add",
+    'owner_id', openapi.IN_QUERY,
+    description="Owner user id to add the publication",
     type=openapi.TYPE_INTEGER)
 
 
@@ -26,7 +28,7 @@ class PublicationViewSet(viewsets.ModelViewSet):
     serializer_class = PublicationSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['profile__id']
+    filterset_fields = ['owner__id']
 
     @swagger_auto_schema(
         method='post', manual_parameters=[author_param, profile_param]
@@ -34,14 +36,14 @@ class PublicationViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'], name='add_publications',
             serializer_class=None)
     def add_publications(self, request):
-        profile_id = request.GET.get('profile_id', None)
-        profile = get_object_or_404(Profile, pk=profile_id)
-        if self.request.user != profile.owner:
+        owner_id = request.GET.get('owner_id', None)
+        owner = get_object_or_404(User, pk=owner_id)
+        if self.request.user != owner:
             return Response(data={
                 'error': 'Unauthorized'
             }, status=status.HTTP_401_UNAUTHORIZED)
         Publication.objects.filter(
-            profile=profile
+            owner=owner
         ).delete()
         author_id = request.GET.get('author_id', None)
         author_basic = scholarly.search_author_id(author_id)
@@ -64,7 +66,7 @@ class PublicationViewSet(viewsets.ModelViewSet):
                 data['journal'] = publication_info['publisher']
             if 'num_citations' in publication_info:
                 data['citation_number'] = publication_info['num_citations']
-            data['profile'] = profile.id
+            data['owner'] = owner.id
             serializer = PublicationSerializer(data=data)
             serializer.is_valid(raise_exception=True)
             Publication.objects.create(

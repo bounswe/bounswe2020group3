@@ -1,5 +1,4 @@
 from django.db import models
-from .profile import Profile
 
 
 class Publication(models.Model):
@@ -12,7 +11,9 @@ class Publication(models.Model):
     authors = models.TextField(default='')
     journal = models.TextField(default='')
     citation_number = models.IntegerField(default=0)
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        'auth.User', related_name='publication_owner',
+        on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['citation_number']

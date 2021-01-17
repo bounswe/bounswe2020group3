@@ -90,6 +90,9 @@ export default class HomePage extends Component {
   goToEditProjectPage = (pid) => {
     this.props.history.push("/edit-project/" + pid);
   };
+  goToProjectFiles = (pid) => {
+    this.props.history.push("/project/files/" + pid);
+  }
   getProject = (project_id) => {
     axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}/`, { headers: {  'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
@@ -368,7 +371,7 @@ export default class HomePage extends Component {
             <Grid item sm={7}>
               <Typography variant="h4" color="primary">{this.state.name}</Typography>
 
-              {this.state.isPublic && !this.state.isMember ?
+              {!this.state.isPublic && !this.state.isMember ?
                 <Typography variant="h6" color="error">(Private Project)</Typography>
                 :
                 <></>
@@ -383,9 +386,9 @@ export default class HomePage extends Component {
                 {this.renderTags()}
               </Paper>
               {this.state.isMember  ?
-                  <Grid item sm={12} style={{ minHeight: "10vh" }}>
-                    <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.goToEditProjectPage(project_id)}>Edit Project</Button>
-                    <br />
+                  <Grid item sm={12} style={{ marginTop:"20px"}}>
+                    <Button variant="contained" color="primary" style={{ marginTop: "10px", marginRight:"10px" }} onClick={() => this.goToEditProjectPage(project_id)}>Edit Project</Button>
+                    <Button variant="contained" color="primary" style={{ marginTop: "10px", marginRight:"10px" }} onClick={() => this.goToProjectFiles(project_id)}>Project Files</Button>
                     <Button variant="contained" color="primary" style={{ marginTop: "10px" }}
                             onClick={() => { this.props.history.push("/issue-milestone", { projectId: this.state.projectId }); }}>Set New Milestone</Button>
                   </Grid>
@@ -538,14 +541,7 @@ export default class HomePage extends Component {
     }
 
   }
-  // {/* isMember = () => {
-  //   const { membersData } = this.state;
-  //   for(let i = 0 ; i < membersData.length ; i++){
-  //     if(membersData[i].id === parseInt(getUserId()) ) { return true; }
-  //   }
-  //   return false;
-     
-  // } */}
+
 
   //Get tag ids for patch operations
   getTagIds = (newTags) => {

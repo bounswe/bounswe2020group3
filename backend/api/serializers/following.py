@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from api.models.following import Following, FollowRequest
-from api.serializers.user import UserPrivateSerializer, UserNotificationSerializer
+from api.serializers.user import UserPrivateSerializer, \
+    UserNotificationSerializer
 
 
 class FollowingSerializer(serializers.HyperlinkedModelSerializer):
@@ -91,7 +92,8 @@ class IncomingFollowRequestSerializer(serializers.HyperlinkedModelSerializer):
         return self.parent.to_native(value)
 
 
-class FollowRequestNotificationSerializer(serializers.HyperlinkedModelSerializer):
+class FollowRequestNotificationSerializer(serializers.
+                                          HyperlinkedModelSerializer):
     """
     Follow request serializer.
     """

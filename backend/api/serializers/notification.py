@@ -13,7 +13,7 @@ from api.serializers.file import File, FileSerializer
 from api.serializers.milestone import Milestone, MilestoneSerializer
 from api.serializers.tag import Tag, TagSerializer
 from api.serializers.following import Following, FollowRequest, \
-    FollowerSerializer, FollowRequestSerializer
+    FollowerSerializer, FollowRequestNotificationSerializer
 
 from api.serializers.comment import Comment, CommentUpdateSerializer
 from api.serializers.rating import Rating, RatingSerializer
@@ -43,7 +43,7 @@ class GenericNotificationRelatedField(serializers.RelatedField):
         if isinstance(value, Following):
             serializer = FollowerSerializer(value)
         if isinstance(value, FollowRequest):
-            serializer = FollowRequestSerializer(value)
+            serializer = FollowRequestNotificationSerializer(value)
         if isinstance(value, Comment):
             serializer = CommentUpdateSerializer(value)
         if isinstance(value, Rating):

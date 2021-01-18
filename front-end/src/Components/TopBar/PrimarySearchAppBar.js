@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import SearchIcon from '@material-ui/icons/Search';
+import InputBase from '@material-ui/core/InputBase';
 // import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -83,6 +85,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PrimarySearchAppBar(props) {
   const classes = useStyles();
+  
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -121,7 +124,12 @@ export default function PrimarySearchAppBar(props) {
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
     </Menu>
   );
-
+  const [search, setSearch] = useState('')
+  const handleSearchEdit = () => {
+    if (search.length>1){
+      props.history.push("/search/" + search);
+    }
+  };
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
     <Menu
@@ -179,6 +187,34 @@ export default function PrimarySearchAppBar(props) {
             PaperLayer
           </Typography>
           <img src={logo} style={{height:"50px", cursor:"pointer"}} alt="logo" />
+          <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                  type="search"
+                  placeholder="Search…"
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  onChange={event => setSearch(event.target.value)}
+                  onClick = {()=>{if(search.length>1){
+                    handleSearchEdit()
+                    window.location.reload(false);
+                  }}}
+                  inputProps={{ 'aria-label': 'search' }}
+              />
+              <IconButton type="submit" className={classes.iconButton} aria-label="search"  >
+                <SearchIcon onClick = {() =>{
+                  if(search.length>1){
+                    handleSearchEdit();
+                    setSearch('');
+                    window.location.reload(false);}}}/>
+
+              </IconButton>
+
+            </div>
           {/* <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />

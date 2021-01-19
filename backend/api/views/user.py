@@ -120,16 +120,9 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         for invite in invited_users:
             user_score.pop(invite.to_user.id, None)
 
-        top_ids = []
-
-        if len(user_score) >= 10:
-            top_ids = [f for f in sorted(user_score,
-                                         key=user_score.get,
-                                         reverse=True)[:10]]
-        else:
-            top_ids = [f for f in sorted(user_score,
-                                         key=user_score.get,
-                                         reverse=True)]
+        top_ids = [i for i in sorted(user_score,
+                                     key=user_score.get,
+                                     reverse=True)]
 
         preserved = Case(*[When(id=pk, then=pos)
                            for pos, pk in enumerate(top_ids)])

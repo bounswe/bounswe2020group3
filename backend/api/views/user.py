@@ -5,8 +5,23 @@ from api.serializers.user import UserFullSerializer
 from api.serializers.user import UserBasicSerializer
 from api.serializers.user import UserPrivateSerializer
 from rest_framework.response import Response
-
 from api.utils import get_is_following
+from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
+from api.models.project import Project
+from api.models.following import Following
+from api.models.rating import Rating
+import math
+import re
+from django.db.models import Avg
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from django.db.models import Case, When
+
+project_param = openapi.Parameter(
+    'project_id', openapi.IN_QUERY,
+    description="Project id to get recommendations",
+    type=openapi.TYPE_INTEGER)
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -39,3 +54,97 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
             return UserPrivateSerializer
         else:
             return UserFullSerializer
+
+    @swagger_auto_schema(
+        method='get', manual_parameters=[project_param]
+    )
+    @action(detail=False, methods=['GET'],
+            name='get_collaborator_recommendation',
+            serializer_class=None)
+    def get_collaborator_recommendation(self, request):
+        project_id = request.GET.get('project_id', None)
+        project = get_object_or_404(Project, pk=project_id)
+        project_owner = project.owner_id
+        reqs = []
+        if project.requirements:
+            reqs = re.split('; |, |\n', project.requirements)
+            reqs = [r.strip() for r in reqs]
+
+        """
+            value of the dictionary items will be a list of length 3:
+            [rating_score, expertise_score, following_score]
+
+            The end score calculation will be the following:
+            rating_score*expertise_score*following_score
+
+            Base value for rating_score is 1, rating/10 is added to this value.
+            If someone has no rating it is treated as a rating of 5.
+
+            Default score for expertise is 1 and is incremented by 1
+            with each match with requirements.
+
+            Following_score is 1.1 for the users that the owner follows,
+            1 otherwise.
+        """
+
+        user_score = {}
+
+        profiles = Profile.objects.all()
+        for profile in profiles:
+            rating = get_rating(profile.owner_id)
+            scaled_rating = rating/10.0 if rating else 0.5
+            user_score[profile.owner_id] = [1 + scaled_rating, 1, 1]
+
+        for keyword in reqs:
+            profiles = Profile.objects.filter(
+                expertise__icontains=keyword)
+            for profile in profiles:
+                user_score[profile.owner_id][1] += 1
+
+        followed_users = Following.objects.filter(from_user=project_owner)
+        for followed in followed_users:
+            user_score[followed.to_user.id][2] = 1.1
+
+        for user_id, scores in user_score.items():
+            user_score[user_id] = math.prod(scores)
+
+        for k in project.members.all():
+            user_score.pop(k.id, None)
+
+        top_ids = []
+
+        if len(user_score) >= 5:
+            top_ids = [f for f in sorted(user_score,
+                                         key=user_score.get,
+                                         reverse=True)[:5]]
+        else:
+            top_ids = [f for f in sorted(user_score,
+                                         key=user_score.get,
+                                         reverse=True)]
+
+        preserved = Case(*[When(id=pk, then=pos)
+                           for pos, pk in enumerate(top_ids)])
+        users = User.objects.filter(id__in=top_ids).order_by(preserved)
+        serializer_context = {'request': request}
+        serializer = UserBasicSerializer(
+            users, many=True, context=serializer_context)
+        return Response(serializer.data)
+
+
+def get_is_following_from_id(this_user_id, accessed_user_id):
+    """
+        Returns True if "this_user" follows "accessed_user"
+    """
+    if not this_user_id:
+        is_following = False
+    else:
+        is_following = Following.objects.filter(
+            from_user__id=this_user_id,
+            to_user__id=accessed_user_id).exists()
+    return is_following
+
+
+def get_rating(user_id):
+    ratings = Rating.objects.filter(to_user=user_id)
+    rating = ratings.aggregate(Avg('rating'))
+    return rating['rating__avg']

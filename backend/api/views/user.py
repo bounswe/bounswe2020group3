@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from api.models.project import Project
 from api.models.following import Following
 from api.models.rating import Rating
+from api.models.collaboration_invite import CollaborationInvite
 import math
 import re
 from django.db.models import Avg
@@ -103,20 +104,28 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
         followed_users = Following.objects.filter(from_user=project_owner)
         for followed in followed_users:
-            user_score[followed.to_user.id][2] = 1.1
+            user_score[followed.to_user.id][2] = 1.2
 
         for user_id, scores in user_score.items():
             user_score[user_id] = math.prod(scores)
 
-        for k in project.members.all():
-            user_score.pop(k.id, None)
+        # pop the project members out of the list
+        for member in project.members.all():
+            user_score.pop(member.id, None)
+
+        invited_users = CollaborationInvite.objects.filter(
+            from_user=project_owner,
+            to_project=project)
+        # pop the invited users out of the list
+        for invite in invited_users:
+            user_score.pop(invite.to_user.id, None)
 
         top_ids = []
 
-        if len(user_score) >= 5:
+        if len(user_score) >= 10:
             top_ids = [f for f in sorted(user_score,
                                          key=user_score.get,
-                                         reverse=True)[:5]]
+                                         reverse=True)[:10]]
         else:
             top_ids = [f for f in sorted(user_score,
                                          key=user_score.get,

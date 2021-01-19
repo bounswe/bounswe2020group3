@@ -3,11 +3,14 @@
 
     <item
         android:id="@+id/eventFragment"
+        android:icon="@drawable/ic_event"
         android:title="Events" />
     <item
         android:id="@+id/projectUpdateFragment"
-        android:title="Project Updates" />
+        android:icon="@drawable/ic_project"
+        android:title="Recent Projects" />
     <item
         android:id="@+id/milestoneFragment"
+        android:icon="@drawable/ic_milestone"
         android:title="Milestones" />
 </menu>

@@ -44,7 +44,11 @@ class MilestoneFragment : Fragment(), HomeContract.MileStoneView , OnCardClickLi
 
         this.presenter.bind(this)
         writeLogMessage("i",TAG,"event fragment has been created.")
-        view.findViewById<BottomNavigationView>(R.id.bottomNavigationView).setOnNavigationItemSelectedListener { item ->
+        val mainMenu = view.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        //mainMenu.menu.getItem(0).setChecked(false)
+        //mainMenu.menu.getItem(1).setChecked(false)
+        //mainMenu.menu.getItem(2).setChecked(true)
+        mainMenu.setOnNavigationItemSelectedListener { item ->
             when(item.itemId){
                 R.id.eventFragment ->{        Navigation.findNavController(view).navigate(R.id.navigateToEventsFromMilestones)
                 }

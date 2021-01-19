@@ -42,6 +42,8 @@ export default class HomePage extends Component {
       desc: "",
       reqs: "",
       members: [],
+      profileNames: [],
+      colabReqIds: [],
       membersData : [],
       stat: "",
       type: "",
@@ -56,7 +58,7 @@ export default class HomePage extends Component {
       showAddTag: false,
       showInviteColab: false,
       tagQuery: "",
-      colabQuery: "",
+      allColabRequests: [],
       currTag: [],
       allTags: [],
       isMember: false,
@@ -65,6 +67,10 @@ export default class HomePage extends Component {
       owner: ""
     }
   };
+
+  distinct(value, index, self) {
+    return self.indexOf(value) === index;
+  }
 
   handleSnackbarOpen = () => {
     this.SnackbarRef.current.turnOnSnackbar();
@@ -147,6 +153,19 @@ export default class HomePage extends Component {
         this.setState({ username: name, userlastname: lastname });
         });
   };
+
+  getProfileNameById = (userId) => {
+    axios.get(`${config.API_URL}/api/profiles/${userId}/`, { headers: { 'Content-Type': 'Application/json'} })
+      .then(res => {
+        var name = res.data.name;
+        var mname = res.data.middle_name;
+        var lastname = res.data.last_name;
+        const val = name + " " + mname + " " + lastname;
+        console.log(val);
+        return val;
+      });
+  };
+
   isMember = () =>{
       const { membersData } = this.state;
       let ids = []
@@ -169,7 +188,7 @@ export default class HomePage extends Component {
     this.getProject(project_id);
     this.getProfile();
     this.getTags();
-    // this.getColabs();
+    this.getColabRequests();
   };
 
   renderContributor() {
@@ -192,6 +211,7 @@ export default class HomePage extends Component {
       </>)
     });
   };
+
   renderMilestones() {
     const milestones = JSON.parse(JSON.stringify(this.state.milestones));
     if (milestones.length === 0) return (
@@ -224,6 +244,7 @@ export default class HomePage extends Component {
       </>)
     });
   };
+
   renderDeadlines() {
     const deadlines = JSON.parse(JSON.stringify(this.state.events));
     deadlines.push({ "deadline": this.state.due });
@@ -265,7 +286,6 @@ export default class HomePage extends Component {
         }
       </>
       )
-
     });
   }
 
@@ -308,10 +328,9 @@ export default class HomePage extends Component {
           </Paper>
         </Grid>
     </>)
-    
   }
 
-  renderColabRequest = () => {
+  submitColabRequest = () => {
     var proj_id = this.props.location.pathname.split('/')[2];
     axios.post(`${config.API_URL}/api/collaboration_requests/`, { from_user: this.username, to_project: proj_id }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
         .then(res => {
@@ -320,6 +339,41 @@ export default class HomePage extends Component {
               this.getProject(this.state.projectId);
             })
         }); 
+  }
+
+  renderColabRequests() {
+    const { allColabRequests } = this.state;
+    var userIds = [];
+    for(var i=0; i<allColabRequests.length; i++){
+      userIds.push(allColabRequests[i].from_user);
+    }
+    var uniqueIds = userIds.filter(this.distinct);
+  
+    if (uniqueIds.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaborators</Typography>)
+    else return uniqueIds.map((item) => {
+      return (<>
+        <Typography variant="h6" color="primary" style={{ cursor: "pointer", width: "100%", textAlign: "center" }}>{this.getProfileNameById(item)}</Typography>
+      </>)
+    });
+  };
+
+  renderRequests() {
+    return (
+      <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
+        <Typography variant="h6" color="primary">Collaboration Requests</Typography>
+        <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+          {this.renderColabRequests()}
+        </Paper>
+      </Grid>
+    )
+  }
+
+  getColabRequests = () => {
+    axios.get(`${config.API_URL}/api/collaboration_requests/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let colabRequests = res.data;
+        this.setState({ allColabRequests: colabRequests });
+      })
   }
 
   renderRelatedEvents = () => {
@@ -457,9 +511,10 @@ export default class HomePage extends Component {
                       <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitTagQuery}>Add Tag</Button>
                     </>
                     :
-                    <Button color="primary" variant="outlined" onClick={() => { this.setState({ showAddTag: true }) }}> Add New Tag </Button>
+                    <Button color="primary" variant="outlined" onClick={() => { this.setState({ showAddTag: true }) }}>Add New Tag</Button>
                   }
                 </Paper>
+                {this.renderRequests()}
               </Grid>
               :
               <></>
@@ -468,7 +523,7 @@ export default class HomePage extends Component {
               <br />
               {this.state.isNotMember ? 
                 <Grid item sm={12} style={{ minHeight: "10vh" }}>
-                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderColabRequest}>Send Colab Request</Button>
+                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitColabRequest}>Send Colab Request</Button>
                 </Grid>
               :
               <></>
@@ -571,14 +626,6 @@ export default class HomePage extends Component {
       }
     }
   }
-
-  // getColabs = () => {
-  //   axios.get(`${config.API_URL}/api/collaboration_invites/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-  //     .then(res => {
-  //       let colabs = res.data;
-  //       this.setState({ allColabs: colabs });
-  //     })
-  // }
   
   //Delete this particular tag.
   deleteTag = (tag) => {

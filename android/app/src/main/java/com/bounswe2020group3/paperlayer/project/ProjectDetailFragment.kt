@@ -194,6 +194,9 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         {
             this.fragmentView.textViewEvents.text=project.event.title
         }
+        else{
+            this.fragmentView.textViewEvents.setText(R.string.project_detail_event_not_found);
+        }
 
         //Adding Members
         for (member in project.members.orEmpty()){

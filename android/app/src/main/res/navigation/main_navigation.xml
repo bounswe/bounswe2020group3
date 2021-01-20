@@ -134,6 +134,9 @@
         <action
             android:id="@+id/navigateToProjectFromSearch"
             app:destination="@id/projectFragment" />
+        <action
+            android:id="@+id/navigateToAdvancedSearchFragmentFromSearch"
+            app:destination="@id/advancedSearchFragment" />
     </fragment>
     <fragment
         android:id="@+id/userListFragment"
@@ -236,4 +239,8 @@
             android:id="@+id/navigateToUserFromCollabs"
             app:destination="@id/userFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/advancedSearchFragment"
+        android:name="com.bounswe2020group3.paperlayer.search.AdvancedSearchFragment"
+        android:label="AdvancedSearchFragment" />
 </navigation>

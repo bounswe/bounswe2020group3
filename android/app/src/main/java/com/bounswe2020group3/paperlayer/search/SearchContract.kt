@@ -41,6 +41,12 @@ interface SearchContract {
         fun addSearchCard(searchType: Int,titleIconType: Int,title:String,body:String,supportText:String,tags:List<Tag>,id:Int)
     }
 
+    interface AdvancedSearchView: Mvp.View{
+        fun getLayout(): android.view.View
+        fun showToast(message: String)
+        fun writeLogMessage(type:String ,tag: String,message: String)
+    }
+
     //FIX
     interface Model {
         fun searchRequest(searchFilter: Search): Single<SearchResponse>

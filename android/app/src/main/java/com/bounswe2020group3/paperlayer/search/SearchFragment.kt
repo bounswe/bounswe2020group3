@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.MainActivity
@@ -97,6 +98,12 @@ class SearchFragment: Fragment(),SearchContract.View ,OnCardClickListener{
 
             }
         })
+
+        //Advanced Search Button Click Listener
+        this.buttonAdvancedSearch.setOnClickListener {
+
+            fragmentView?.let { Navigation.findNavController(it).navigate(R.id.navigateToAdvancedSearchFragmentFromSearch) }
+        }
 
     }
 

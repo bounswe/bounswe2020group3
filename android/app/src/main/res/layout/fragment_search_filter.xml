@@ -8,39 +8,17 @@
     android:background="@color/colorWhite"
     tools:context=".search.SearchFragment">
 
-    <LinearLayout
+    <SearchView
+        android:layout_margin="10dp"
+        android:id="@+id/searchView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-
-        <SearchView
-            android:layout_margin="10dp"
-            android:id="@+id/searchView"
-            android:layout_width="match_parent"
-            android:layout_weight="2"
-            android:layout_height="wrap_content" >
-        </SearchView>
-
-        <ImageButton
-            android:id="@+id/buttonAdvancedSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:src="@drawable/ic_baseline_settings_24"
-            android:tint="@color/primaryColor"
-            android:layout_gravity="center"
-            android:layout_marginRight="15dp"
-            android:tooltipText="Advanced Search" />
-
-    </LinearLayout>
-
+        android:layout_height="wrap_content" />
 
 
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tabLayoutSearch"
+        android:id="@+id/tabLayoutSearchFilter"
         app:tabRippleColor="@color/primaryColor"
         app:tabIndicatorColor="@color/primaryColor"
         app:tabMode="fixed">
@@ -63,11 +41,30 @@
             />
     </com.google.android.material.tabs.TabLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <!-- Project Search Settings -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:id="@+id/recyclerViewSearch"
-        android:layout_height="wrap_content" >
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/menuProjectState"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Project State">
+
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/autoCompleteTextViewProjectState"
+                android:inputType="none"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -8,12 +8,8 @@ import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-//import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
 import { Button} from '@material-ui/core';
 import {logout, getPhoto, getUserId, getAccessToken} from "../Auth/Authenticate";
 import Avatar from '@material-ui/core/Avatar';
@@ -92,7 +88,6 @@ export default function UserNavbar(props) {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -163,7 +158,7 @@ export default function UserNavbar(props) {
             <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
         )
       }
-      if (type === "Milestone") {
+      else if (type === "Milestone") {
         const milestone = item.milestone;
         const id = milestone.project;
         const link = "/project/" + id;
@@ -172,25 +167,30 @@ export default function UserNavbar(props) {
             <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
         )
       }
-      if (type === "Follow Request") {
+      else if (type === "Follow Request") {
         const link = "/profile/" + item.actor.id;
         const str = item.actor.username + " " + item.verb;
         return (
             <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
         )
       }
-      if (type === "Rating") {
+      else if (type === "Rating") {
         const link = "/profile/" + item.actor.id;
         const str = item.actor.username + " " + item.verb+ ".";
         return (
             <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
         )
       }
-      if (type === "Follow") {
+      else if (type === "Follow") {
         const link = "/profile/" + item.actor.id;
         const str = item.actor.username + " " + item.verb;
         return (
             <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
+        )
+      }
+      else {
+        return (
+            <MenuItem onClick={() => handleMenuClose}>Notification</MenuItem>
         )
       }
     }

@@ -42,8 +42,7 @@ export default class HomePage extends Component {
       desc: "",
       reqs: "",
       members: [],
-      profileNames: [],
-      colabReqIds: [],
+      usernames: [],
       membersData : [],
       stat: "",
       type: "",
@@ -151,22 +150,10 @@ export default class HomePage extends Component {
         let lastname = res.data.profile[0].last_name;
         name = name + " " + mname;
         this.setState({ username: name, userlastname: lastname });
-        });
-  };
-
-  getProfileNameById = (userId) => {
-    axios.get(`${config.API_URL}/api/profiles/${userId}/`, { headers: { 'Content-Type': 'Application/json'} })
-      .then(res => {
-        var name = res.data.name;
-        var mname = res.data.middle_name;
-        var lastname = res.data.last_name;
-        const val = name + " " + mname + " " + lastname;
-        console.log(val);
-        return val;
       });
   };
 
-  isMember = () =>{
+  isMember = () => {
       const { membersData } = this.state;
       let ids = []
       for(let i = 0 ; i < membersData.length ; i++){
@@ -307,7 +294,7 @@ export default class HomePage extends Component {
       }
       </>
     )
-  }
+  };
 
   renderMembers = () => {
     const { isPublic } = this.state;
@@ -328,7 +315,7 @@ export default class HomePage extends Component {
           </Paper>
         </Grid>
     </>)
-  }
+  };
 
   submitColabRequest = () => {
     var proj_id = this.props.location.pathname.split('/')[2];
@@ -339,25 +326,72 @@ export default class HomePage extends Component {
               this.getProject(this.state.projectId);
             })
         }); 
+  };
+
+  deleteColabRequest = (myId) => {
+    axios.delete(`${config.API_URL}/api/collaboration_requests/${myId}/`, { id: myId }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            .then(res => {
+              this.getProject(this.state.projectId);
+            })
+        }); 
   }
 
-  renderColabRequests() {
+  acceptColabRequest = (myId) => {
+    axios.post(`${config.API_URL}/api/collaboration_requests/${myId}/accept_collaboration/`, { id: myId }, { headers: { 'Content-Type': 'Application/json' } })
+        .then(res => {
+          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { headers: { 'Content-Type': 'Application/json' } })
+            .then(res => {
+              this.deleteColabRequest(myId);
+            })
+        }); 
+  };
+
+  rejectColabRequest = (myId) => {
+    axios.post(`${config.API_URL}/api/collaboration_requests/${myId}/reject_collaboration/`, { id: myId }, { headers: { 'Content-Type': 'Application/json' } })
+        .then(res => {
+          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { headers: { 'Content-Type': 'Application/json' } })
+            .then(res => {
+              this.deleteColabRequest(myId);
+            })
+        }); 
+  };
+
+  renderColabRequests = () => {
     const { allColabRequests } = this.state;
-    var userIds = [];
+    
+    var ids = [];
     for(var i=0; i<allColabRequests.length; i++){
-      userIds.push(allColabRequests[i].from_user);
+      var idPair = [allColabRequests[i].id, allColabRequests[i].from_user];
+      ids.push(idPair);
     }
-    var uniqueIds = userIds.filter(this.distinct);
+
+    // const len = uniqueIds.length;
+    // for(var k=0; k<len; k++){
+    //   axios.get(`${config.API_URL}/api/users/${uniqueIds[k]}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    //   .then(res => {
+    //     let name = res.data.profile[0].name;
+    //     let mname = res.data.profile[0].middle_name;
+    //     let lastname = res.data.profile[0].last_name;
+    //     let username = name + " " + mname + " " + lastname;
+        
+    //     var joined = this.state.usernames.concat(username);
+    //     this.setState({ usernames: joined })
+    //   });
+    // }
   
-    if (uniqueIds.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaborators</Typography>)
-    else return uniqueIds.map((item) => {
+    if (ids.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaborators</Typography>)
+    else return ids.map((item) => {
       return (<>
-        <Typography variant="h6" color="primary" style={{ cursor: "pointer", width: "100%", textAlign: "center" }}>{this.getProfileNameById(item)}</Typography>
+        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{item[0]}</Typography>
+        <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.acceptColabRequest(item[1])} > Accept </Button>
+        <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.rejectColabRequest(item[1])} > Reject </Button>
       </>)
     });
   };
 
-  renderRequests() {
+  renderRequests(){
     return (
       <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
         <Typography variant="h6" color="primary">Collaboration Requests</Typography>
@@ -372,7 +406,20 @@ export default class HomePage extends Component {
     axios.get(`${config.API_URL}/api/collaboration_requests/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         let colabRequests = res.data;
-        this.setState({ allColabRequests: colabRequests });
+        let reqs = [];
+        var len = colabRequests.length;
+
+        for(var i=0; i<len; i++){
+          var id = colabRequests[i].to_user;
+          var myId = getUserId();
+          // eslint-disable-next-line
+          if(id == myId){
+            reqs.push(colabRequests[i]);
+          }
+        }
+        var uniReqs = reqs.filter(this.distinct);
+        this.setState({ allColabRequests: uniReqs });
+        console.log(this.state.allColabRequests);
       })
   }
 

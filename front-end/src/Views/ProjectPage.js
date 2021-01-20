@@ -339,9 +339,9 @@ export default class HomePage extends Component {
   }
 
   acceptColabRequest = (myId) => {
-    axios.post(`${config.API_URL}/api/collaboration_requests/${myId}/accept_collaboration/`, { id: myId }, { headers: { 'Content-Type': 'Application/json' } })
+    axios.post(`${config.API_URL}/api/collaboration_requests/${myId}/accept_collaboration/`, { id: myId }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
         .then(res => {
-          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { headers: { 'Content-Type': 'Application/json' } })
+          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
             .then(res => {
               this.deleteColabRequest(myId);
             })
@@ -349,9 +349,9 @@ export default class HomePage extends Component {
   };
 
   rejectColabRequest = (myId) => {
-    axios.post(`${config.API_URL}/api/collaboration_requests/${myId}/reject_collaboration/`, { id: myId }, { headers: { 'Content-Type': 'Application/json' } })
+    axios.post(`${config.API_URL}/api/collaboration_requests/${myId}/reject_collaboration/`, { id: myId }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
         .then(res => {
-          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { headers: { 'Content-Type': 'Application/json' } })
+          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
             .then(res => {
               this.deleteColabRequest(myId);
             })

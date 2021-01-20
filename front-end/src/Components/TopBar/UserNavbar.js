@@ -107,6 +107,20 @@ export default function UserNavbar(props) {
     handleMobileMenuClose();
   };
 
+  const handleNotificationClick = (link, id) => {
+    console.log(link)
+    const notification_object = {
+      id: id
+    }
+    axios.post(`${config.API_URL}/api/notifications/${id}/mark_as_read/`, notification_object,
+        { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(resAcc=>{
+          console.log(resAcc)
+          window.location.reload(false);
+        });
+    props.history.push(link);
+  }
+
   const [search, setSearch] = useState('')
   const handleSearchEdit = () => {
     if (search.length>1){
@@ -114,19 +128,9 @@ export default function UserNavbar(props) {
     }
   };
 
-  const getNotifications = () => {
-    axios.get(`${config.API_URL}/api/notifications/unread/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-        .then(res => {
-          console.log(res);
-          return res.data;
-        });
-  };
-
-
   const menuId = 'primary-search-account-menu';
+
   const renderMenu = () => {
-    const notifications = getNotifications();
-    console.log(notifications);
     return (<Menu
         anchorEl={anchorEl}
         anchorOrigin={{vertical: 'top', horizontal: 'right'}}
@@ -136,9 +140,61 @@ export default function UserNavbar(props) {
         open={isMenuOpen}
         onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Myyy account</MenuItem>
+        {renderNotifications()}
     </Menu>)
+
+  }
+
+  const renderNotifications = () => {
+    const notifications = JSON.parse(JSON.stringify(props.notifications));
+    if (notifications.length < 1) {
+      return (
+          <MenuItem onClick={() => handleMenuClose}>You don't have any new notifications.</MenuItem>
+      )
+    }
+    return notifications.map((item) => {
+      const type = item.description;
+      if (type === "Project") {
+        const project = item.project;
+        const id = project.id;
+        const link = "/project/" + id;
+        const str = item.actor.username + " " + item.verb + ".";
+        return (
+            <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
+        )
+      }
+      if (type === "Milestone") {
+        const milestone = item.milestone;
+        const id = milestone.project;
+        const link = "/project/" + id;
+        const str = item.actor.username + " " + item.verb + ".";
+        return (
+            <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
+        )
+      }
+      if (type === "Follow Request") {
+        const link = "/profile/" + item.actor.id;
+        const str = item.actor.username + " " + item.verb;
+        return (
+            <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
+        )
+      }
+      if (type === "Rating") {
+        const link = "/profile/" + item.actor.id;
+        const str = item.actor.username + " " + item.verb+ ".";
+        return (
+            <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
+        )
+      }
+      if (type === "Follow") {
+        const link = "/profile/" + item.actor.id;
+        const str = item.actor.username + " " + item.verb;
+        return (
+            <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
+        )
+      }
+    }
+    )
   };
 
   return (
@@ -185,7 +241,7 @@ export default function UserNavbar(props) {
             <div className={classes.sectionDesktop}>
               {
             <IconButton aria-label="show 17 new notifications" color="inherit" onClick={handleProfileMenuOpen}>
-              <Badge badgeContent={0} color="secondary">
+              <Badge badgeContent={props.notifications.length} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton> }

@@ -97,6 +97,7 @@ export default class ProfilePage extends Component {
       following: [],
       milestones: [],
       projects: [],
+      notifications: [],
       file: undefined,
       showUpload: false,
       loading: true, // For eradicating glitches due to request delays
@@ -125,6 +126,12 @@ export default class ProfilePage extends Component {
           selfLastName: res.data.profile[0].last_name
         });
       });
+    axios.get(`${config.API_URL}/api/notifications/unread/`,
+        { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          console.log((res.data))
+          this.setState({notifications: res.data})
+        });
   };
 
   getProfile = () => {
@@ -684,6 +691,7 @@ export default class ProfilePage extends Component {
         pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
         goHome={() => { this.props.history.push(config.Homepage_Path) }}
         history ={this.props.history}
+        notifications = {this.state.notifications}
       />
 
       <Grid container direction="row" justify="center" alignItems="center" >
@@ -760,6 +768,7 @@ export default class ProfilePage extends Component {
         }}
         goHome={() => { this.props.history.push(config.Homepage_Path) }}
         history ={this.props.history}
+        notifications = {this.state.notifications}
       />
       <Box>
         {!this.state.self && !this.state.loading ?  // So that re-render doesn't cause any glitch-like graphics.

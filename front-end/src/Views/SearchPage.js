@@ -43,6 +43,7 @@ export default class SearchPage extends Component {
             message: "",
             messageType: "",
             projects:[],
+            notifications: [],
             events:[],
             profiles:[],
         }
@@ -136,6 +137,12 @@ export default class SearchPage extends Component {
             this.setState(res.data);
             console.log(this.state);
         });
+        axios.get(`${config.API_URL}/api/notifications/unread/`,
+            { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            .then(res => {
+                console.log((res.data))
+                this.setState({notifications: res.data})
+            });
     }
 
     render() {
@@ -146,6 +153,7 @@ export default class SearchPage extends Component {
                     pushProfile={() => { this.props.history.push( "/profile/" + getUserId() ) }}
                     goHome={() => { this.props.history.push(config.Homepage_Path) }}
                     history={this.props.history}
+                    notifications = {this.state.notifications}
                 />
                 <Box style={{marginTop:"8px"}}>
 

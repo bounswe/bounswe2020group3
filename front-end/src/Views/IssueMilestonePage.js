@@ -78,6 +78,7 @@ export default class IssueMilestonePage extends Component {
       messageType: "",
       milestoneDescription: "",
       projectId: "",
+      notifications: [],
       date: format(new Date(), 'yyyy-MM-dd'),
       
     }
@@ -85,6 +86,12 @@ export default class IssueMilestonePage extends Component {
   componentDidMount() { 
     var projectId = this.props.location.state.projectId;
     this.setState({projectId : projectId});
+    axios.get(`${config.API_URL}/api/notifications/unread/`,
+        { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          console.log((res.data))
+          this.setState({notifications: res.data})
+        });
   }
   handleDateChange = (date) => {
     this.setState({ date: date });
@@ -149,6 +156,7 @@ export default class IssueMilestonePage extends Component {
           pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }} 
           goHome={() => { this.props.history.push(config.Homepage_Path) }}
           history ={this.props.history}
+          notifications = {this.state.notifications}
           />
         <FormWrapper>
           <h1 style={{ color: "black" }}> Set a Milestone </h1>

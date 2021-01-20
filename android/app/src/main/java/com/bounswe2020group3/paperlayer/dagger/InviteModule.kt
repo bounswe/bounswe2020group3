@@ -14,7 +14,7 @@ abstract class InviteModule {
     abstract fun bindInvitePresenter(presenter: InvitePresenter): InviteContract.Presenter
 
     @Binds
-    abstract fun bindInvitePresenter(presenter: ManageInvitesPresenter): ManageInvitesContract.Presenter
+    abstract fun bindManageInvitesPresenter(presenter: ManageInvitesPresenter): ManageInvitesContract.Presenter
     @Binds
     @Singleton
     abstract fun bindInviteModel(model: InviteModel): InviteContract.Model

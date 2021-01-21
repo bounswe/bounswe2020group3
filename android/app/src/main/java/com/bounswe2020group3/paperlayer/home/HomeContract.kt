@@ -52,7 +52,7 @@ interface HomeContract {
         fun fetchMilestones(ownerId : Int)
         fun subscribeAuthToken()
     }
-    interface RecentProjectsView: Mvp.View{
+    interface RecommendedProjectsView: Mvp.View{
         fun getLayout(): android.view.View
         fun showToast(message: String)
         fun writeLogMessage(type:String ,tag: String,message: String)
@@ -65,8 +65,8 @@ interface HomeContract {
 
 
     }
-    interface RecentProjectsPresenter : Mvp.Presenter<RecentProjectsView> {
-        fun setView(view: HomeContract.RecentProjectsView)
+    interface RecommendedProjectsPresenter : Mvp.Presenter<RecommendedProjectsView> {
+        fun setView(view: HomeContract.RecommendedProjectsView)
         fun showMessage(message: String)
         fun fetchProjects(ownerId : Int)
         fun subscribeAuthToken()
@@ -84,6 +84,8 @@ interface HomeContract {
         fun getAllEvents(): Observable<List<Event>>?
         fun getAuthToken(): BehaviorSubject<AuthToken>
         fun getAllProjects(OwnerId:Int): Observable<List<ProjectShort>>
+        fun getRecommendedProjects(userId : Int): Observable<List<Project>>
+
         fun collaborateRequest(request : CollaborateRequest) : Observable<CollaborationRequest>
         fun fetchRequests(userId:Int)   :   Observable<List<CollaborationRequest>>
         fun deleteRequest( collabId : Int ) : Completable
@@ -97,6 +99,8 @@ interface HomeContract {
 
         @GET("/api/projects/")
         fun getAllProjects(): Observable<List<ProjectShort>>
+        @GET("api/projects/get_project_recommendation/")
+        fun getRecommendedProjects(@Query("user_id") userId: Int): Observable<List<Project>>
 
 
     }

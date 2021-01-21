@@ -48,7 +48,7 @@ class MilestoneFragment : Fragment(), HomeContract.MileStoneView , OnCardClickLi
             when(item.itemId){
                 R.id.eventFragment ->{        Navigation.findNavController(view).navigate(R.id.navigateToEventsFromMilestones)
                 }
-                R.id.projectUpdateFragment ->{Navigation.findNavController(view).navigate(R.id.navigateToProjectUpdatesFromMilestones)}
+                R.id.recommendedProjectsFragment ->{Navigation.findNavController(view).navigate(R.id.navigateToProjectUpdatesFromMilestones)}
                 R.id.milestoneFragment ->{}
 
             }

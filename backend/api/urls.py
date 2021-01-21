@@ -1,7 +1,14 @@
+from django_email_verification import urls as mail_urls
+from django.contrib import admin
+from .views.rating import RatingViewSet
+from .views.comment import CommentViewSet
+from django.contrib.auth import views as auth_views
+from .views.search import SearchGenericAPIView
+from .views.notification import NotificationViewSet
+from .views.publication import PublicationViewSet
 from django.urls import path
 from django.conf.urls import include
 from rest_framework.routers import DefaultRouter
-
 from .views.feed import FeedViewSet
 from .views.following import FollowingViewSet, FollowRequestViewSet
 from .views.profile import ProfileViewSet, ProfilePictureViewSet
@@ -14,13 +21,6 @@ from .views.event import EventViewSet
 from .views.file import FileViewSet
 from .views.collaboration_request import CollaborationRequestViewSet
 from .views.collaboration_invite import CollaborationInviteViewSet
-from .views.notification import NotificationViewSet
-from .views.search import SearchGenericAPIView
-from django.contrib.auth import views as auth_views
-from .views.comment import CommentViewSet
-from .views.rating import RatingViewSet
-from django.contrib import admin
-from django_email_verification import urls as mail_urls
 
 router = DefaultRouter()
 router.register(r'profiles', ProfileViewSet)
@@ -39,6 +39,7 @@ router.register(r'notifications', NotificationViewSet, basename='notification')
 router.register(r'comments', CommentViewSet)
 router.register(r'ratings', RatingViewSet)
 router.register(r'feeds', FeedViewSet, basename='feed')
+router.register(r'publications', PublicationViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

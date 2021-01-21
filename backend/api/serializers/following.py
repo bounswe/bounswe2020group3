@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from api.models.following import Following, FollowRequest
-from api.serializers.user import UserPrivateSerializer,\
+from api.serializers.user import UserPrivateSerializer, \
     UserNotificationSerializer
 
 
@@ -102,3 +102,16 @@ class IncomingFollowRequestSerializer(serializers.HyperlinkedModelSerializer):
 
     def to_native(self, value):
         return self.parent.to_native(value)
+
+
+class FollowRequestNotificationSerializer(serializers.
+                                          HyperlinkedModelSerializer):
+    """
+    Follow request serializer.
+    """
+    req_from_user = UserNotificationSerializer(read_only=True)
+    req_to_user = UserNotificationSerializer(read_only=True)
+
+    class Meta:
+        model = FollowRequest
+        fields = ("id", "req_from_user", "req_to_user", "created")

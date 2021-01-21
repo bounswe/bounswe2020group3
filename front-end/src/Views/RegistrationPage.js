@@ -11,6 +11,7 @@ import config from "../config";
 import Box from '@material-ui/core/Box';
 import { theme } from "../Common/ColorTheme";
 import Typography from '@material-ui/core/Typography';
+import CheckBox from '@material-ui/core/Checkbox';
 
 const Messages = {
     emptyFieldError: "Please Fill All Areas!",
@@ -48,7 +49,8 @@ export default class RegistrationPage extends Component {
             messageType: "",
             lastName: "",
             middleName: "",
-            firstName: ""
+            firstName: "",
+            check: false
         }
     }
 
@@ -140,6 +142,9 @@ export default class RegistrationPage extends Component {
     goToRegister = () => {
         this.props.history.push(config.Register_Path);
     }
+    checkBoxTest(){
+        this.setState({check: !this.state.check})
+    }
 
     render() {
         console.log(theme.palette)
@@ -216,8 +221,15 @@ export default class RegistrationPage extends Component {
                             helperText=""
                         />
                     </div>
-
-                    <Button type="submit" variant="contained" color="primary" className=""   /*style={{color: "#c3fdff", backgroundColor:"#90caf9"}}*/ >Register</Button>
+                    
+                    <p className="">
+                        <Typography variant="inherit" color="primary">
+                        <CheckBox value ={this.state.check} onChange={() => this.checkBoxTest()}></CheckBox>
+                            Your use of PaperLayer indicates your acceptance of the <a href="/terms-of-services/" target = "_blank">Terms of Conditions</a> of Use.
+                        </Typography>
+                    </p>
+                    
+                    <Button type="submit" variant="contained" color="primary" className="" disabled={!this.state.check}  /*style={{color: "#c3fdff", backgroundColor:"#90caf9"}}*/ >Register</Button>
 
                     <p className="">
                         <Typography variant="inherit" color="primary">

@@ -10,7 +10,7 @@ class Tag(models.Model):
     """
     Tag model for project tags.
     """
-    name = models.CharField(max_length=500, blank=False)
+    name = models.CharField(max_length=500, blank=False, unique=True)
     color = models.IntegerField(default=random_color)
 
     class Meta:

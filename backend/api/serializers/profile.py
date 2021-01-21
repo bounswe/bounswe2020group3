@@ -130,7 +130,7 @@ class ProfilePrivateSerializer(serializers.HyperlinkedModelSerializer):
         return get_is_collaborator(request.user, obj.owner)
 
 
-class ProfilePictureSerializer(serializers.ModelSerializer):
+class ProfilePictureSerializer(serializers.HyperlinkedModelSerializer):
     """
     Profile serializer for owner and admin.
     """

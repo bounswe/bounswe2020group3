@@ -20,6 +20,7 @@ from .views.comment import CommentViewSet
 from .views.rating import RatingViewSet
 from django.contrib import admin
 from django_email_verification import urls as mail_urls
+from .views.report import ReportViewSet
 
 router = DefaultRouter()
 router.register(r'profiles', ProfileViewSet)
@@ -37,6 +38,7 @@ router.register(r'collaboration_invites', CollaborationInviteViewSet)
 router.register(r'notifications', NotificationViewSet, basename='notification')
 router.register(r'comments', CommentViewSet)
 router.register(r'ratings', RatingViewSet)
+router.register(r'reports', ReportViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

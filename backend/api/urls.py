@@ -20,6 +20,7 @@ from .views.event import EventViewSet
 from .views.file import FileViewSet
 from .views.collaboration_request import CollaborationRequestViewSet
 from .views.collaboration_invite import CollaborationInviteViewSet
+from .views.report import ReportViewSet
 
 router = DefaultRouter()
 router.register(r'profiles', ProfileViewSet)
@@ -38,6 +39,7 @@ router.register(r'notifications', NotificationViewSet, basename='notification')
 router.register(r'comments', CommentViewSet)
 router.register(r'ratings', RatingViewSet)
 router.register(r'publications', PublicationViewSet)
+router.register(r'reports', ReportViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

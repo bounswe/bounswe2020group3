@@ -150,7 +150,7 @@ export default class RegistrationPage extends Component {
         console.log(theme.palette)
         return (
             <Container color="secondary">
-                <PrimarySearchAppBar loginNav={this.goToLogin} />
+                <PrimarySearchAppBar loginNav={this.goToLogin} history={this.props.history}/>
                 <form className="" onSubmit={this.handleSubmit}>
                     <Typography variant="h5" color="primary">Registration</Typography>
                     <div className="">

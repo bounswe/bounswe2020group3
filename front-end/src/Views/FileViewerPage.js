@@ -58,6 +58,7 @@ export default class FileViewer extends Component {
       tagQuery: "",
       colabQuery: "",
       currTag: [],
+      notifications: [],
       allTags: [],
       isMember: false,
       isNotMember: true,
@@ -186,6 +187,12 @@ export default class FileViewer extends Component {
     this.getProject(project_id);
     this.getProfile();
     this.getFiles(project_id);
+    axios.get(`${config.API_URL}/api/notifications/unread/`,
+        { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          console.log((res.data))
+          this.setState({notifications: res.data})
+        });
   };
   deleteFile = (fileName , fileId) => {
     const { projectId } = this.state;   
@@ -429,6 +436,7 @@ export default class FileViewer extends Component {
             pushProfile={this.goToProfile}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
             history ={this.props.history}
+            notifications = {this.state.notifications}
           />
             <Profilebar
               name={this.state.username}

@@ -130,6 +130,7 @@ export default class ProjectPage extends Component {
       collaborators: [this.getSelfProfile()],  //Other members to be added later TODO
       isPublic: true,
       events: [],
+      notifications: [],
       event : "",
       tags: [{
         name: "",
@@ -154,6 +155,12 @@ export default class ProjectPage extends Component {
           this.setState({event:prof.event.id});
         }
       });
+    axios.get(`${config.API_URL}/api/notifications/unread/`,
+        { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          console.log((res.data))
+          this.setState({notifications: res.data})
+        });
     axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers:{'Content-Type':'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
       .then(res => {
         let name = res.data.profile[0].name;
@@ -313,6 +320,7 @@ export default class ProjectPage extends Component {
           pushProfile={() => { this.props.history.push(`/profile/${getUserId()} `) }}
           goHome={() => { this.props.history.push(config.Homepage_Path) }}
           history ={this.props.history}
+          notifications = {this.state.notifications}
         />
         <FormWrapper>
           <h1 style={{ color: "black" }}> Edit Project </h1>

@@ -8,16 +8,16 @@ import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-//import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
 import { Button} from '@material-ui/core';
-import {logout, getPhoto} from "../Auth/Authenticate";
+import {logout, getPhoto, getAccessToken} from "../Auth/Authenticate";
 import Avatar from '@material-ui/core/Avatar';
 import logo from '../../navbarlogo.png';
+import axios from "axios";
+import config from "../../config";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -105,9 +105,19 @@ export default function UserNavbar(props) {
     handleMobileMenuClose();
   };
 
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
+  const handleNotificationClick = (link, id) => {
+    console.log(link)
+    const notification_object = {
+      id: id
+    }
+    axios.post(`${config.API_URL}/api/notifications/${id}/mark_as_read/`, notification_object,
+        { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(resAcc=>{
+          console.log(resAcc)
+          window.location.reload(false);
+        });
+    props.history.push(link);
+  }
 
   const [search, setSearch] = useState('')
   const handleSearchEdit = () => {
@@ -116,22 +126,22 @@ export default function UserNavbar(props) {
     }
   };
 
-
   const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-      <Menu
-          anchorEl={anchorEl}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          id={menuId}
-          keepMounted
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          open={isMenuOpen}
-          onClose={handleMenuClose}
-      >
-        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-        <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      </Menu>
-  );
+
+  const renderMenu = () => {
+    return (<Menu
+        anchorEl={anchorEl}
+        anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+        id={menuId}
+        keepMounted
+        transformOrigin={{vertical: 'top', horizontal: 'right'}}
+        open={isMenuOpen}
+        onClose={handleMenuClose}
+    >
+        {renderNotifications()}
+    </Menu>)
+
+  }
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
@@ -173,6 +183,63 @@ export default function UserNavbar(props) {
         </MenuItem>
       </Menu>
   );
+
+  const renderNotifications = () => {
+    const notifications = JSON.parse(JSON.stringify(props.notifications));
+    if (notifications.length < 1) {
+      return (
+          <MenuItem onClick={() => handleMenuClose}>You don't have any new notifications.</MenuItem>
+      )
+    }
+    return notifications.map((item) => {
+      const type = item.description;
+      if (type === "Project") {
+        const project = item.project;
+        const id = project.id;
+        const link = "/project/" + id;
+        const str = item.actor.username + " " + item.verb + ".";
+        return (
+            <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
+        )
+      }
+      else if (type === "Milestone") {
+        const milestone = item.milestone;
+        const id = milestone.project;
+        const link = "/project/" + id;
+        const str = item.actor.username + " " + item.verb + ".";
+        return (
+            <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
+        )
+      }
+      else if (type === "Follow Request") {
+        const link = "/profile/" + item.actor.id;
+        const str = item.actor.username + " " + item.verb;
+        return (
+            <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
+        )
+      }
+      else if (type === "Rating") {
+        const link = "/profile/" + item.actor.id;
+        const str = item.actor.username + " " + item.verb+ ".";
+        return (
+            <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
+        )
+      }
+      else if (type === "Follow") {
+        const link = "/profile/" + item.actor.id;
+        const str = item.actor.username + " " + item.verb;
+        return (
+            <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
+        )
+      }
+      else {
+        return (
+            <MenuItem onClick={() => handleMenuClose}>Notification</MenuItem>
+        )
+      }
+    }
+    )
+  };
 
   return (
       <div className={classes.grow}>
@@ -216,47 +283,22 @@ export default function UserNavbar(props) {
             }} />
 
             <div className={classes.sectionDesktop}>
-              {/* <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={0} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={0} color="secondary">
+              {
+            <IconButton aria-label="show 17 new notifications" color="inherit" onClick={handleProfileMenuOpen}>
+              <Badge badgeContent={props.notifications.length} color="secondary">
                 <NotificationsIcon />
               </Badge>
-            </IconButton> */}
-              {/* <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton> */}
+            </IconButton> }
               <Button variant="contained" color="primary" className="" onClick={() => {
                 logout();
                 props.logout();
               }}>Logout</Button>
 
             </div>
-            <div className={classes.sectionMobile}>
-              <IconButton
-                  aria-label="show more"
-                  aria-controls={mobileMenuId}
-                  aria-haspopup="true"
-                  onClick={handleMobileMenuOpen}
-                  color="inherit"
-              >
-                <MoreIcon />
-              </IconButton>
-            </div>
           </Toolbar>
         </AppBar>
+        {renderMenu()}
         {renderMobileMenu}
-        {renderMenu}
       </div>
   );
 }

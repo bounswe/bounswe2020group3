@@ -542,10 +542,15 @@ export default class ProfilePage extends Component {
   renderGraph() {
     return (
       <>{this.state.self ?
-        <Button variant="outlined" color="primary" style={{ width: "50", fontSize: '10px', marginBottom: "20px" }} onClick={() => {
-          this.deletePhoto(this.getUserPhoto(this.state.profileId))
-          window.location.reload(false);
-        }}> Delete Profile Picture </Button>
+
+        <>
+          <Button variant="outlined" color="primary" style={{ width:"50", fontSize:"10px", marginBottom:"20px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
+<br/>
+          <Button variant="outlined" color="primary" style={{ width: "50", fontSize: '10px', marginBottom: "20px" }} onClick={() => {
+            this.deletePhoto(this.getUserPhoto(this.state.profileId))
+            window.location.reload(false);
+          }}> Delete Profile Picture </Button>
+        </>
         :
         <></>
       }
@@ -760,12 +765,7 @@ export default class ProfilePage extends Component {
             {this.renderGraph()}
 
           </Grid>
-          {
-            this.state.self ?
-              <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
-              :
-              <></>
-          }
+          
         </Grid>
       </Grid>
       <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpen} type={this.state.messageType} message={this.state.message} />
@@ -858,6 +858,7 @@ export default class ProfilePage extends Component {
               {(this.state.self || this.state.isPublic) ? this.renderMidRightColumn() : <></>}
 
             </Grid>
+            
             <Grid item sm={3}>
               {this.renderGraph()}
               {this.renderAddComment()}

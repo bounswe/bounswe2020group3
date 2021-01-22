@@ -88,7 +88,8 @@ export default class EditProfilePage extends Component {
         shareAffiliations: false,
         shareGender : false,
         shareBio: false,
-        isPublic: false
+        isPublic: false,
+        notifications: [],
  
 
       }
@@ -121,7 +122,13 @@ export default class EditProfilePage extends Component {
         this.setState({ success: false, message: "Error when fetching profile data.", messageType: AlertTypes.Error });
         this.handleSnackbarOpen()
         console.log(error);
-      }); 
+      });
+        axios.get(`${config.API_URL}/api/notifications/unread/`,
+            { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            .then(res => {
+                console.log((res.data))
+                this.setState({notifications: res.data})
+            });
     }
 
     handleSnackbarOpen = () => {
@@ -223,6 +230,7 @@ export default class EditProfilePage extends Component {
               pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
               goHome={() => { this.props.history.push(config.Homepage_Path) }}
               history ={this.props.history}
+              notifications = {this.state.notifications}
             />
             <FormWrapper>
               <h1 style={{ color: "black" }}> Edit Profile </h1>

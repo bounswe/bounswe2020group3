@@ -23,6 +23,10 @@ user_param = openapi.Parameter(
     'user_id', openapi.IN_QUERY,
     description="User id to get recommendations",
     type=openapi.TYPE_INTEGER)
+count_param = openapi.Parameter(
+    'user_count', openapi.IN_QUERY,
+    description="Number of projects requested",
+    type=openapi.TYPE_INTEGER)
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -83,13 +87,15 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return response
 
     @swagger_auto_schema(
-        method='get', manual_parameters=[user_param]
+        method='get', manual_parameters=[user_param, count_param]
     )
     @action(detail=False, methods=['GET'],
             name='get_project_recommendation',
             serializer_class=None)
     def get_project_recommendation(self, request):
         user_id = request.GET.get('user_id', None)
+        user_count = int(request.GET.get('user_count', None))
+        print(user_count)
         profile = Profile.objects.get(owner_id=user_id)
         exps = []
         if profile.expertise:
@@ -152,9 +158,15 @@ class ProjectViewSet(viewsets.ModelViewSet):
         for req in req_projects:
             project_score.pop(req.to_project.id, None)
 
-        top_ids = [i for i in sorted(project_score,
-                                     key=project_score.get,
-                                     reverse=True)]
+        top_ids = []
+        if user_count:
+            top_ids = [i for i in sorted(project_score,
+                                         key=project_score.get,
+                                         reverse=True)[:user_count]]
+        else:
+            top_ids = [i for i in sorted(project_score,
+                                         key=project_score.get,
+                                         reverse=True)]
 
         preserved = Case(*[When(id=pk, then=pos)
                            for pos, pk in enumerate(top_ids)])

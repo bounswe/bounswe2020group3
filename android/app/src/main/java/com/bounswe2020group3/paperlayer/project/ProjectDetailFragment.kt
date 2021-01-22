@@ -252,6 +252,16 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         val bundle = bundleOf("userID" to userId)
         Navigation.findNavController(requireView()).navigate(R.id.navigateToUserFromProject, bundle)
     }
+
+    override fun onCardKickClickListener(userId: Int) {
+        resetMemberCardList()
+        presenter.onClickKick(userId)
+        for (member in presenter.getProject()?.members.orEmpty()){
+            addMemberCard(member)
+            submitMemberCardList()
+        }
+    }
+
     override fun collabCheck(index: Int) {
         collabbed = index
         buttonCollab.text = "WITHDRAW"

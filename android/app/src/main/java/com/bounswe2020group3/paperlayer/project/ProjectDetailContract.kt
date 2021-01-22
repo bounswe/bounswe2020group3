@@ -23,6 +23,7 @@ interface ProjectDetailContract {
         fun navigateToEditProject()
         fun subscribeAuthToken()
         fun OnClickCollab(projectId: Int,collabbed : Int)
+        fun onClickKick(memberId : Int)
         fun fetchRequestOfMine(projectId: Int)
     }
 
@@ -48,6 +49,8 @@ interface ProjectDetailContract {
         fun fetchRequestofMine(projectId: Int): Observable<List<CollaborationRequest>>
         fun getProject(projectId: Int): Single<Project>
         fun getAuthToken(): BehaviorSubject<AuthToken>
+        fun updateProject(projectId:Int,project: Project) : Observable<List<Project>>
+
     }
     interface CollaborationRequestService {
         @POST("/api/collaboration_requests/")

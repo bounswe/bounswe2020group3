@@ -7,10 +7,7 @@ import com.bounswe2020group3.paperlayer.project.data.ProjectShort
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface       ProjectsContract {
 
@@ -47,6 +44,9 @@ interface       ProjectsContract {
 
         @GET("/api/projects/")
         fun getAllProjectsOfOwner(@Header("Authorization") authorization: String, @Query("owner__id") ownerId: Int): Observable<List<ProjectShort>>
+
+        @PATCH("/api/projects/")
+        fun updateProject(@Header("Authorization") authorization: String, @Path("projectId") projectId: Int,@Body project : Project): Observable<List<Project>>
     }
 
 }

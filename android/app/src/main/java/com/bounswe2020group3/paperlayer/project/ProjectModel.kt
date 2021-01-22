@@ -29,6 +29,12 @@ class ProjectModel @Inject constructor(private var sessionManager: Session,retro
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
+    override fun updateProject(projectId: Int, project: Project): Observable<List<Project>> {
+        return projectService.updateProject(authToken, projectId,project)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
     //ProjectMainContract.Model
     //Get all projects of given owner
     override fun getAllProjectsOfOwner(ownerId: Int): Observable<List<ProjectShort>> {

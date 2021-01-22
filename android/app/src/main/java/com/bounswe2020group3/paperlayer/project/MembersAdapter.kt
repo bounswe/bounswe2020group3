@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.layout_list_item_project_member.view.*
 
 interface OnMemberCardClickListener {
     fun onCardClickListener(userId: Int)
+    fun onCardKickClickListener(userId:Int)
 }
 
 class MembersAdapter(val clickListener: OnMemberCardClickListener): RecyclerView.Adapter<MembersAdapter.MemberViewHolder>() {
@@ -48,7 +49,7 @@ class MembersAdapter(val clickListener: OnMemberCardClickListener): RecyclerView
 
         var memberUsername: TextView =itemView.textViewProjectMemberUsername
         var memberAvatar: ImageView = itemView.imageViewMemberAvatar
-
+        var memberKick : ImageView = itemView.buttonKickMember;
         fun bind(memberCard: MemberCard, clickListener: OnMemberCardClickListener){
             val fullName = "${memberCard.user.profile[0].name} ${memberCard.user.profile[0].lastName}"
             memberUsername.text = fullName
@@ -58,9 +59,13 @@ class MembersAdapter(val clickListener: OnMemberCardClickListener): RecyclerView
                 Picasso.get().load(imageUrl).into(memberAvatar)
             }
 
+            memberKick.setOnClickListener {
+                clickListener.onCardKickClickListener(memberCard.user.id)
+                }
             itemView.setOnClickListener {
                 clickListener.onCardClickListener(memberCard.user.id)
             }
+
         }
 
     }

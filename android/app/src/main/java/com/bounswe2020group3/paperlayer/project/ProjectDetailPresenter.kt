@@ -6,6 +6,7 @@ import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.home.data.CollaborateRequest
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import com.bounswe2020group3.paperlayer.project.data.Project
+import com.bounswe2020group3.paperlayer.project.data.User
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -129,5 +130,25 @@ class ProjectPresenter  @Inject constructor(private var model: ProjectDetailCont
                     })
             disposable.add(uninviteUserObservable)
         }
+    }
+
+    override fun onClickKick(memberId: Int) {
+        var temp : Project? = this.getProject()
+        var memberToBeRemoved : User? = null
+        var members : MutableList<User> = mutableListOf()
+
+        for(member in temp?.members!!){
+            if(member.id != memberId) {
+                members.add(member)
+            }
+        }
+        temp.members = members
+        setProject(temp)
+        val uninviteUserObservable = model.deleteRequest().subscribe({
+            ok ->
+        },
+                {err ->}
+        )
+        this.view?.writeLogMessage("e",TAG,"kick the member with the id $memberId")
     }
 }

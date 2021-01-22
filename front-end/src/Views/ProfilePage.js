@@ -376,7 +376,7 @@ export default class ProfilePage extends Component {
   renderProjects() {
     const { projects } = this.state;
     return (
-      <Box style={{ overflowY: "scroll", maxHeight: "500px", paddingTop: "10px", paddingBottom: "10px" }}>
+      <Box style={{ overflowY: "scroll", maxHeight: "300px", paddingTop: "10px", paddingBottom: "10px" }}>
 
         {projects.length !== 0
           ?
@@ -410,7 +410,7 @@ export default class ProfilePage extends Component {
   renderMilestones() {
     const { milestones } = this.state;
     return (
-      <Box style={{ overflowY: "scroll", maxHeight: "500px", paddingTop: "10px", paddingBottom: "10px" }}>
+      <Box style={{ overflowY: "scroll", maxHeight: "300px", paddingTop: "10px", paddingBottom: "10px" }}>
 
         {milestones.length !== 0
           ?

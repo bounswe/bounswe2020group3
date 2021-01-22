@@ -45,6 +45,7 @@ export default class HomePage extends Component {
             events:[],
             milestones:[],
             page_num: 0,
+            notifications: [],
         }
     };
 
@@ -97,6 +98,13 @@ export default class HomePage extends Component {
           this.setState({ name:name , lastName: lastname });
 
         });
+        axios.get(`${config.API_URL}/api/notifications/unread/`,
+            getRequestHeader())
+            .then(res => {
+                console.log((res.data))
+                this.setState({notifications: res.data})
+            });
+
   }
   renderTags(tags) {
     return tags.map((item) => {
@@ -186,6 +194,7 @@ export default class HomePage extends Component {
             pushProfile={() => { this.props.history.push( "/profile/" + getUserId() ) }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
             history ={this.props.history}
+            notifications = {this.state.notifications}
           />
           <Box style={{marginTop:"8px"}}>
           {isLoggedIn() ? 

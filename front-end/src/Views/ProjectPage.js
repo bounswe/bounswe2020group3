@@ -62,6 +62,7 @@ export default class HomePage extends Component {
       isMember: false,
       isNotMember: true,
       isPublic: false,
+      notifications: [],
       owner: ""
     }
   };
@@ -151,8 +152,9 @@ export default class HomePage extends Component {
   isMember = () =>{
       const { membersData } = this.state;
       let ids = []
+      console.log(membersData)
       for(let i = 0 ; i < membersData.length ; i++){
-        ids.push(membersData[i].profile[0].id);
+        ids.push(membersData[i].profile[i].id);
       }
       console.log(ids, membersData);
       console.log(ids, getProfileId())
@@ -171,6 +173,12 @@ export default class HomePage extends Component {
     this.getProfile();
     this.getTags();
     // this.getColabs();
+      axios.get(`${config.API_URL}/api/notifications/unread/`,
+          getRequestHeader())
+          .then(res => {
+              console.log((res.data))
+              this.setState({notifications: res.data})
+          });
   };
 
   renderContributor() {
@@ -358,6 +366,7 @@ export default class HomePage extends Component {
             pushProfile={this.goToProfile}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
             history ={this.props.history}
+            notifications = {this.state.notifications}
           />
             <Profilebar
               name={this.state.username}

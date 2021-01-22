@@ -91,6 +91,7 @@ export default class CreateEventPage extends Component {
       success: null,
       message: "",
       messageType: "",
+      notifications: [],
       eventTitle: "",
       eventType: null,
       eventDescription: "",
@@ -101,6 +102,13 @@ export default class CreateEventPage extends Component {
 
     }
   };
+  componentDidMount(){
+    axios.get(`${config.API_URL}/api/notifications/unread/`,
+        getRequestHeader())
+        .then(res => {
+          this.setState({notifications: res.data})
+        });
+  }
   handleDateChange = (date) => {
     this.setState({ date: date });
   };
@@ -163,6 +171,7 @@ export default class CreateEventPage extends Component {
           pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }} 
           goHome={() => { this.props.history.push(config.Homepage_Path) }}
           history ={this.props.history}
+          notifications = {this.state.notifications}
           />
         <FormWrapper>
           <h1 style={{ color: "black" }}> Create an Event </h1>

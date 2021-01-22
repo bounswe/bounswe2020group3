@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import Profilebar from "../Components/ProfileBar/Profilebar";
-import {getAccessToken, getUserId, getPhoto} from "../Components/Auth/Authenticate";
+import {getAccessToken, getUserId, getPhoto, getRequestHeader} from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
     backgroundColor: '#f7f7f5',
@@ -39,6 +39,7 @@ export default class HomePage extends Component {
             date:"",
             type:"",
             url:"",
+            notifications: [],
             username:"",
             userlastname:"",
             photoUrl:""
@@ -72,6 +73,12 @@ export default class HomePage extends Component {
             let photoUrl = (res.data.profile[0].photo_url)
             this.setState({ username:name , userlastname: lastname, photoUrl:photoUrl });
         });
+        axios.get(`${config.API_URL}/api/notifications/unread/`,
+            getRequestHeader())
+            .then(res => {
+                console.log((res.data))
+                this.setState({notifications: res.data})
+            });
     };
 
     render() {
@@ -82,6 +89,7 @@ export default class HomePage extends Component {
             pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
             history ={this.props.history}
+            notifications = {this.state.notifications}
           />
             <Box style={{marginTop:"8px"}}>
             <Profilebar

@@ -13,7 +13,7 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 // import { theme } from "../Common/ColorTheme";
 import AlertTypes from '../Common/AlertTypes.json';
-import { getAccessToken, getRequestHeader, getUserId } from '../Components/Auth/Authenticate';
+import { getRequestHeader, getUserId } from '../Components/Auth/Authenticate';
 import { format } from "date-fns";
 import UserNavbar from "../Components/TopBar/UserNavbar";
 

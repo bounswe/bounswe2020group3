@@ -134,7 +134,7 @@ export default class ProfilePage extends Component {
         this.setState({ email: res.data.email, self: res.data.id === parseInt(getUserId()), });
         const prof = res.data.profile[0];
         let windowUserId = res.data.id;
-        if (windowUserId === parseInt(getUserId()) || res.data.profile[0].is_public) {
+        if (windowUserId === parseInt(getUserId()) || res.data.profile[0].is_public || res.data.is_following) {
           this.setState({
             isPublic: prof.is_public || res.data.is_following,
             profileId: prof.id,
@@ -503,7 +503,7 @@ export default class ProfilePage extends Component {
     );
   }
   renderAddComment() {
-    if(!this.state.isPublic && !this.state.isCommentable) return (<></>);
+    if(!this.state.isPublic || !this.state.isCommentable) return (<></>);
 
     return (
       <>
@@ -544,7 +544,7 @@ export default class ProfilePage extends Component {
       }
         {!this.state.self && this.state.isPublic ?
           <div style={{ textAlign: 'left', width: "90%", paddingLeft: "10%" }}>
-            {isLoggedIn() ?
+            {isLoggedIn() && (this.state.isCommentable || this.state.isFollowing) ?
               <>
                 <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">{"Your Rating :     "}</Typography>
                 <Rating
@@ -565,7 +565,7 @@ export default class ProfilePage extends Component {
           :
           <></>
         }
-        {this.state.isPublic || this.state.self ? 
+        {this.state.isPublic || this.state.self || this.state.isFollowing || true ? 
         <div style={{ textAlign: 'left', width: "90%", paddingLeft: "10%" }}>
           <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">Overall Rating :</Typography>
           <Rating

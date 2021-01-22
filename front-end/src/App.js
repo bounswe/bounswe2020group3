@@ -26,7 +26,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <BrowserRouter history={history}>
           <Switch>
-            <AuthenticatedRoute exact path={config.Homepage_Path} component={HomePage} />
+            <Route exact path={config.Homepage_Path} component={HomePage} />
             <Route exact path={config.Login_Path} component={LoginPage} />
             <Route exact path={config.Register_Path} component={RegistrationPage} />
             <AuthenticatedRoute exact path={config.Create_Project_Path} component={CreateProjectPage} />

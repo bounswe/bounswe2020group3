@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import UserNavbar from '../Components/TopBar/UserNavbar';
 import Profilebar from '../Components/ProfileBar/Profilebar';
 import { colorCodes } from "../Common/ColorTheme";
-import { getUserId, getAccessToken, getPhoto, setProfileId, getRequestHeader } from "../Components/Auth/Authenticate";
+import { getUserId, getAccessToken, getPhoto, setProfileId, getRequestHeader, isLoggedIn } from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
     backgroundColor: '#f7f7f5',
@@ -71,7 +71,7 @@ export default class HomePage extends Component {
     };
 
     componentDidMount() {
-      axios.get(`${config.API_URL}${config.Create_Project_Url}`, { headers:{ 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
+      axios.get(`${config.API_URL}${config.Create_Project_Url}`, getRequestHeader())
         .then(res => {
           const projects = res.data.reverse();
           console.log(projects)
@@ -122,6 +122,7 @@ export default class HomePage extends Component {
                           
   renderMilestones() {
     const { milestones } = this.state;
+    if (isLoggedIn()){
     return (
       <Grid style={{ maxHeight: "500px", paddingTop: "10px", paddingBottom: "10px" }}>
         {milestones.length !== 0
@@ -160,7 +161,7 @@ export default class HomePage extends Component {
           </Paper>
         }
       </Grid>)
-
+    }
   };
     renderFeed(){
       var news = [];
@@ -187,7 +188,7 @@ export default class HomePage extends Component {
             history ={this.props.history}
           />
           <Box style={{marginTop:"8px"}}>
-
+          {isLoggedIn() ? 
             <Profilebar 
               name={this.state.name}
               lastName={this.state.lastName}
@@ -196,6 +197,9 @@ export default class HomePage extends Component {
               goToProfile={() => { this.props.history.push( "/profile/" + getUserId() ); }}
               goToEventCreation ={this.goToEventCreation}
             />
+            :
+            <></>
+          }
 
           <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" 
             style={{overflowY:"scroll", maxHeight:"calc(99vh - 55px)", marginLeft:"200px", width:`calc(100% - 200px)`}}>
@@ -209,8 +213,11 @@ export default class HomePage extends Component {
                 <Typography variant="h5" color="primary">Upcoming Events</Typography>
                 {this.renderEvents()}
               </Grid>
-              
-              <Typography variant="h5" color="primary" style={{marginTop:"10px"}}>Milestones</Typography>
+                {isLoggedIn() ?
+                  <Typography variant="h5" color="primary" style={{ marginTop: "10px" }}>Milestones</Typography>
+                  :
+                  <></>
+                }
               <Grid style={{maxHeight:"50vh", overflowY:"scroll"}} item sm={12}>
                   {this.renderMilestones()}
               </Grid>

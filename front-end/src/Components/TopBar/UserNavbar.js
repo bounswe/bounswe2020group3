@@ -15,7 +15,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { Button} from '@material-ui/core';
-import {logout, getPhoto} from "../Auth/Authenticate";
+import {logout, getPhoto, isLoggedIn} from "../Auth/Authenticate";
 import Avatar from '@material-ui/core/Avatar';
 import logo from '../../navbarlogo.png';
 
@@ -211,9 +211,16 @@ export default function UserNavbar(props) {
 
             </div>
             <div className={classes.grow} />
+            {isLoggedIn() ?
             <Avatar src={photoUrl} style={{marginRight:"10px", cursor:"pointer"}} onClick={() => {
               props.pushProfile()
             }} />
+            :
+            <>
+              <Button variant="contained" color="primary" className="" onClick={() => { props.history.push("/register"); }}>Register</Button>
+              <Button variant="contained" color="primary" className="" onClick={() => { props.history.push("/login"); }}>Login</Button>
+            </>
+          }
 
             <div className={classes.sectionDesktop}>
               {/* <IconButton aria-label="show 4 new mails" color="inherit">
@@ -236,11 +243,14 @@ export default function UserNavbar(props) {
             >
               <AccountCircle />
             </IconButton> */}
+            {isLoggedIn() ?
               <Button variant="contained" color="primary" className="" onClick={() => {
                 logout();
                 props.logout();
               }}>Logout</Button>
-
+              :
+              <></>
+            }
             </div>
             <div className={classes.sectionMobile}>
               <IconButton

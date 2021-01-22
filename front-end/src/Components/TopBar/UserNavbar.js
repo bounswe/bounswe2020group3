@@ -13,7 +13,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { Button} from '@material-ui/core';
-import {logout, getPhoto, getAccessToken} from "../Auth/Authenticate";
+import {logout, getPhoto, isLoggedIn, getRequestHeader} from "../Auth/Authenticate";
 import Avatar from '@material-ui/core/Avatar';
 import logo from '../../navbarlogo.png';
 import axios from "axios";
@@ -111,7 +111,7 @@ export default function UserNavbar(props) {
       id: id
     }
     axios.post(`${config.API_URL}/api/notifications/${id}/mark_as_read/`, notification_object,
-        { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        getRequestHeader())
         .then(resAcc=>{
           console.log(resAcc)
           window.location.reload(false);
@@ -194,8 +194,8 @@ export default function UserNavbar(props) {
     return notifications.map((item) => {
       const type = item.description;
       if (type === "Project") {
-        const project = item.project;
-        const id = project.id;
+        const project = item;
+        const id = project.target.id;
         const link = "/project/" + id;
         const str = item.actor.username + " " + item.verb + ".";
         return (
@@ -203,8 +203,8 @@ export default function UserNavbar(props) {
         )
       }
       else if (type === "Milestone") {
-        const milestone = item.milestone;
-        const id = milestone.project;
+        const milestone = item;
+        const id = milestone.target.id;
         const link = "/project/" + id;
         const str = item.actor.username + " " + item.verb + ".";
         return (
@@ -278,9 +278,16 @@ export default function UserNavbar(props) {
 
             </div>
             <div className={classes.grow} />
+            {isLoggedIn() ?
             <Avatar src={photoUrl} style={{marginRight:"10px", cursor:"pointer"}} onClick={() => {
               props.pushProfile()
             }} />
+            :
+            <>
+              <Button variant="contained" color="primary" className="" onClick={() => { props.history.push("/register"); }}>Register</Button>
+              <Button variant="contained" color="primary" className="" onClick={() => { props.history.push("/login"); }}>Login</Button>
+            </>
+          }
 
             <div className={classes.sectionDesktop}>
               {
@@ -289,11 +296,14 @@ export default function UserNavbar(props) {
                 <NotificationsIcon />
               </Badge>
             </IconButton> }
+            {isLoggedIn() ?
               <Button variant="contained" color="primary" className="" onClick={() => {
                 logout();
                 props.logout();
               }}>Logout</Button>
-
+              :
+              <></>
+            }
             </div>
           </Toolbar>
         </AppBar>

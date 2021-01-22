@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import Profilebar from '../Components/ProfileBar/Profilebar';
 import { colorCodes } from "../Common/ColorTheme";
-import { getUserId, getAccessToken, getPhoto, getProfileId } from "../Components/Auth/Authenticate";
+import { getUserId, getPhoto, getProfileId, getRequestHeader } from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
   backgroundColor: '#f7f7f5',
@@ -95,7 +95,7 @@ export default class HomePage extends Component {
     this.props.history.push("/project/files/" + pid);
   }
   getProject = (project_id) => {
-    axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}/`, { headers: {  'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}/`, getRequestHeader())
       .then(res => {
         const prof = res.data;
         const temp_members = (prof.members ? prof.members : [])
@@ -122,9 +122,10 @@ export default class HomePage extends Component {
 
         this.setState({ members: memberNames });
       }, (error) => {
-        this.props.history.push("/"); // Forwards from unexisting profiles to homepage
+        console.log(error);
+        //this.props.history.push("/"); // Forwards from unexisting profiles to homepage
       });
-    axios.get(`${config.API_URL}${config.Milestone_url}?project__id=${project_id}`, { headers: {  'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}${config.Milestone_url}?project__id=${project_id}`, getRequestHeader())
         .then(res => {
           const prof = res.data
           console.log(prof)
@@ -139,7 +140,7 @@ export default class HomePage extends Component {
         });
   }
   getProfile = () => {
-    axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}/api/users/${getUserId()}/`, getRequestHeader())
       .then(res => {
         let name = res.data.profile[0].name;
         let mname = res.data.profile[0].middle_name;
@@ -151,8 +152,9 @@ export default class HomePage extends Component {
   isMember = () =>{
       const { membersData } = this.state;
       let ids = []
+      console.log(membersData)
       for(let i = 0 ; i < membersData.length ; i++){
-        ids.push(membersData[i].profile[0].id);
+        ids.push(membersData[i].profile[i].id);
       }
       console.log(ids, membersData);
       console.log(ids, getProfileId())
@@ -172,7 +174,7 @@ export default class HomePage extends Component {
     this.getTags();
     // this.getColabs();
       axios.get(`${config.API_URL}/api/notifications/unread/`,
-          { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+          getRequestHeader())
           .then(res => {
               console.log((res.data))
               this.setState({notifications: res.data})
@@ -320,9 +322,9 @@ export default class HomePage extends Component {
 
   renderColabRequest = () => {
     var proj_id = this.props.location.pathname.split('/')[2];
-    axios.post(`${config.API_URL}/api/collaboration_requests/`, { from_user: this.username, to_project: proj_id }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.post(`${config.API_URL}/api/collaboration_requests/`, { from_user: this.username, to_project: proj_id }, getRequestHeader())
         .then(res => {
-          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, getRequestHeader())
             .then(res => {
               this.getProject(this.state.projectId);
             })
@@ -509,7 +511,7 @@ export default class HomePage extends Component {
       for (let i = 0; i < newTags.length; i++) {
         tagIds.push(newTags[i].id);
       }
-      axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { tags: tagIds }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { tags: tagIds }, getRequestHeader())
         .then(res => {
           this.setState({ showAddTag: false, tagQuery: "", currTag: [] });
           this.getProject(this.state.projectId);
@@ -523,7 +525,7 @@ export default class HomePage extends Component {
         }
       }
       tagIds = this.getTagIds(newTags);
-      axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { tags: tagIds }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { tags: tagIds }, getRequestHeader())
         .then(res => {
           this.setState({ showAddTag: false, tagQuery: "", currTag: [] });
           this.getProject(this.state.projectId);
@@ -531,7 +533,7 @@ export default class HomePage extends Component {
     }
 
     else if (currTag.name === undefined && tag !== "") {
-      axios.post(`${config.API_URL}/api/tags/`, { name: tag.toLowerCase() }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      axios.post(`${config.API_URL}/api/tags/`, { name: tag.toLowerCase() }, getRequestHeader())
         .then(res => {
           newTagColor = res.data.color;
           newTagId = res.data.id;
@@ -539,7 +541,7 @@ export default class HomePage extends Component {
           newTag = { color: newTagColor, id: newTagId, name: newTagName };
           newTags.push(newTag);
           tagIds = this.getTagIds(newTags);
-          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { tags: tagIds }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { tags: tagIds }, getRequestHeader())
             .then(res => {
               this.setState({ showAddTag: false, tagQuery: "", currTag: [] });
               this.getProject(this.state.projectId);
@@ -581,7 +583,7 @@ export default class HomePage extends Component {
   }
 
   // getColabs = () => {
-  //   axios.get(`${config.API_URL}/api/collaboration_invites/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+  //   axios.get(`${config.API_URL}/api/collaboration_invites/`, getRequestHeader())
   //     .then(res => {
   //       let colabs = res.data;
   //       this.setState({ allColabs: colabs });
@@ -595,7 +597,7 @@ export default class HomePage extends Component {
     let newTags = tags;
     let tagIds = this.getTagIds(newTags);
     tagIds.splice(tagIds.indexOf(id), 1);
-    axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { tags: tagIds }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { tags: tagIds }, getRequestHeader())
       .then(res => {
         this.getProject(this.state.projectId);
       })
@@ -603,7 +605,7 @@ export default class HomePage extends Component {
   }
 
   getTags = () => {
-    axios.get(`${config.API_URL}/api/tags/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}/api/tags/`, getRequestHeader())
       .then(res => {
         let tags = res.data;
         this.setState({ allTags: tags });

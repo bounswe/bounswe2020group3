@@ -35,7 +35,7 @@ function App() {
             <AuthenticatedRoute path="/edit-project/:projectId" component={EditProjectPage} />
             <Route exact path="/project/:projectId" component={ProjectPage} />
             <Route exact path="/events/:eventId" component={EventPage} />
-            <AuthenticatedRoute exact path="/profile/:profileId" component={ProfilePage} />
+            <Route exact path="/profile/:profileId" component={ProfilePage} />
             <AuthenticatedRoute exact path="/edit-profile" component={EditProfilePage} />
             <AuthenticatedRoute exact path={config.Issue_Milestone_Path} component={IssueMilestonePage} />
             <AuthenticatedRoute exact path="/project/files/:projectId" component={FileViewer} />

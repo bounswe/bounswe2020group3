@@ -3,7 +3,7 @@ import { Button, Input, styled, Avatar, Box, Grid, Paper, Typography,Accordion,A
 import { Rating } from '@material-ui/lab';
 import AlertTypes from "../Common/AlertTypes.json";
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
-import { getUserId, getPhoto, getRequestHeader } from '../Components/Auth/Authenticate';
+import { getUserId, getPhoto, getRequestHeader, isLoggedIn } from '../Components/Auth/Authenticate';
 import axios from 'axios';
 import config from '../config';
 import UserNavbar from '../Components/TopBar/UserNavbar';
@@ -520,7 +520,13 @@ export default class ProfilePage extends Component {
             <Button variant="outlined" color="primary" onClick={() => { this.postComment() }}>Post</Button>
           </>
           :
-          <Button variant="outlined" color="primary" onClick={() => { this.setState({ showAddNewComment: true }) }}>Comment</Button>
+          <>
+            {isLoggedIn() && this.state.isCommentable ?
+              <Button variant="outlined" color="primary" onClick={() => { this.setState({ showAddNewComment: true }) }}>Comment</Button>
+              :
+              <></>
+            }
+          </>
         }
       </>
     )
@@ -538,16 +544,23 @@ export default class ProfilePage extends Component {
       }
         {!this.state.self && this.state.isPublic ?
           <div style={{ textAlign: 'left', width: "90%", paddingLeft: "10%" }}>
-            <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">{"Your Rating :     "}</Typography>
-            <Rating
-              defaultValue={0}
-              precision={0.5}
-              name="pristine"
-              size="small"
-              style={{ top: "3px", paddingLeft: "13px" }}
-              value={this.state.currentRating / 2.0}
-              onChange={(e) => { this.handleRatingChange(e) }}
-            />
+            {isLoggedIn() ?
+              <>
+                <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">{"Your Rating :     "}</Typography>
+                <Rating
+                  defaultValue={0}
+                  precision={0.5}
+                  name="pristine"
+                  size="small"
+                  style={{ top: "3px", paddingLeft: "13px" }}
+                  value={this.state.currentRating / 2.0}
+                  onChange={(e) => { this.handleRatingChange(e) }}
+                />
+              </>
+              :
+              <></>
+            }
+          
           </div>
           :
           <></>
@@ -633,8 +646,8 @@ export default class ProfilePage extends Component {
               :
               <></>
           }
-        {this.state.isPublic || this.state.self ? 
-          <>
+        {/* {this.state.isPublic || this.state.self ? 
+          <> */}
         <Typography variant='h6' color='primary' style={{ margin: "10px 0" }}>Comments</Typography>
         <Paper elevation={6}
           style={{
@@ -650,10 +663,10 @@ export default class ProfilePage extends Component {
           borderColor="primary" border={1}>
           {this.renderComments()}
         </Paper>
-        </>
-        :
-        <></>
-        }
+        {/* </>
+         :
+         <></>
+         } */}
       </>);
   };
   handleProfilePictureChange = (e) => {
@@ -797,38 +810,39 @@ export default class ProfilePage extends Component {
                     :
                     <Typography variant="h5" color="error"> ( Private ) </Typography>
                 }
-                <Grid>
-
-                    
+                {isLoggedIn() ?
+                  <Grid>
                     {!this.state.isFollowing ?
-                        <>
-                        
-                      {!this.state.isPublic ?
+                      <>
 
-                         <>
-                         {!this.state.isFollowReqSent ?
-                         
-                         <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderSentFollowRequest()}>Send Follow Request</Button>
-                        
-                         :
+                        {!this.state.isPublic ?
 
-                         <Button variant="contained" color="primary" style={{ marginTop: "10px" }} >Waiting for Answer</Button>
+                          <>
+                            {!this.state.isFollowReqSent ?
 
-                        }
-                         
-                         </> 
-                                           
-                      :
+                              <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderSentFollowRequest()}>Send Follow Request</Button>
+
+                              :
+
+                              <Button variant="contained" color="primary" style={{ marginTop: "10px" }} >Waiting for Answer</Button>
+
+                            }
+
+                          </>
+
+                          :
                           <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderFollow()}>Follow</Button>
                         }
                       </>
-                    :
+                      :
                       <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderUnfollow()}>Unfollow</Button>
-    
                     }
-                    
 
-                </Grid>
+
+                  </Grid>
+                  :
+                  <></>
+                }
               </Grid>
 
               {(this.state.self || this.state.isPublic) ? this.renderMidLeftColumn() : <></>}

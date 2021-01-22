@@ -18,6 +18,17 @@ export const logout = () => {
     Cookies.remove('user_id');
     Cookies.remove('user_prof_id');
 }
+export const getRequestHeader = () => {
+    let token = getAccessToken();
+    if(token === undefined){
+        return { headers: { 'Content-Type': 'Application/json' } } 
+    }else {
+        return { headers: { 'Content-Type': 'Application/json' }, 'Authorization': `Token ${token}` } 
+    }
+}
+export const isLoggedIn = () => {
+    return (getAccessToken() !== undefined);
+}
 
 
 export const setCookie = (token) => {

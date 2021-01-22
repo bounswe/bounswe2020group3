@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import UserNavbar from '../Components/TopBar/UserNavbar';
 import Profilebar from '../Components/ProfileBar/Profilebar';
 import { colorCodes } from "../Common/ColorTheme";
-import { getUserId, getAccessToken, getPhoto, setProfileId } from "../Components/Auth/Authenticate";
+import { getUserId, getAccessToken, getPhoto, setProfileId, getRequestHeader } from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
     backgroundColor: '#f7f7f5',
@@ -82,7 +82,7 @@ export default class HomePage extends Component {
         .then(res => {
           this.setState({ events:res.data });
         });
-        axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, getRequestHeader())
         .then(res => {
           this.setState({ milestones: res.data.result });
         });

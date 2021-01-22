@@ -13,7 +13,7 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 // import { theme } from "../Common/ColorTheme";
 import AlertTypes from '../Common/AlertTypes.json';
-import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
+import { getRequestHeader, getUserId } from '../Components/Auth/Authenticate';
 import { format } from "date-fns";
 import UserNavbar from "../Components/TopBar/UserNavbar";
 
@@ -185,8 +185,7 @@ export default class CreateProjectPage extends Component {
       return;
     }
     const event_filter = { event_type : type };
-    axios.get(`${config.API_URL}${config.Event_Creation_Url}?event_type=${event_filter.event_type}`, event_filter, 
-      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}${config.Event_Creation_Url}?event_type=${event_filter.event_type}`, event_filter, getRequestHeader())
       .then(res => {
         console.log(res.data);
         const events = res.data;
@@ -251,7 +250,7 @@ export default class CreateProjectPage extends Component {
     if (projectState !== "")
       project.state = projectState
 
-    axios.post(`${config.API_URL}${config.Create_Project_Url}`, project, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.post(`${config.API_URL}${config.Create_Project_Url}`, project, getRequestHeader())
       .then(res => {
         console.log(res.data)
         this.setState({ success: true, message: Messages.projectCreationSuccess, messageType: AlertTypes.Success }, () => {

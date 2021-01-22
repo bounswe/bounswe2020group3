@@ -8,7 +8,7 @@ import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import UserNavbar from '../Components/TopBar/UserNavbar';
 import DateComponent from "../Components/Date/DateComponent";
 import AlertTypes from '../Common/AlertTypes.json';
-import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
+import {  getUserId, getRequestHeader } from '../Components/Auth/Authenticate';
 import { format } from "date-fns";
 
 const Messages = {
@@ -121,7 +121,7 @@ export default class IssueMilestonePage extends Component {
       description: milestoneDescription,
       date: date
     };
-    axios.post(`${config.API_URL}${config.Milestone_url}`, milestone, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.post(`${config.API_URL}${config.Milestone_url}`, milestone, getRequestHeader())
       .then(res => {
         console.log(res.data)
         this.setState({ success: true, message: Messages.eventCreationSuccess, messageType: AlertTypes.Success }, () => {

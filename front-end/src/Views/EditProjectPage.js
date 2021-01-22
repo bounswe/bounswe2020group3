@@ -12,7 +12,7 @@ import "../index.scss";
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import AlertTypes from '../Common/AlertTypes.json';
-import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
+import { getAccessToken, getUserId, getRequestHeader } from '../Components/Auth/Authenticate';
 import { format } from "date-fns";
 import UserNavbar from "../Components/TopBar/UserNavbar";
 
@@ -216,7 +216,7 @@ export default class ProjectPage extends Component {
     }
     const event_filter = { event_type : type };
     axios.get(`${config.API_URL}${config.Event_Creation_Url}?event_type=${event_filter.event_type}`, event_filter, 
-      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      getRequestHeader())
       .then(res => {
         console.log(res.data);
         const events = res.data;
@@ -285,7 +285,7 @@ export default class ProjectPage extends Component {
     var project_id =this.props.location.pathname.split('/')[2];
     console.log("project")
     console.log(project)
-    axios.patch(`${config.API_URL}${config.Projectpage_url}${project_id}/`, project, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.patch(`${config.API_URL}${config.Projectpage_url}${project_id}/`, project, getRequestHeader())
       .then(res => {
         console.log("project")
         console.log(res.data)

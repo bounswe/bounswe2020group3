@@ -33,7 +33,7 @@ function App() {
             <AuthenticatedRoute exact path={config.Event_Creation_Path} component={CreateEventPage} />
             <Route path="/search/:query" component={SearchPage} />
             <AuthenticatedRoute path="/edit-project/:projectId" component={EditProjectPage} />
-            <AuthenticatedRoute exact path="/project/:projectId" component={ProjectPage} />
+            <Route exact path="/project/:projectId" component={ProjectPage} />
             <AuthenticatedRoute exact path="/events/:eventId" component={EventPage} />
             <AuthenticatedRoute exact path="/profile/:profileId" component={ProfilePage} />
             <AuthenticatedRoute exact path="/edit-profile" component={EditProfilePage} />

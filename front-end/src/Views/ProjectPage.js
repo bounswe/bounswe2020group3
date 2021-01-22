@@ -94,7 +94,7 @@ export default class HomePage extends Component {
     this.props.history.push("/project/files/" + pid);
   }
   getProject = (project_id) => {
-    axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}/`, { headers: {  'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}/`, getRequestHeader())
       .then(res => {
         const prof = res.data;
         const temp_members = (prof.members ? prof.members : [])
@@ -121,9 +121,10 @@ export default class HomePage extends Component {
 
         this.setState({ members: memberNames });
       }, (error) => {
-        this.props.history.push("/"); // Forwards from unexisting profiles to homepage
+        console.log(error);
+        //this.props.history.push("/"); // Forwards from unexisting profiles to homepage
       });
-    axios.get(`${config.API_URL}${config.Milestone_url}?project__id=${project_id}`, { headers: {  'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}${config.Milestone_url}?project__id=${project_id}`, getRequestHeader())
         .then(res => {
           const prof = res.data
           console.log(prof)

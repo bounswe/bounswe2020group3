@@ -23,7 +23,7 @@ export const getRequestHeader = () => {
     if(token === undefined){
         return { headers: { 'Content-Type': 'Application/json' } } 
     }else {
-        return { headers: { 'Content-Type': 'Application/json' }, 'Authorization': `Token ${token}` } 
+        return { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } }
     }
 }
 export const isLoggedIn = () => {

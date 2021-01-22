@@ -13,7 +13,7 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 // import { theme } from "../Common/ColorTheme";
 import AlertTypes from '../Common/AlertTypes.json';
-import { getRequestHeader, getUserId } from '../Components/Auth/Authenticate';
+import { getAccessToken, getRequestHeader, getUserId } from '../Components/Auth/Authenticate';
 import { format } from "date-fns";
 import UserNavbar from "../Components/TopBar/UserNavbar";
 
@@ -243,33 +243,28 @@ export default class CreateProjectPage extends Component {
       // state: projectState,
       // project_type: projectType,
       due_date: dueDate,
-      event: parseInt(event[0])
+      event: parseInt(event[0]),
     };
     if(projectType !== "" )
       project.project_type = projectType;
     if (projectState !== "")
       project.state = projectState
-
-    axios.post(`${config.API_URL}${config.Create_Project_Url}`, project, getRequestHeader())
+    axios.post(`${config.API_URL}${config.Create_Project_Url}`, project, getRequestHeader() )
       .then(res => {
-        console.log(res.data)
         this.setState({ success: true, message: Messages.projectCreationSuccess, messageType: AlertTypes.Success }, () => {
           this.handleSnackbarOpen();
           setTimeout(() => { this.props.history.push(config.Homepage_Path); }, 5000);
         });
-
       }, (error) => {
         this.setState({ success: false, message: Messages.projectCreationFail, messageType: AlertTypes.Error });
         this.handleSnackbarOpen()
         console.log(error);
-      })
-
-
+      });
   }
 
   render() {
     const { isPublic, projectType, projectState } = this.state;
-    console.log(this.state)
+    console.log(this.state);
     return (
       <Container >
         <UserNavbar

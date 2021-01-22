@@ -5,17 +5,18 @@ import com.bounswe2020group3.paperlayer.home.data.Event
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
+
 private const val TAG = "EventPresenter"
 
 class EventPresenter @Inject constructor(private var model: HomeContract.Model) : BasePresenter<HomeContract.EventView>(), HomeContract.EventPresenter {
 
     private var disposable = CompositeDisposable()
 
-    override fun bind(eventView: HomeContract.EventView) {
-        this.view?.writeLogMessage("i", TAG,"Event Presenter Created")
+    override fun bind(view: HomeContract.EventView) {
+        this.view?.writeLogMessage("i", TAG, "Event Presenter Created")
 
         subscribeAuthToken()
-        super.bind(eventView)
+        super.bind(view)
     }
 
     override fun unbind() {
@@ -24,7 +25,7 @@ class EventPresenter @Inject constructor(private var model: HomeContract.Model) 
     }
 
     override fun setView(eventView: HomeContract.EventView) {
-        this.view =eventView
+        this.view = eventView
     }
 
     override fun showMessage(message: String) {
@@ -39,16 +40,39 @@ class EventPresenter @Inject constructor(private var model: HomeContract.Model) 
         }
         disposable.add(userProfileSub)
     }
-    fun dataToCard(event : Event) : EventCard{
-        return EventCard(event.id,event.title,event.description,event.deadline,event.date,event.event_type,event.url)
+
+    fun dataToCard(event: Event): EventCard {
+        return EventCard(event.id, event.title, event.description, event.deadline, event.date, event.event_type, event.url)
     }
-    override fun fetchEvents(ownerId : Int) {
+
+    override fun fetchNotifications() {
+        val getNotificationsObservable = model.getNotifications().subscribe({
+            view?.showToast("Notification Success ${it.notificationsList?.size}")
+        }, {
+            view?.showToast("Notification Error")
+        }
+        )
+        disposable.add(getNotificationsObservable)
+    }
+
+    override fun fetchUnreadNotificationCount() {
+        val getUnreadNotificationCountObservable = model.getUnreadNotificationCount().subscribe({
+            view?.updateNotificationIcon(it.unread_count)
+        }, {
+            view?.showToast("Notification count error")
+        })
+        disposable.add(getUnreadNotificationCountObservable)
+    }
+
+
+
+    override fun fetchEvents(ownerId: Int) {
         val getEventsObservable = model.getAllEvents()?.subscribe(
                 { eventslist ->
 
                     for (event in eventslist) {
                         this.view?.addCard(dataToCard(event))
-                        this.view?.writeLogMessage("i", TAG,event.title + " eventcard is add")
+                        this.view?.writeLogMessage("i", TAG, event.title + " eventcard is add")
 
                     }
                     this.view?.submitCardList()

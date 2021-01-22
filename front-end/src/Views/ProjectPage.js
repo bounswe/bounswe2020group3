@@ -341,20 +341,16 @@ export default class HomePage extends Component {
   acceptColabRequest = (myId) => {
     axios.post(`${config.API_URL}/api/collaboration_requests/${myId}/accept_collaboration/`, { id: myId }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
         .then(res => {
-          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-            .then(res => {
-              this.deleteColabRequest(myId);
-            })
+          this.deleteColabRequest(myId);
+          window.location.reload(true);
         }); 
   };
 
   rejectColabRequest = (myId) => {
     axios.post(`${config.API_URL}/api/collaboration_requests/${myId}/reject_collaboration/`, { id: myId }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
         .then(res => {
-          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-            .then(res => {
-              this.deleteColabRequest(myId);
-            })
+          this.deleteColabRequest(myId);
+          window.location.reload(true);
         }); 
   };
 
@@ -384,9 +380,9 @@ export default class HomePage extends Component {
     if (ids.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaborators</Typography>)
     else return ids.map((item) => {
       return (<>
-        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{item[0]}</Typography>
-        <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.acceptColabRequest(item[1])} > Accept </Button>
-        <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.rejectColabRequest(item[1])} > Reject </Button>
+        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{item[1]}</Typography>
+        <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.acceptColabRequest(item[0])} > Accept </Button>
+        <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.rejectColabRequest(item[0])} > Reject </Button>
       </>)
     });
   };
@@ -412,8 +408,11 @@ export default class HomePage extends Component {
         for(var i=0; i<len; i++){
           var id = colabRequests[i].to_user;
           var myId = getUserId();
+
+          var proj_id = this.props.location.pathname.split('/')[2];
+          var myproj = colabRequests[i].to_project;
           // eslint-disable-next-line
-          if(id == myId){
+          if(id == myId && proj_id == myproj){
             reqs.push(colabRequests[i]);
           }
         }
@@ -422,6 +421,11 @@ export default class HomePage extends Component {
         console.log(this.state.allColabRequests);
       })
   }
+
+  // submitColabInviteQuery = () => {
+  //   var proj_id = this.props.location.pathname.split('/')[2];
+    
+  // }
 
   renderRelatedEvents = () => {
     const { isPublic } = this.state;
@@ -582,11 +586,6 @@ export default class HomePage extends Component {
         </Grid>
       </Container>);
   }
-
-  submitColabInviteQuery = () => {
-
-  }
-  
 
   submitTagQuery = () => {
     const { tagQuery, currTag, tags, allTags } = this.state;

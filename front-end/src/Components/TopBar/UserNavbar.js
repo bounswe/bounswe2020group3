@@ -203,7 +203,7 @@ export default function UserNavbar(props) {
         )
       }
       else if (type === "Milestone") {
-        const milestone = item.milestone;
+        const milestone = item.target;
         const id = milestone.project;
         const link = "/project/" + id;
         const str = item.actor.username + " " + item.verb + ".";

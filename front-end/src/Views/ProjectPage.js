@@ -42,7 +42,7 @@ export default class HomePage extends Component {
       desc: "",
       reqs: "",
       members: [],
-      usernames: [],
+      profname: "",
       membersData : [],
       stat: "",
       type: "",
@@ -362,6 +362,18 @@ export default class HomePage extends Component {
         }); 
   };
 
+  getUsernameById(id){
+    axios.get(`${config.API_URL}/api/users/${id}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let name = res.data.profile[0].name;
+        let mname = res.data.profile[0].middle_name;
+        let lastname = res.data.profile[0].last_name;
+        let userName = name + " " + mname + " " + lastname;
+        
+        this.setState({profname : userName});
+      });
+  }
+
   renderColabRequests = () => {
     const { allColabRequests } = this.state;
     
@@ -370,25 +382,12 @@ export default class HomePage extends Component {
       var idPair = [allColabRequests[i].id, allColabRequests[i].from_user];
       ids.push(idPair);
     }
-
-    // const len = uniqueIds.length;
-    // for(var k=0; k<len; k++){
-    //   axios.get(`${config.API_URL}/api/users/${uniqueIds[k]}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-    //   .then(res => {
-    //     let name = res.data.profile[0].name;
-    //     let mname = res.data.profile[0].middle_name;
-    //     let lastname = res.data.profile[0].last_name;
-    //     let username = name + " " + mname + " " + lastname;
-        
-    //     var joined = this.state.usernames.concat(username);
-    //     this.setState({ usernames: joined })
-    //   });
-    // }
   
     if (ids.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaborators</Typography>)
     else return ids.map((item) => {
       return (<>
-        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{item[1]}</Typography>
+        {this.getUsernameById(item[1])}
+        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{this.state.profname}</Typography>
         <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.acceptColabRequest(item[0])} > Accept </Button>
         <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.rejectColabRequest(item[0])} > Reject </Button>
       </>)

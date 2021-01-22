@@ -95,7 +95,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def get_project_recommendation(self, request):
         user_id = request.GET.get('user_id', None)
         user_count = int(request.GET.get('user_count', None))
-        print(user_count)
         profile = Profile.objects.get(owner_id=user_id)
         exps = []
         if profile.expertise:
@@ -162,7 +161,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         if user_count:
             top_ids = [i for i in sorted(project_score,
                                          key=project_score.get,
-                                         reverse=True)[:user_count]]
+                                         reverse=True)[:int(user_count)]]
         else:
             top_ids = [i for i in sorted(project_score,
                                          key=project_score.get,

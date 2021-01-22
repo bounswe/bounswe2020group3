@@ -66,7 +66,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
             serializer_class=None)
     def get_collaborator_recommendation(self, request):
         project_id = request.GET.get('project_id', None)
-        project_count = int(request.GET.get('project_count', None))
+        project_count = request.GET.get('project_count', None)
         project = get_object_or_404(Project, pk=project_id)
         project_owner = project.owner_id
         reqs = []
@@ -127,7 +127,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         if project_count:
             top_ids = [i for i in sorted(user_score,
                                          key=user_score.get,
-                                         reverse=True)[:project_count]]
+                                         reverse=True)[:int(project_count)]]
         else:
             top_ids = [i for i in sorted(user_score,
                                          key=user_score.get,

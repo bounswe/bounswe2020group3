@@ -34,7 +34,7 @@ function App() {
             <Route path="/search/:query" component={SearchPage} />
             <AuthenticatedRoute path="/edit-project/:projectId" component={EditProjectPage} />
             <Route exact path="/project/:projectId" component={ProjectPage} />
-            <AuthenticatedRoute exact path="/events/:eventId" component={EventPage} />
+            <Route exact path="/events/:eventId" component={EventPage} />
             <AuthenticatedRoute exact path="/profile/:profileId" component={ProfilePage} />
             <AuthenticatedRoute exact path="/edit-profile" component={EditProfilePage} />
             <AuthenticatedRoute exact path={config.Issue_Milestone_Path} component={IssueMilestonePage} />

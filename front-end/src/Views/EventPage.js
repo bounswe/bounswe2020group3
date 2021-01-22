@@ -95,21 +95,21 @@ export default class HomePage extends Component {
           <Grid container direction="row" justify="space-evenly" alignItems="baseline" style={{marginLeft:"200px", width:`calc(100% - 200px)`}}>
             <Grid item sm={8}>
               <Typography variant="h5" color="primary">{this.state.name}</Typography>
-              <Typography variant="h5" color="primary">Brief Description</Typography>
-              <Paper elevation={6} style={{border: "solid 1px blue", minHeight: "100px"}}>
+              <Typography variant="h5" color="primary">Event Description</Typography>
+              <Paper elevation={6} style={{border: "solid 1px blue", minHeight: "100px", padding:"20px"}}>
                   <Typography variant="body1">{this.state.desc}</Typography>
               </Paper>
             </Grid>
             <Grid item sm={3} >
               <Typography variant="h5" color="primary">Important Dates</Typography>
-              <Paper elevation={6} style={{border: "solid 1px blue", minHeight: "100px", marginBottom:"10px"}}>
+              <Paper elevation={6} style={{border: "solid 1px blue", minHeight: "100px", marginBottom:"10px", padding:"10px"}}>
                   <Typography variant="body1" color="secondary">Event Date is:</Typography>
                   <Typography variant="body1">{this.state.date}</Typography>
                   <Typography variant="body1" color="secondary">Deadline of Event:</Typography>
                   <Typography variant="body1">{this.state.deadline}</Typography>
               </Paper>
               <Typography variant="h5" color="primary">Event Details</Typography>
-              <Paper elevation={6} style={{border: "solid 1px blue", minHeight: "100px", marginBottom:"10px"}}>
+              <Paper elevation={6} style={{border: "solid 1px blue", minHeight: "60px", marginBottom:"10px", padding:"10px"}}>
                 <Typography variant="body1" color="secondary">{this.state.type.toUpperCase()}</Typography>
                 <Link href={this.state.url}>{this.state.name}</Link>
               </Paper>

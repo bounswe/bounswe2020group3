@@ -33,9 +33,10 @@ class FeedTests(APITestCase):
         }, format='json')
 
         '''
-            User 1 logins and create an new event, 
+            User 1 logins and create an new event,
             a new tag and a new project.
         '''
+
         self.client.force_authenticate(user=self.user1)
 
         self.client.post('/api/events/', {
@@ -77,13 +78,14 @@ class FeedTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         result = response.data['results']
         for item in result:
-            if item['type'] == 'project' and item['object'] == self.project.data['id']:
+            if item['type'] == 'project' and \
+                    item['object'] == self.project.data['id']:
                 project_name = item['project']['name']
                 self.assertEqual(project_name, self.project.data['name'])
 
     '''
-            User can see which users' activities.
-        '''
+        User can see users in their timeline.
+    '''
 
     def test_can_get_followers(self):
         self.client.force_authenticate(user=self.user2)
@@ -102,13 +104,15 @@ class FeedTests(APITestCase):
         unfollow_response = self.client.post('/api/feeds/unfollow', {
             "user_id": 2
         }, format='json')
-        self.assertEqual(unfollow_response.status_code, status.HTTP_301_MOVED_PERMANENTLY)
+        self.assertEqual(unfollow_response.status_code,
+                         status.HTTP_301_MOVED_PERMANENTLY)
 
         response = self.client.get('/api/feeds/', format='json')
         result = response.data['results']
         found_project = False
         for item in result:
-            if item['type'] == 'project' and item['object'] == self.project.data['id']:
+            if item['type'] == 'project' and \
+                    item['object'] == self.project.data['id']:
                 found_project = True
 
         self.assertEqual(found_project, False)

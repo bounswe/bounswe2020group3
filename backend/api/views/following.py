@@ -53,7 +53,8 @@ class FollowingViewSet(viewsets.ModelViewSet):
         '''
         follow_serializer = FollowBasicSerializer(follow).data
         activity_data = {'actor': str(self.request.user),
-                         'verb': 'followed ' + follow_serializer['to_user']['username'],
+                         'verb': 'followed ' +
+                                 follow_serializer['to_user']['username'],
                          'type': 'follow',
                          'object': follow_serializer['id'],
                          'foreign_id': 'follow:' +
@@ -64,9 +65,11 @@ class FollowingViewSet(viewsets.ModelViewSet):
         add_activity_to_feed(self.request.user, activity_data)
 
         '''
-            After following, user see activities of followed user in his/her timeline.
+            After following, user see activities of followed user
+            in his/her timeline.
         '''
-        follow_user_timeline(self.request.user, follow_serializer['to_user']['username'])
+        follow_user_timeline(self.request.user,
+                             follow_serializer['to_user']['username'])
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -148,12 +151,12 @@ class FollowRequestViewSet(viewsets.ModelViewSet):
                         description="User"
                         )
 
-            '''
-                After accepted the follow request, user see all activities of followed user 
-                in his/her timeline.
+            ''' After accepted the follow request, user see
+                all activities of followed user in his/her timeline.
             '''
             user_serializer = UserNotificationSerializer(user).data
-            follow_user_timeline(self.request.user,user_serializer['username'])
+            follow_user_timeline(self.request.user,
+                                 user_serializer['username'])
 
             return Response(status=status.HTTP_201_CREATED)
         else:

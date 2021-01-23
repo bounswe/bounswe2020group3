@@ -74,7 +74,9 @@
     <string name="selected_tag">You selected %1$d tags.</string>
     <string name="select_tag_title">Choose project tags</string>
     <string name="project_detail_tag_not_found">There is no tags in this project. You can add tags to project from project edit page.</string>
+    <string name="project_detail_event_not_found">There is no events in this project. You can add event to project from project edit page.</string>
     <string name="project_detail_tag_title">Tags</string>
+    <string name="project_detail_milestone_item_title">Milestone</string>
     <string name="project_detail_milestone_title">Milestones</string>
     <string name="project_detail_event_title">Events</string>
     <string name="project_detail_tab_title_project">Project</string>

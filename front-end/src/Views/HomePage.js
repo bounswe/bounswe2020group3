@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from 'axios';
 import config from '../config';
-import {styled, Chip } from '@material-ui/core';
+import {styled, Chip, Button } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import Grid from '@material-ui/core/Grid';
@@ -10,8 +10,9 @@ import Typography from "@material-ui/core/Typography";
 import UserNavbar from '../Components/TopBar/UserNavbar';
 import Profilebar from '../Components/ProfileBar/Profilebar';
 import { colorCodes } from "../Common/ColorTheme";
-import { getUserId, getAccessToken, getPhoto, setProfileId } from "../Components/Auth/Authenticate";
+import { getUserId, getAccessToken, getPhoto, setProfileId, getRequestHeader, isLoggedIn } from "../Components/Auth/Authenticate";
 
+const projectPerPage = 6;
 const Container = styled(Box)({
     backgroundColor: '#f7f7f5',
     background: "#f9f9eb",
@@ -44,7 +45,11 @@ export default class HomePage extends Component {
             projects:[],
             events:[],
             milestones:[],
-            page_num: 0,
+            page: 1,
+            pageCount: 0,
+            notifications: [],
+            pages : []
+            
         }
     };
 
@@ -71,18 +76,21 @@ export default class HomePage extends Component {
     };
 
     componentDidMount() {
-      axios.get(`${config.API_URL}${config.Create_Project_Url}`, { headers:{ 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
+      axios.get(`${config.API_URL}${config.Create_Project_Url}`, getRequestHeader())
         .then(res => {
           const projects = res.data.reverse();
-          console.log(projects)
-          console.log(projects);
-          this.setState({ projects:projects });
+          let pages = []
+          let pageCount = projects.length/projectPerPage
+          for (let i = 1; i <= pageCount; i++) {
+            pages.push(i)
+          }
+          this.setState({ projects:projects, pageCount:pageCount, pages:pages });
         });
       axios.get(`${config.API_URL}${config.Event_Creation_Url}`, { headers:{'Content-Type':'Application/json'}})
         .then(res => {
           this.setState({ events:res.data });
         });
-        axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, getRequestHeader())
         .then(res => {
           this.setState({ milestones: res.data.result });
         });
@@ -97,6 +105,13 @@ export default class HomePage extends Component {
           this.setState({ name:name , lastName: lastname });
 
         });
+        axios.get(`${config.API_URL}/api/notifications/unread/`,
+            getRequestHeader())
+            .then(res => {
+                console.log((res.data))
+                this.setState({notifications: res.data})
+            });
+
   }
   renderTags(tags) {
     return tags.map((item) => {
@@ -106,22 +121,49 @@ export default class HomePage extends Component {
     });
   };
     renderProject(){
-      var projects = this.state.projects;
-      return projects.map((item) => {return (
+      const { projects, page } = this.state;
+      return projects.map((item, id) => {
+        if( id < projectPerPage*page && id >= projectPerPage*(page-1) ){
+        return (
+          <Paper elevation={6} style={{ border: "solid 1px blue", padding: "15px", width: "80%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+            <Typography variant="h6" color="primary" style={{ cursor: "pointer", width: "100%", textAlign: "left" }} onClick={() => this.goToProject(item.id)}>{item.name}</Typography>
+            <Typography style={{ textAlign: "left", color: "black" }}>{this.renderTags(item.tags)}</Typography>
+            <Typography style={{ textAlign: "left", color: "black" }}>
+              {item.description.trim().substr(0, 120) + (item.description.length > 120 ? "..." : "")}
+            </Typography>
+          </Paper>
 
-      <Paper elevation={6}  style={{border: "solid 1px blue", padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
-        <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Typography>
-        <Typography  style={{textAlign:"left", color:"black"}}>{this.renderTags(item.tags)}</Typography>
-        <Typography  style={{textAlign:"left", color:"black"}}>
-          {item.description.trim().substr(0, 120) +  (item.description.length > 120 ?  "..." : "") }
-        </Typography>
-        </Paper>
-
-        )});
+        )
+        }
+        else{
+          return <></>
+        }
+      });
   };
+  buttonRenderCond (id){
+    const {page, pageCount} = this.state;
+    return id===1 || id===pageCount || id===page || id === page-1 || id === page+1 || id===page-2 || id===page+2 || id ===page+3 || id===page-3
+  }
+  renderButtons() {
+    const { pages } = this.state;
+    return(
+      <p>
+        {pages.map((id) => {
+          if(this.buttonRenderCond(id)){
+          return(<Button variant="outlined" color="primary" size="small" onClick={() => {this.setState({page:id})}}>{id}</Button>)
+          }else{
+            return <></>
+          }
+        })}
+      </p>
+
+
+    )
+  }
                           
   renderMilestones() {
     const { milestones } = this.state;
+    if (isLoggedIn()){
     return (
       <Grid style={{ maxHeight: "500px", paddingTop: "10px", paddingBottom: "10px" }}>
         {milestones.length !== 0
@@ -160,7 +202,7 @@ export default class HomePage extends Component {
           </Paper>
         }
       </Grid>)
-
+    }
   };
     renderFeed(){
       var news = [];
@@ -185,9 +227,10 @@ export default class HomePage extends Component {
             pushProfile={() => { this.props.history.push( "/profile/" + getUserId() ) }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
             history ={this.props.history}
+            notifications = {this.state.notifications}
           />
           <Box style={{marginTop:"8px"}}>
-
+          {isLoggedIn() ? 
             <Profilebar 
               name={this.state.name}
               lastName={this.state.lastName}
@@ -196,6 +239,9 @@ export default class HomePage extends Component {
               goToProfile={() => { this.props.history.push( "/profile/" + getUserId() ); }}
               goToEventCreation ={this.goToEventCreation}
             />
+            :
+            <></>
+          }
 
           <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" 
             style={{overflowY:"scroll", maxHeight:"calc(99vh - 55px)", marginLeft:"200px", width:`calc(100% - 200px)`}}>
@@ -203,14 +249,18 @@ export default class HomePage extends Component {
              <Grid item sm={9} style={{paddingBottom:"50px"}}>
                <Typography variant="h3" color="primary">Home</Typography>
                {this.renderProject()}
+               {this.renderButtons()}
              </Grid> 
             <Grid item sm={3} >
               <Grid style={{ maxHeight: "50vh", overflowY: "scroll" }} item sm={12}>
                 <Typography variant="h5" color="primary">Upcoming Events</Typography>
                 {this.renderEvents()}
               </Grid>
-              
-              <Typography variant="h5" color="primary" style={{marginTop:"10px"}}>Milestones</Typography>
+                {isLoggedIn() ?
+                  <Typography variant="h5" color="primary" style={{ marginTop: "10px" }}>Milestones</Typography>
+                  :
+                  <></>
+                }
               <Grid style={{maxHeight:"50vh", overflowY:"scroll"}} item sm={12}>
                   {this.renderMilestones()}
               </Grid>

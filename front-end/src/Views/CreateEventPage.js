@@ -14,7 +14,7 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 // import { theme } from "../Common/ColorTheme";
 import AlertTypes from '../Common/AlertTypes.json';
-import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
+import { getRequestHeader, getUserId } from '../Components/Auth/Authenticate';
 import { format } from "date-fns";
 
 const Messages = {
@@ -91,6 +91,7 @@ export default class CreateEventPage extends Component {
       success: null,
       message: "",
       messageType: "",
+      notifications: [],
       eventTitle: "",
       eventType: null,
       eventDescription: "",
@@ -101,6 +102,13 @@ export default class CreateEventPage extends Component {
 
     }
   };
+  componentDidMount(){
+    axios.get(`${config.API_URL}/api/notifications/unread/`,
+        getRequestHeader())
+        .then(res => {
+          this.setState({notifications: res.data})
+        });
+  }
   handleDateChange = (date) => {
     this.setState({ date: date });
   };
@@ -137,7 +145,7 @@ export default class CreateEventPage extends Component {
       date: date,
       deadline: deadlineDate
     };
-    axios.post(`${config.API_URL}${config.Event_Creation_Url}`, event, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.post(`${config.API_URL}${config.Event_Creation_Url}`, event, getRequestHeader())
       .then(res => {
         console.log(res.data)
         this.setState({ success: true, message: Messages.eventCreationSuccess, messageType: AlertTypes.Success }, () => {
@@ -163,6 +171,7 @@ export default class CreateEventPage extends Component {
           pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }} 
           goHome={() => { this.props.history.push(config.Homepage_Path) }}
           history ={this.props.history}
+          notifications = {this.state.notifications}
           />
         <FormWrapper>
           <h1 style={{ color: "black" }}> Create an Event </h1>

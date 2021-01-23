@@ -2,6 +2,7 @@ from api.models.following import Following, FollowRequest
 from api.models.project import Project
 from api.models.rating import Rating
 from api.models.publication import Publication
+from django.db.models import Avg
 
 
 def get_is_following(this_user, accessed_user):
@@ -128,3 +129,9 @@ def get_count_of_publications(this_user):
         Returns length of publications of user
     """
     return Publication.objects.filter(owner=this_user.id).count()
+
+
+def get_user_rating(user_id):
+    ratings = Rating.objects.filter(to_user=user_id)
+    rating = ratings.aggregate(Avg('rating'))
+    return rating['rating__avg']

@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import Profilebar from '../Components/ProfileBar/Profilebar';
 import AlertTypes from "../Common/AlertTypes.json";
-import { getUserId, getAccessToken, getPhoto, getProfileId } from "../Components/Auth/Authenticate";
+import { getUserId, getAccessToken, getPhoto, getProfileId, getRequestHeader } from "../Components/Auth/Authenticate";
 const UnsupportedExtensions = ["jpg", "jpeg", "png", "pdf", "docx", "pptx"];
 const Container = styled(Box)({
   backgroundColor: '#f7f7f5',
@@ -58,6 +58,7 @@ export default class FileViewer extends Component {
       tagQuery: "",
       colabQuery: "",
       currTag: [],
+      notifications: [],
       allTags: [],
       isMember: false,
       isNotMember: true,
@@ -145,7 +146,7 @@ export default class FileViewer extends Component {
         });
   }
   getProfile = () => {
-    axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}/api/users/${getUserId()}/`, getRequestHeader())
       .then(res => {
         let name = res.data.profile[0].name;
         let mname = res.data.profile[0].middle_name;
@@ -156,7 +157,7 @@ export default class FileViewer extends Component {
   };
   getFiles = (projectId) => {
     axios.get(`https://paperlayer.herokuapp.com/api/files/?project=${projectId}`, 
-    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    getRequestHeader())
     .then((res) => {
       let files = res.data
       for(let i = 0 ; i < files.length; i++){
@@ -186,11 +187,17 @@ export default class FileViewer extends Component {
     this.getProject(project_id);
     this.getProfile();
     this.getFiles(project_id);
+    axios.get(`${config.API_URL}/api/notifications/unread/`,
+        getRequestHeader())
+        .then(res => {
+          console.log((res.data))
+          this.setState({notifications: res.data})
+        });
   };
   deleteFile = (fileName , fileId) => {
     const { projectId } = this.state;   
     axios.delete(`${config.API_URL}${config.File_Path}${fileId}`,
-    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    getRequestHeader())
     .then(res => {
       this.getFiles(projectId);
       this.setState({message:`File ${fileName} Deleted.`, messageType:AlertTypes.Success}, () => {
@@ -213,7 +220,7 @@ export default class FileViewer extends Component {
   }
   fetchFile = (id, name, remark, callback) => {
     axios.get(`${config.API_URL}/api/files/${id}/retrieve_file/`,
-      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      getRequestHeader())
       .then(res => {
         let file = res.data;
         console.log(file);
@@ -345,7 +352,7 @@ export default class FileViewer extends Component {
     data.append("remark", uploadRemark);
     data.append("project", parseInt(projectId));
     axios.post(`${config.API_URL}${config.File_Path}`, data,
-      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      getRequestHeader())
       .then(res => {
         this.getFiles(projectId);
         this.setState({message:"File Uploaded", messageType:AlertTypes.Success, newFile: undefined, showUpload: false, uploadRemark:""}, () => {
@@ -366,7 +373,7 @@ export default class FileViewer extends Component {
     data.append("project", parseInt(projectId));
     
     axios.post(`${config.API_URL}${config.File_Path}`, data,
-    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    getRequestHeader())
     .then(res => {
       this.getFiles(projectId);
       this.setState({message:"File Uploaded", messageType:AlertTypes.Success, newFile: undefined, showEdit: false, showNew:false}, () => {
@@ -408,7 +415,7 @@ export default class FileViewer extends Component {
     data.append("project", parseInt(projectId));
     
     axios.patch(`${config.API_URL}${config.File_Path}${currFileId}/`, data,
-    { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    getRequestHeader())
     .then(res => {
       this.getFiles(projectId);
       this.setState({message:"File Uploaded", messageType:AlertTypes.Success, newFile: undefined, showEdit: false, showNew:false}, () => {
@@ -429,6 +436,7 @@ export default class FileViewer extends Component {
             pushProfile={this.goToProfile}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
             history ={this.props.history}
+            notifications = {this.state.notifications}
           />
             <Profilebar
               name={this.state.username}

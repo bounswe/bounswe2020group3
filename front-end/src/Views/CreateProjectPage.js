@@ -13,7 +13,7 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 // import { theme } from "../Common/ColorTheme";
 import AlertTypes from '../Common/AlertTypes.json';
-import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
+import { getRequestHeader, getUserId } from '../Components/Auth/Authenticate';
 import { format } from "date-fns";
 import UserNavbar from "../Components/TopBar/UserNavbar";
 
@@ -126,6 +126,7 @@ export default class CreateProjectPage extends Component {
       projectRequirements: "",
       dueDate: format(new Date(), 'yyyy-MM-dd'),
       projectState: "",
+      notifications: [],
       // collaborator: "",
       collaborators: [this.getSelfProfile()],  //Other members to be added later TODO
       isPublic: true,
@@ -135,6 +136,11 @@ export default class CreateProjectPage extends Component {
   };
   componentDidMount(){
     this.fetchRelatedEvents()
+    axios.get(`${config.API_URL}/api/notifications/unread/`,
+        getRequestHeader())
+        .then(res => {
+          this.setState({notifications: res.data})
+        });
   }
   handleDateChange = (date) => {
     this.setState({ dueDate: date });
@@ -185,8 +191,7 @@ export default class CreateProjectPage extends Component {
       return;
     }
     const event_filter = { event_type : type };
-    axios.get(`${config.API_URL}${config.Event_Creation_Url}?event_type=${event_filter.event_type}`, event_filter, 
-      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}${config.Event_Creation_Url}?event_type=${event_filter.event_type}`, event_filter, getRequestHeader())
       .then(res => {
         console.log(res.data);
         const events = res.data;
@@ -244,33 +249,28 @@ export default class CreateProjectPage extends Component {
       // state: projectState,
       // project_type: projectType,
       due_date: dueDate,
-      event: parseInt(event[0])
+      event: parseInt(event[0]),
     };
     if(projectType !== "" )
       project.project_type = projectType;
     if (projectState !== "")
       project.state = projectState
-
-    axios.post(`${config.API_URL}${config.Create_Project_Url}`, project, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.post(`${config.API_URL}${config.Create_Project_Url}`, project, getRequestHeader() )
       .then(res => {
-        console.log(res.data)
         this.setState({ success: true, message: Messages.projectCreationSuccess, messageType: AlertTypes.Success }, () => {
           this.handleSnackbarOpen();
           setTimeout(() => { this.props.history.push(config.Homepage_Path); }, 5000);
         });
-
       }, (error) => {
         this.setState({ success: false, message: Messages.projectCreationFail, messageType: AlertTypes.Error });
         this.handleSnackbarOpen()
         console.log(error);
-      })
-
-
+      });
   }
 
   render() {
     const { isPublic, projectType, projectState } = this.state;
-    console.log(this.state)
+    console.log(this.state);
     return (
       <Container >
         <UserNavbar
@@ -278,6 +278,7 @@ export default class CreateProjectPage extends Component {
           pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
           goHome={() => { this.props.history.push(config.Homepage_Path) }}
           history ={this.props.history}
+          notifications = {this.state.notifications}
         />
         <FormWrapper>
           <h1 style={{ color: "black" }}> Create a Project </h1>

@@ -8,7 +8,7 @@ import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import UserNavbar from '../Components/TopBar/UserNavbar';
 import DateComponent from "../Components/Date/DateComponent";
 import AlertTypes from '../Common/AlertTypes.json';
-import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
+import {  getUserId, getRequestHeader } from '../Components/Auth/Authenticate';
 import { format } from "date-fns";
 
 const Messages = {
@@ -78,6 +78,7 @@ export default class IssueMilestonePage extends Component {
       messageType: "",
       milestoneDescription: "",
       projectId: "",
+      notifications: [],
       date: format(new Date(), 'yyyy-MM-dd'),
       
     }
@@ -85,6 +86,12 @@ export default class IssueMilestonePage extends Component {
   componentDidMount() { 
     var projectId = this.props.location.state.projectId;
     this.setState({projectId : projectId});
+    axios.get(`${config.API_URL}/api/notifications/unread/`,
+        getRequestHeader())
+        .then(res => {
+          console.log((res.data))
+          this.setState({notifications: res.data})
+        });
   }
   handleDateChange = (date) => {
     this.setState({ date: date });
@@ -121,7 +128,7 @@ export default class IssueMilestonePage extends Component {
       description: milestoneDescription,
       date: date
     };
-    axios.post(`${config.API_URL}${config.Milestone_url}`, milestone, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.post(`${config.API_URL}${config.Milestone_url}`, milestone, getRequestHeader())
       .then(res => {
         console.log(res.data)
         this.setState({ success: true, message: Messages.eventCreationSuccess, messageType: AlertTypes.Success }, () => {
@@ -149,6 +156,7 @@ export default class IssueMilestonePage extends Component {
           pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }} 
           goHome={() => { this.props.history.push(config.Homepage_Path) }}
           history ={this.props.history}
+          notifications = {this.state.notifications}
           />
         <FormWrapper>
           <h1 style={{ color: "black" }}> Set a Milestone </h1>

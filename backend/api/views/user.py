@@ -5,23 +5,26 @@ from api.serializers.user import UserFullSerializer
 from api.serializers.user import UserBasicSerializer
 from api.serializers.user import UserPrivateSerializer
 from rest_framework.response import Response
-from api.utils import get_is_following
+from api.utils import get_is_following, get_user_rating
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from api.models.project import Project
 from api.models.following import Following
-from api.models.rating import Rating
 from api.models.collaboration_invite import CollaborationInvite
 import math
 import re
-from django.db.models import Avg
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.db.models import Case, When
+from django_filters.rest_framework import DjangoFilterBackend
 
 project_param = openapi.Parameter(
     'project_id', openapi.IN_QUERY,
     description="Project id to get recommendations",
+    type=openapi.TYPE_INTEGER)
+count_param = openapi.Parameter(
+    'project_count', openapi.IN_QUERY,
+    description="Number of users requested",
     type=openapi.TYPE_INTEGER)
 
 
@@ -30,6 +33,8 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     This viewset automatically provides `list` and `detail` actions.
     """
     queryset = User.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['username']
 
     def retrieve(self, request, *args, **kwargs):
         self.accessed_user = self.get_object()
@@ -57,13 +62,14 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
             return UserFullSerializer
 
     @swagger_auto_schema(
-        method='get', manual_parameters=[project_param]
+        method='get', manual_parameters=[project_param, count_param]
     )
     @action(detail=False, methods=['GET'],
             name='get_collaborator_recommendation',
             serializer_class=None)
     def get_collaborator_recommendation(self, request):
         project_id = request.GET.get('project_id', None)
+        project_count = request.GET.get('project_count', None)
         project = get_object_or_404(Project, pk=project_id)
         project_owner = project.owner_id
         reqs = []
@@ -84,7 +90,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
             Default score for expertise is 1 and is incremented by 1
             with each match with requirements.
 
-            Following_score is 1.1 for the users that the owner follows,
+            Following_score is 1.2 for the users that the owner follows,
             1 otherwise.
         """
 
@@ -92,7 +98,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
         profiles = Profile.objects.all()
         for profile in profiles:
-            rating = get_rating(profile.owner_id)
+            rating = get_user_rating(profile.owner_id)
             scaled_rating = rating/10.0 if rating else 0.5
             user_score[profile.owner_id] = [1 + scaled_rating, 1, 1]
 
@@ -120,9 +126,15 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         for invite in invited_users:
             user_score.pop(invite.to_user.id, None)
 
-        top_ids = [i for i in sorted(user_score,
-                                     key=user_score.get,
-                                     reverse=True)]
+        top_ids = []
+        if project_count:
+            top_ids = [i for i in sorted(user_score,
+                                         key=user_score.get,
+                                         reverse=True)[:int(project_count)]]
+        else:
+            top_ids = [i for i in sorted(user_score,
+                                         key=user_score.get,
+                                         reverse=True)]
 
         preserved = Case(*[When(id=pk, then=pos)
                            for pos, pk in enumerate(top_ids)])
@@ -131,22 +143,3 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         serializer = UserBasicSerializer(
             users, many=True, context=serializer_context)
         return Response(serializer.data)
-
-
-def get_is_following_from_id(this_user_id, accessed_user_id):
-    """
-        Returns True if "this_user" follows "accessed_user"
-    """
-    if not this_user_id:
-        is_following = False
-    else:
-        is_following = Following.objects.filter(
-            from_user__id=this_user_id,
-            to_user__id=accessed_user_id).exists()
-    return is_following
-
-
-def get_rating(user_id):
-    ratings = Rating.objects.filter(to_user=user_id)
-    rating = ratings.aggregate(Avg('rating'))
-    return rating['rating__avg']

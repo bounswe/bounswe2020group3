@@ -48,6 +48,7 @@ export default class HomePage extends Component {
       type: "",
       due: "",
       colabQuery: "",
+      colabInviteId: 0,
       events: [],
       tags: [],
       milestones: [],
@@ -104,7 +105,7 @@ export default class HomePage extends Component {
     axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}/`, getRequestHeader())
       .then(res => {
         const prof = res.data;
-        console.log(prof);
+        //console.log(prof);
         const temp_members = (prof.members ? prof.members : [])
         this.setState({
           name: prof.name, desc: prof.description,
@@ -135,12 +136,12 @@ export default class HomePage extends Component {
     axios.get(`${config.API_URL}${config.Milestone_url}?project__id=${project_id}`, getRequestHeader())
         .then(res => {
           const prof = res.data
-          console.log(prof)
+          //console.log(prof)
           if (prof == null) {
             this.setState({ milestones: [] });
           } else {
             this.setState({ milestones: prof }); // ATTENTION : May cause bugs later ! ! !
-            console.log(this.state.milestones)
+            //console.log(this.state.milestones)
           }
         }, (error) => {
           this.props.history.push("/"); // Forwards from unexisting profiles to homepage
@@ -160,12 +161,12 @@ export default class HomePage extends Component {
   isMember = () => {
       const { membersData } = this.state;
       let ids = []
-      console.log(membersData)
+      //console.log(membersData)
       for(let i = 0 ; i < membersData.length ; i++){
         ids.push(membersData[i].profile[0].id);
       }
-      console.log(ids, membersData);
-      console.log(ids, getProfileId())
+      //console.log(ids, membersData);
+      //console.log(ids, getProfileId())
       if( ids.includes(parseInt(getProfileId() ) ) ){
         this.setState({isMember :true})
       }
@@ -185,7 +186,7 @@ export default class HomePage extends Component {
       axios.get(`${config.API_URL}/api/notifications/unread/`,
           getRequestHeader())
           .then(res => {
-              console.log((res.data))
+              //console.log((res.data))
               this.setState({notifications: res.data})
           });
   };
@@ -204,7 +205,7 @@ export default class HomePage extends Component {
     if (events.length === 0) return (  <Typography variant='h6' color="textPrimary">No Related Events</Typography>)
 
     return events.map((item) => {
-      console.log(item)
+      //console.log(item)
       return (<>
         <Typography variant="h6" color="primary" style={{ cursor: "pointer", width: "100%", textAlign: "center" }} onClick={() => this.goToEvent(item.id)}>{item.title}</Typography>
       </>)
@@ -428,10 +429,31 @@ export default class HomePage extends Component {
       })
   };
 
-  // submitColabInviteQuery = () => {
-  //   var proj_id = this.props.location.pathname.split('/')[2];
-    
-  // }
+  getUserIdFromUsername = (username) => {
+    if(username.length > 0){
+      axios.get(`${config.API_URL}/api/users/?username=${username}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        if(res.data.length > 0){
+          let data = res.data[0];
+          console.log(data.id);
+          let myId = data.id;
+          // eslint-disable-next-line
+          if(this.state.colabInviteId != myId){
+            this.setState({colabInviteId: myId});
+         }
+        }
+      });
+    }
+  };
+
+  submitColabInviteQuery = (id) => {
+    var proj_id = this.props.location.pathname.split('/')[2];
+    axios.post(`${config.API_URL}/api/collaboration_invites/`, { to_user: id, to_project: proj_id }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+            this.getProject(this.state.projectId);
+            window.location.reload(true);
+        }); 
+  };
 
   renderRelatedEvents = () => {
     const { isPublic } = this.state;
@@ -517,13 +539,14 @@ export default class HomePage extends Component {
                       <Input
                         type="text"
                         color='primary'
-                        style={{ width: "90%", textTransform: "capitalize" }}
+                        style={{ width: "90%" }}
                         placeholder="Please enter a collaborator"
                         onChange={(e) => { this.handleColabQuery(e); }}
                         value={this.state.colabQuery}
                       />
                       <br />
-                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitColabInviteQuery}>Invite Collaborator</Button>
+                      {this.getUserIdFromUsername(this.state.colabQuery)}
+                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.submitColabInviteQuery(this.state.colabInviteId)}>Invite Collaborator</Button>
                     </>
                 </Paper>
               </Grid>

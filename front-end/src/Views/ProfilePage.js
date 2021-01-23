@@ -122,6 +122,7 @@ export default class ProfilePage extends Component {
 
   componentDidMount() {
     this.getProfile();
+    this.getColabInvites();
     axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, getRequestHeader())
       .then(res => {
         this.setState({
@@ -136,6 +137,10 @@ export default class ProfilePage extends Component {
           this.setState({notifications: res.data})
         });
   };
+
+  distinct(value, index, self) {
+    return self.indexOf(value) === index;
+  }
 
   getProfile = () => {
     var userId = this.props.location.pathname.split('/')[2];
@@ -711,17 +716,18 @@ export default class ProfilePage extends Component {
         let colabInvites = res.data;
         let invites = [];
         var len = colabInvites.length;
-
+        console.log(colabInvites);
         for(var i=0; i<len; i++){
-          var id = colabInvites[i].to_user_id;
+          var id = colabInvites[i].to_user;
           var myId = getUserId();
-
+          console.log(myId);
           // eslint-disable-next-line
-          if(id == myId && proj_id == myproj){
+          if(id == myId){
             invites.push(colabInvites[i]);
           }
         }
         var uniInvs = invites.filter(this.distinct);
+        console.log(uniInvs);
         this.setState({ allColabInvites: uniInvs });
       })
   };

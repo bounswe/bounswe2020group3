@@ -7,13 +7,15 @@ from rest_framework.response import Response
 from rest_framework import generics
 from api.serializers.search import SearchRequestSerializer
 from api.serializers.event import EventSerializer
-from api.serializers.project import ProjectGETPublicSerializer
 from api.serializers.project import ProjectPrivateSerializer
 from api.serializers.profile import ProfileBasicSerializer
 from api.serializers.profile import ProfilePrivateSerializer
 from datamuse import datamuse
 from api.models.following import Following
 from django.contrib.auth.models import AnonymousUser
+import re
+from api.utils import get_user_rating
+import math
 
 
 class SearchGenericAPIView(generics.GenericAPIView):
@@ -51,16 +53,13 @@ class SearchGenericAPIView(generics.GenericAPIView):
         search_profiles = search_type in ["all", "profile"]
         search_events = search_type in ["all", "event"]
 
-        public_project_filters = set(["project_due_date_after",
+        any_project_filter = len(set(["project_due_date_after",
                                       "project_due_date_before",
-                                      "project_event"])
-        any_public_project_filter = len(
-            public_project_filters.intersection(set(req_data.keys()))) > 0
-
-        public_profile_filters = set(["profile_affiliations",
+                                      "project_event", "project_state"])
+                                 .intersection(set(req_data.keys()))) > 0
+        any_profile_filter = len(set(["profile_affiliations",
                                       "profile_expertise"])
-        any_public_profile_filter = len(
-            public_profile_filters.intersection(set(req_data.keys()))) > 0
+                                 .intersection(set(req_data.keys()))) > 0
 
         query_following = []
         if not isGuest:
@@ -68,7 +67,6 @@ class SearchGenericAPIView(generics.GenericAPIView):
                                        Following.objects.
                                        filter(from_user=request.user)))
 
-        # Query the database for each keyword
         for keyword in keywords:
             if search_events:
                 q = Q(title__icontains=keyword) | Q(
@@ -104,9 +102,6 @@ class SearchGenericAPIView(generics.GenericAPIView):
                     q &= Q(event__id=req_data["project_event"])
                 if "project_state" in req_data:
                     q &= Q(state=req_data["project_state"])
-                if "project_tags" in req_data:
-                    print(req_data["project_tags"])
-                    q &= Q(tags__id__in=req_data["project_tags"])
 
                 q &= (Q(name__icontains=keyword) |
                       Q(description__icontains=keyword) |
@@ -116,19 +111,13 @@ class SearchGenericAPIView(generics.GenericAPIView):
 
                 query_projects += Project.objects.filter(q)
 
-                if not any_public_project_filter:
+                if not any_project_filter:
                     q = Q()
                     if isGuest:
                         q = Q(is_public=False)
                     else:
                         q = (Q(is_public=False) & ~Q(
                             members__id=request.user.id))
-
-                    if "project_state" in req_data:
-                        q &= Q(state=req_data["project_state"])
-                    if "project_tags" in req_data:
-                        q &= Q(tags__id__in=req_data["project_tags"])
-
                     q &= (Q(name__icontains=keyword) |
                           Q(description__icontains=keyword))
 
@@ -176,7 +165,7 @@ class SearchGenericAPIView(generics.GenericAPIView):
 
                     query_followed_profiles += Profile.objects.filter(q)
 
-                if not any_public_profile_filter:
+                if not any_profile_filter:
                     q = Q()
                     if isGuest:
                         q = Q(is_public=False)
@@ -189,7 +178,6 @@ class SearchGenericAPIView(generics.GenericAPIView):
 
                     query_private_profiles += Profile.objects.filter(q)
 
-        # Fill the Response
         if search_events:
             query_events = list(set(query_events))
 
@@ -202,15 +190,61 @@ class SearchGenericAPIView(generics.GenericAPIView):
             query_projects = list(set(query_projects))
             query_private_projects = list(set(query_private_projects))
 
-            project_serializer = ProjectGETPublicSerializer(
-                query_projects, many=True,
-                context={'request': request})
-            private_project_serializer = ProjectPrivateSerializer(
-                query_private_projects, many=True,
-                context={'request': request})
+            profile = Profile.objects.filter(
+                owner_id=self.request.user.id).first()
+            exps = []
+            projects_all = query_projects + query_private_projects
 
-            res['projects'] = project_serializer.data + \
-                private_project_serializer.data
+            if profile:
+                if profile.expertise:
+                    exps = re.split('; |, |\n', profile.expertise)
+                    exps = [r.strip() for r in exps]
+
+                project_score = {}
+                followed_users = Following.objects.filter(
+                    from_user=self.request.user)
+
+                for project in projects_all:
+                    rating = get_user_rating(project.owner_id)
+                    scaled_rating = rating/10.0 if rating else 0.5
+                    project_score[project.id] = [1 + scaled_rating, 1, 1]
+
+                    members = project.members.all()
+                    members = [member.id for member in members]
+                    if self.request.user.id in members:
+                        project_score[project.id][2] = 5
+                    else:
+                        for followed in followed_users:
+                            if followed.to_user.id in members:
+                                project_score[project.id][2] = 1.5
+                                break
+                    for x in exps:
+                        if x in project.requirements:
+                            project_score[project.id][1] += 1
+
+                for project_id, scores in project_score.items():
+                    project_score[project_id] = math.prod(scores)
+
+                top_ids = [i for i in sorted(project_score,
+                                             key=project_score.get,
+                                             reverse=True)]
+
+                query_projects_all = [project for pid in top_ids
+                                      for project in projects_all
+                                      if project.id == pid]
+
+                private_project_serializer = ProjectPrivateSerializer(
+                    query_projects_all, many=True,
+                    context={'request': request})
+
+                res['projects'] = private_project_serializer.data
+
+            else:
+                private_project_serializer = ProjectPrivateSerializer(
+                    projects_all, many=True,
+                    context={'request': request})
+
+                res['projects'] = private_project_serializer.data
 
         if search_profiles:
             query_profiles = list(set(query_profiles))

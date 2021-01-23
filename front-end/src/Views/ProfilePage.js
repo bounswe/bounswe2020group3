@@ -92,10 +92,13 @@ export default class ProfilePage extends Component {
       self: false,
       selfName: "",
       selfLastName: "",
+      projname: "",
+      profname: "",
       follow_reqs: [],
       followers: [],
       following: [],
       milestones: [],
+      allColabInvites: [],
       projects: [],
       notifications: [],
       file: undefined,
@@ -684,6 +687,107 @@ export default class ProfilePage extends Component {
       })
   }
 
+  getColabInvites(){
+    axios.get(`${config.API_URL}/api/collaboration_invites/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let colabInvites = res.data;
+        let invites = [];
+        var len = colabInvites.length;
+
+        for(var i=0; i<len; i++){
+          var id = colabInvites[i].to_user_id;
+          var myId = getUserId();
+
+          // eslint-disable-next-line
+          if(id == myId && proj_id == myproj){
+            invites.push(colabInvites[i]);
+          }
+        }
+        var uniInvs = invites.filter(this.distinct);
+        this.setState({ allColabInvites: uniInvs });
+      })
+  };
+
+  deleteColabInvite = (myId) => {
+    axios.delete(`${config.API_URL}/api/collaboration_invites/${myId}/`, { id: myId }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          axios.patch(`${config.API_URL}/api/profiles/${this.state.profileId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            .then(res => {
+              this.getProfile(this.state.profileId);
+            })
+        }); 
+  }
+
+  acceptColabInvite = (myId) => {
+    axios.post(`${config.API_URL}/api/collaboration_invites/${myId}/accept_collaboration_invite/`, { id: myId }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          this.deleteColabInvite(myId);
+          window.location.reload(true);
+        }); 
+  };
+
+  rejectColabInvite = (myId) => {
+    axios.post(`${config.API_URL}/api/collaboration_invites/${myId}/reject_collaboration/`, { id: myId }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          this.deleteColabInvite(myId);
+          window.location.reload(true);
+        }); 
+  };
+
+  getUsernameById(id){
+    axios.get(`${config.API_URL}/api/users/${id}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let name = res.data.profile[0].name;
+        let mname = res.data.profile[0].middle_name;
+        let lastname = res.data.profile[0].last_name;
+        let userName = name + " " + mname + " " + lastname;
+        
+        this.setState({profname : userName});
+      });
+  };
+
+  getProjectNameById(id){
+    axios.get(`${config.API_URL}/api/projects/${id}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let name = res.data.name;
+        
+        this.setState({projname : name});
+      });
+  }
+
+  renderColabInvites = () => {
+    const { allColabInvites } = this.state;
+    
+    var ids = [];
+    for(var i=0; i<allColabInvites.length; i++){
+      var idTriple = [allColabInvites[i].id, allColabInvites[i].from_user, allColabInvites[i].to_project];
+      ids.push(idTriple);
+    }
+  
+    if (ids.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaboration Invites</Typography>)
+    else return ids.map((item) => {
+      return (<>
+        {this.getUsernameById(item[1])}
+        {this.getProjectNameById(item[2])}
+        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{this.state.profname}</Typography>
+        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{this.state.projname}</Typography>
+        <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.acceptColabInvite(item[0])} > Accept </Button>
+        <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.rejectColabInvite(item[0])} > Reject </Button>
+      </>)
+    });
+  };
+
+  renderInvites(){
+    return (
+      <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
+        
+        <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+          {this.renderColabInvites()}
+        </Paper>
+      </Grid>
+    )
+  }
+
   renderSelfProfile() {
     return (<SelfContainer>
       <UserNavbar
@@ -704,6 +808,8 @@ export default class ProfilePage extends Component {
                 {this.renderMilestones()}
                 <Typography variant="h5" color="primary" style={titleStyleCenter}>Projects</Typography>
                 {this.renderProjects()}
+                <Typography variant="h5" color="primary" style={titleStyleCenter}>Collaboration Invites</Typography>
+                {this.renderInvites()}
               </>
               :
               <></>

@@ -47,6 +47,7 @@ export default class HomePage extends Component {
       stat: "",
       type: "",
       due: "",
+      colabQuery: "",
       events: [],
       tags: [],
       milestones: [],
@@ -413,21 +414,19 @@ export default class HomePage extends Component {
         var len = colabRequests.length;
 
         for(var i=0; i<len; i++){
-          var id = colabRequests[i].to_user;
-          var myId = getUserId();
 
           var proj_id = this.props.location.pathname.split('/')[2];
           var myproj = colabRequests[i].to_project;
           // eslint-disable-next-line
-          if(id == myId && proj_id == myproj){
+          if(proj_id == myproj){
             reqs.push(colabRequests[i]);
           }
         }
         var uniReqs = reqs.filter(this.distinct);
         this.setState({ allColabRequests: uniReqs });
-        console.log(this.state.allColabRequests);
+        //console.log(this.state.allColabRequests);
       })
-  }
+  };
 
   // submitColabInviteQuery = () => {
   //   var proj_id = this.props.location.pathname.split('/')[2];
@@ -524,7 +523,7 @@ export default class HomePage extends Component {
                         value={this.state.colabQuery}
                       />
                       <br />
-                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitColabInviteQuery}>Invite Collaborator</Button>
+                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitColabInviteQuery()}>Invite Collaborator</Button>
                     </>
                 </Paper>
               </Grid>

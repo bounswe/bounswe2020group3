@@ -16,6 +16,7 @@ import re
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.db.models import Case, When
+from django_filters.rest_framework import DjangoFilterBackend
 
 project_param = openapi.Parameter(
     'project_id', openapi.IN_QUERY,
@@ -32,6 +33,8 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     This viewset automatically provides `list` and `detail` actions.
     """
     queryset = User.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['username']
 
     def retrieve(self, request, *args, **kwargs):
         self.accessed_user = self.get_object()

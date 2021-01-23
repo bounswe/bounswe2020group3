@@ -3,6 +3,7 @@ from rest_framework import mixins, viewsets, status
 
 import stream
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import serializers
 
@@ -25,7 +26,8 @@ def follow_admin(username):
     admin_id = User.objects.get(username='admin').id
     user_feed.follow('user', admin_id)
 
-def follow_user_timeline(username,followed_username):
+
+def follow_user_timeline(username, followed_username):
     user_id = User.objects.get(username=username).id
     followed_username_id = User.objects.get(username=followed_username).id
     user_feed = client().feed('timeline', user_id)
@@ -38,20 +40,13 @@ class FeedSerializer(serializers.Serializer):
 
 class FeedViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = None
+    permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         user_feed = self.get_feed()
         return Response(data={
             'results': user_feed.get()['results']
         })
-
-    @action(detail=False, methods=['POST'], url_name='add_user_timeline',
-            serializer_class=FeedSerializer)
-    def follow(self, request):
-        follow_user_id = self.request.data['user_id']
-        user_feed = self.get_feed()
-        response = user_feed.follow('user', follow_user_id)
-        return Response(data=response, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['POST'], url_name='unfollow_timeline',
             serializer_class=FeedSerializer)

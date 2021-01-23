@@ -8,7 +8,6 @@ from rest_framework import generics
 from api.serializers.search import SearchRequestSerializer
 from api.serializers.event import EventSerializer
 from api.serializers.project import ProjectPrivateSerializer
-from api.serializers.profile import ProfileBasicSerializer
 from api.serializers.profile import ProfilePrivateSerializer
 from datamuse import datamuse
 from api.models.following import Following
@@ -190,19 +189,16 @@ class SearchGenericAPIView(generics.GenericAPIView):
             query_projects = list(set(query_projects))
             query_private_projects = list(set(query_private_projects))
 
-            profile = Profile.objects.filter(
-                owner_id=self.request.user.id).first()
             exps = []
             projects_all = query_projects + query_private_projects
 
-            if profile:
+            if not isGuest:
+                profile = Profile.objects.get(owner_id=self.request.user.id)
                 if profile.expertise:
                     exps = re.split('; |, |\n', profile.expertise)
                     exps = [r.strip() for r in exps]
 
                 project_score = {}
-                followed_users = Following.objects.filter(
-                    from_user=self.request.user)
 
                 for project in projects_all:
                     rating = get_user_rating(project.owner_id)
@@ -214,8 +210,8 @@ class SearchGenericAPIView(generics.GenericAPIView):
                     if self.request.user.id in members:
                         project_score[project.id][2] = 5
                     else:
-                        for followed in followed_users:
-                            if followed.to_user.id in members:
+                        for followed in query_following:
+                            if followed.id in members:
                                 project_score[project.id][2] = 1.5
                                 break
                     for x in exps:
@@ -229,40 +225,64 @@ class SearchGenericAPIView(generics.GenericAPIView):
                                              key=project_score.get,
                                              reverse=True)]
 
-                query_projects_all = [project for pid in top_ids
-                                      for project in projects_all
-                                      if project.id == pid]
+                projects_all = [project for pid in top_ids
+                                for project in projects_all
+                                if project.id == pid]
 
-                private_project_serializer = ProjectPrivateSerializer(
-                    query_projects_all, many=True,
-                    context={'request': request})
+            private_project_serializer = ProjectPrivateSerializer(
+                projects_all, many=True,
+                context={'request': request})
 
-                res['projects'] = private_project_serializer.data
-
-            else:
-                private_project_serializer = ProjectPrivateSerializer(
-                    projects_all, many=True,
-                    context={'request': request})
-
-                res['projects'] = private_project_serializer.data
+            res['projects'] = private_project_serializer.data
 
         if search_profiles:
             query_profiles = list(set(query_profiles))
             query_followed_profiles = list(set(query_followed_profiles))
             query_private_profiles = list(set(query_private_profiles))
 
-            profile_serializer = ProfileBasicSerializer(
-                query_profiles, many=True,
-                context={'request': request})
-            followed_profile_serializer = ProfileBasicSerializer(
-                query_followed_profiles, many=True,
-                context={'request': request})
+            profiles_all = query_profiles + query_followed_profiles + \
+                query_private_profiles
+
+            if not isGuest:
+                query_following_ids = [
+                    user.id for user in query_following]
+                query_following_following = list(
+                    map(lambda following: following.to_user,
+                        Following.objects.
+                        filter(from_user__in=query_following)))
+                query_following_following_ids = [
+                    user.id for user in query_following_following]
+                query_following_following_ids = list(
+                    set(query_following_following_ids) -
+                    set(query_following_ids))
+
+                profile_score = {}
+
+                for profile in profiles_all:
+                    rating = get_user_rating(profile.owner_id)
+                    scaled_rating = rating/10.0 if rating else 0.5
+                    profile_score[profile.id] = [1 + scaled_rating, 1]
+
+                    if profile.owner_id in query_following_ids:
+                        profile_score[profile.id][1] = 5
+                    elif profile.owner_id in query_following_following_ids:
+                        profile_score[profile.id][1] = 3
+
+                for profile_id, scores in profile_score.items():
+                    profile_score[profile_id] = math.prod(scores)
+
+                top_ids = [i for i in sorted(profile_score,
+                                             key=profile_score.get,
+                                             reverse=True)]
+
+                profiles_all = [profile for pid in top_ids
+                                for profile in profiles_all
+                                if profile.id == pid]
+
             private_profile_serializer = ProfilePrivateSerializer(
-                query_private_profiles, many=True,
+                profiles_all, many=True,
                 context={'request': request})
 
-            res['profiles'] = profile_serializer.data + \
-                followed_profile_serializer.data + \
-                private_profile_serializer.data
+            res['profiles'] = private_profile_serializer.data
 
         return Response(data=res)

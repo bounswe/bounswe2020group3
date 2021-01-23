@@ -38,7 +38,8 @@ class FeedSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
 
 
-class FeedViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class FeedViewSet(mixins.ListModelMixin, mixins.DestroyModelMixin,
+                  viewsets.GenericViewSet):
     queryset = None
     permission_classes = [IsAuthenticated]
 
@@ -48,6 +49,12 @@ class FeedViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         return Response(data={
             'results': user_feed.get()['results']
         })
+
+    def destroy(self, request, *args, **kwargs):
+        user_id = User.objects.get(username=self.request.user).id
+        user_feed = client().feed('user', user_id)
+        response = user_feed.remove_activity(self.kwargs['pk'])
+        return Response(data=response, status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=['GET'], url_name='timeline',
             serializer_class=FeedSerializer)

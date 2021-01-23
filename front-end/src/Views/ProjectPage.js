@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import Profilebar from '../Components/ProfileBar/Profilebar';
 import { colorCodes } from "../Common/ColorTheme";
-import { getUserId, getPhoto, getProfileId, getRequestHeader } from "../Components/Auth/Authenticate";
+import { getUserId, getPhoto, getProfileId, getRequestHeader, getAccessToken } from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
   backgroundColor: '#f7f7f5',

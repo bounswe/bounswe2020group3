@@ -3,7 +3,7 @@ import { Button, Input, styled, Avatar, Box, Grid, Paper, Typography,Accordion,A
 import { Rating } from '@material-ui/lab';
 import AlertTypes from "../Common/AlertTypes.json";
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
-import { getUserId, getPhoto, getRequestHeader, isLoggedIn } from '../Components/Auth/Authenticate';
+import { getUserId, getPhoto, getRequestHeader, isLoggedIn, getAccessToken } from '../Components/Auth/Authenticate';
 import axios from 'axios';
 import config from '../config';
 import UserNavbar from '../Components/TopBar/UserNavbar';

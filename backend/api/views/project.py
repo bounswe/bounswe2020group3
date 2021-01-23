@@ -66,7 +66,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 Adds the project to the user feed
             """
             activity_data = {'actor': str(self.request.user),
-                             'verb': 'create',
+                             'verb': 'created new Project called ' + project.name,
+                             'type': 'project',
                              'object': project.id,
                              'foreign_id': 'project:' + str(project.id),
                              'project': ProjectPublicSerializer(project).data,

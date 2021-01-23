@@ -72,7 +72,9 @@ class CommentViewSet(viewsets.ModelViewSet):
 
             comment_serializer = CommentFeedSerializer(comment).data
             activity_data = {'actor': str(self.request.user),
-                             'verb': 'comment',
+                             'verb': 'commented {}'.format(
+                                 comment_serializer['to_user']['username']),
+                             'type': 'comment',
                              'object': comment_serializer['id'],
                              'foreign_id': 'comment:' +
                                            str(comment_serializer['id']),

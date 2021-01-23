@@ -25,6 +25,12 @@ def follow_admin(username):
     admin_id = User.objects.get(username='admin').id
     user_feed.follow('user', admin_id)
 
+def follow_user_timeline(username,followed_username):
+    user_id = User.objects.get(username=username).id
+    followed_username_id = User.objects.get(username=followed_username).id
+    user_feed = client().feed('timeline', user_id)
+    user_feed.follow('user', followed_username_id)
+
 
 class FeedSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
@@ -39,9 +45,9 @@ class FeedViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             'results': user_feed.get()['results']
         })
 
-    @action(detail=False, methods=['POST'], url_name='follow_timeline',
+    @action(detail=False, methods=['POST'], url_name='add_user_timeline',
             serializer_class=FeedSerializer)
-    def follow_timeline(self, request):
+    def follow(self, request):
         follow_user_id = self.request.data['user_id']
         user_feed = self.get_feed()
         response = user_feed.follow('user', follow_user_id)
@@ -49,14 +55,14 @@ class FeedViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
     @action(detail=False, methods=['POST'], url_name='unfollow_timeline',
             serializer_class=FeedSerializer)
-    def unfollow_timeline(self, request):
+    def unfollow(self, request):
         unfollow_user_id = self.request.data['user_id']
         user_feed = self.get_feed()
         response = user_feed.unfollow('user', unfollow_user_id)
         return Response(data=response, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['GET'], url_name='timeline_followers')
-    def timeline_followers(self, request):
+    def followers(self, request):
         user_feed = self.get_feed()
         response = user_feed.following()
         return Response(data=response, status=status.HTTP_200_OK)

@@ -29,8 +29,9 @@ class EventViewSet(viewsets.ModelViewSet):
         admin = User.objects.get(id=1)
         id = serializer.data['id']
         activity_data = {'actor': admin.username,
-                         'verb': 'create',
+                         'verb': serializer.data['title'] + ' is created.',
                          'object': id,
+                         'type': 'event',
                          'foreign_id': 'event:' + str(id),
                          'event': serializer.data,
                          }

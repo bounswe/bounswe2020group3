@@ -76,7 +76,10 @@ class RatingViewSet(viewsets.ModelViewSet):
 
             rating_serializer = RatingFeedSerializer(rating).data
             activity_data = {'actor': str(self.request.user),
-                             'verb': 'rating',
+                             'verb': 'rated {} {} stars'.format(
+                                 rating_serializer['to_user']['username'],
+                                 rating_serializer['rating']),
+                             'type': 'rating',
                              'object': rating_serializer['id'],
                              'foreign_id': 'rating:' +
                                            str(rating_serializer['id']),

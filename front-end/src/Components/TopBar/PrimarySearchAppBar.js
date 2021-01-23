@@ -183,10 +183,10 @@ export default function PrimarySearchAppBar(props) {
           >
             <MenuIcon />
           </IconButton> */}
-          <Typography className={classes.title} style={{cursor:"pointer"}} variant="h6" noWrap>
+          <Typography className={classes.title} style={{cursor:"pointer"}} variant="h6" noWrap onClick={() => { props.history.push("/"); }}>
             PaperLayer
           </Typography>
-          <img src={logo} style={{height:"50px", cursor:"pointer"}} alt="logo" />
+          <img src={logo} style={{height:"50px", cursor:"pointer"}} alt="logo" onClick={() => { props.history.push("/"); }}/>
           <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />

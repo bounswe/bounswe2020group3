@@ -3,7 +3,7 @@ import { Button, Input, styled, Avatar, Box, Grid, Paper, Typography,Accordion,A
 import { Rating } from '@material-ui/lab';
 import AlertTypes from "../Common/AlertTypes.json";
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
-import { getUserId, getAccessToken, getPhoto } from '../Components/Auth/Authenticate';
+import { getUserId, getPhoto, getRequestHeader, isLoggedIn } from '../Components/Auth/Authenticate';
 import axios from 'axios';
 import config from '../config';
 import UserNavbar from '../Components/TopBar/UserNavbar';
@@ -122,7 +122,7 @@ export default class ProfilePage extends Component {
 
   componentDidMount() {
     this.getProfile();
-    axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, getRequestHeader())
       .then(res => {
         this.setState({
           selfName: res.data.profile[0].name + " " + res.data.profile[0].middle_name,
@@ -130,7 +130,7 @@ export default class ProfilePage extends Component {
         });
       });
     axios.get(`${config.API_URL}/api/notifications/unread/`,
-        { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        getRequestHeader())
         .then(res => {
           console.log((res.data))
           this.setState({notifications: res.data})
@@ -139,12 +139,12 @@ export default class ProfilePage extends Component {
 
   getProfile = () => {
     var userId = this.props.location.pathname.split('/')[2];
-    axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}${config.User_Path}${userId}/`, getRequestHeader())
       .then(res => {
         this.setState({ email: res.data.email, self: res.data.id === parseInt(getUserId()), });
         const prof = res.data.profile[0];
         let windowUserId = res.data.id;
-        if (windowUserId === parseInt(getUserId()) || res.data.profile[0].is_public) {
+        if (windowUserId === parseInt(getUserId()) || res.data.profile[0].is_public || res.data.is_following) {
           this.setState({
             isPublic: prof.is_public || res.data.is_following,
             profileId: prof.id,
@@ -176,28 +176,28 @@ export default class ProfilePage extends Component {
             isFollowReqReceived: res.data.is_follow_request_received
           }, () => {
             this.getComments();
-            axios.get(`${config.API_URL}${config.Follow_url}?from_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            axios.get(`${config.API_URL}${config.Follow_url}?from_user__id=${userId}`, getRequestHeader())
               .then(res => {
                 const temp_followings = res.data.map(f => f.to_user.profile[0]);
                 this.setState({ following: temp_followings });
               });
-            axios.get(`${config.API_URL}${config.Follow_url}?to_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            axios.get(`${config.API_URL}${config.Follow_url}?to_user__id=${userId}`, getRequestHeader())
               .then(res => {
                 const temp_followers = res.data.map(f => f.from_user.profile[0]);
                 this.setState({ followers: temp_followers });
               });
-            axios.get(`${config.API_URL}${config.Follow_request_url}?req_to_user=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            axios.get(`${config.API_URL}${config.Follow_request_url}?req_to_user=${userId}`, getRequestHeader())
               .then(res => {
                 const temp_follow_reqs = res.data.map(f => f.req_from_user.profile[0]);
                 this.setState({ follow_reqs: temp_follow_reqs });
               });
           });
           if (windowUserId === parseInt(getUserId())) {
-            axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            axios.get(`${config.API_URL}${config.OwnMilestoneUrl}`, getRequestHeader())
               .then(res => {
                 this.setState({ milestones: res.data.result });
               });
-            axios.get(`${config.API_URL}${config.Projectpage_url}?owner__id=${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            axios.get(`${config.API_URL}${config.Projectpage_url}?owner__id=${getUserId()}`, getRequestHeader())
               .then(res => {
                 this.setState({ projects: res.data });
               });
@@ -234,7 +234,7 @@ export default class ProfilePage extends Component {
   getComments = () => {
     const { currentUserId } = this.state;
     axios.get(`${config.API_URL}/api/comments/?to_user=${currentUserId}`,
-      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      getRequestHeader())
       .then(res => {
         this.setState({ comments: (res.data ? res.data : []) });
       });
@@ -295,7 +295,7 @@ export default class ProfilePage extends Component {
 
     let data = { from_user: parseInt(getUserId()), to_user: currentUserId, comment: newComment };
     axios.post(`${config.API_URL}/api/comments/`, data,
-      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      getRequestHeader())
       .then(res => {
         this.setState({ message: "Comment Posted", messageType: AlertTypes.Success, newComment: "", showAddNewComment: false }, () => {
           this.handleSnackbarOpen();
@@ -309,7 +309,7 @@ export default class ProfilePage extends Component {
   }
   deleteComment = (id) => {
     axios.delete(`${config.API_URL}/api/comments/`, { id: id },
-      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      getRequestHeader())
       .then(res => {
         this.setState({ message: "Comment Deleted", messageType: AlertTypes.Success }, () => {
           this.handleSnackbarOpen();
@@ -331,7 +331,7 @@ export default class ProfilePage extends Component {
     console.log(currentRating , ratedBefore, myRatingId, rating)
     if (!ratedBefore) {
       axios.post(`${config.API_URL}/api/ratings/`, ratingm,
-        { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        getRequestHeader())
         .then(res => {
           this.getProfile();
         }, (error) => {
@@ -341,7 +341,7 @@ export default class ProfilePage extends Component {
         });
     } else {
       axios.patch(`${config.API_URL}/api/ratings/${myRatingId}/`, {rating: currentRating},
-        { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        getRequestHeader())
         .then(res => {
           this.setState({ messageType: AlertTypes.Success, message: "Rating Updated." }, () => {
             this.handleSnackbarOpen();
@@ -513,7 +513,7 @@ export default class ProfilePage extends Component {
     );
   }
   renderAddComment() {
-    if(!this.state.isPublic && !this.state.isCommentable) return (<></>);
+    if(!this.state.isPublic || !this.state.isCommentable) return (<></>);
 
     return (
       <>
@@ -530,7 +530,13 @@ export default class ProfilePage extends Component {
             <Button variant="outlined" color="primary" onClick={() => { this.postComment() }}>Post</Button>
           </>
           :
-          <Button variant="outlined" color="primary" onClick={() => { this.setState({ showAddNewComment: true }) }}>Comment</Button>
+          <>
+            {isLoggedIn() && this.state.isCommentable ?
+              <Button variant="outlined" color="primary" onClick={() => { this.setState({ showAddNewComment: true }) }}>Comment</Button>
+              :
+              <></>
+            }
+          </>
         }
       </>
     )
@@ -539,30 +545,42 @@ export default class ProfilePage extends Component {
   renderGraph() {
     return (
       <>{this.state.self ?
-        <Button variant="outlined" color="primary" style={{ width: "50", fontSize: '10px', marginBottom: "20px" }} onClick={() => {
-          this.deletePhoto(this.getUserPhoto(this.state.profileId))
-          window.location.reload(false);
-        }}> Delete Profile Picture </Button>
+
+        <>
+          <Button variant="outlined" color="primary" style={{ width:"50", fontSize:"10px", marginBottom:"20px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
+<br/>
+          <Button variant="outlined" color="primary" style={{ width: "50", fontSize: '10px', marginBottom: "20px" }} onClick={() => {
+            this.deletePhoto(this.getUserPhoto(this.state.profileId))
+            window.location.reload(false);
+          }}> Delete Profile Picture </Button>
+        </>
         :
         <></>
       }
         {!this.state.self && this.state.isPublic ?
           <div style={{ textAlign: 'left', width: "90%", paddingLeft: "10%" }}>
-            <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">{"Your Rating :     "}</Typography>
-            <Rating
-              defaultValue={0}
-              precision={0.5}
-              name="pristine"
-              size="small"
-              style={{ top: "3px", paddingLeft: "13px" }}
-              value={this.state.currentRating / 2.0}
-              onChange={(e) => { this.handleRatingChange(e) }}
-            />
+            {isLoggedIn() && (this.state.isCommentable || this.state.isFollowing) ?
+              <>
+                <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">{"Your Rating :     "}</Typography>
+                <Rating
+                  defaultValue={0}
+                  precision={0.5}
+                  name="pristine"
+                  size="small"
+                  style={{ top: "3px", paddingLeft: "13px" }}
+                  value={this.state.currentRating / 2.0}
+                  onChange={(e) => { this.handleRatingChange(e) }}
+                />
+              </>
+              :
+              <></>
+            }
+          
           </div>
           :
           <></>
         }
-        {this.state.isPublic || this.state.self ? 
+        {this.state.isPublic || this.state.self || this.state.isFollowing || true ? 
         <div style={{ textAlign: 'left', width: "90%", paddingLeft: "10%" }}>
           <Typography component="span" style={{ textAlign: "left", width: '50%', marginBottom: "5px" }} color="primary">Overall Rating :</Typography>
           <Rating
@@ -643,8 +661,8 @@ export default class ProfilePage extends Component {
               :
               <></>
           }
-        {this.state.isPublic || this.state.self ? 
-          <>
+        {/* {this.state.isPublic || this.state.self ? 
+          <> */}
         <Typography variant='h6' color='primary' style={{ margin: "10px 0" }}>Comments</Typography>
         <Paper elevation={6}
           style={{
@@ -660,10 +678,10 @@ export default class ProfilePage extends Component {
           borderColor="primary" border={1}>
           {this.renderComments()}
         </Paper>
-        </>
-        :
-        <></>
-        }
+        {/* </>
+         :
+         <></>
+         } */}
       </>);
   };
   handleProfilePictureChange = (e) => {
@@ -681,7 +699,7 @@ export default class ProfilePage extends Component {
     const data = new FormData();
     data.append("profile_picture", file);
     axios.put(`${config.API_URL}/api/profile_picture/${this.state.profileId}/`, data,
-      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      getRequestHeader())
       .then(res => {
         window.location.reload(false);
       })
@@ -853,12 +871,7 @@ export default class ProfilePage extends Component {
             {this.renderGraph()}
 
           </Grid>
-          {
-            this.state.self ?
-              <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.goToEditProfilePage}>Edit Profile</Button>
-              :
-              <></>
-          }
+          
         </Grid>
       </Grid>
       <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpen} type={this.state.messageType} message={this.state.message} />
@@ -912,44 +925,46 @@ export default class ProfilePage extends Component {
                     :
                     <Typography variant="h5" color="error"> ( Private ) </Typography>
                 }
-                <Grid>
-
-                    
+                {isLoggedIn() ?
+                  <Grid>
                     {!this.state.isFollowing ?
-                        <>
-                        
-                      {!this.state.isPublic ?
+                      <>
 
-                         <>
-                         {!this.state.isFollowReqSent ?
-                         
-                         <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderSentFollowRequest()}>Send Follow Request</Button>
-                        
-                         :
+                        {!this.state.isPublic ?
 
-                         <Button variant="contained" color="primary" style={{ marginTop: "10px" }} >Waiting for Answer</Button>
+                          <>
+                            {!this.state.isFollowReqSent ?
 
-                        }
-                         
-                         </> 
-                                           
-                      :
+                              <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderSentFollowRequest()}>Send Follow Request</Button>
+
+                              :
+
+                              <Button variant="contained" color="primary" style={{ marginTop: "10px" }} >Waiting for Answer</Button>
+
+                            }
+
+                          </>
+
+                          :
                           <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderFollow()}>Follow</Button>
                         }
                       </>
-                    :
+                      :
                       <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.renderUnfollow()}>Unfollow</Button>
-    
                     }
-                    
 
-                </Grid>
+
+                  </Grid>
+                  :
+                  <></>
+                }
               </Grid>
 
               {(this.state.self || this.state.isPublic) ? this.renderMidLeftColumn() : <></>}
               {(this.state.self || this.state.isPublic) ? this.renderMidRightColumn() : <></>}
 
             </Grid>
+            
             <Grid item sm={3}>
               {this.renderGraph()}
               {this.renderAddComment()}
@@ -974,7 +989,7 @@ export default class ProfilePage extends Component {
   }
 
   deletePhoto = (url) => {
-    axios.delete(url, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } });
+    axios.delete(url, getRequestHeader());
   }
 
   showPersonalInfo = () => {
@@ -1012,7 +1027,7 @@ export default class ProfilePage extends Component {
   acceptFollowRequest = (req_id) => {
 
     var userId = this.props.location.pathname.split('/')[2];
-    axios.get(`${config.API_URL}${config.Follow_request_url}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}${config.Follow_request_url}`, getRequestHeader())
     .then(resId=>{
       var unfId = 0
       resId.data.forEach((item) => {
@@ -1023,7 +1038,7 @@ export default class ProfilePage extends Component {
         
       })
 
-      axios.get(`${config.API_URL}${config.Follow_request_url}${unfId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      axios.get(`${config.API_URL}${config.Follow_request_url}${unfId}/`, getRequestHeader())
       .then(resp=>{
 
         console.log(resp.data)
@@ -1045,7 +1060,7 @@ export default class ProfilePage extends Component {
           }
         }
 
-        axios.post(`${config.API_URL}${config.Follow_request_url}${newId}${config.Accept_Path}`, action , { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        axios.post(`${config.API_URL}${config.Follow_request_url}${newId}${config.Accept_Path}`, action , getRequestHeader())
         .then(resAcc=>{ 
           window.location.reload(false);
         });
@@ -1057,7 +1072,7 @@ export default class ProfilePage extends Component {
 rejectFollowRequest = (req_id) => {
 
     var userId = this.props.location.pathname.split('/')[2];
-    axios.get(`${config.API_URL}${config.Follow_request_url}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}${config.Follow_request_url}`, getRequestHeader())
     .then(resId=>{
 
       console.log(resId.data)
@@ -1074,7 +1089,7 @@ rejectFollowRequest = (req_id) => {
         
       })
 
-      axios.get(`${config.API_URL}${config.Follow_request_url}${unfId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      axios.get(`${config.API_URL}${config.Follow_request_url}${unfId}/`, getRequestHeader())
       .then(resp=>{
 
         console.log(resp.data)
@@ -1096,7 +1111,7 @@ rejectFollowRequest = (req_id) => {
           }
         }
 
-        axios.post(`${config.API_URL}${config.Follow_request_url}${newId}${config.Reject_Path}`, action , { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        axios.post(`${config.API_URL}${config.Follow_request_url}${newId}${config.Reject_Path}`, action , getRequestHeader())
         .then(resAcc=>{ 
             window.location.reload(false);
         });
@@ -1107,17 +1122,17 @@ rejectFollowRequest = (req_id) => {
 
   renderFollow() {
 
-  axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+  axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, getRequestHeader())
     .then(resUser => {
       var userId = this.props.location.pathname.split('/')[2];
-      axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      axios.get(`${config.API_URL}${config.User_Path}${userId}/`, getRequestHeader())
         .then(res => {
           const profileState = res.data;
           const follow_create = {
             to_user: profileState.id,
             created: "datatime-local"
           }
-          axios.post(`${config.API_URL}${config.Follow_url}`, follow_create, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+          axios.post(`${config.API_URL}${config.Follow_url}`, follow_create, getRequestHeader())
             .then(resCreate => {
               window.location.reload(false);
             });
@@ -1127,7 +1142,7 @@ rejectFollowRequest = (req_id) => {
 
   renderUnfollow() {
     var userId = this.props.location.pathname.split('/')[2];
-    axios.get(`${config.API_URL}${config.Follow_url}?to_user__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}${config.Follow_url}?to_user__id=${userId}`, getRequestHeader())
       .then(resId => {
 
         let unfId = 0
@@ -1139,7 +1154,7 @@ rejectFollowRequest = (req_id) => {
 
         })
 
-        axios.delete(`${config.API_URL}${config.Follow_url}${unfId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        axios.delete(`${config.API_URL}${config.Follow_url}${unfId}/`, getRequestHeader())
           .then(resDelete => {
             window.location.reload(false);
           });
@@ -1149,7 +1164,7 @@ rejectFollowRequest = (req_id) => {
 
   renderSentFollowRequest() {
 
-    axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, getRequestHeader())
       .then(resUser => {
 
         const userState = resUser.data;
@@ -1157,7 +1172,7 @@ rejectFollowRequest = (req_id) => {
         console.log(userState.profile[0])
 
         var userId = this.props.location.pathname.split('/')[2];
-        axios.get(`${config.API_URL}${config.User_Path}${userId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        axios.get(`${config.API_URL}${config.User_Path}${userId}/`, getRequestHeader())
           .then(res => {
 
             const profileState = res.data;
@@ -1171,7 +1186,7 @@ rejectFollowRequest = (req_id) => {
 
             console.log(followReq_create)
 
-            axios.post(`${config.API_URL}${config.Follow_request_url}`, followReq_create, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            axios.post(`${config.API_URL}${config.Follow_request_url}`, followReq_create, getRequestHeader())
               .then(resCreate => {
                 window.location.reload(false);
               });
@@ -1182,7 +1197,7 @@ rejectFollowRequest = (req_id) => {
 
   renderWithdrawFollowRequest() {
     var userId = this.props.location.pathname.split('/')[2];
-    axios.get(`${config.API_URL}${config.Follow_request_url}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}${config.Follow_request_url}`, getRequestHeader())
       .then(resId => {
 
         console.log(resId.data)
@@ -1200,7 +1215,7 @@ rejectFollowRequest = (req_id) => {
 
     var newId = parseInt(unfId + "")
 
-    axios.delete(`${config.API_URL}${config.Follow_request_url}${newId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.delete(`${config.API_URL}${config.Follow_request_url}${newId}/`, getRequestHeader())
     .then(resDelete => {
 
     });            

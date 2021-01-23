@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import UserNavbar from '../Components/TopBar/UserNavbar';
 import Profilebar from '../Components/ProfileBar/Profilebar';
 import { colorCodes } from "../Common/ColorTheme";
-import {getUserId, getPhoto, getAccessToken, setProfileId} from "../Components/Auth/Authenticate";
+import {getUserId, getPhoto, getAccessToken, setProfileId, getRequestHeader} from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
     backgroundColor: '#f7f7f5',
@@ -138,7 +138,7 @@ export default class SearchPage extends Component {
             console.log(this.state);
         });
         axios.get(`${config.API_URL}/api/notifications/unread/`,
-            { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+            getRequestHeader())
             .then(res => {
                 console.log((res.data))
                 this.setState({notifications: res.data})

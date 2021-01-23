@@ -384,7 +384,7 @@ export default class HomePage extends Component {
       ids.push(idPair);
     }
   
-    if (ids.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaborators</Typography>)
+    if (ids.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaboration Requests</Typography>)
     else return ids.map((item) => {
       return (<>
         {this.getUsernameById(item[1])}
@@ -523,7 +523,7 @@ export default class HomePage extends Component {
                         value={this.state.colabQuery}
                       />
                       <br />
-                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitColabInviteQuery()}>Invite Collaborator</Button>
+                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitColabInviteQuery}>Invite Collaborator</Button>
                     </>
                 </Paper>
               </Grid>

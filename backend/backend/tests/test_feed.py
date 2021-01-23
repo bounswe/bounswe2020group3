@@ -72,9 +72,9 @@ class FeedTests(APITestCase):
         user1's activities. Ex. Project
     '''
 
-    def test_can_get_feeds_user2(self):
+    def test_can_get_timeline(self):
         self.client.force_authenticate(user=self.user2)
-        response = self.client.get('/api/feeds/', format='json')
+        response = self.client.get('/api/feeds/timeline/', format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         result = response.data['results']
         for item in result:
@@ -107,7 +107,7 @@ class FeedTests(APITestCase):
         self.assertEqual(unfollow_response.status_code,
                          status.HTTP_301_MOVED_PERMANENTLY)
 
-        response = self.client.get('/api/feeds/', format='json')
+        response = self.client.get('/api/feeds/timeline/', format='json')
         result = response.data['results']
         found_project = False
         for item in result:

@@ -43,25 +43,36 @@ class FeedViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        user_feed = self.get_feed()
+        user_id = User.objects.get(username=self.request.user).id
+        user_feed = client().feed('user', user_id)
         return Response(data={
             'results': user_feed.get()['results']
         })
+
+    @action(detail=False, methods=['GET'], url_name='timeline',
+            serializer_class=FeedSerializer)
+    def timeline(self, request):
+        user_feed = self.get_timeline()
+        results = user_feed.get()['results']
+        return Response(data={
+            'count': len(results),
+            'results': results
+        }, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['POST'], url_name='unfollow_timeline',
             serializer_class=FeedSerializer)
     def unfollow(self, request):
         unfollow_user_id = self.request.data['user_id']
-        user_feed = self.get_feed()
+        user_feed = self.get_timeline()
         response = user_feed.unfollow('user', unfollow_user_id)
         return Response(data=response, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['GET'], url_name='timeline_followers')
     def followers(self, request):
-        user_feed = self.get_feed()
+        user_feed = self.get_timeline()
         response = user_feed.following()
         return Response(data=response, status=status.HTTP_200_OK)
 
-    def get_feed(self):
+    def get_timeline(self):
         user = User.objects.get(username=self.request.user)
         return client().feed('timeline', user.id)

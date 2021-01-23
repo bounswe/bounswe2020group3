@@ -104,6 +104,7 @@ export default class HomePage extends Component {
     axios.get(`${config.API_URL}${config.Projectpage_url}${project_id}/`, getRequestHeader())
       .then(res => {
         const prof = res.data;
+        console.log(prof);
         const temp_members = (prof.members ? prof.members : [])
         this.setState({
           name: prof.name, desc: prof.description,
@@ -161,7 +162,7 @@ export default class HomePage extends Component {
       let ids = []
       console.log(membersData)
       for(let i = 0 ; i < membersData.length ; i++){
-        ids.push(membersData[i].profile[i].id);
+        ids.push(membersData[i].profile[0].id);
       }
       console.log(ids, membersData);
       console.log(ids, getProfileId())
@@ -330,12 +331,9 @@ export default class HomePage extends Component {
 
   submitColabRequest = () => {
     var proj_id = this.props.location.pathname.split('/')[2];
-    axios.post(`${config.API_URL}/api/collaboration_requests/`, { from_user: this.username, to_project: proj_id }, getRequestHeader())
-        .then(res => {
-          axios.patch(`${config.API_URL}/api/projects/${this.state.projectId}/`, getRequestHeader())
-            .then(res => {
-              this.getProject(this.state.projectId);
-            })
+    axios.post(`${config.API_URL}/api/collaboration_requests/`, { from_user: getUserId(), to_project: proj_id }, getRequestHeader() )
+          .then(res => {
+            this.getProject(this.state.projectId);
         }); 
   };
 
@@ -509,7 +507,7 @@ export default class HomePage extends Component {
                   :
                   <></>
               }
-              {this.state.isMember ? 
+              {this.state.isMember && (this.state.stat === "inviting collaborators" || this.state.stat === "open for collaborators") ? 
                 <Grid item sm={12} style={{marginTop:"20px"}}>
                 <Paper elevation={6}
                   style={{ width: "40%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
@@ -581,7 +579,7 @@ export default class HomePage extends Component {
                 }
               <br />
               <br />
-              {this.state.isNotMember ? 
+              {this.state.isNotMember && this.state.stat === "open for collaborators" ? 
                 <Grid item sm={12} style={{ minHeight: "10vh" }}>
                 <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitColabRequest}>Send Colab Request</Button>
                 </Grid>

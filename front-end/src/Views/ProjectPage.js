@@ -182,10 +182,12 @@ export default class HomePage extends Component {
   };
 
   renderContributor() {
-    var mems = this.state.members;
-    return mems.map((item) => {
+    const { members, membersData } = this.state;
+    return members.map((item, id) => {
       return (
-        <Typography variant="h6" color="primary" style={{ cursor: "pointer", width: "100%", textAlign: "left", textTransform:"capitalize" }}>{item}</Typography>
+        <Typography variant="h6" color="primary" 
+        onClick={() => {this.props.history.push("/profile/"+ membersData[id].id )}}
+        style={{ cursor: "pointer", width: "100%", textAlign: "left", textTransform:"capitalize" }}>{item}</Typography>
       )
     });
   };

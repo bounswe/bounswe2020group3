@@ -9,6 +9,7 @@ import com.bounswe2020group3.paperlayer.project.data.Publication
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
+import retrofit2.Response
 import retrofit2.http.*
 
 interface       ProjectsContract {
@@ -33,6 +34,9 @@ interface       ProjectsContract {
         fun showToast(message: String)
         fun writeLogMessage(type:String ,tag: String,message: String)
 
+        fun showPublicationAdd()
+        fun hidePublicationAdd()
+
         fun resetProjectCardList()
         fun submitProjectCardList()
         fun addProjectCard(projectName: String,projectBody: String,projectOwner: String,projectId: Int,projectType: String)
@@ -47,7 +51,7 @@ interface       ProjectsContract {
         fun getAllProjectsOfOwner(ownerId: Int): Observable<List<ProjectShort>>
         fun getAllPublicationsOfOwner(ownerId: Int): Observable<List<Publication>>
         fun getAuthToken(): BehaviorSubject<AuthToken>
-        fun addPublicationsOfOwner(authorId: String): Observable<Publication>
+        fun addPublicationsOfOwner(authorId: String): Observable<Response<Void>>
     }
 
     interface ProjectService {
@@ -57,8 +61,8 @@ interface       ProjectsContract {
         @GET("/api/projects/")
         fun getAllProjectsOfOwner(@Header("Authorization") authorization: String, @Query("owner__id") ownerId: Int): Observable<List<ProjectShort>>
 
-        @POST("/api/publications/add_publications")
-        fun addPublicationsOfOwner(@Header("Authorization") authorization: String, @Query("author_id") authorId: String): Observable<Publication>
+        @POST("/api/publications/add_publications/")
+        fun addPublicationsOfOwner(@Header("Authorization") authorization: String, @Query("author_id") authorId: String): Observable<Response<Void>>
 
         @GET("/api/publications/")
         fun getAllPublicationsOfOwner(@Query("owner__id") ownerId: Int): Observable<List<Publication>>

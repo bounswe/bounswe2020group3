@@ -14,6 +14,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import retrofit2.Response
 import retrofit2.Retrofit
 import javax.inject.Inject
 
@@ -46,7 +47,7 @@ class ProjectModel @Inject constructor(private var sessionManager: Session,retro
     }
 
     //Add publications of given owner
-    override fun addPublicationsOfOwner(authorId: String): Observable<Publication>{
+    override fun addPublicationsOfOwner(authorId: String): Observable<Response<Void>>{
         return projectService.addPublicationsOfOwner(authToken,authorId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -109,9 +109,8 @@ class ProjectsFragment : Fragment(), ProjectsContract.View, OnCardClickListener,
                     fragmentView.buttonAddProject.visibility= GONE
 
                     if(publicationsCardList.size==0){
-                        showToast("You can connect your scholar id from profile.")
-                        fragmentView.editTextScholarID.visibility= VISIBLE
-                        fragmentView.buttonConnectScholar.visibility=VISIBLE
+                        showToast("Please connect your scholar id.")
+                        showPublicationAdd()
                     }
                     //hideProjectsRecyclerView()
                     //showPublicationsRecyclerView()
@@ -235,6 +234,16 @@ class ProjectsFragment : Fragment(), ProjectsContract.View, OnCardClickListener,
 
     override fun getMyContext(): Context {
         return this.mContext
+    }
+
+    override fun hidePublicationAdd(){
+        fragmentView.editTextScholarID.visibility= GONE
+        fragmentView.buttonConnectScholar.visibility=GONE
+    }
+
+    override fun showPublicationAdd(){
+        fragmentView.editTextScholarID.visibility= VISIBLE
+        fragmentView.buttonConnectScholar.visibility=VISIBLE
     }
 
 }

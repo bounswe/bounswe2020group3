@@ -90,7 +90,12 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectsContra
         val getPublicationObservable = model.addPublicationsOfOwner(authorId).subscribe(
                 { response ->
                     this.view?.writeLogMessage("i",TAG,"Connected successfully.")
-                    this.view?.showToast("Publications connected successfully.Please reload page")
+                    this.view?.showToast("Connected Successfully.")
+                    val userProfileSub = model.getAuthToken().subscribe { token ->
+                        this.view?.hidePublicationAdd()
+                        fetchAllPublicationsOfOwner(token.id)
+                    }
+                    disposable.add(userProfileSub)
                 },
                 { error ->
                     this.view?.writeLogMessage("e",TAG,"Error in connecting scholar id of owner $error")

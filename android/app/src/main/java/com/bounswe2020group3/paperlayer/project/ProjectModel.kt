@@ -39,6 +39,14 @@ class ProjectModel @Inject constructor(private var sessionManager: Session,retro
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
+
+    //Get all projects of given member
+    override fun getAllProjectsOfMember(userId: Int): Observable<List<ProjectShort>> {
+        return projectService.getAllProjectsOfMember(authToken, userId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     //Get all publications of given owner
     override fun getAllPublicationsOfOwner(ownerId: Int): Observable<List<Publication>> {
         return projectService.getAllPublicationsOfOwner(ownerId)

@@ -5,14 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/gradient"
-    android:clickable="true"
-    app:cardBackgroundColor="@color/primaryColor">
+    android:clickable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/Block"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/gradient_item">
+        android:background="@drawable/gradient">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/projectTitle"

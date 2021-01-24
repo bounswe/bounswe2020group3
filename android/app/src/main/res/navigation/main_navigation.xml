@@ -207,7 +207,7 @@
     </fragment>
     <fragment
         android:id="@+id/recentProjectsFragment"
-        android:name="com.bounswe2020group3.paperlayer.home.RecentProjectsFragment"
+        android:name="com.bounswe2020group3.paperlayer.home.RecommendedProjectsFragment"
         android:label="Recent Projects">
         <action
             android:id="@+id/navigateToMilestonesFromProjectUpdates"

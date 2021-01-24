@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
@@ -43,20 +42,16 @@ class EventFragment : Fragment(), HomeContract.EventView, OnCardClickListenerFor
         this.presenter.bind(this)
         resetCardList()
         writeLogMessage("i",TAG,"event fragment has been created.")
-        val mainMenu = view.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-
-        mainMenu.setOnNavigationItemSelectedListener { item ->
+        view.findViewById<BottomNavigationView>(R.id.bottomNavigationView).setOnNavigationItemSelectedListener { item ->
             when(item.itemId){
                 R.id.eventFragment ->{}
-                R.id.projectUpdateFragment ->{
-                    Navigation.findNavController(view).navigate(R.id.navigateToProjectUpdatesFromEvents)
-                    }
+                R.id.recommendedProjectsFragment ->{
+                    Navigation.findNavController(view).navigate(R.id.navigateToProjectUpdatesFromEvents)}
                 R.id.milestoneFragment ->{Navigation.findNavController(view).navigate(R.id.navigateToMilestonesFromEvents)}
 
             }
             true
         }
-
 
         return view
     }

@@ -21,10 +21,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import javax.inject.Inject
 private const val TAG = "RecentProjectsFragment"
 
-class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCardClickListener {
+class RecommendedProjectsFragment : Fragment(), HomeContract.RecommendedProjectsView, OnCardClickListener {
 
     @Inject
-    lateinit var presenter : RecentProjectsPresenter
+    lateinit var presenter : RecommendedProjectsPresenter
 
     lateinit var fragment_view : View
     private lateinit var mContext: Context
@@ -36,14 +36,14 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
     private val projectslist = ArrayList<ProjectUpdateCard>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_projectupdates, container, false)
+        val view = inflater.inflate(R.layout.fragment_recommended_projects, container, false)
         fragment_view = view
         val mainMenu = view.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         view.findViewById<BottomNavigationView>(R.id.bottomNavigationView).setOnNavigationItemSelectedListener {item ->
             when(item.itemId){
                 R.id.eventFragment ->{Navigation.findNavController(view).navigate(R.id.navigateToEventsFromProjectUpdates)}
-                R.id.projectUpdateFragment ->{}
+                R.id.recommendedProjectsFragment ->{}
                 R.id.milestoneFragment ->{Navigation.findNavController(view).navigate(R.id.navigateToMilestonesFromProjectUpdates)}
 
             }

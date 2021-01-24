@@ -45,7 +45,7 @@ class EventFragment : Fragment(), HomeContract.EventView, OnCardClickListenerFor
         view.findViewById<BottomNavigationView>(R.id.bottomNavigationView).setOnNavigationItemSelectedListener { item ->
             when(item.itemId){
                 R.id.eventFragment ->{}
-                R.id.projectUpdateFragment ->{
+                R.id.recommendedProjectsFragment ->{
                     Navigation.findNavController(view).navigate(R.id.navigateToProjectUpdatesFromEvents)}
                 R.id.milestoneFragment ->{Navigation.findNavController(view).navigate(R.id.navigateToMilestonesFromEvents)}
 

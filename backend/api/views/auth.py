@@ -13,6 +13,8 @@ from rest_framework.schemas import coreapi as coreapi_schema
 from rest_framework.views import APIView
 from django_email_verification.Confirm import sendConfirm, validateAndGetField
 
+from api.views.feed import follow_admin
+
 
 class RegisterGenericAPIView(generics.GenericAPIView):
     serializer_class = auth.RegisterSerializer
@@ -32,6 +34,7 @@ class RegisterGenericAPIView(generics.GenericAPIView):
         active_field = validateAndGetField('EMAIL_ACTIVE_FIELD')
         setattr(user, active_field, True)
         user.save()
+        follow_admin(serializer.data['username'])
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

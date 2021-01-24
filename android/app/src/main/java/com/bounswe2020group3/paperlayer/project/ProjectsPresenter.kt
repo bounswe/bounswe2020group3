@@ -9,6 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
+import com.bounswe2020group3.paperlayer.project.data.Tag
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -54,7 +55,7 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectsContra
         val getProjectObservable = model.getAllProjectsOfOwner(ownerId).subscribe(
                 { projectList ->
                     for (project in projectList){
-                        this.view?.addProjectCard(project.name,project.description,project.owner,project.id,"Project")
+                        this.view?.addProjectCard(project.name,project.description,project.owner,project.id,project.tags,"Project")
                         this.view?.writeLogMessage("i",TAG,"Project Fetched + " )//+ project.project_type)
                     }
                     this.view?.writeLogMessage("i",TAG,"Fetching finished.")
@@ -72,7 +73,8 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectsContra
         val getPublicationObservable = model.getAllPublicationsOfOwner(ownerId).subscribe(
                 { publicationList ->
                     for (publication in publicationList){
-                        this.view?.addPublicationCard(publication.title,publication.link,publication.citationNumber.toString(),publication.id)
+                        var emptyList= ArrayList<Tag>()
+                        this.view?.addPublicationCard(publication.title,publication.link,publication.citationNumber.toString(),emptyList,publication.id)
                         this.view?.writeLogMessage("i",TAG,"Publication Fetched + "+publication.title+ " ")//+ project.project_type)
                     }
                     this.view?.writeLogMessage("i",TAG,"Fetching finished.")

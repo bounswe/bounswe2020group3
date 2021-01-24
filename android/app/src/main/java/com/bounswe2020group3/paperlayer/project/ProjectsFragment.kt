@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.project.data.Tag
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_projects.*
 import kotlinx.android.synthetic.main.fragment_projects.view.*
@@ -69,16 +70,17 @@ class ProjectsFragment : Fragment(), ProjectsContract.View, OnCardClickListener,
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_projects, container, false)
         this.fragmentView = view
-        initRecyclerView()
-        resetProjectCardList()
-        resetPublicationCardList()
-        this.presenter.bind(this)
         writeLogMessage("i", TAG, "ProjectMainFragment view created")
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initRecyclerView()
+        resetProjectCardList()
+        resetPublicationCardList()
+        this.presenter.bind(this)
 
         buttonAddProject.setOnClickListener {
             presenter.onNewProjectButtonClicked()
@@ -156,11 +158,11 @@ class ProjectsFragment : Fragment(), ProjectsContract.View, OnCardClickListener,
         writeLogMessage("i", TAG, "Project Card List Updated! " + projectCardList.size)
     }
 
-    override fun addProjectCard(projectName: String, projectBody: String, projectOwner: String, projectId: Int, projectType: String) {
+    override fun addProjectCard(projectName: String, projectBody: String, projectOwner: String, projectId: Int, tags: List<Tag>,projectType: String) {
         projectCardList.add(
                 ProjectCard(projectName,
                         projectBody,
-                        projectOwner, projectId, projectType))
+                        projectOwner, projectId, tags,projectType))
         writeLogMessage("i", TAG, "Project Card Added $projectName ")
     }
 
@@ -176,11 +178,11 @@ class ProjectsFragment : Fragment(), ProjectsContract.View, OnCardClickListener,
         writeLogMessage("i", TAG, "Publication Card List Updated! " + publicationsCardList.size)
     }
 
-    override fun addPublicationCard(publicationTitle: String, publicationAbstract: String, publicationAuthors: String, publicationID: Int) {
+    override fun addPublicationCard(publicationTitle: String, publicationAbstract: String, publicationAuthors: String, tags: List<Tag>,publicationID: Int) {
         publicationsCardList.add(
                 ProjectCard(publicationTitle,
                         publicationAbstract,
-                        publicationAuthors, publicationID,"Publication"))
+                        publicationAuthors, publicationID,tags,"Publication"))
         writeLogMessage("i", TAG, "Publication Card Added $publicationTitle ")
     }
 

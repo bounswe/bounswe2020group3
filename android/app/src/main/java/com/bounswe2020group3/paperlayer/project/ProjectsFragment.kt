@@ -88,7 +88,7 @@ class ProjectsFragment : Fragment(), ProjectsContract.View, OnCardClickListener,
             presenter.connectScholarPublications(this.fragmentView.editTextScholarID.editText?.text.toString())
         }
 
-        //Tablayout listener
+        //Tab layout listener
         tabLayoutProjectsAndPublications!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if(tab.position==0){//Projects tab selected
@@ -100,8 +100,6 @@ class ProjectsFragment : Fragment(), ProjectsContract.View, OnCardClickListener,
                     if(projectCardList.size==0){
                         showToast("You can add projects from create project icon.")
                     }
-                    //showProjectsRecyclerView()
-                    //hidePublicationsRecyclerView()
                 }
                 else{
                     fragmentView.recyclerViewProjects.visibility= GONE
@@ -112,8 +110,6 @@ class ProjectsFragment : Fragment(), ProjectsContract.View, OnCardClickListener,
                         showToast("Please connect your scholar id.")
                         showPublicationAdd()
                     }
-                    //hideProjectsRecyclerView()
-                    //showPublicationsRecyclerView()
                 }
 
             }
@@ -187,24 +183,6 @@ class ProjectsFragment : Fragment(), ProjectsContract.View, OnCardClickListener,
                         publicationAuthors, publicationID,"Publication"))
         writeLogMessage("i", TAG, "Publication Card Added $publicationTitle ")
     }
-
-
-    //Used for testing purposes
-    private fun addExampleProjectList() {
-        //val projectCardList=ArrayList<ProjectCard>()
-        projectCardList.add(
-                ProjectCard("Covid19 Search",
-                        "We are so close to developing vaccine for covid19",
-                        "crazyDoctor", 1, "journal"))
-        projectCardList.add(ProjectCard("Embedded System Class Research",
-                "How to improve cmpe443 class before students make a riot",
-                "crazyProf", 2, "Conference"))
-        projectCardList.add(ProjectCard("Eating Fruits affects performance in coding",
-                "Research about how eating fruits while coding affects performance of programmers",
-                "crazyCoder", 3, "journal"))
-        projectAdapter.submitList(projectCardList)
-    }
-
 
     private fun initRecyclerView() {
         this.recyclerView = fragmentView.findViewById(R.id.recyclerViewProjects)!!

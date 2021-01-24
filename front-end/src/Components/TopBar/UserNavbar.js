@@ -232,6 +232,27 @@ export default function UserNavbar(props) {
             <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
         )
       }
+      else if (type === "Request") {
+        const link = "/profile/" + item.actor.id;
+        const str = item.actor.username + " " + item.verb+ ".";
+        return (
+            <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
+        )
+      }
+      else if (type === "Invite") {
+        const link = "/profile/" + item.actor.id;
+        const str = item.actor.username + " " + item.verb+ ".";
+        return (
+            <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
+        )
+      }
+      else if (type === "Comment") {
+        const link = "/profile/" + item.actor.id;
+        const str = item.actor.username + " " + item.verb+ ".";
+        return (
+            <MenuItem onClick={() => handleNotificationClick(link, item.id)}>{str}</MenuItem>
+        )
+      }
       else {
         return (
             <MenuItem onClick={() => handleMenuClose}>Notification</MenuItem>

@@ -94,7 +94,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             serializer_class=None)
     def get_project_recommendation(self, request):
         user_id = request.GET.get('user_id', None)
-        user_count = int(request.GET.get('user_count', None))
+        user_count = request.GET.get('user_count', None)
         profile = Profile.objects.get(owner_id=user_id)
         exps = []
         if profile.expertise:

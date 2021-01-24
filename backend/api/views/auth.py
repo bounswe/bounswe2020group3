@@ -37,13 +37,13 @@ class RegisterGenericAPIView(generics.GenericAPIView):
 
         text = render_to_string('verification_body.txt', {'link': link})
 
-        for _ in range(3):
+        for _ in range(5):
             try:
                 send_mail("Confirm your PaperLayer account", text,
                           "bupazar451@gmail.com", [user.email])
                 break
-            except any:
-                pass
+            except any as e:
+                print(e)
 
     def post(self, request, *args, **kwargs):
         """

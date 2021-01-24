@@ -47,11 +47,8 @@ class EventPresenter @Inject constructor(private var model: HomeContract.Model) 
 
     override fun fetchNotifications() {
         val getNotificationsObservable = model.getNotifications().subscribe({
-            view?.showToast("Notification Success ${it.notificationsList?.size}")
         }, {
-            view?.showToast("Notification Error")
-        }
-        )
+        })
         disposable.add(getNotificationsObservable)
     }
 
@@ -59,7 +56,6 @@ class EventPresenter @Inject constructor(private var model: HomeContract.Model) 
         val getUnreadNotificationCountObservable = model.getUnreadNotificationCount().subscribe({
             view?.updateNotificationIcon(it.unread_count)
         }, {
-            view?.showToast("Notification count error")
         })
         disposable.add(getUnreadNotificationCountObservable)
     }

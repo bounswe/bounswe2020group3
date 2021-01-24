@@ -55,7 +55,6 @@ class EventFragment : Fragment(), HomeContract.EventView, OnCardClickListenerFor
         }
 
         presenter.fetchUnreadNotificationCount()
-        presenter.fetchNotifications()
 
         return view
     }

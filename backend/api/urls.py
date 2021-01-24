@@ -9,6 +9,7 @@ from .views.publication import PublicationViewSet
 from django.urls import path
 from django.conf.urls import include
 from rest_framework.routers import DefaultRouter
+from .views.feed import FeedViewSet
 from .views.following import FollowingViewSet, FollowRequestViewSet
 from .views.profile import ProfileViewSet, ProfilePictureViewSet
 from .views.auth import RegisterGenericAPIView, LogoutGenericAPIView, AuthView
@@ -38,6 +39,7 @@ router.register(r'collaboration_invites', CollaborationInviteViewSet)
 router.register(r'notifications', NotificationViewSet, basename='notification')
 router.register(r'comments', CommentViewSet)
 router.register(r'ratings', RatingViewSet)
+router.register(r'feeds', FeedViewSet, basename='feed')
 router.register(r'publications', PublicationViewSet)
 router.register(r'reports', ReportViewSet)
 

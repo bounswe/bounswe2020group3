@@ -12,6 +12,8 @@ from rest_framework.schemas import ManualSchema
 from rest_framework.schemas import coreapi as coreapi_schema
 from rest_framework.views import APIView
 
+from api.views.feed import follow_admin
+
 
 class RegisterGenericAPIView(generics.GenericAPIView):
     serializer_class = auth.RegisterSerializer
@@ -23,6 +25,8 @@ class RegisterGenericAPIView(generics.GenericAPIView):
         serializer = auth.RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
+        follow_admin(serializer.data['username'])
 
         # sendConfirm(user)
 

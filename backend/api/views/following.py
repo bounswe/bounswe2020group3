@@ -7,11 +7,14 @@ from api.models.following import Following, FollowRequest
 from api.permission import IsRequestSenderOrReceiver
 from api.serializers.following import FollowSerializer, \
     FollowRequestSerializer, FollowPostSerializer, \
-    FollowRequestPostSerializer
+    FollowRequestPostSerializer, FollowBasicSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 from notifications.signals import notify
+
+from api.serializers.user import UserNotificationSerializer
+from api.views.feed import add_activity_to_feed, follow_user_timeline
 
 
 class FollowingViewSet(viewsets.ModelViewSet):
@@ -44,6 +47,29 @@ class FollowingViewSet(viewsets.ModelViewSet):
                     target=follow,
                     description="Follow"
                     )
+
+        '''
+            Adds the follow to the user feed
+        '''
+        follow_serializer = FollowBasicSerializer(follow).data
+        activity_data = {'actor': str(self.request.user),
+                         'verb': 'followed ' +
+                                 follow_serializer['to_user']['username'],
+                         'type': 'follow',
+                         'object': follow_serializer['id'],
+                         'foreign_id': 'follow:' +
+                                       str(follow_serializer['id']),
+                         'follow': follow_serializer,
+                         }
+
+        add_activity_to_feed(self.request.user, activity_data)
+
+        '''
+            After following, user see activities of followed user
+            in his/her timeline.
+        '''
+        follow_user_timeline(self.request.user,
+                             follow_serializer['to_user']['username'])
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -124,6 +150,13 @@ class FollowRequestViewSet(viewsets.ModelViewSet):
                         target=user,
                         description="User"
                         )
+
+            ''' After accepted the follow request, user see
+                all activities of followed user in his/her timeline.
+            '''
+            user_serializer = UserNotificationSerializer(user).data
+            follow_user_timeline(self.request.user,
+                                 user_serializer['username'])
 
             return Response(status=status.HTTP_201_CREATED)
         else:

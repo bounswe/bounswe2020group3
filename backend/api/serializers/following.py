@@ -44,6 +44,18 @@ class FollowSerializer(serializers.HyperlinkedModelSerializer):
         fields = ("id", "from_user", "to_user", "created")
 
 
+class FollowBasicSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Follow serializer
+    """
+    from_user = UserNotificationSerializer(read_only=True)
+    to_user = UserNotificationSerializer(read_only=True)
+
+    class Meta:
+        model = Following
+        fields = ("id", "from_user", "to_user", "created")
+
+
 class FollowPostSerializer(serializers.HyperlinkedModelSerializer):
     """
     Follow serializer

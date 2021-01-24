@@ -113,7 +113,9 @@ export default class ProfilePage extends Component {
       isFollowing: false, // ben onu followluyor muyum
       isFollower: false, // o beni mi followluyor
       isFollowReqSent: false,
-      isFollowReqReceived: false
+      isFollowReqReceived: false,
+      showReportTag: false,
+      reportQuery: ""
     }
   };
 
@@ -660,6 +662,8 @@ export default class ProfilePage extends Component {
           }
         {/* {this.state.isPublic || this.state.self ? 
           <> */}
+
+        <Grid>
         <Typography variant='h6' color='primary' style={{ margin: "10px 0" }}>Comments</Typography>
         <Paper elevation={6}
           style={{
@@ -675,12 +679,73 @@ export default class ProfilePage extends Component {
           borderColor="primary" border={1}>
           {this.renderComments()}
         </Paper>
+        </Grid>
+        {!this.state.self ?
+        <>
+        <Grid item sm={12} style={{ minHeight: "10vh" }}>
+                {/* <Typography variant="h5" color="primary">Tags</Typography> */}
+                <Paper elevation={6}
+                  style={{border: "solid 1px blue", width: "90%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
+                  borderColor="primary"
+                  border={1}>
+                  {this.state.showReportTag ?
+                    <>
+                      <Input
+                        type="text"
+                        color='primary'
+                        style={{ width: "90%", textTransform: "capitalize" }}
+                        placeholder="Please enter a new tag and press enter"
+                        onChange={(e) => { this.handleReportQuery(e); }}
+                        value={this.state.reportQuery}
+                      />
+                      
+                      <br />
+                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitReportQuery}>Send Report</Button>
+                    </>
+                    :
+                    <Button color="primary" variant="outlined" onClick={() => { this.setState({ showReportTag: true }) }}> Send New Report </Button>
+                  }
+                </Paper>
+              </Grid>
+              </>
+              :
+                
+                <></>
+              }
         {/* </>
          :
          <></>
          } */}
       </>);
   };
+
+  handleReportQuery = (e) => {
+    this.setState({ reportQuery: e.target.value })
+  };
+
+  submitReportQuery = () => {
+    const {reportQuery} = this.state;
+    let newReportId = getUserId();
+    let newReportName  = "user_report_" + newReportId;
+    if (reportQuery === undefined) return;
+    
+    console.log(this.reportQuery)
+    
+/*    axios.patch(`${config.API_URL}/api/profiles/${this.state.profileId}/`, newReportId, getRequestHeader())
+      .then(res => {
+        
+      })
+    // STH
+*/      
+      this.setState({ showReportTag: false, reportQuery: "" });
+      this.getProfile(this.state.profileId);
+  /*  console.log("Report Here!!!")
+      console.log(newReportId);
+      console.log(newReportName); */
+    
+
+  }
+
   handleProfilePictureChange = (e) => {
     this.setState({ file: e.target.files[0] });
   }

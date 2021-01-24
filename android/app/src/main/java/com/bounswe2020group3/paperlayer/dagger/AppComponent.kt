@@ -12,6 +12,7 @@ import com.bounswe2020group3.paperlayer.profile.ProfileFragment
 import com.bounswe2020group3.paperlayer.profile.edit.ProfileEditFragment
 import com.bounswe2020group3.paperlayer.profile.follow.FollowListFragment
 import com.bounswe2020group3.paperlayer.profile.list.UserListFragment
+import com.bounswe2020group3.paperlayer.profile.report.ReportFragment
 import com.bounswe2020group3.paperlayer.profile.user.UserFragment
 import com.bounswe2020group3.paperlayer.project.ProjectDetailFragment
 import com.bounswe2020group3.paperlayer.project.ProjectsFragment
@@ -37,7 +38,8 @@ import javax.inject.Singleton
     ProjectEditModule::class,
     SearchModule::class,
     UserModule::class,
-    EventModule::class
+    EventModule::class,
+    ReportModule::class
 ])
 @Singleton
 interface AppComponent {
@@ -60,5 +62,5 @@ interface AppComponent {
     fun inject(fragment: EventDetailFragment)
     fun inject(fragment: CollabFragment)
     fun inject(fragment: ManageInvitesFragment)
-
+    fun inject(fragment: ReportFragment)
 }

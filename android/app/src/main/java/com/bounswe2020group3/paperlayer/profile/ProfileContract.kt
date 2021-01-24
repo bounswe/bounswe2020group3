@@ -2,12 +2,14 @@ package com.bounswe2020group3.paperlayer.profile
 
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.data.user.Profile
+import com.bounswe2020group3.paperlayer.data.user.Report
 import com.bounswe2020group3.paperlayer.data.user.User
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import okhttp3.MediaType
 import okhttp3.MultipartBody
+import retrofit2.Response
 import retrofit2.http.*
 import java.io.File
 
@@ -33,6 +35,7 @@ interface ProfileContract {
         fun getUser(userId: Int): Single<User>
         fun getUserList(): Observable<List<User>>
         fun updateProfilePicture(profileId: Int, file: File, type: MediaType): Observable<retrofit2.Response<Void>>
+        fun reportUser(report: Report): Observable<Response<Any>>
     }
 
     interface Service {
@@ -54,7 +57,9 @@ interface ProfileContract {
                 @Header("Authorization") authorization: String,
                 @Path("profileId") profileId: Int,
                 @Part photo: MultipartBody.Part
-        ): Observable<retrofit2.Response<Void>>
+        ): Observable<Response<Void>>
 
+        @POST("/api/reports/")
+        fun reportUser(@Header("Authorization") authorization: String, @Body report: Report): Observable<Response<Any>>
     }
 }

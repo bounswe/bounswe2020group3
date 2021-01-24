@@ -163,6 +163,9 @@
         <action
             android:id="@+id/navigateToProfileFromUser"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/navigateToReportFromUser"
+            app:destination="@id/reportFragment" />
     </fragment>
     <fragment
         android:id="@+id/inviteFragment"
@@ -254,4 +257,9 @@
         android:id="@+id/manageInvitesFragment"
         android:name="com.bounswe2020group3.paperlayer.invite.ManageInvitesFragment"
         android:label="ManageInvitesFragment" />
+    <fragment
+        android:id="@+id/reportFragment"
+        android:name="com.bounswe2020group3.paperlayer.profile.report.ReportFragment"
+        android:label="Report"
+        tools:layout="@layout/fragment_report" />
 </navigation>

@@ -88,6 +88,11 @@ class UserFragment : Fragment(), UserContract.View {
         layoutUserFollowings.setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToFollowListFromUser, followingBundle)
         }
+
+        imageViewReportUser.setOnClickListener{
+            val reportBundle = bundleOf("userID" to userID)
+            Navigation.findNavController(view).navigate(R.id.navigateToReportFromUser, reportBundle)
+        }
     }
 
     override fun onResume() {

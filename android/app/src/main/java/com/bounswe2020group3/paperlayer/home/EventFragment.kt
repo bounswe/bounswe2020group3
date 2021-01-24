@@ -38,9 +38,7 @@ class EventFragment : Fragment(), HomeContract.EventView, OnCardClickListenerFor
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_events, container, false)
         this.fragment_view = view
-        initRecycler()
-        this.presenter.bind(this)
-        resetCardList()
+
         writeLogMessage("i",TAG,"event fragment has been created.")
         view.findViewById<BottomNavigationView>(R.id.bottomNavigationView).setOnNavigationItemSelectedListener { item ->
             when(item.itemId){
@@ -55,6 +53,14 @@ class EventFragment : Fragment(), HomeContract.EventView, OnCardClickListenerFor
 
         return view
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initRecycler()
+        this.presenter.bind(this)
+        resetCardList()
+    }
+
     fun initRecycler(){
         viewManager = LinearLayoutManager(this.context)
         viewAdapter = EventAdaptor(this)

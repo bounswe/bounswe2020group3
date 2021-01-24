@@ -28,11 +28,11 @@ class RegisterFragment : Fragment(), RegisterContract.View {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
 
-        presenter.bind(this)
         return inflater.inflate(R.layout.fragment_register, container, false)
         }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.bind(this)
 
         view.findViewById<Button>(R.id.buttonRegister).setOnClickListener {
             var register = CreateUserService.checkRegistration(view)

@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -11,13 +12,40 @@ from rest_framework.compat import coreapi, coreschema
 from rest_framework.schemas import ManualSchema
 from rest_framework.schemas import coreapi as coreapi_schema
 from rest_framework.views import APIView
-from django_email_verification.Confirm import sendConfirm, validateAndGetField
 
-from api.views.feed import follow_admin
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django_email_verification.views import verify
+from django.urls import get_resolver
+from django.contrib.auth.tokens import default_token_generator
+# from django_email_verification.Confirm import sendConfirm
+# validateAndGetField
+
+# from api.views.feed import follow_admin
 
 
 class RegisterGenericAPIView(generics.GenericAPIView):
     serializer_class = auth.RegisterSerializer
+
+    def __send_verification(self, user: User):
+        domain = 'https://paperlayer-backend.azurewebsites.net/'
+        token = default_token_generator.make_token(user)
+
+        link = ''
+        for k, v in get_resolver(None).reverse_dict.items():
+            if k is verify and v[0][0][1][0]:
+                addr = str(v[0][0][0])
+                link = domain + addr[0: addr.index('%')] + token
+
+        text = render_to_string('verification_body.txt', {'link': link})
+
+        for _ in range(3):
+            try:
+                send_mail("Confirm your PaperLayer account", text,
+                          "bupazar451@gmail.com", [user.email])
+                break
+            except any:
+                pass
 
     def post(self, request, *args, **kwargs):
         """
@@ -26,15 +54,16 @@ class RegisterGenericAPIView(generics.GenericAPIView):
         serializer = auth.RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-
-        sendConfirm(user)
+        self.__send_verification(user)
+        # sendConfirm(user)
 
         # For testing purposes. Normally, user can't log in if the system
         # fails to send an email.
-        active_field = validateAndGetField('EMAIL_ACTIVE_FIELD')
-        setattr(user, active_field, True)
-        user.save()
-        follow_admin(serializer.data['username'])
+        # active_field = validateAndGetField('EMAIL_ACTIVE_FIELD')
+        # setattr(user, active_field, True)
+        # user.save()
+
+        # follow_admin(serializer.data['username'])
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

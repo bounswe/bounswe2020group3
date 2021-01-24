@@ -5,7 +5,8 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from api.permission import CommentPermission
 from api.serializers.comment import CommentSerializer, \
-    CommentUpdateSerializer, CommentFeedSerializer
+    CommentUpdateSerializer, CommentFeedSerializer, \
+    CommentCreateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework import status
@@ -31,6 +32,8 @@ class CommentViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action in ['update', 'partial_update']:
             return CommentUpdateSerializer
+        elif self.action in ['create']:
+            return CommentCreateSerializer
         else:
             return CommentSerializer
 

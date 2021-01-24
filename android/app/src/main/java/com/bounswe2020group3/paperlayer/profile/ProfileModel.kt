@@ -5,6 +5,7 @@ import android.os.FileUtils
 import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.network.RetrofitProvider
 import com.bounswe2020group3.paperlayer.data.user.Profile
+import com.bounswe2020group3.paperlayer.data.user.Report
 import com.bounswe2020group3.paperlayer.data.user.User
 import com.bounswe2020group3.paperlayer.util.Session
 import io.reactivex.Observable
@@ -77,5 +78,12 @@ class ProfileModel @Inject constructor(private var sessionManager: Session) : Pr
         return profileService.updateProfilePicture(authorization, profileId, pictureFile)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun reportUser(report: Report): Observable<Response<Any>> {
+        val authorization = "Token ${getAuthToken().token}"
+        return profileService.reportUser(authorization, report)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 }

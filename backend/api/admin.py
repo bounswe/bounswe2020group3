@@ -12,6 +12,7 @@ from .models.collaboration_request import CollaborationRequest
 from .models.comment import Comment
 from .models.rating import Rating
 from .models.tag import Tag
+from .models.report import Report
 
 admin.site.register(Profile)
 admin.site.register(Project)
@@ -25,3 +26,4 @@ admin.site.register(CollaborationRequest)
 admin.site.register(Comment)
 admin.site.register(Rating)
 admin.site.register(Tag)
+admin.site.register(Report)

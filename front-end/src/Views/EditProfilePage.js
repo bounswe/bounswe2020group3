@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
-import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
+import { getRequestHeader, getUserId } from '../Components/Auth/Authenticate';
 import axios from 'axios';
 import config from '../config';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -88,14 +88,14 @@ export default class EditProfilePage extends Component {
         shareAffiliations: false,
         shareGender : false,
         shareBio: false,
-        isPublic: false
+        isPublic: false,
+        notifications: [],
  
 
       }
     };
     componentDidMount() {
-      axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`,
-      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, getRequestHeader())
       .then(res => {
         let prof = res.data.profile[0];
         this.setState({
@@ -121,7 +121,13 @@ export default class EditProfilePage extends Component {
         this.setState({ success: false, message: "Error when fetching profile data.", messageType: AlertTypes.Error });
         this.handleSnackbarOpen()
         console.log(error);
-      }); 
+      });
+        axios.get(`${config.API_URL}/api/notifications/unread/`,
+            getRequestHeader())
+            .then(res => {
+                console.log((res.data))
+                this.setState({notifications: res.data})
+            });
     }
 
     handleSnackbarOpen = () => {
@@ -198,7 +204,7 @@ export default class EditProfilePage extends Component {
           share_bio : shareBio
         };
         
-        axios.put(`${config.API_URL}${config.Edit_Profile_Url}${this.state.profileId}/`, profile, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        axios.put(`${config.API_URL}${config.Edit_Profile_Url}${this.state.profileId}/`, profile, getRequestHeader())
           .then(res => {
             console.log(res.data)
             this.setState({ success: true, messageType: AlertTypes.Success, message: Messages.profileEditSuccess }, () => {
@@ -223,6 +229,7 @@ export default class EditProfilePage extends Component {
               pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
               goHome={() => { this.props.history.push(config.Homepage_Path) }}
               history ={this.props.history}
+              notifications = {this.state.notifications}
             />
             <FormWrapper>
               <h1 style={{ color: "black" }}> Edit Profile </h1>

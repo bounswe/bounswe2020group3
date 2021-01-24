@@ -16,10 +16,15 @@ import re
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.db.models import Case, When
+from django_filters.rest_framework import DjangoFilterBackend
 
 project_param = openapi.Parameter(
     'project_id', openapi.IN_QUERY,
     description="Project id to get recommendations",
+    type=openapi.TYPE_INTEGER)
+count_param = openapi.Parameter(
+    'project_count', openapi.IN_QUERY,
+    description="Number of users requested",
     type=openapi.TYPE_INTEGER)
 
 
@@ -28,6 +33,8 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     This viewset automatically provides `list` and `detail` actions.
     """
     queryset = User.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['username']
 
     def retrieve(self, request, *args, **kwargs):
         self.accessed_user = self.get_object()
@@ -55,13 +62,14 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
             return UserFullSerializer
 
     @swagger_auto_schema(
-        method='get', manual_parameters=[project_param]
+        method='get', manual_parameters=[project_param, count_param]
     )
     @action(detail=False, methods=['GET'],
             name='get_collaborator_recommendation',
             serializer_class=None)
     def get_collaborator_recommendation(self, request):
         project_id = request.GET.get('project_id', None)
+        project_count = request.GET.get('project_count', None)
         project = get_object_or_404(Project, pk=project_id)
         project_owner = project.owner_id
         reqs = []
@@ -118,9 +126,15 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         for invite in invited_users:
             user_score.pop(invite.to_user.id, None)
 
-        top_ids = [i for i in sorted(user_score,
-                                     key=user_score.get,
-                                     reverse=True)]
+        top_ids = []
+        if project_count:
+            top_ids = [i for i in sorted(user_score,
+                                         key=user_score.get,
+                                         reverse=True)[:int(project_count)]]
+        else:
+            top_ids = [i for i in sorted(user_score,
+                                         key=user_score.get,
+                                         reverse=True)]
 
         preserved = Case(*[When(id=pk, then=pos)
                            for pos, pk in enumerate(top_ids)])

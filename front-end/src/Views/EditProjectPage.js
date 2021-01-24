@@ -12,7 +12,7 @@ import "../index.scss";
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import AlertTypes from '../Common/AlertTypes.json';
-import { getAccessToken, getUserId } from '../Components/Auth/Authenticate';
+import { getAccessToken, getUserId, getRequestHeader } from '../Components/Auth/Authenticate';
 import { format } from "date-fns";
 import UserNavbar from "../Components/TopBar/UserNavbar";
 
@@ -130,6 +130,7 @@ export default class ProjectPage extends Component {
       collaborators: [this.getSelfProfile()],  //Other members to be added later TODO
       isPublic: true,
       events: [],
+      notifications: [],
       event : "",
       tags: [{
         name: "",
@@ -154,6 +155,12 @@ export default class ProjectPage extends Component {
           this.setState({event:prof.event.id});
         }
       });
+    axios.get(`${config.API_URL}/api/notifications/unread/`,
+        getRequestHeader())
+        .then(res => {
+          console.log((res.data))
+          this.setState({notifications: res.data})
+        });
     axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers:{'Content-Type':'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
       .then(res => {
         let name = res.data.profile[0].name;
@@ -216,7 +223,7 @@ export default class ProjectPage extends Component {
     }
     const event_filter = { event_type : type };
     axios.get(`${config.API_URL}${config.Event_Creation_Url}?event_type=${event_filter.event_type}`, event_filter, 
-      { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      getRequestHeader())
       .then(res => {
         console.log(res.data);
         const events = res.data;
@@ -285,7 +292,7 @@ export default class ProjectPage extends Component {
     var project_id =this.props.location.pathname.split('/')[2];
     console.log("project")
     console.log(project)
-    axios.patch(`${config.API_URL}${config.Projectpage_url}${project_id}/`, project, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.patch(`${config.API_URL}${config.Projectpage_url}${project_id}/`, project, getRequestHeader())
       .then(res => {
         console.log("project")
         console.log(res.data)
@@ -313,6 +320,7 @@ export default class ProjectPage extends Component {
           pushProfile={() => { this.props.history.push(`/profile/${getUserId()} `) }}
           goHome={() => { this.props.history.push(config.Homepage_Path) }}
           history ={this.props.history}
+          notifications = {this.state.notifications}
         />
         <FormWrapper>
           <h1 style={{ color: "black" }}> Edit Project </h1>

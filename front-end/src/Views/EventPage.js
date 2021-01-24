@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import Profilebar from "../Components/ProfileBar/Profilebar";
-import {getAccessToken, getUserId, getPhoto} from "../Components/Auth/Authenticate";
+import {getAccessToken, getUserId, getPhoto, getRequestHeader} from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
     backgroundColor: '#f7f7f5',
@@ -39,6 +39,7 @@ export default class HomePage extends Component {
             date:"",
             type:"",
             url:"",
+            notifications: [],
             username:"",
             userlastname:"",
             photoUrl:""
@@ -72,6 +73,12 @@ export default class HomePage extends Component {
             let photoUrl = (res.data.profile[0].photo_url)
             this.setState({ username:name , userlastname: lastname, photoUrl:photoUrl });
         });
+        axios.get(`${config.API_URL}/api/notifications/unread/`,
+            getRequestHeader())
+            .then(res => {
+                console.log((res.data))
+                this.setState({notifications: res.data})
+            });
     };
 
     render() {
@@ -82,6 +89,7 @@ export default class HomePage extends Component {
             pushProfile={() => { this.props.history.push("/profile/" + getUserId()) }}
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
             history ={this.props.history}
+            notifications = {this.state.notifications}
           />
             <Box style={{marginTop:"8px"}}>
             <Profilebar
@@ -95,21 +103,21 @@ export default class HomePage extends Component {
           <Grid container direction="row" justify="space-evenly" alignItems="baseline" style={{marginLeft:"200px", width:`calc(100% - 200px)`}}>
             <Grid item sm={8}>
               <Typography variant="h5" color="primary">{this.state.name}</Typography>
-              <Typography variant="h5" color="primary">Brief Description</Typography>
-              <Paper elevation={6} style={{border: "solid 1px blue", minHeight: "100px"}}>
+              <Typography variant="h5" color="primary">Event Description</Typography>
+              <Paper elevation={6} style={{border: "solid 1px blue", minHeight: "100px", padding:"20px"}}>
                   <Typography variant="body1">{this.state.desc}</Typography>
               </Paper>
             </Grid>
             <Grid item sm={3} >
               <Typography variant="h5" color="primary">Important Dates</Typography>
-              <Paper elevation={6} style={{border: "solid 1px blue", minHeight: "100px", marginBottom:"10px"}}>
+              <Paper elevation={6} style={{border: "solid 1px blue", minHeight: "100px", marginBottom:"10px", padding:"10px"}}>
                   <Typography variant="body1" color="secondary">Event Date is:</Typography>
                   <Typography variant="body1">{this.state.date}</Typography>
                   <Typography variant="body1" color="secondary">Deadline of Event:</Typography>
                   <Typography variant="body1">{this.state.deadline}</Typography>
               </Paper>
               <Typography variant="h5" color="primary">Event Details</Typography>
-              <Paper elevation={6} style={{border: "solid 1px blue", minHeight: "100px", marginBottom:"10px"}}>
+              <Paper elevation={6} style={{border: "solid 1px blue", minHeight: "60px", marginBottom:"10px", padding:"10px"}}>
                 <Typography variant="body1" color="secondary">{this.state.type.toUpperCase()}</Typography>
                 <Link href={this.state.url}>{this.state.name}</Link>
               </Paper>

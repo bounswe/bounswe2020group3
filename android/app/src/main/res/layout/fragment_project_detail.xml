@@ -74,12 +74,12 @@
 
                                 <TextView
                                     android:id="@+id/projectTitle"
+                                    style="@style/TextAppearance.MaterialComponents.Headline5"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:gravity="center_vertical"
-                                    android:text="Project Title"
-                                    style="@style/TextAppearance.MaterialComponents.Headline5"/>
+                                    android:text="Project Title" />
 
                                 <ImageView
                                     android:id="@+id/imageViewCollabRequests"
@@ -105,15 +105,16 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="end"
                                 android:orientation="horizontal">
+
                                 <Button
                                     android:id="@+id/buttonCollab"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="end"
                                     android:layout_margin="@dimen/margin_sm"
+                                    android:text="Collaborate"
                                     android:visibility="gone"
-                                    tools:visibility="gone"
-                                    android:text="Collaborate" />
+                                    tools:visibility="gone" />
                             </LinearLayout>
 
                         </LinearLayout>
@@ -303,18 +304,18 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/project_requirements_title"
                                 android:layout_gravity="left"
                                 android:gravity="center_vertical"
+                                android:text="@string/project_requirements_title"
                                 android:textAppearance="?attr/textAppearanceHeadline5" />
 
                             <TextView
                                 android:id="@+id/projectRequirements"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="left"
                                 android:layout_marginTop="8dp"
                                 android:gravity="center_vertical"
-                                android:layout_gravity="left"
                                 android:text=""
                                 android:textAppearance="?attr/textAppearanceBody2"
                                 android:textColor="?android:attr/textColorSecondary" />
@@ -346,8 +347,8 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/project_detail_tag_title"
                                 android:gravity="center_vertical"
+                                android:text="@string/project_detail_tag_title"
                                 android:textAppearance="?attr/textAppearanceHeadline5" />
 
                             <TextView
@@ -358,14 +359,12 @@
                                 android:gravity="center_vertical"
                                 android:text="@string/project_detail_tag_not_found"
                                 android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary"
-                                />
+                                android:textColor="?android:attr/textColorSecondary" />
 
                             <com.google.android.material.chip.ChipGroup
                                 android:id="@+id/chipGroupTags"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-                            </com.google.android.material.chip.ChipGroup>
+                                android:layout_height="wrap_content"></com.google.android.material.chip.ChipGroup>
 
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -380,9 +379,10 @@
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardViewEvent"
                         android:layout_width="match_parent"
-                        app:cardElevation="5dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="2dp">
+                        android:layout_margin="2dp"
+                        app:cardElevation="5dp">
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -394,10 +394,10 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/project_detail_event_title"
                                 android:gravity="center_vertical"
-                                android:textAppearance="?attr/textAppearanceHeadline5"
-                                />
+                                android:text="@string/project_detail_event_title"
+                                android:textAppearance="?attr/textAppearanceHeadline5" />
+
                             <TextView
                                 android:id="@+id/textViewEvents"
                                 android:layout_width="wrap_content"
@@ -432,22 +432,20 @@
                             android:padding="16dp">
 
                             <!-- Title, secondary and supporting text -->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/project_detail_milestone_title"
-                                android:gravity="center_vertical"
-                                android:textAppearance="?attr/textAppearanceHeadline5" />
 
                             <TextView
-                                android:id="@+id/textViewMilestones"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
                                 android:gravity="center_vertical"
-                                android:text=""
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary" />
+                                android:text="@string/project_detail_milestone_title"
+                                android:textAppearance="?attr/textAppearanceHeadline5" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:layout_width="match_parent"
+                                android:id="@+id/recyclerViewMilestones"
+                                android:background="@null"
+                                android:layout_height="wrap_content" />
+
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
@@ -459,21 +457,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="gone"
                 tools:visibility="gone">
 
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewProjectMembers"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonInvite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Invite Member" />
+                </androidx.recyclerview.widget.RecyclerView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonManageInvites"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Manage Your INVITES" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonInvite"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Invite Member" />
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -20,6 +20,7 @@ interface InviteContract {
 
         fun subscribeAuthToken()
         fun fetchAllUsers(ownerId: Int)
+        fun fetchRecommendedUsers(ownerId : Int)
         fun OnInviteButtonClicked(Item : InviteCard,position : Int)
     }
 
@@ -40,6 +41,7 @@ interface InviteContract {
     interface Model {
         //fun getProject(projectId: Int): Single<Project>
         fun getAllUsers(): Observable<List<User>>?
+        fun getRecommendedUsers(projectId : Int): Observable<List<User>>?
         fun getAuthToken(): BehaviorSubject<AuthToken>
         fun inviteUsers(inviteRequest: InviteRequest) : Observable<CollaborationInvite>
         fun getInvited(projectId : Int ) :  Observable<List<CollaborationInvite>>
@@ -56,8 +58,14 @@ interface InviteContract {
         @GET("/api/users/")
         fun getUsers(): Observable<List<User>>
 
+        @GET("/api/users/get_collaborator_recommendation")
+        fun getRecommendedUsers(@Query("project_id") projectId : Int): Observable<List<User>>
+
+
         @DELETE("api/collaboration_invites/{id}/")
         fun deleteInvite(@Header("Authorization") authorization: String,@Path("id") invite_id : Int ) : Completable
+
+
     }
 
 

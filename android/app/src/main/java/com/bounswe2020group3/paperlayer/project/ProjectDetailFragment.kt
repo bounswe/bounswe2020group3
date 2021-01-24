@@ -18,6 +18,7 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.project.data.Milestone
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.User
 import com.bounswe2020group3.paperlayer.projectCreate.ProjectState
@@ -43,13 +44,22 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
     //View object
     private lateinit var fragmentView: View
 
-    //Adapter Object
+    //Adapter Object of members
     private lateinit var membersAdapter: MembersAdapter
 
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerViewMembers: RecyclerView
+
+    //Adapter Object of Milestones
+    private lateinit var milestoneAdapter: MilestoneAdapter
+
+    private lateinit var recyclerViewMilestone: RecyclerView
 
     //Member Card List
     private val memberCardList = ArrayList<MemberCard>()
+
+    //Milestone Card List
+    private val milestoneCardList = ArrayList<MilestoneCard>()
+
 
     //Current OwnerID
     private var ownerID = 0
@@ -78,6 +88,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
 
         initRecyclerView()
         resetMemberCardList()
+        resetMilestoneCardList()
 
         //Getting bundle arguments
         val projectID = arguments?.getInt("projectID")
@@ -94,6 +105,10 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         view.findViewById<Button>(R.id.buttonInvite).setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToInviteFromProjectDetails,bundle)
         }
+        view.findViewById<Button>(R.id.buttonManageInvites).setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToManageInvitesFromProject,bundle)
+        }
+
         view.findViewById<ImageView>(R.id.imageViewCollabRequests).setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToCollabRequestsFromProject,bundle)
         }
@@ -141,16 +156,41 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         writeLogMessage("i", TAG, "Member Card Added ${user.username}")
     }
 
+    override fun addMilestoneCard(milestone: Milestone) {
+        milestoneCardList.add(
+            MilestoneCard(milestone))
+        writeLogMessage("i", TAG, "Milestone Card Added ${milestone.description}")
+    }
+
+    override fun submitMilestoneCardList() {
+        milestoneAdapter.submitList(this.milestoneCardList)
+        milestoneAdapter.notifyDataSetChanged() //notify to update recyclerview
+        writeLogMessage("i", TAG, "Milestone Card List Updated! " + milestoneCardList.size)
+    }
+
+    override fun resetMilestoneCardList() {
+        milestoneCardList.clear()
+        milestoneAdapter.submitList(this.milestoneCardList)
+        milestoneAdapter.notifyDataSetChanged() //notify to update recyclerview
+    }
+
+
     override fun updateCurrentUser(ownerID: Int) {
         this.ownerID=ownerID
         this.presenter.getProject()?.let { updateProjectUI(it) }
     }
 
     private fun initRecyclerView() {
-        this.recyclerView = fragmentView.findViewById(R.id.recyclerViewProjectMembers)!!
-        this.recyclerView.layoutManager = LinearLayoutManager(this.context)
+        this.recyclerViewMembers = fragmentView.findViewById(R.id.recyclerViewProjectMembers)!!
+        this.recyclerViewMembers.layoutManager = LinearLayoutManager(this.context)
         this.membersAdapter = MembersAdapter(this)
-        this.recyclerView.adapter = membersAdapter
+        this.recyclerViewMembers.adapter = membersAdapter
+
+        this.recyclerViewMilestone = fragmentView.findViewById(R.id.recyclerViewMilestones)!!
+        this.recyclerViewMilestone.layoutManager=LinearLayoutManager(this.context)
+        this.milestoneAdapter=MilestoneAdapter()
+        this.recyclerViewMilestone.adapter=milestoneAdapter
+
         writeLogMessage("i", TAG, "RecyclerView initialized.")
     }
 
@@ -190,15 +230,26 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         this.fragmentView.projectState.text=project.state
         this.fragmentView.projectRequirements.text=project.requirements
 
+        //Adding event
         if(project.event!=null)
         {
             this.fragmentView.textViewEvents.text=project.event.title
         }
+        else{
+            this.fragmentView.textViewEvents.setText(R.string.project_detail_event_not_found);
+        }
+
+
+        //Adding milestones
+        for(milestone in project.milestones.orEmpty()){
+            addMilestoneCard(milestone)
+            submitMilestoneCardList()
+        }
 
         //Adding Members
         for (member in project.members.orEmpty()){
-                addMemberCard(member)
-                submitMemberCardList()
+            addMemberCard(member)
+            submitMemberCardList()
         }
 
         //Tag Field Text

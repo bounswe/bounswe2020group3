@@ -115,7 +115,7 @@ export default class LoginPage extends Component {
     render() {
         return (
             <Container>
-                <PrimarySearchAppBar registerNav={this.goToRegister} />
+                <PrimarySearchAppBar registerNav={this.goToRegister} history={this.props.history} />
                 <form className="" onSubmit={this.handleSubmit}>
                     <Typography variant="h4" color="primary">Login</Typography>
                     <div className="">

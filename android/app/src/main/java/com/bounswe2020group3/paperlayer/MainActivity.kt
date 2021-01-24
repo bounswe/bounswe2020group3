@@ -87,9 +87,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.notification_badge -> {
-
-                // Do something
+            R.id.itemNotificationAction -> {
+                navController.navigate(R.id.notificationFragment)
                 return true
             }
         }

@@ -17,14 +17,17 @@
     <TextView
         android:id="@+id/notification_badge"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="right|end|top"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="-5dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="-6dp"
         android:background="@drawable/rounded_square"
         android:gravity="center"
-        android:padding="3dp"
-        android:text="10"
+        android:paddingVertical="4dp"
+        android:paddingHorizontal="6dp"
+        tools:visibility="visible"
+        tools:text="4"
+        android:visibility="gone"
         android:textColor="@android:color/white"
         android:textSize="10sp" />
 

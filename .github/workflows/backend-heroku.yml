@@ -19,10 +19,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: AkhileshNS/heroku-deploy@v3.8.8 # This is the action
+      - uses: AkhileshNS/heroku-deploy@v3.8.9 # This is the action
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: "paperlayer" #Must be unique in Heroku
           heroku_email: "bounswe2020group3@gmail.com"
-          appdir: "backend" # <- This will point to the api folder in your project
           branch: "master"
+          appdir: "backend" # <- This will point to the api folder in your project
+          

@@ -19,7 +19,7 @@ interface       ProjectsContract {
         fun showMessage(message: String)
 
         fun subscribeAuthToken()
-        fun fetchAllProjectsOfOwner(ownerId: Int)
+        fun fetchAllProjectsOfUser(userId: Int)
         fun fetchAllPublicationsOfOwner(ownerId: Int)
         fun connectScholarPublications(authorId: String)
         fun onViewProjectButtonClicked(item: ProjectCard, position: Int)
@@ -49,6 +49,7 @@ interface       ProjectsContract {
     interface Model {
         //fun getProject(projectId: Int): Single<Project>
         fun getAllProjectsOfOwner(ownerId: Int): Observable<List<ProjectShort>>
+        fun getAllProjectsOfMember(userId: Int): Observable<List<ProjectShort>>
         fun getAllPublicationsOfOwner(ownerId: Int): Observable<List<Publication>>
         fun getAuthToken(): BehaviorSubject<AuthToken>
         fun addPublicationsOfOwner(authorId: String): Observable<Response<Void>>
@@ -60,6 +61,9 @@ interface       ProjectsContract {
 
         @GET("/api/projects/")
         fun getAllProjectsOfOwner(@Header("Authorization") authorization: String, @Query("owner__id") ownerId: Int): Observable<List<ProjectShort>>
+
+        @GET("/api/projects/")
+        fun getAllProjectsOfMember(@Header("Authorization") authorization: String, @Query("members__id") userId: Int): Observable<List<ProjectShort>>
 
         @POST("/api/publications/add_publications/")
         fun addPublicationsOfOwner(@Header("Authorization") authorization: String, @Query("author_id") authorId: String): Observable<Response<Void>>

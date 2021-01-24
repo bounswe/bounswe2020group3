@@ -1,10 +1,8 @@
 package com.bounswe2020group3.paperlayer.project
 
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
@@ -43,15 +41,15 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectsContra
     override fun subscribeAuthToken() {
         this.view?.writeLogMessage("i",TAG, "##1##")
         val userProfileSub = model.getAuthToken().subscribe { token ->
-            fetchAllProjectsOfOwner(token.id)
+            fetchAllProjectsOfUser(token.id)
             fetchAllPublicationsOfOwner(token.id)
         }
         disposable.add(userProfileSub)
     }
 
-    override fun fetchAllProjectsOfOwner(ownerId: Int) {
-        this.view?.writeLogMessage("i",TAG, "Fetching all projects of owner $ownerId ...")
-        val getProjectObservable = model.getAllProjectsOfOwner(ownerId).subscribe(
+    override fun fetchAllProjectsOfUser(userId: Int) {
+        this.view?.writeLogMessage("i",TAG, "Fetching all projects of user $userId ...")
+        val getProjectObservable = model.getAllProjectsOfMember(userId).subscribe(
                 { projectList ->
                     for (project in projectList){
                         this.view?.addProjectCard(project.name,project.description,project.owner,project.id,"Project")
@@ -61,7 +59,7 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectsContra
                     this.view?.submitProjectCardList()
                 },
                 { error ->
-                    this.view?.writeLogMessage("e",TAG,"Error in fetching all projects of owner $ownerId $error")
+                    this.view?.writeLogMessage("e",TAG,"Error in fetching all projects of user $userId $error")
                 }
         )
         disposable.add(getProjectObservable)

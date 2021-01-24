@@ -20,7 +20,7 @@ const Container = styled(Box)({
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
   height: "calc(98vh -64px)",
   color: 'white',
-  paddingBottom:"60px",
+  paddingBottom:"38px",
   top:0,
   left:"0",
   right:"0",

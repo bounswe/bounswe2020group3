@@ -130,10 +130,24 @@ class ProfilePrivateSerializer(serializers.HyperlinkedModelSerializer):
         return get_is_collaborator(request.user, obj.owner)
 
 
-class ProfilePictureSerializer(serializers.ModelSerializer):
+class ProfilePictureSerializer(serializers.HyperlinkedModelSerializer):
     """
     Profile serializer for owner and admin.
     """
+
     class Meta:
         model = Profile
         fields = ['id', 'profile_picture']
+
+
+class ProfilePrivateNotificationSerializer(serializers.
+                                           HyperlinkedModelSerializer):
+    """
+    Private profile serializer.
+    """
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = Profile
+        fields = ['id', 'name', 'middle_name', 'last_name',
+                  'owner', 'is_public']

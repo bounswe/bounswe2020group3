@@ -9,6 +9,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework import status
 from api.utils import get_is_following, get_is_collaborator
+from notifications.signals import notify
 from django.db.models import Q
 
 
@@ -49,7 +50,19 @@ class CommentViewSet(viewsets.ModelViewSet):
 
         if is_collaborator and \
                 self.request.user.id != to_user.id:
-            Comment.objects.create(**serializer.validated_data)
+            comment = Comment.objects.create(**serializer.validated_data)
+
+            """
+                Comment Notification
+            """
+
+            notify.send(sender=self.request.user,
+                        verb="commented about you",
+                        recipient=to_user,
+                        target=comment,
+                        description="Comment"
+                        )
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(data={

@@ -17,6 +17,8 @@ import SearchPage from "./Views/SearchPage";
 import EventPage from "./Views/EventPage";
 import EditProjectPage from "./Views/EditProjectPage";
 import IssueMilestonePage from "./Views/IssueMilestonePage";
+import FileViewer from "./Views/FileViewerPage";
+import TermsOfServicesPage from './Views/TermsOfServicesPage';
 
 function App() {
   return (
@@ -24,18 +26,20 @@ function App() {
       <ThemeProvider theme={theme}>
         <BrowserRouter history={history}>
           <Switch>
-            <AuthenticatedRoute exact path={config.Homepage_Path} component={HomePage} />
+            <Route exact path={config.Homepage_Path} component={HomePage} />
             <Route exact path={config.Login_Path} component={LoginPage} />
             <Route exact path={config.Register_Path} component={RegistrationPage} />
             <AuthenticatedRoute exact path={config.Create_Project_Path} component={CreateProjectPage} />
             <AuthenticatedRoute exact path={config.Event_Creation_Path} component={CreateEventPage} />
-            <AuthenticatedRoute path="/search/:query" component={SearchPage} />
+            <Route path="/search/:query" component={SearchPage} />
             <AuthenticatedRoute path="/edit-project/:projectId" component={EditProjectPage} />
-            <AuthenticatedRoute exact path="/project/:projectId" component={ProjectPage} />
-            <AuthenticatedRoute exact path="/events/:eventId" component={EventPage} />
-            <AuthenticatedRoute exact path="/profile/:profileId" component={ProfilePage} />
+            <Route exact path="/project/:projectId" component={ProjectPage} />
+            <Route exact path="/events/:eventId" component={EventPage} />
+            <Route exact path="/profile/:profileId" component={ProfilePage} />
             <AuthenticatedRoute exact path="/edit-profile" component={EditProfilePage} />
             <AuthenticatedRoute exact path={config.Issue_Milestone_Path} component={IssueMilestonePage} />
+            <AuthenticatedRoute exact path="/project/files/:projectId" component={FileViewer} />
+            <Route exact path={config.Terms_Of_Services_Page_Url} component={TermsOfServicesPage} />
           </Switch>
         </BrowserRouter>
       </ThemeProvider>

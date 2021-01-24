@@ -17,7 +17,6 @@ function DateComponent(props) {
         props.handleDateChange(dateString);        
     }
     let past = props.past
-    console.log(props.dateValue)
     return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker

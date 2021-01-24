@@ -4,6 +4,7 @@ import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.home.data.CollaborateRequest
 import com.bounswe2020group3.paperlayer.home.data.CollaborationRequest
 import com.bounswe2020group3.paperlayer.mvp.Mvp
+import com.bounswe2020group3.paperlayer.project.data.Milestone
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.User
 import io.reactivex.Completable
@@ -36,6 +37,10 @@ interface ProjectDetailContract {
         fun resetMemberCardList()
         fun submitMemberCardList()
         fun addMemberCard(user: User)
+        fun resetMilestoneCardList()
+        fun submitMilestoneCardList()
+        fun addMilestoneCard(milestone: Milestone)
+
         fun updateCurrentUser(ownerID:Int)
 
         fun collabCheck(index : Int)

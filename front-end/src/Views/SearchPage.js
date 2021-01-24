@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from 'axios';
 import config from '../config';
-import { styled } from '@material-ui/core';
+import { styled, Chip } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import Grid from '@material-ui/core/Grid';
@@ -9,7 +9,8 @@ import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import UserNavbar from '../Components/TopBar/UserNavbar';
 import Profilebar from '../Components/ProfileBar/Profilebar';
-import { getUserId, getPhoto } from "../Components/Auth/Authenticate";
+import { colorCodes } from "../Common/ColorTheme";
+import {getUserId, getPhoto, getAccessToken, setProfileId, getRequestHeader} from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
     backgroundColor: '#f7f7f5',
@@ -42,6 +43,7 @@ export default class SearchPage extends Component {
             message: "",
             messageType: "",
             projects:[],
+            notifications: [],
             events:[],
             profiles:[],
         }
@@ -80,9 +82,9 @@ export default class SearchPage extends Component {
         return projects.map((item) => {return (
             <Paper elevation={6}  style={{border: "solid 1px blue", padding:"15px", width:"80%", background:"white", margin:"auto", marginBottom:"10px"}} borderColor="primary" border={1}>
                 <Typography variant="h6" color="primary" style={{cursor:"pointer", width:"100%", textAlign:"left"}} onClick={()=> this.goToProject(item.id)}>{item.name}</Typography>
-
-                <Typography  style={{textAlign:"left", color:"black"}}>
-                    {item.description}
+                <Typography  style={{textAlign:"left", color:"black"}}>{this.renderTags(item.tags)}</Typography>
+                <Typography style={{textAlign:"left", color:"black"}}>
+                    {item.description.trim().substr(0, 120) +  (item.description.length > 120 ?  "..." : "") }
                 </Typography>
             </Paper>)});
     };
@@ -111,12 +113,36 @@ export default class SearchPage extends Component {
             </Paper>)});
     }
 
+    renderTags(tags) {
+        return tags.map((item) => {
+            return (
+                <Chip style={{ background: colorCodes[item.color], margin: "3px", textTransform: "capitalize" }} label={item.name} />
+            )
+        });
+    };
+
     componentDidMount() {
+        axios.get(`${config.API_URL}/api/users/${getUserId()}/`, { headers:{'Content-Type':'Application/json', 'Authorization': `Token ${getAccessToken()}`}})
+            .then(res => {
+                let name = res.data.profile[0].name;
+                let mname = res.data.profile[0].middle_name;
+                let lastname = res.data.profile[0].last_name;
+                name = name + " " + mname;
+                let profileId = res.data.profile[0].id;
+                setProfileId(profileId);
+                this.setState({ name:name , lastName: lastname });
+            });
         const query = { keyword: this.props.location.pathname.split('/')[2]};
         axios.post(`${config.API_URL}${config.Search_url}`,query, { headers:{ 'Content-Type': 'Application/json'}}).then(res=>{
             this.setState(res.data);
             console.log(this.state);
         });
+        axios.get(`${config.API_URL}/api/notifications/unread/`,
+            getRequestHeader())
+            .then(res => {
+                console.log((res.data))
+                this.setState({notifications: res.data})
+            });
     }
 
     render() {
@@ -127,6 +153,7 @@ export default class SearchPage extends Component {
                     pushProfile={() => { this.props.history.push( "/profile/" + getUserId() ) }}
                     goHome={() => { this.props.history.push(config.Homepage_Path) }}
                     history={this.props.history}
+                    notifications = {this.state.notifications}
                 />
                 <Box style={{marginTop:"8px"}}>
 

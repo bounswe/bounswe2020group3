@@ -432,6 +432,7 @@
                             android:padding="16dp">
 
                             <!-- Title, secondary and supporting text -->
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -439,15 +440,12 @@
                                 android:gravity="center_vertical"
                                 android:textAppearance="?attr/textAppearanceHeadline5" />
 
-                            <TextView
-                                android:id="@+id/textViewMilestones"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:gravity="center_vertical"
-                                android:text=""
-                                android:textAppearance="?attr/textAppearanceBody2"
-                                android:textColor="?android:attr/textColorSecondary" />
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:layout_width="match_parent"
+                                android:id="@+id/recyclerViewMilestones"
+                                android:background="@null"
+                                android:layout_height="wrap_content" />
+
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>

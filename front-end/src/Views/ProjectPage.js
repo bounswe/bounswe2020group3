@@ -134,7 +134,7 @@ export default class HomePage extends Component {
 
         this.setState({ members: memberNames });
       }, (error) => {
-        console.log(error);
+        //console.log(error);
         //this.props.history.push("/"); // Forwards from unexisting profiles to homepage
       });
     axios.get(`${config.API_URL}${config.Milestone_url}?project__id=${project_id}`, getRequestHeader())
@@ -377,10 +377,12 @@ export default class HomePage extends Component {
         let mname = res.data.profile[0].middle_name;
         let lastname = res.data.profile[0].last_name;
         let userName = name + " " + mname + " " + lastname;
-        
-        this.setState({profname : userName});
+
+        if(this.state.profname !== userName){
+          this.setState({profname : userName});
+        }
       });
-  }
+  };
 
   renderColabRequests = () => {
     const { allColabRequests } = this.state;
@@ -441,7 +443,7 @@ export default class HomePage extends Component {
       .then(res => {
         if(res.data.length > 0){
           let data = res.data[0];
-          console.log(data.id);
+          //console.log(data.id);
           let myId = data.id;
           // eslint-disable-next-line
           if(this.state.colabInviteId != myId){

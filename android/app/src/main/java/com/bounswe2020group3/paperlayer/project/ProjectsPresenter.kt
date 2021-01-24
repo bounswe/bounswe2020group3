@@ -1,6 +1,10 @@
 package com.bounswe2020group3.paperlayer.project
 
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
@@ -68,7 +72,7 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectsContra
         val getPublicationObservable = model.getAllPublicationsOfOwner(ownerId).subscribe(
                 { publicationList ->
                     for (publication in publicationList){
-                        this.view?.addPublicationCard(publication.title,publication.abstract,publication.authors,publication.id)
+                        this.view?.addPublicationCard(publication.title,publication.link,publication.citationNumber.toString(),publication.id)
                         this.view?.writeLogMessage("i",TAG,"Publication Fetched + "+publication.title+ " ")//+ project.project_type)
                     }
                     this.view?.writeLogMessage("i",TAG,"Fetching finished.")
@@ -86,6 +90,7 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectsContra
         val getPublicationObservable = model.addPublicationsOfOwner(authorId).subscribe(
                 { response ->
                     this.view?.writeLogMessage("i",TAG,"Connected successfully.")
+                    this.view?.showToast("Publications connected successfully.Please reload page")
                 },
                 { error ->
                     this.view?.writeLogMessage("e",TAG,"Error in connecting scholar id of owner $error")
@@ -96,10 +101,11 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectsContra
 
 
     override fun onViewPublicationButtonClicked(item: ProjectCard, position: Int) {
-        //FIX
-        //Navigation to project page, gives projectID as a bundle
-       // val bundle = bundleOf("publicationID" to item.projectId )
-       // view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectFromProjectMainFragment,bundle) }
+        //Navigating to publications page
+        val url = item.projectBody
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(url)
+        this.view?.getMyContext()?.startActivity(intent)
     }
 
     override fun onViewProjectButtonClicked(item: ProjectCard, position: Int) {

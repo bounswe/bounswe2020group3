@@ -1,5 +1,6 @@
 package com.bounswe2020group3.paperlayer.project
 
+import android.content.Context
 import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.project.data.Project
@@ -28,6 +29,7 @@ interface       ProjectsContract {
 
     interface View: Mvp.View{
         fun getLayout(): android.view.View
+        fun getMyContext(): Context
         fun showToast(message: String)
         fun writeLogMessage(type:String ,tag: String,message: String)
 
@@ -56,7 +58,7 @@ interface       ProjectsContract {
         fun getAllProjectsOfOwner(@Header("Authorization") authorization: String, @Query("owner__id") ownerId: Int): Observable<List<ProjectShort>>
 
         @POST("/api/publications/add_publications")
-        fun addPublicationsOfOwner(@Header("Authorization") authorization: String, @Query("author_id") authorId: String,@Query("owner_id") ownerId: Int): Observable<Publication>
+        fun addPublicationsOfOwner(@Header("Authorization") authorization: String, @Query("author_id") authorId: String): Observable<Publication>
 
         @GET("/api/publications/")
         fun getAllPublicationsOfOwner(@Query("owner__id") ownerId: Int): Observable<List<Publication>>

@@ -233,4 +233,8 @@ class ProjectsFragment : Fragment(), ProjectsContract.View, OnCardClickListener,
         this.presenter.onViewPublicationButtonClicked(item,position)
     }
 
+    override fun getMyContext(): Context {
+        return this.mContext
+    }
+
 }

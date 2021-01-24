@@ -44,15 +44,16 @@ class PublicationAdapter(var clickListener: OnCardPublicationClickListener): Rec
             itemView: View
     ): RecyclerView.ViewHolder(itemView) {
 
-        var projectTitle: TextView =itemView.textViewProjectTitle
-        var projectDescription: TextView =itemView.textViewProjectDescription
-        var projectCreator: TextView =itemView.textViewProjectCreator
+        var publicationTitle: TextView =itemView.textViewProjectTitle
+        var publicationDescription: TextView =itemView.textViewProjectDescription
+        var publicationCreator: TextView =itemView.textViewProjectCreator
+        var publicationIcon: ImageView = itemView.imageViewProjectIcon
 
         fun bind(projectCard: ProjectCard,action:OnCardPublicationClickListener){
-            projectTitle.setText(projectCard.projectTitle)
-            projectDescription.setText(projectCard.projectBody)
-            projectCreator.setText("@"+projectCard.projectCreator)
-
+            publicationTitle.setText(projectCard.projectTitle)
+            publicationDescription.setText(projectCard.projectBody)
+            publicationCreator.setText("Citation number: "+projectCard.projectCreator)
+            publicationIcon.setImageResource(R.drawable.ic_journal)
 
             //Listeners for each project cards
             itemView.buttonView.setOnClickListener {

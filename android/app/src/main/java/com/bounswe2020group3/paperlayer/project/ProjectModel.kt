@@ -47,7 +47,7 @@ class ProjectModel @Inject constructor(private var sessionManager: Session,retro
 
     //Add publications of given owner
     override fun addPublicationsOfOwner(authorId: String): Observable<Publication>{
-        return projectService.addPublicationsOfOwner(authToken,authorId,ownerID)
+        return projectService.addPublicationsOfOwner(authToken,authorId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }

@@ -739,9 +739,9 @@ export default class ProfilePage extends Component {
 */      
       this.setState({ showReportTag: false, reportQuery: "" });
       this.getProfile(this.state.profileId);
-  /*  console.log("Report Here!!!")
+      console.log("Report Here!!!")
       console.log(newReportId);
-      console.log(newReportName); */
+      console.log(newReportName); 
     
 
   }

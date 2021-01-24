@@ -3,6 +3,7 @@ package com.bounswe2020group3.paperlayer.search
 import com.bounswe2020group3.paperlayer.project.data.Event
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.ProjectShort
+import com.bounswe2020group3.paperlayer.project.data.Tag
 import com.bounswe2020group3.paperlayer.search.data.Search
 import com.bounswe2020group3.paperlayer.search.data.SearchResponse
 import com.bounswe2020group3.paperlayer.search.data.User
@@ -25,6 +26,13 @@ class SearchModel @Inject constructor(private var sessionManager: Session, retro
         return searchService.searchRequest(searchFilter)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    //Getting Tags
+    override fun getTags(): Observable<List<Tag>> {
+        return searchService.getTags()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
     }
 
 }

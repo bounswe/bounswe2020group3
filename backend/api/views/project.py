@@ -8,6 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from notifications.signals import notify
 from api.models.project import Project
+from api.views.feed import add_activity_to_feed
 from rest_framework.decorators import action
 from api.models.profile import Profile
 from api.models.following import Following
@@ -80,6 +81,19 @@ class ProjectViewSet(viewsets.ModelViewSet):
                         description='Project')
             # send_mail(self.request.user)
 
+            """
+                Adds the project to the user feed
+            """
+            activity_data = {'actor': str(self.request.user),
+                             'verb': 'created new Project called '
+                                     + project.name,
+                             'type': 'project',
+                             'object': project.id,
+                             'foreign_id': 'project:' + str(project.id),
+                             'project': ProjectPublicSerializer(project).data,
+                             }
+            add_activity_to_feed(self.request.user, activity_data)
+
         if self.action == 'update':
             pass
         if self.action == 'destroy':
@@ -94,7 +108,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             serializer_class=None)
     def get_project_recommendation(self, request):
         user_id = request.GET.get('user_id', None)
-        user_count = int(request.GET.get('user_count', None))
+        user_count = request.GET.get('user_count', None)
         profile = Profile.objects.get(owner_id=user_id)
         exps = []
         if profile.expertise:

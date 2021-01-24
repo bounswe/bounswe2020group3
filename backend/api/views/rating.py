@@ -5,11 +5,14 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework import permissions
 from api.permission import RatingPermission
-from api.serializers.rating import RatingSerializer, RatingUpdateSerializer
+from api.serializers.rating import RatingSerializer, \
+    RatingUpdateSerializer, RatingFeedSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from notifications.signals import notify
 from rest_framework import status
+
+from api.views.feed import add_activity_to_feed
 
 
 class RatingViewSet(viewsets.ModelViewSet):
@@ -66,6 +69,24 @@ class RatingViewSet(viewsets.ModelViewSet):
                         target=rating,
                         description="Rating"
                         )
+
+            """
+                Adds the rating to user feed.
+            """
+
+            rating_serializer = RatingFeedSerializer(rating).data
+            activity_data = {'actor': str(self.request.user),
+                             'verb': 'rated {} {} stars'.format(
+                                 rating_serializer['to_user']['username'],
+                                 rating_serializer['rating']),
+                             'type': 'rating',
+                             'object': rating_serializer['id'],
+                             'foreign_id': 'rating:' +
+                                           str(rating_serializer['id']),
+                             'rating': rating_serializer,
+                             }
+
+            add_activity_to_feed(self.request.user, activity_data)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:

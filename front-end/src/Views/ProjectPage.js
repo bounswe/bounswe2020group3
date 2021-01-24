@@ -67,7 +67,8 @@ export default class HomePage extends Component {
       isNotMember: true,
       isPublic: false,
       notifications: [],
-      owner: ""
+      owner: "",
+      ownerId:-1
     }
   };
 
@@ -117,7 +118,8 @@ export default class HomePage extends Component {
           reqs: prof.requirements,
           stat: prof.state, age: prof.age, type: prof.project_type,
           due: prof.due_date, tags: prof.tags, isPublic: prof.is_public,
-          owner: prof.owner
+          owner: prof.owner,
+          ownerId: prof.owner_id
         }, () => {
           this.isMember();
         });
@@ -196,10 +198,12 @@ export default class HomePage extends Component {
   };
 
   renderContributor() {
-    var mems = this.state.members;
-    return mems.map((item) => {
+    const { members, membersData } = this.state;
+    return members.map((item, id) => {
       return (
-        <Typography variant="h6" color="primary" style={{ cursor: "pointer", width: "100%", textAlign: "left", textTransform:"capitalize" }}>{item}</Typography>
+        <Typography variant="h6" color="primary" 
+        onClick={() => {this.props.history.push("/profile/"+ membersData[id].id )}}
+        style={{ cursor: "pointer", width: "100%", textAlign: "left", textTransform:"capitalize" }}>{item}</Typography>
       )
     });
   };
@@ -328,7 +332,9 @@ export default class HomePage extends Component {
     <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
           <Typography variant="6" color="primary">Owner</Typography>
           <Paper elevation={6} style={{ padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
-            <Typography variant="h6" colour="primary">{this.state.owner}</Typography>
+          <Typography variant="h6" color="primary"
+            style={{ cursor: "pointer" }}
+            onClick={() => {this.props.history.push("/profile/"+this.state.ownerId)}}>{this.state.owner}</Typography>
           </Paper>
         </Grid>
     </>)

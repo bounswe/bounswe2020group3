@@ -48,24 +48,23 @@ const SelfContainer = styled(Box)({
 });
 const Container = styled(Box)({
   backgroundColor: '#f7f7f5',
+  background: "#f9f9eb",
   border: 0,
   borderRadius: 3,
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+  height: "calc(100vh -64px)",
   color: 'white',
-  paddingBottom: "60px",
-  top: "0",
-  bottom: "0",
-  left: "0",
-  right: "0",
-  height: "calc(98vh - 60px)",
+  paddingBottom:"40px",
+  top:0,
+  left:"0",
+  right:"0",
   margin: "auto",
   '& .MuiTextField-root': {
-    margin: "10px",
-    width: "30%",
-    minWidth: "250px"
-  }
+      margin: "10px",
+      width: "30%",
+      minWidth: "250px"
+    }
 });
-
 export default class ProfilePage extends Component {
   constructor(props) {
     super(props);
@@ -687,7 +686,7 @@ export default class ProfilePage extends Component {
             margin: "auto",
             marginBottom: "10px",
             textAlign: 'left',
-            maxHeight: "500px",
+            maxHeight: "400px",
             overflowY: "scroll"
           }}
           borderColor="primary" border={1}>
@@ -949,7 +948,7 @@ export default class ProfilePage extends Component {
         history ={this.props.history}
         notifications = {this.state.notifications}
       />
-      <Box>
+      <Box style={{marginTop:"8px", height:"calc(100vh -64px)", overflowY:"scroll", overflowX:"hidden"}}>
         {!this.state.self && !this.state.loading ?  // So that re-render doesn't cause any glitch-like graphics.
           <Profilebar
             name={this.state.selfName}

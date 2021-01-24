@@ -793,10 +793,10 @@ export default class ProfilePage extends Component {
       return (<>
         {this.getUsernameById(item[1])}
         {this.getProjectNameById(item[2])}
-        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{this.state.profname}</Typography>
+        <Typography variant="h5" color="primary" style={{ width: "100%", textAlign: "left" }}>{this.state.profname}</Typography>
         <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{this.state.projname}</Typography>
-        <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.acceptColabInvite(item[0])} > Accept </Button>
-        <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.rejectColabInvite(item[0])} > Reject </Button>
+        <Button variant="contained" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.acceptColabInvite(item[0])} > Accept </Button>
+        <Button variant="contained" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.rejectColabInvite(item[0])} > Reject </Button>
       </>)
     });
   };

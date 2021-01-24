@@ -359,7 +359,7 @@ export default class SearchPage extends Component {
     componentDidUpdate() {
         if(this.state.filter){
             const s_keyword = this.props.location.pathname.split('/')[2];
-            const {aff, exp, event_date_after, event_date_before, event_deadline_after, event_deadline_before, event_type,active_project_state_filters, active_project_tag_filters,event} =this.state;
+            const {aff, exp, event_date_after, event_date_before, event_deadline_after, event_deadline_before, event_type,active_project_state_filters, active_project_tag_filters} =this.state;
             let query_profile = { keyword:s_keyword ,search_type:"profile"};
             if(aff!=="")
                 query_profile.profile_affiliations=aff;

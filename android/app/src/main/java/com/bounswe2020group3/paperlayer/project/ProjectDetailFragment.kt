@@ -105,6 +105,10 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         view.findViewById<Button>(R.id.buttonInvite).setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToInviteFromProjectDetails,bundle)
         }
+        view.findViewById<Button>(R.id.buttonManageInvites).setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToManageInvitesFromProject,bundle)
+        }
+
         view.findViewById<ImageView>(R.id.imageViewCollabRequests).setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToCollabRequestsFromProject,bundle)
         }

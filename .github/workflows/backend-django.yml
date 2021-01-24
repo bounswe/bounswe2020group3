@@ -27,7 +27,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install --no-cache-dir poetry
         poetry install
-    - name: set many environment variables
+    - name: Set environment variables
       uses: allenevans/set-env@v2.0.0
       with:
         STREAM_API_KEY: 5kb93qkmexcq

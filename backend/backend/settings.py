@@ -174,14 +174,15 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'bounswe2020group3@gmail.com'
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+# os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_HOST_PASSWORD = 'Group3isthebest'
 
 # For email verification
 EMAIL_ACTIVE_FIELD = 'is_active'
 EMAIL_SERVER = 'smtp.gmail.com'
 EMAIL_ADDRESS = 'bounswe2020group3@gmail.com'
 EMAIL_FROM_ADDRESS = 'noreply@bounswe2020group3.com'
-EMAIL_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_PASSWORD = 'Group3isthebest'  # os.environ.get('EMAIL_HOST_PASSWORD', '')
 EMAIL_MAIL_SUBJECT = 'Confirm your email'
 EMAIL_MAIL_HTML = 'verification_body.html'
 EMAIL_MAIL_PLAIN = 'verification_body.txt'
@@ -200,3 +201,6 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_STORAGE_BUCKET_NAME = 'paperlayerbucket'
 AWS_S3_REGION_NAME = 'eu-central-1'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+STREAM_API_KEY = os.environ.get('STREAM_API_KEY', '')
+STREAM_API_SECRET = os.environ.get('STREAM_API_SECRET', '')

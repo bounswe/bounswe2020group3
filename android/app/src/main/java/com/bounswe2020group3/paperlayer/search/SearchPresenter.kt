@@ -51,6 +51,23 @@ class SearchPresenter @Inject constructor(private var model:SearchContract.Model
         view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToEventDetailFromSearch,bundle) }
     }
 
+    override fun getTags(){
+        val getTagObservable =model.getTags().subscribe(
+                { tagList ->
+                    var tags: ArrayList<Tag> = ArrayList<Tag>()
+                    for (tag in tagList) {
+                        tags.add(tag)
+                    }
+                    this.view?.setTags(tags)
+                    this.view?.writeLogMessage("i", TAG,"Tags results fetched successfully.")
+                },
+                { error ->
+                    this.view?.writeLogMessage("e", TAG, "Error in getting results of tag list")
+                }
+        )
+        disposable.add(getTagObservable)
+    }
+
     override fun searchRequest(searchFilter: Search) {
         this.view?.writeLogMessage("i", TAG, "Getting results of search with keyword ${searchFilter.keyword} ...")
         val getProjectObservable = model.searchRequest(searchFilter).subscribe(

@@ -8,11 +8,33 @@
     android:background="@color/colorWhite"
     tools:context=".search.SearchFragment">
 
-    <SearchView
-        android:layout_margin="10dp"
-        android:id="@+id/searchView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <SearchView
+            android:layout_margin="10dp"
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_weight="2"
+            android:layout_height="wrap_content" >
+        </SearchView>
+
+        <ImageButton
+            android:id="@+id/buttonAdvancedSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@drawable/ic_baseline_settings_24"
+            android:tint="@color/primaryColor"
+            android:layout_gravity="center"
+            android:layout_marginRight="15dp"
+            android:tooltipText="Advanced Search" />
+
+    </LinearLayout>
+
 
 
     <com.google.android.material.tabs.TabLayout
@@ -31,7 +53,7 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Users"
+            android:text="PROFILES"
             />
 
         <com.google.android.material.tabs.TabItem

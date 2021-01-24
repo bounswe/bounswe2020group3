@@ -16,7 +16,7 @@ abstract class HomeModule {
     abstract fun bindMilestonePresenter(presenter: MilestonePresenter): HomeContract.MileStonePresenter
 
     @Binds
-    abstract fun bindRecentProjectsPresenter(presenter: RecentProjectsPresenter): HomeContract.RecentProjectsPresenter
+    abstract fun bindRecommendedProjectsPresenter(presenter: RecommendedProjectsPresenter): HomeContract.RecommendedProjectsPresenter
 
     @Binds
     @Singleton

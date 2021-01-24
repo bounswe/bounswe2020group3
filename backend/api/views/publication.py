@@ -16,10 +16,6 @@ author_param = openapi.Parameter(
     'author_id', openapi.IN_QUERY,
     description="Google Scholar id of author",
     type=openapi.TYPE_STRING)
-profile_param = openapi.Parameter(
-    'owner_id', openapi.IN_QUERY,
-    description="Owner user id to add the publication",
-    type=openapi.TYPE_INTEGER)
 
 
 class PublicationViewSet(viewsets.ModelViewSet):
@@ -31,17 +27,13 @@ class PublicationViewSet(viewsets.ModelViewSet):
     filterset_fields = ['owner__id']
 
     @swagger_auto_schema(
-        method='post', manual_parameters=[author_param, profile_param]
+        method='post', manual_parameters=[author_param]
     )
     @action(detail=False, methods=['post'], name='add_publications',
             serializer_class=None)
     def add_publications(self, request):
-        owner_id = request.GET.get('owner_id', None)
+        owner_id = self.request.user.id
         owner = get_object_or_404(User, pk=owner_id)
-        if self.request.user != owner:
-            return Response(data={
-                'error': 'Unauthorized'
-            }, status=status.HTTP_401_UNAUTHORIZED)
         Publication.objects.filter(
             owner=owner
         ).delete()
@@ -49,26 +41,26 @@ class PublicationViewSet(viewsets.ModelViewSet):
         author_basic = scholarly.search_author_id(author_id)
         author = scholarly.fill(author_basic)
         data = {}
-        for publication in author['publications']:
-            publication = scholarly.fill(publication)
+        for publication in author['publications'][:300]:
             publication_info = publication['bib']
             if 'title' in publication_info:
                 data['title'] = publication_info['title']
             if 'pub_year' in publication_info:
                 data['publication_year'] = publication_info['pub_year']
-            if 'abstract' in publication_info:
-                data['abstract'] = publication_info['abstract']
-            if 'author' in publication_info:
-                data['authors'] = publication_info['author']
-            if 'journal' in publication_info:
-                data['journal'] = publication_info['journal']
-            elif 'publisher' in publication_info:
-                data['journal'] = publication_info['publisher']
-            if 'num_citations' in publication_info:
-                data['citation_number'] = publication_info['num_citations']
-            data['owner'] = owner.id
+            if 'author_pub_id' in publication:
+                elem = publication['author_pub_id'].split(':')
+                base_link = "https://scholar.google.com/citations?user={}" + \
+                    "#d=gs_md_cita-d&u=%2Fcitations%3Fview_op%3D" +\
+                    "view_citation%26user%3D{}%26citation_for_view%3D{}%3A{}"
+                data['link'] = base_link.format(
+                    elem[0], elem[0], elem[0], elem[1])
+            if 'num_citations' in publication:
+                data['citation_number'] = publication['num_citations']
+            data['owner'] = owner_id
+
             serializer = PublicationSerializer(data=data)
             serializer.is_valid(raise_exception=True)
             Publication.objects.create(
                 **serializer.validated_data)
+
         return Response(status=status.HTTP_201_CREATED)

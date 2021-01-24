@@ -40,6 +40,7 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectsContra
         this.view?.writeLogMessage("i",TAG, "##1##")
         val userProfileSub = model.getAuthToken().subscribe { token ->
             fetchAllProjectsOfOwner(token.id)
+            fetchAllPublicationsOfOwner(token.id)
         }
         disposable.add(userProfileSub)
     }
@@ -60,6 +61,45 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectsContra
                 }
         )
         disposable.add(getProjectObservable)
+    }
+
+    override fun fetchAllPublicationsOfOwner(ownerId: Int) {
+        this.view?.writeLogMessage("i",TAG, "Fetching all publications of owner $ownerId ...")
+        val getPublicationObservable = model.getAllPublicationsOfOwner(ownerId).subscribe(
+                { publicationList ->
+                    for (publication in publicationList){
+                        this.view?.addPublicationCard(publication.title,publication.abstract,publication.authors,publication.id)
+                        this.view?.writeLogMessage("i",TAG,"Publication Fetched + "+publication.title+ " ")//+ project.project_type)
+                    }
+                    this.view?.writeLogMessage("i",TAG,"Fetching finished.")
+                    this.view?.submitPublicationCardList()
+                },
+                { error ->
+                    this.view?.writeLogMessage("e",TAG,"Error in fetching all publications of owner $ownerId $error")
+                }
+        )
+        disposable.add(getPublicationObservable)
+    }
+
+    override fun connectScholarPublications(authorId: String) {
+        this.view?.writeLogMessage("i",TAG, "Connecting scholar account...")
+        val getPublicationObservable = model.addPublicationsOfOwner(authorId).subscribe(
+                { response ->
+                    this.view?.writeLogMessage("i",TAG,"Connected successfully.")
+                },
+                { error ->
+                    this.view?.writeLogMessage("e",TAG,"Error in connecting scholar id of owner $error")
+                }
+        )
+        disposable.add(getPublicationObservable)
+    }
+
+
+    override fun onViewPublicationButtonClicked(item: ProjectCard, position: Int) {
+        //FIX
+        //Navigation to project page, gives projectID as a bundle
+       // val bundle = bundleOf("publicationID" to item.projectId )
+       // view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectFromProjectMainFragment,bundle) }
     }
 
     override fun onViewProjectButtonClicked(item: ProjectCard, position: Int) {

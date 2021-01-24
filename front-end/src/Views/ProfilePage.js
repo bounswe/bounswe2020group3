@@ -885,9 +885,11 @@ export default class ProfilePage extends Component {
         //console.log(data);
 
         var myPubs = [];
-        for(var i=0; i<10; i++){
-          var myData = [i, data[i].title, data[i].publication_year, data[i].citation_number, data[i].link];
-          myPubs.push(myData);
+        if(data.length > 0){
+          for(var i=0; i<10; i++){
+            var myData = [i, data[i].title, data[i].publication_year, data[i].citation_number, data[i].link];
+            myPubs.push(myData);
+          }
         }
 
         this.setState({publications: myPubs});

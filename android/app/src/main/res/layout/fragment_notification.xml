@@ -13,8 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_md"
-        android:text="Notifications"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Notifications" />
 
     <View
         android:layout_width="match_parent"
@@ -22,8 +21,7 @@
         android:layout_marginTop="@dimen/margin_sm"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:background="@color/colorBlack"
-        android:layout_below="@id/linearLayoutNotification"/>
+        android:background="@color/colorBlack" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewNotification"
@@ -39,9 +37,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_gravity="center" />
 
 </LinearLayout>

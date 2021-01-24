@@ -58,6 +58,8 @@ class UserInviteAdapter(var clickListener: OnCardClickListener) : RecyclerView.A
             val imageUrl = inviteCard.photo_url
             if (imageUrl != null && imageUrl != "") {
                 Picasso.get().load(imageUrl).into(inviteAvatar)
+            } else {
+                inviteAvatar.setImageResource(R.drawable.ic_avatar)
             }
 
             itemView.setOnClickListener {

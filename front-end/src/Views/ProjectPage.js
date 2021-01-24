@@ -38,6 +38,7 @@ export default class HomePage extends Component {
     super(props);
     this.SnackbarRef = React.createRef();
     this.state = {
+      loop: 0,
       name: "",
       desc: "",
       reqs: "",
@@ -54,6 +55,8 @@ export default class HomePage extends Component {
       colabRequestText: "Send Colab Request",
       milestones: [],
       username: "",
+      requestIds: [],
+      requestNames: [],
       userlastname: "",
       photoUrl: "",
       projectId: "",
@@ -67,6 +70,7 @@ export default class HomePage extends Component {
       isNotMember: true,
       isPublic: false,
       notifications: [],
+      requests: [],
       owner: "",
       ownerId:-1
     }
@@ -97,6 +101,11 @@ export default class HomePage extends Component {
   goToEvent = (eid) => {
     this.props.history.push(config.Event_Path + "/" + eid);
   };
+  handleLoop = () => {
+    var i = this.state.loop;
+    i = i + 1;
+    this.setState({loop: i}); 
+  }
   goToProjectCreation = () => {
     this.props.history.push(config.Create_Project_Path);
   };
@@ -384,28 +393,23 @@ export default class HomePage extends Component {
         let lastname = res.data.profile[0].last_name;
         let userName = name + " " + mname + " " + lastname;
 
-        if(this.state.profname !== userName){
-          this.setState({profname : userName});
-        }
+        this.setState({profname : userName});
       });
   };
 
   renderColabRequests = () => {
-    const { allColabRequests } = this.state;
-    
-    var ids = [];
-    for(var i=0; i<allColabRequests.length; i++){
-      var idPair = [allColabRequests[i].id, allColabRequests[i].from_user];
-      ids.push(idPair);
+    const {requests} = this.state;
+    if(this.state.loop < 3){
+      this.getColabRequests();
+      this.handleLoop();
     }
-  
-    if (ids.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaboration Requests</Typography>)
-    else return ids.map((item) => {
+    
+    if (requests.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaboration Requests</Typography>)
+    else return requests.map((item) => {
       return (<>
-        {this.getUsernameById(item[1])}
-        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{this.state.profname}</Typography>
-        <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.acceptColabRequest(item[0])} > Accept </Button>
-        <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.rejectColabRequest(item[0])} > Reject </Button>
+        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{item[0]}</Typography>
+        <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.acceptColabRequest(item[1])} > Accept </Button>
+        <Button variant="contained" color="primary" style={{ marginLeft:"10px" }} onClick={() => this.rejectColabRequest(item[1])} > Reject </Button>
       </>)
     });
   };
@@ -439,8 +443,46 @@ export default class HomePage extends Component {
         }
         var uniReqs = reqs.filter(this.distinct);
         this.setState({ allColabRequests: uniReqs });
-        //console.log(this.state.allColabRequests);
-      })
+        console.log(this.state.allColabRequests);
+        // ________________________________________
+
+        const { allColabRequests } = this.state;
+        var ids = [];
+        for(var k=0; k<allColabRequests.length; k++){
+          var idPair = [allColabRequests[k].id, allColabRequests[k].from_user];
+          ids.push(idPair);
+        }
+        this.setState({requestIds: ids});
+        console.log(this.state.requestIds);
+        // _________________________________________
+
+        var usernames = [];
+        let promises = [];
+        for(var t=0; t<ids.length; t++){
+          promises.push(
+            axios.get(`${config.API_URL}/api/users/${ids[t][1]}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } }).then(res => {
+              let name = res.data.profile[0].name;
+              let mname = res.data.profile[0].middle_name;
+              let lastname = res.data.profile[0].last_name;
+              let userName = name + " " + mname + " " + lastname;
+              usernames.push(userName);
+            }))
+        }
+        Promise.all(promises).then(() => {
+          console.log(usernames);
+          this.setState({requestNames: usernames});
+          console.log(this.state.requestNames);
+        });
+        //console.log(this.state.requestNames);
+        var reqDatas = [];
+        for(var n=0; n<ids.length; n++){
+          var reqData = [this.state.requestNames[n], ids[n][0]];
+          console.log(reqData);
+          reqDatas.push(reqData);
+        }
+        console.log(reqDatas);
+        this.setState({requests: reqDatas});
+      });
   };
 
   getUserIdFromUsername = (username) => {

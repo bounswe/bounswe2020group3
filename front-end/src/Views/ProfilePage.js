@@ -76,6 +76,9 @@ export default class ProfilePage extends Component {
       profileId: "",
       name: "",
       middle_name: "",
+      projNames: [],
+      inviteNames: [],
+      invites: [],
       last_name: "",
       email: "",
       img: "",
@@ -97,6 +100,7 @@ export default class ProfilePage extends Component {
       follow_reqs: [],
       followers: [],
       following: [],
+      loop: 0,
       milestones: [],
       allColabInvites: [],
       projects: [],
@@ -140,6 +144,12 @@ export default class ProfilePage extends Component {
 
   distinct(value, index, self) {
     return self.indexOf(value) === index;
+  }
+
+  handleLoop = () => {
+    var i = this.state.loop;
+    i = i + 1;
+    this.setState({loop: i}); 
   }
 
   getProfile = () => {
@@ -729,16 +739,64 @@ export default class ProfilePage extends Component {
         var uniInvs = invites.filter(this.distinct);
         console.log(uniInvs);
         this.setState({ allColabInvites: uniInvs });
-      })
+
+        // ___________________________________________
+
+      const{ allColabInvites } = this.state;
+      var ids = [];
+      for(var k=0; k<allColabInvites.length; k++){
+        var idTriple = [allColabInvites[k].id, allColabInvites[k].from_user, allColabInvites[k].to_project];
+        ids.push(idTriple);
+      }
+
+      // ___________________________________________
+
+      var projnames = [];
+      var promises2 = [];
+      for(var m=0; m<ids.length; m++){
+        promises2.push(
+          axios.get(`${config.API_URL}/api/projects/${ids[m][2]}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+          .then(res => {
+            let name = res.data.name;
+            projnames.push(name);
+        }));
+      }
+      Promise.all(promises2).then(() => {
+        console.log(projnames);
+        this.setState({projNames: projnames});
+      });
+
+      // ___________________________________________
+
+      var usernames = [];
+        let promises = [];
+        for(var t=0; t<ids.length; t++){
+          promises.push(
+            axios.get(`${config.API_URL}/api/users/${ids[t][1]}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } }).then(res => {
+              let name = res.data.profile[0].name;
+              let mname = res.data.profile[0].middle_name;
+              let lastname = res.data.profile[0].last_name;
+              let userName = name + " " + mname + " " + lastname;
+              usernames.push(userName);
+            }))
+        }
+        Promise.all(promises).then(() => {
+          console.log(usernames);
+          this.setState({inviteNames: usernames});
+        });
+        var invDatas = [];
+        for(var n=0; n<ids.length; n++){
+          var reqData = [this.state.inviteNames[n], this.state.projNames[n], ids[n][0]];
+          invDatas.push(reqData);
+        }
+        this.setState({invites: invDatas});
+      });
   };
 
   deleteColabInvite = (myId) => {
     axios.delete(`${config.API_URL}/api/collaboration_invites/${myId}/`, { id: myId }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
         .then(res => {
-          axios.patch(`${config.API_URL}/api/profiles/${this.state.profileId}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-            .then(res => {
-              this.getProfile(this.state.profileId);
-            })
+            this.getProfile(this.state.profileId);
         }); 
   }
 
@@ -780,23 +838,19 @@ export default class ProfilePage extends Component {
   }
 
   renderColabInvites = () => {
-    const { allColabInvites } = this.state;
-    
-    var ids = [];
-    for(var i=0; i<allColabInvites.length; i++){
-      var idTriple = [allColabInvites[i].id, allColabInvites[i].from_user, allColabInvites[i].to_project];
-      ids.push(idTriple);
+    const {invites} = this.state;
+    if(this.state.loop < 3){
+      this.getColabInvites();
+      this.handleLoop();
     }
-  
-    if (ids.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaboration Invites</Typography>)
-    else return ids.map((item) => {
+
+    if (invites.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaboration Invites</Typography>)
+    else return invites.map((item) => {
       return (<>
-        {this.getUsernameById(item[1])}
-        {this.getProjectNameById(item[2])}
-        <Typography variant="h5" color="primary" style={{ width: "100%", textAlign: "left" }}>{this.state.profname}</Typography>
-        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{this.state.projname}</Typography>
-        <Button variant="contained" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.acceptColabInvite(item[0])} > Accept </Button>
-        <Button variant="contained" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.rejectColabInvite(item[0])} > Reject </Button>
+        <Typography variant="h5" color="primary" style={{ width: "100%", textAlign: "left" }}>{item[0]}</Typography>
+        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{item[1]}</Typography>
+        <Button variant="contained" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.acceptColabInvite(item[2])} > Accept </Button>
+        <Button variant="contained" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.rejectColabInvite(item[2])} > Reject </Button>
       </>)
     });
   };
@@ -810,7 +864,7 @@ export default class ProfilePage extends Component {
         </Paper>
       </Grid>
     )
-  }
+  };
 
   renderSelfProfile() {
     return (<SelfContainer>
@@ -1047,15 +1101,15 @@ export default class ProfilePage extends Component {
       axios.get(`${config.API_URL}${config.Follow_request_url}${unfId}/`, getRequestHeader())
       .then(resp=>{
 
-        console.log(resp.data)
-        console.log(resp.data.id)
+        //console.log(resp.data)
+        //console.log(resp.data.id)
 
         const fromUser = resp.data.req_from_user
         const toUser = resp.data.req_to_user
 
         var newId = unfId + ""
 
-        console.log(newId + "              newId")
+        //console.log(newId + "              newId")
 
         const action = {
           req_from_user: {
@@ -1081,9 +1135,9 @@ rejectFollowRequest = (req_id) => {
     axios.get(`${config.API_URL}${config.Follow_request_url}`, getRequestHeader())
     .then(resId=>{
 
-      console.log(resId.data)
-      console.log(userId)
-      console.log(req_id)
+      //console.log(resId.data)
+      //console.log(userId)
+      //console.log(req_id)
 
       
       var unfId = 0
@@ -1098,15 +1152,15 @@ rejectFollowRequest = (req_id) => {
       axios.get(`${config.API_URL}${config.Follow_request_url}${unfId}/`, getRequestHeader())
       .then(resp=>{
 
-        console.log(resp.data)
-        console.log(resp.data.id)
+        //console.log(resp.data)
+        //console.log(resp.data.id)
 
         const fromUser = resp.data.req_from_user
         const toUser = resp.data.req_to_user
 
         var newId = unfId + ""
 
-        console.log(newId + "              newId")
+        //console.log(newId + "              newId")
 
         const action = {
           req_from_user: {
@@ -1173,9 +1227,10 @@ rejectFollowRequest = (req_id) => {
     axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, getRequestHeader())
       .then(resUser => {
 
+        // eslint-disable-next-line
         const userState = resUser.data;
-        console.log(userState)
-        console.log(userState.profile[0])
+        //console.log(userState)
+        //console.log(userState.profile[0])
 
         var userId = this.props.location.pathname.split('/')[2];
         axios.get(`${config.API_URL}${config.User_Path}${userId}/`, getRequestHeader())
@@ -1183,14 +1238,14 @@ rejectFollowRequest = (req_id) => {
 
             const profileState = res.data;
 
-            console.log(profileState.id)
-            console.log("reqId")
+            //console.log(profileState.id)
+            //console.log("reqId")
             const followReq_create = {
               req_to_user: profileState.id,
               created: "datatime-local"
             }
 
-            console.log(followReq_create)
+            //console.log(followReq_create)
 
             axios.post(`${config.API_URL}${config.Follow_request_url}`, followReq_create, getRequestHeader())
               .then(resCreate => {

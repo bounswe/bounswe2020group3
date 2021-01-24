@@ -256,7 +256,7 @@
     <fragment
         android:id="@+id/manageInvitesFragment"
         android:name="com.bounswe2020group3.paperlayer.invite.ManageInvitesFragment"
-        android:label="ManageInvitesFragment" />
+        android:label="Manage Your Invites" />
     <fragment
         android:id="@+id/reportFragment"
         android:name="com.bounswe2020group3.paperlayer.profile.report.ReportFragment"

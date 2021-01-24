@@ -90,6 +90,9 @@
         <action
             android:id="@+id/navigateToUserFromProject"
             app:destination="@id/userFragment" />
+        <action
+            android:id="@+id/navigateToManageInvitesFromProject"
+            app:destination="@id/manageInvitesFragment" />
     </fragment>
 
     <fragment
@@ -247,4 +250,8 @@
             android:id="@+id/navigateToSearchFromAdvancedSearch"
             app:destination="@id/searchFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/manageInvitesFragment"
+        android:name="com.bounswe2020group3.paperlayer.invite.ManageInvitesFragment"
+        android:label="ManageInvitesFragment" />
 </navigation>

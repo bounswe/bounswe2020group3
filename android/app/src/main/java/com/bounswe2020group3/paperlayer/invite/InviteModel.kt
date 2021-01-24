@@ -47,4 +47,10 @@ class InviteModel @Inject constructor(private var sessionManager: Session, retro
         return userService.deleteInvite(authToken,invite_id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())    }
+
+    override fun getRecommendedUsers(projectId : Int): Observable<List<User>>? {
+        return userService.getRecommendedUsers(projectId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
 }

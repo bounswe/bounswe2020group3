@@ -6,6 +6,7 @@ import com.bounswe2020group3.paperlayer.home.EventFragment
 import com.bounswe2020group3.paperlayer.home.MilestoneFragment
 import com.bounswe2020group3.paperlayer.home.RecentProjectsFragment
 import com.bounswe2020group3.paperlayer.invite.InviteFragment
+import com.bounswe2020group3.paperlayer.invite.ManageInvitesFragment
 import com.bounswe2020group3.paperlayer.login.LoginFragment
 import com.bounswe2020group3.paperlayer.profile.ProfileFragment
 import com.bounswe2020group3.paperlayer.profile.edit.ProfileEditFragment
@@ -58,4 +59,6 @@ interface AppComponent {
     fun inject(fragment: FollowListFragment)
     fun inject(fragment: EventDetailFragment)
     fun inject(fragment: CollabFragment)
+    fun inject(fragment: ManageInvitesFragment)
+
 }

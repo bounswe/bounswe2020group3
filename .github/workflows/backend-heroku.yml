@@ -25,6 +25,6 @@ jobs:
           heroku_app_name: "" #Must be unique in Heroku
           heroku_email: "bounswe2020group3@gmail.com"
           justlogin: true
-      - run: git remote add heroku https://git.heroku.com/paperlayer.git
+      - run: heroku git:remote -a paperlayer
       - run: git push --force heroku `git subtree split --prefix=backend master`:refs/heads/master
           

@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import Profilebar from '../Components/ProfileBar/Profilebar';
 import { colorCodes } from "../Common/ColorTheme";
-import { getUserId, getPhoto, getProfileId, getRequestHeader, getAccessToken } from "../Components/Auth/Authenticate";
+import { getUserId, getPhoto, getProfileId, getRequestHeader, getAccessToken, isLoggedIn } from "../Components/Auth/Authenticate";
 
 const Container = styled(Box)({
   backgroundColor: '#f7f7f5',
@@ -18,19 +18,19 @@ const Container = styled(Box)({
   border: 0,
   borderRadius: 3,
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-  color: 'white',
   height: "calc(98vh -64px)",
-  paddingBottom: "60px",
-  top: "0",
-  bottom: "0",
-  left: "0",
-  right: "0",
+  color: 'white',
+  paddingBottom:"60px",
+  top:0,
+  left:"0",
+  right:"0",
   margin: "auto",
+  zIndex: 2,
   '& .MuiTextField-root': {
-    margin: "10px",
-    width: "30%",
-    minWidth: "250px"
-  }
+      margin: "10px",
+      width: "30%",
+      minWidth: "250px"
+    }
 });
 
 export default class HomePage extends Component {
@@ -547,15 +547,22 @@ export default class HomePage extends Component {
             goHome={() => { this.props.history.push(config.Homepage_Path) }}
             history ={this.props.history}
             notifications = {this.state.notifications}
+            style={{zIndex:3}}
           />
-            <Profilebar
-              name={this.state.username}
-              lastName={this.state.userlastname}
+            <Box style={{marginTop:"8px", height:"calc(100vh -64px)", overflowY:"scroll"}}>
+          {isLoggedIn() ? 
+            <Profilebar 
+              name={this.state.name}
+              lastName={this.state.lastName}
               photoUrl={getPhoto()}
               goToProjectCreation={this.goToProjectCreation}
-              goToEventCreation={() => {this.props.history.push(config.Event_Creation_Path);}}
-              goToProfile={this.goToProfile}
+              goToProfile={() => { this.props.history.push( "/profile/" + getUserId() ); }}
+              goToEventCreation ={this.goToEventCreation}
             />
+            :
+            <></>
+          }
+
         <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{ height:"calc(91vh - 40px)",   marginLeft: "225px", marginTop: "10px", width: `calc(100% - 225px)` }}>
           <Grid container direction="row" justify="space-evenly" alignItems="baseline">
             <Grid item sm={7}>
@@ -670,6 +677,7 @@ export default class HomePage extends Component {
           </Grid>
           <CustomSnackbar ref={this.SnackbarRef} OpenSnackbar={this.handleSnackbarOpening} type={this.state.messageType} message={this.state.message} />
         </Grid>
+        </Box>
       </Container>);
   }
 

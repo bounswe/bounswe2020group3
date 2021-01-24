@@ -54,10 +54,10 @@ const Container = styled(Box)({
   color: 'white',
   paddingBottom: "60px",
   top: "0",
-  bottom: "0",
+  // bottom: "0",
   left: "0",
   right: "0",
-  height: "calc(98vh - 60px)",
+  height: "calc(100vh - 60px)",
   margin: "auto",
   '& .MuiTextField-root': {
     margin: "10px",
@@ -938,7 +938,7 @@ export default class ProfilePage extends Component {
     </SelfContainer>);
   }
   renderOtherProfile() {
-    return (<Container style={{backgroundColor: '#f7f7f5'}}>
+    return (<Container style={{backgroundColor: '#f7f7f5', paddingBottom:"60px"}}>
       <UserNavbar
         logout={() => { this.props.history.push(config.Login_Path) }}
         pushProfile={() => {
@@ -949,7 +949,7 @@ export default class ProfilePage extends Component {
         history ={this.props.history}
         notifications = {this.state.notifications}
       />
-      <Box>
+      <Box style={{marginTop:"8px", height:"calc(100vh -64px)", overflowY:"scroll", overflowX:"hidden"}}>
         {!this.state.self && !this.state.loading ?  // So that re-render doesn't cause any glitch-like graphics.
           <Profilebar
             name={this.state.selfName}

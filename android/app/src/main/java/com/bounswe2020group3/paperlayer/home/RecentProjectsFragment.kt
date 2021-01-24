@@ -39,9 +39,7 @@ class RecentProjectsFragment : Fragment(), HomeContract.RecentProjectsView, OnCa
         val view = inflater.inflate(R.layout.fragment_projectupdates, container, false)
         fragment_view = view
         val mainMenu = view.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        //mainMenu.menu.getItem(0).setChecked(false)
-        //mainMenu.menu.getItem(1).setChecked(true)
-        //mainMenu.menu.getItem(2).setChecked(false)
+
         view.findViewById<BottomNavigationView>(R.id.bottomNavigationView).setOnNavigationItemSelectedListener {item ->
             when(item.itemId){
                 R.id.eventFragment ->{Navigation.findNavController(view).navigate(R.id.navigateToEventsFromProjectUpdates)}

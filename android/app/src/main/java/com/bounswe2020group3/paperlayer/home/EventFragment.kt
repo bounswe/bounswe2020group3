@@ -44,9 +44,7 @@ class EventFragment : Fragment(), HomeContract.EventView, OnCardClickListenerFor
         resetCardList()
         writeLogMessage("i",TAG,"event fragment has been created.")
         val mainMenu = view.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        //mainMenu.menu.getItem(0).setChecked(true)
-        //mainMenu.menu.getItem(1).setChecked(false)
-        //mainMenu.menu.getItem(2).setChecked(false)
+
         mainMenu.setOnNavigationItemSelectedListener { item ->
             when(item.itemId){
                 R.id.eventFragment ->{}

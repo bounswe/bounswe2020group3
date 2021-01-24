@@ -84,37 +84,11 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         this.fragmentView=view
         //Set ProjectPresenter view to project fragment
         this.presenter.setView(this)
-        this.presenter.bind(this)
 
-        initRecyclerView()
-        resetMemberCardList()
-        resetMilestoneCardList()
+
 
         //Getting bundle arguments
-        val projectID = arguments?.getInt("projectID")
-        if (projectID != null) {
-            this.presenter.fetchProject(projectID) //fetch project and update ui
-            this.presenter.fetchRequestOfMine(projectID)
-        }
-        else{
-            writeLogMessage("e",TAG,"projectID null")
-        }
-        //Giving bundle arguments
-        val bundle = bundleOf("projectID" to projectID )
 
-        view.findViewById<Button>(R.id.buttonInvite).setOnClickListener{
-            Navigation.findNavController(view).navigate(R.id.navigateToInviteFromProjectDetails,bundle)
-        }
-        view.findViewById<Button>(R.id.buttonManageInvites).setOnClickListener{
-            Navigation.findNavController(view).navigate(R.id.navigateToManageInvitesFromProject,bundle)
-        }
-
-        view.findViewById<ImageView>(R.id.imageViewCollabRequests).setOnClickListener{
-            Navigation.findNavController(view).navigate(R.id.navigateToCollabRequestsFromProject,bundle)
-        }
-        view.findViewById<Button>(R.id.buttonCollab).setOnClickListener{
-            presenter.OnClickCollab(projectID!!,collabbed)
-        }
         writeLogMessage("i",TAG,"ProjectFragment view created")
         return view
     }
@@ -196,6 +170,33 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val projectID = arguments?.getInt("projectID")
+        if (projectID != null) {
+            this.presenter.fetchProject(projectID) //fetch project and update ui
+            this.presenter.fetchRequestOfMine(projectID)
+        }
+        else{
+            writeLogMessage("e",TAG,"projectID null")
+        }
+        //Giving bundle arguments
+        val bundle = bundleOf("projectID" to projectID )
+
+        initRecyclerView()
+        resetMemberCardList()
+        resetMilestoneCardList()
+        view.findViewById<Button>(R.id.buttonInvite).setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToInviteFromProjectDetails,bundle)
+        }
+        view.findViewById<Button>(R.id.buttonManageInvites).setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToManageInvitesFromProject,bundle)
+        }
+
+        view.findViewById<ImageView>(R.id.imageViewCollabRequests).setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.navigateToCollabRequestsFromProject,bundle)
+        }
+        view.findViewById<Button>(R.id.buttonCollab).setOnClickListener{
+            presenter.OnClickCollab(projectID!!,collabbed)
+        }
         tabLayoutProject.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
@@ -218,6 +219,8 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         buttonEditProject.setOnClickListener {
             presenter.navigateToEditProject()
         }
+        this.presenter.bind(this)
+
     }
 
     //Update project UI

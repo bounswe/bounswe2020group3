@@ -50,15 +50,19 @@ class RecommendedProjectsFragment : Fragment(), HomeContract.RecommendedProjects
             true
         }
 
-        this.presenter.bind(this)
-        initRecyclerView()
-        resetCardList()
+
 
         writeLogMessage("i",TAG,"event fragment has been created.")
         return view
     }
 
-    
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        this.presenter.bind(this)
+        initRecyclerView()
+        resetCardList()
+    }
+
     override fun getLayout(): View {
         TODO("Not yet implemented")
     }

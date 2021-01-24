@@ -109,6 +109,7 @@ export default class ProfilePage extends Component {
       showUpload: false,
       loading: true, // For eradicating glitches due to request delays
       rating: 0,
+      publications: [],
       currentRating: 0,
       currentUserId: -1,
       comments: [],
@@ -140,6 +141,8 @@ export default class ProfilePage extends Component {
           console.log((res.data))
           this.setState({notifications: res.data})
         });
+
+      this.getPublications();
   };
 
   distinct(value, index, self) {
@@ -390,6 +393,9 @@ export default class ProfilePage extends Component {
   };
   goToProjectCreation = () => {
     this.props.history.push(config.Create_Project_Path);
+  };
+  goToPublicationLink = (link) => {
+    window.location.href = "'" + link + "'";
   };
   renderProjects() {
     const { projects } = this.state;
@@ -693,6 +699,8 @@ export default class ProfilePage extends Component {
           borderColor="primary" border={1}>
           {this.renderComments()}
         </Paper>
+        <Typography variant="h5" color="primary" style={titleStyleCenter}>Publications</Typography>
+        {this.renderPublications()}
         {/* </>
          :
          <></>
@@ -726,18 +734,18 @@ export default class ProfilePage extends Component {
         let colabInvites = res.data;
         let invites = [];
         var len = colabInvites.length;
-        console.log(colabInvites);
+        //console.log(colabInvites);
         for(var i=0; i<len; i++){
           var id = colabInvites[i].to_user;
           var myId = getUserId();
-          console.log(myId);
+          //console.log(myId);
           // eslint-disable-next-line
           if(id == myId){
             invites.push(colabInvites[i]);
           }
         }
         var uniInvs = invites.filter(this.distinct);
-        console.log(uniInvs);
+        //console.log(uniInvs);
         this.setState({ allColabInvites: uniInvs });
 
         // ___________________________________________
@@ -762,7 +770,7 @@ export default class ProfilePage extends Component {
         }));
       }
       Promise.all(promises2).then(() => {
-        console.log(projnames);
+        //console.log(projnames);
         this.setState({projNames: projnames});
       });
 
@@ -781,7 +789,7 @@ export default class ProfilePage extends Component {
             }))
         }
         Promise.all(promises).then(() => {
-          console.log(usernames);
+          //console.log(usernames);
           this.setState({inviteNames: usernames});
         });
         var invDatas = [];
@@ -844,6 +852,8 @@ export default class ProfilePage extends Component {
       this.handleLoop();
     }
 
+    //console.log(invites);
+
     if (invites.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaboration Invites</Typography>)
     else return invites.map((item) => {
       return (<>
@@ -861,6 +871,53 @@ export default class ProfilePage extends Component {
         
         <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
           {this.renderColabInvites()}
+        </Paper>
+      </Grid>
+    )
+  };
+
+  getPublications = () => {
+    var userId = getUserId();
+    console.log(userId);
+    axios.get(`${config.API_URL}/api/publications/?owner__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let data = res.data;
+        //console.log(data);
+
+        var myPubs = [];
+        for(var i=0; i<10; i++){
+          var myData = [i, data[i].title, data[i].publication_year, data[i].citation_number, data[i].link];
+          myPubs.push(myData);
+        }
+
+        this.setState({publications: myPubs});
+        console.log(this.state.publications);
+      });
+  };
+
+  renderPublicationsData = () => {
+    const {publications} = this.state;
+    if(this.state.loop < 2){
+      this.getPublications();
+      this.handleLoop();
+    }
+
+    if (publications.length === 0) return (  <Typography variant='h6' color="textPrimary">No Publications</Typography>)
+    else return publications.map((item) => {
+      return (<>
+        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}> {item[0]+1}) {item[1]} - {item[2]} </Typography>
+        <a target="_blank" rel="noreferrer" href={item[4]} variant="h5" color="primary" style={{ width: "100%", textAlign: "left" }}> Go To Paper </a>
+        
+      </>)
+    });
+  };
+
+  renderPublications(){
+    return (
+      <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
+        
+        <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+          {this.renderPublicationsData()}
         </Paper>
       </Grid>
     )
@@ -1028,6 +1085,7 @@ export default class ProfilePage extends Component {
             <Grid item sm={3}>
               {this.renderGraph()}
               {this.renderAddComment()}
+              {this.renderPublications()}
             </Grid>
           </Grid>
         </Grid>

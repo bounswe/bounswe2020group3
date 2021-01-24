@@ -453,7 +453,7 @@ export default class HomePage extends Component {
           ids.push(idPair);
         }
         this.setState({requestIds: ids});
-        console.log(this.state.requestIds);
+        //console.log(this.state.requestIds);
         // _________________________________________
 
         var usernames = [];
@@ -471,16 +471,16 @@ export default class HomePage extends Component {
         Promise.all(promises).then(() => {
           console.log(usernames);
           this.setState({requestNames: usernames});
-          console.log(this.state.requestNames);
+          //console.log(this.state.requestNames);
         });
         //console.log(this.state.requestNames);
         var reqDatas = [];
         for(var n=0; n<ids.length; n++){
           var reqData = [this.state.requestNames[n], ids[n][0]];
-          console.log(reqData);
+          //console.log(reqData);
           reqDatas.push(reqData);
         }
-        console.log(reqDatas);
+        //console.log(reqDatas);
         this.setState({requests: reqDatas});
       });
   };

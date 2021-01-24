@@ -41,7 +41,7 @@ class PublicationViewSet(viewsets.ModelViewSet):
         author_basic = scholarly.search_author_id(author_id)
         author = scholarly.fill(author_basic)
         data = {}
-        for publication in author['publications'][:300]:
+        for publication in author['publications'][:100]:
             publication_info = publication['bib']
             if 'title' in publication_info:
                 data['title'] = publication_info['title']

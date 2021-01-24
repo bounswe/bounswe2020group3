@@ -11,7 +11,7 @@ from rest_framework.compat import coreapi, coreschema
 from rest_framework.schemas import ManualSchema
 from rest_framework.schemas import coreapi as coreapi_schema
 from rest_framework.views import APIView
-from django_email_verification import sendConfirm
+from django_email_verification.Confirm import sendConfirm, validateAndGetField
 
 
 class RegisterGenericAPIView(generics.GenericAPIView):
@@ -26,6 +26,12 @@ class RegisterGenericAPIView(generics.GenericAPIView):
         user = serializer.save()
 
         sendConfirm(user)
+
+        # For testing purposes. Normally, user can't log in if the system
+        # fails to send an email.
+        active_field = validateAndGetField('EMAIL_ACTIVE_FIELD')
+        setattr(user, active_field, True)
+        user.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

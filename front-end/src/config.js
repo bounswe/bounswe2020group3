@@ -26,6 +26,7 @@ const config = {
   Issue_Milestone_Path : "/issue-milestone",
   Profille_Page_Path : "/profile",
   File_Path : "/api/files/",
-  Terms_Of_Services_Page_Url: "/terms-of-services/"
+  Terms_Of_Services_Page_Url: "/terms-of-services/",
+  Report_URL: "/api/reports/"
 }
 export default config;

@@ -9,12 +9,23 @@ import config from '../config';
 import UserNavbar from '../Components/TopBar/UserNavbar';
 import Profilebar from '../Components/ProfileBar/Profilebar';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import "../index.scss";
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
 
 const privateGender = "do not want to share";
 const titleStyle = {
   textAlign: "left",
   marginTop: "10px"
 }
+const dropdownMenuStyle = {
+  minWidth: "150px",
+  marginLeft: "12px",
+  marginTop: "10px"
+}
+
 const titleStyleCenter = {
   textAlign: "center",
   marginTop: "10px"
@@ -66,6 +77,19 @@ const Container = styled(Box)({
   }
 });
 
+const reportTypes = {
+  distUser: "Disturbing other users",
+  post: "Sharing unrelated or disturbing posts",
+  spam: "Spam",
+  fake: "Fake Profile",
+  stolen: "Stolen Account"
+  
+}
+const Messages = {
+  report_success: "We have received your feedback, Thank you.",
+
+}
+
 export default class ProfilePage extends Component {
   constructor(props) {
     super(props);
@@ -115,7 +139,9 @@ export default class ProfilePage extends Component {
       isFollowReqSent: false,
       isFollowReqReceived: false,
       showReportTag: false,
-      reportQuery: ""
+      reportQuery: "",
+      reportType: "",
+      showReportNav: false
     }
   };
 
@@ -681,6 +707,7 @@ export default class ProfilePage extends Component {
         </Paper>
         </Grid>
         {!this.state.self ?
+
         <>
         <Grid item sm={12} style={{ minHeight: "10vh" }}>
                 {/* <Typography variant="h5" color="primary">Tags</Typography> */}
@@ -690,20 +717,52 @@ export default class ProfilePage extends Component {
                   border={1}>
                   {this.state.showReportTag ?
                     <>
-                      <Input
-                        type="text"
-                        color='primary'
-                        style={{ width: "90%", textTransform: "capitalize" }}
-                        placeholder="Please enter a new tag and press enter"
-                        onChange={(e) => { this.handleReportQuery(e); }}
-                        value={this.state.reportQuery}
-                      />
-                      
-                      <br />
-                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitReportQuery}>Send Report</Button>
-                    </>
+
+                    {!this.state.showReportNav ?
+                    <>
+                          
+                          <Input
+                            type="text"
+                            color='primary'
+                            style={{ width: "90%", textTransform: "capitalize" }}
+                            placeholder="Please enter a new tag and press enter"
+                            onChange={(e) => { this.handleReportQuery(e); }}
+                            value={this.state.reportQuery}
+                          />
+                          
+                          <br />
+                          <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitReportQuery}>Send Report</Button>
+                        
+                          </>
+                        
+                        : 
+                        <>
+                        
+                        <div style={{ marginBottom: "10px" }}>
+                            <FormControl>
+                              <InputLabel style={{ marginLeft: "12px" }} id="projectState">Report Types</InputLabel>
+                              <Select
+                                style={dropdownMenuStyle}
+                                value={reportTypes}
+                                onChange={this.handleReportTypeChange}
+                                labelId="projectState"
+                              >
+                                <MenuItem value={reportTypes.distUser}>Disturbing other users</MenuItem>
+                                <MenuItem value={reportTypes.post}>Sharing unrelated or disturbing posts</MenuItem>
+                                <MenuItem value={reportTypes.spam}>Spam</MenuItem>
+                                <MenuItem value={reportTypes.fake}>Fake Profile</MenuItem>
+                                <MenuItem value={reportTypes.stolen}>Stolen Account</MenuItem>
+                                
+                              </Select>
+                            </FormControl>
+                          </div>
+                        
+                        </>
+                    }
+                        
+                        </>
                     :
-                    <Button color="primary" variant="outlined" onClick={() => { this.setState({ showReportTag: true }) }}> Send New Report </Button>
+                    <Button color="primary" variant="outlined" onClick={() => { this.setState({ showReportTag: true, showReportNav: true }) }}> Send New Report </Button>
                   }
                 </Paper>
               </Grid>
@@ -719,29 +778,47 @@ export default class ProfilePage extends Component {
       </>);
   };
 
+  handleReportTypeChange = (e) => {
+    this.setState({ reportType: e.target.value, showReportNav: false });
+  }
+
   handleReportQuery = (e) => {
     this.setState({ reportQuery: e.target.value })
   };
 
   submitReportQuery = () => {
+    var userId = this.props.location.pathname.split('/')[2];
     const {reportQuery} = this.state;
-    let newReportId = getUserId();
-    let newReportName  = "user_report_" + newReportId;
+    let newReportId = userId;
+    let newReportType  = this.state.reportType;
+    let newReportDesc  = this.state.reportQuery;
     if (reportQuery === undefined) return;
     
-    console.log(this.reportQuery)
+    const report = {
+      report_type: newReportType,
+      description: newReportDesc,
+      created: "datatime-local",
+      reported_user: newReportId
+    }
+/*
+    console.log(newReportId); 
+    console.log(newReportType); 
+    console.log(newReportDesc);
+*/
+    axios.post(`${config.API_URL}${config.Report_URL}`, report, getRequestHeader())
+            .then(res => {
+              
+              this.getProfile(this.state.profileId);
+              console.log("Report Here!!!")
+              console.log(newReportId); 
+              console.log(newReportType); 
+              console.log(newReportDesc);
+              this.setState({ message: Messages.report_success, messageType: AlertTypes.Success });
+            });
+
+            this.setState({ showReportTag: false, reportQuery: "" });
+
     
-/*    axios.patch(`${config.API_URL}/api/profiles/${this.state.profileId}/`, newReportId, getRequestHeader())
-      .then(res => {
-        
-      })
-    // STH
-*/      
-      this.setState({ showReportTag: false, reportQuery: "" });
-      this.getProfile(this.state.profileId);
-      console.log("Report Here!!!")
-      console.log(newReportId);
-      console.log(newReportName); 
     
 
   }

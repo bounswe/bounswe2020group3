@@ -19,6 +19,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - run: git remote add heroku https://git.heroku.com/paperlayer.git
       - uses: AkhileshNS/heroku-deploy@v3.8.9 # This is the action
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}

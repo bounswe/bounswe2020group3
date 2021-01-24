@@ -165,12 +165,7 @@ class AdvancedSearchFragment: Fragment(){
 
     private fun onSearchButtonClicked(keyword:String){
         writeLogMessage("i", TAG,"Advanced Search : $keyword submitted .")
-        //val tagIdList:ArrayList<Int> = ArrayList<Int>()
         val checkedChipIds = fragmentView.chipGroupTags.checkedChipIds
-       // for(id in checkedChipIds){
-         //   val chip = fragmentView.chipGroupTags.findViewById<Chip>(id)
-           // chipIdToTagId[chip]?.let { tagIdList.add(it) }
-        //}
         writeLogMessage("i",TAG,"Chips "+ checkedChipIds.size)
         when(this.tabLayoutSearchFilter.selectedTabPosition){
             0->{//Project Tab selected
@@ -179,7 +174,6 @@ class AdvancedSearchFragment: Fragment(){
                 var projectEvent:String?= this.fragmentView.editTextProjectEvent.editText?.text.toString()
                 var projectState:String? =this.fragmentView.autoCompleteTextViewProjectState.text.toString()
                 var projectTags:List<Int>? = this.fragmentView.chipGroupTags.checkedChipIds
-                // writeLogMessage("i",TAG,"Project Dua Date Before "+projectDueDateBefore)
                 if(projectDueDateAfter=="")
                     projectDueDateAfter=null
                 if(projectDueDateBefore=="")
@@ -191,9 +185,6 @@ class AdvancedSearchFragment: Fragment(){
                 if (projectTags != null) {
                     if(projectTags.isEmpty())
                         projectTags=null
-
-                    //writeLogMessage("i", TAG,"Advanced Search : $projectState + $projectEvent + $projectDueDateAfter + $projectDueDateBefore submitted .")
-
 
                 }
                 var searchFilter = Search(keyword,"project",null,null,null,
@@ -253,8 +244,6 @@ class AdvancedSearchFragment: Fragment(){
                 val chip = Chip(this.fragmentView.chipGroupTags.context)
                 chip.text=tag.name
                 chip.id=tag.id
-                //chipIdToTagId[chip.id]=tag.id
-                //writeLogMessage("i",TAG,"Chip id "+chip.id+"Tag id "+tag.id)
                 chip.isCheckable=true
                 chip.setChipBackgroundColorResource(tagColors[tag.color])
                 this.fragmentView.chipGroupTags.addView(chip)

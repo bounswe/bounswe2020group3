@@ -85,7 +85,6 @@ class EventDetailFragment : Fragment(), EventDetailContract.View {
     }
 
     override fun updateEvent(event: Event) {
-        showInfoToast(event.id.toString())
         textViewEventTitle.text = event.title
         textViewEventDescription.text = event.description
         textViewEventDeadline.text = event.deadline

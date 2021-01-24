@@ -18,10 +18,8 @@ from django.template.loader import render_to_string
 from django_email_verification.views import verify
 from django.urls import get_resolver
 from django.contrib.auth.tokens import default_token_generator
-# from django_email_verification.Confirm import sendConfirm
-# validateAndGetField
 
-# from api.views.feed import follow_admin
+from api.views.feed import follow_admin
 
 
 class RegisterGenericAPIView(generics.GenericAPIView):
@@ -55,15 +53,8 @@ class RegisterGenericAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         self.__send_verification(user)
-        # sendConfirm(user)
 
-        # For testing purposes. Normally, user can't log in if the system
-        # fails to send an email.
-        # active_field = validateAndGetField('EMAIL_ACTIVE_FIELD')
-        # setattr(user, active_field, True)
-        # user.save()
-
-        # follow_admin(serializer.data['username'])
+        follow_admin(serializer.data['username'])
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

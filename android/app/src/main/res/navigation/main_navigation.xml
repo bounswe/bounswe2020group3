@@ -90,6 +90,9 @@
         <action
             android:id="@+id/navigateToUserFromProject"
             app:destination="@id/userFragment" />
+        <action
+            android:id="@+id/navigateToManageInvitesFromProject"
+            app:destination="@id/manageInvitesFragment" />
     </fragment>
 
     <fragment
@@ -134,6 +137,9 @@
         <action
             android:id="@+id/navigateToProjectFromSearch"
             app:destination="@id/projectFragment" />
+        <action
+            android:id="@+id/navigateToAdvancedSearchFragmentFromSearch"
+            app:destination="@id/advancedSearchFragment" />
     </fragment>
     <fragment
         android:id="@+id/userListFragment"
@@ -201,7 +207,7 @@
     </fragment>
     <fragment
         android:id="@+id/recentProjectsFragment"
-        android:name="com.bounswe2020group3.paperlayer.home.RecentProjectsFragment"
+        android:name="com.bounswe2020group3.paperlayer.home.RecommendedProjectsFragment"
         android:label="Recent Projects">
         <action
             android:id="@+id/navigateToMilestonesFromProjectUpdates"
@@ -236,4 +242,16 @@
             android:id="@+id/navigateToUserFromCollabs"
             app:destination="@id/userFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/advancedSearchFragment"
+        android:name="com.bounswe2020group3.paperlayer.search.AdvancedSearchFragment"
+        android:label="AdvancedSearchFragment" >
+        <action
+            android:id="@+id/navigateToSearchFromAdvancedSearch"
+            app:destination="@id/searchFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/manageInvitesFragment"
+        android:name="com.bounswe2020group3.paperlayer.invite.ManageInvitesFragment"
+        android:label="Manage Your Invites" />
 </navigation>

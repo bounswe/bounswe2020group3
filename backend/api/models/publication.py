@@ -7,9 +7,7 @@ class Publication(models.Model):
     """
     title = models.CharField(max_length=1000)
     publication_year = models.IntegerField(default=0)
-    abstract = models.TextField(default='')
-    authors = models.TextField(default='')
-    journal = models.TextField(default='')
+    link = models.TextField(default='')
     citation_number = models.IntegerField(default=0)
     owner = models.ForeignKey(
         'auth.User', related_name='publication_owner',

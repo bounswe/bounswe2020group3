@@ -24,6 +24,7 @@ interface SearchContract {
         fun navigateToEvent(eventID: Int)
 
         fun searchRequest(searchFilter:Search)
+        fun getTags()
         fun onProjectClicked(item:SearchCard,position:Int)
         fun onUserClicked(item:SearchCard,position:Int)
         fun onEventClicked(item:SearchCard,position:Int)
@@ -36,19 +37,28 @@ interface SearchContract {
         fun showLoading()
         fun hideLoading()
 
+        fun setTags(tags:List<Tag>)
         fun resetSearchCardList()
         fun submitSearchCardList()
         fun addSearchCard(searchType: Int,titleIconType: Int,title:String,body:String,supportText:String,tags:List<Tag>,id:Int)
     }
 
-    //FIX
+    interface AdvancedSearchView: Mvp.View{
+        fun getLayout(): android.view.View
+        fun showToast(message: String)
+        fun writeLogMessage(type:String ,tag: String,message: String)
+    }
+
     interface Model {
         fun searchRequest(searchFilter: Search): Single<SearchResponse>
+        fun getTags(): Observable<List<Tag>>
     }
 
     interface SearchService {
         @POST("/api/search/")
         fun searchRequest(@Body searchFilter: Search): Single<SearchResponse>
+        @GET("/api/tags/")
+        fun getTags(): Observable<List<Tag>>
     }
 
 }

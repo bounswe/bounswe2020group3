@@ -81,7 +81,9 @@ class ProjectAdaptor (var clickListener: OnCardClickListener) : RecyclerView.Ada
             buttonView.setOnClickListener{
                 action.onViewButtonClick(item,adapterPosition)
             }
-
+            itemView.setOnClickListener{
+                action.onViewButtonClick(item,adapterPosition)
+            }
 
         }
 

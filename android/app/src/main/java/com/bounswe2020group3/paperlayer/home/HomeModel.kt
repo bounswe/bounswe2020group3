@@ -63,4 +63,10 @@ class HomeModel @Inject constructor(private var sessionManager: Session, retrofi
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
+
+    override fun getRecommendedProjects(userId: Int): Observable<List<Project>> {
+        return projectService.getRecommendedProjects(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
 }

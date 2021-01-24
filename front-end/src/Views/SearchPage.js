@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from 'axios';
 import config from '../config';
-import {FormControl,Select, InputLabel,TextField, MenuItem,styled, Chip, Accordion, AccordionSummary, AccordionDetails, Checkbox, FormControlLabel, Button, FormGroup, RadioGroup, Radio } from '@material-ui/core';
+import {FormControl,Select, InputLabel,TextField, MenuItem,styled, Chip, Accordion, AccordionSummary, AccordionDetails, Checkbox, FormControlLabel, Button, FormGroup, RadioGroup, Radio, ButtonGroup } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
 import Grid from '@material-ui/core/Grid';
@@ -61,6 +61,9 @@ export default class SearchPage extends Component {
             projects_open: [],
             events_open: [],
             profiles_open: [],
+            projects_rec: [],
+            events_rec: [],
+            profiles_rec: [],
             project_tag_filters: [],
             project_tag_filters_id: [],
             project_state_filters: [],
@@ -75,6 +78,10 @@ export default class SearchPage extends Component {
             event_deadline_before: "",
             event_type:"all",
             filter:false,
+            sort:false,
+            project_sort:0,
+            profile_sort:0,
+            event_sort:0,
         }
     };
 
@@ -144,6 +151,31 @@ export default class SearchPage extends Component {
     handleFilter=()=>{
         this.setState({filter:true});
     }
+    handleProjectSort=(type)=>{
+        const sort_status = this.state.project_sort;
+        console.log(type);
+        if (type%2===sort_status%2){
+            this.setState({sort:true,project_sort:((sort_status+2)%4)});
+        }else{
+            this.setState({sort:true,project_sort:type});
+        }
+    };
+    handleProfileSort=(type)=>{
+        const sort_status = this.state.profile_sort;
+        if (type%2===sort_status%2){
+            this.setState({sort:true,profile_sort:((sort_status+2)%4)});
+        }else{
+            this.setState({sort:true,profile_sort:type});
+        }
+    };
+    handleEventSort=(type)=>{
+        const sort_status = this.state.event_sort;
+        if (type%2===sort_status%2){
+            this.setState({sort:true,event_sort:((sort_status+2)%4)});
+        }else{
+            this.setState({sort:true,event_sort:type});
+        }
+    };
 
     renderProject(){
         const projects = this.state.projects_open;
@@ -298,15 +330,27 @@ export default class SearchPage extends Component {
         return (
             <Grid container direction="row" justify="space-between" alignItems="baseline">
                 <Grid item sm={4} style={{ maxHeight:"75vh", overflowY: "scroll"}}>
-                <Typography variant="h3" color="primary">Projects</Typography>
-                {this.renderProject()}
-            </Grid>
+                    <Typography variant="h3" color="primary">Projects</Typography>
+                    <ButtonGroup size="small" variant="contained" disableFocusRipple={true} color="primary" style={{margin:"30px"}}>
+                        <Button onClick={()=>{this.handleProjectSort(0)}}>Recommended</Button>
+                        <Button onClick={()=>{this.handleProjectSort(1)}}>Alphabetical</Button>
+                    </ButtonGroup >
+                    {this.renderProject()}
+                </Grid>
                 <Grid item sm={4} style={{ maxHeight:"75vh", overflowY: "scroll"}}>
                     <Typography variant="h3" color="primary">Profiles</Typography>
+                    <ButtonGroup size="small" variant="contained" color="primary" style={{margin:"30px"}}>
+                        <Button onClick={()=>{this.handleProfileSort(0)}}>Recommended</Button>
+                        <Button onClick={()=>{this.handleProfileSort(1)}}>Alphabetical</Button>
+                    </ButtonGroup >
                     {this.renderProfiles()}
                 </Grid>
                 <Grid item sm={4} style={{ maxHeight:"75vh", overflowY: "scroll"}} >
                     <Typography variant="h3" color="primary">Events</Typography>
+                    <ButtonGroup size="small" variant="contained" color="primary" style={{margin:"30px"}}>
+                        <Button onClick={()=>{this.handleEventSort(0)}}>Recommended</Button>
+                        <Button onClick={()=>{this.handleEventSort(1)}}>Alphabetical</Button>
+                    </ButtonGroup >
                     {this.renderEvents()}
                 </Grid>
             </Grid>);
@@ -322,7 +366,7 @@ export default class SearchPage extends Component {
             if(exp!=="")
                 query_profile.profile_expertise= exp;
             axios.post(`${config.API_URL}${config.Search_url}`,query_profile, { headers:{ 'Content-Type': 'Application/json'}}).then(res=>{
-                this.setState({profiles_open:res.data.profiles,filter:false});
+                this.setState({profiles_open:res.data.profiles,profiles_rec:res.data.profiles.slice(),profile_sort:0,filter:false});
             });
             let query_event = { keyword:s_keyword,search_type:"event"};
             if(event_date_after!=="")
@@ -336,7 +380,7 @@ export default class SearchPage extends Component {
             if(event_type !== "all")
                 query_event.event_type= event_type;
             axios.post(`${config.API_URL}${config.Search_url}`,query_event, { headers:{ 'Content-Type': 'Application/json'}}).then(res=>{
-                this.setState({ events_open:res.data.events,filter:false});
+                this.setState({ events_open:res.data.events,events_rec:res.data.events.slice(),event_sort:0,filter:false,sort:false});
             });
             let query_project = {
                 keyword: s_keyword,
@@ -346,17 +390,87 @@ export default class SearchPage extends Component {
             if(active_project_tag_filters.length!==0){
                 query_project.project_tags=active_project_tag_filters;
             }
-            if(event!=="all"){
-                query_project.project_event=event;
-            }
             axios.post(`${config.API_URL}${config.Search_url}`,query_project, { headers:{ 'Content-Type': 'Application/json'}}).then(res=>{
-                this.setState({projects_open:res.data.projects,filter:false});
+                this.setState({projects_open:res.data.projects,projects_rec:res.data.projects.slice(),project_sort:0,filter:false,sort:false});
             });
 
             if(active_project_state_filters!=="all"){
                 const active_projects=this.state.projects_open.filter(item=>item.state===active_project_state_filters);
-                this.setState({projects_open:active_projects,active_project_state_filters:"all",filter:false});
+                this.setState({projects_open:active_projects,active_project_state_filters:"all",filter:false,sort:false});
             }
+        }
+        if(this.state.sort){
+            const {profile_sort,project_sort,event_sort,projects_open,projects_rec,profiles_open,profiles_rec,events_open,events_rec} =this.state;
+            if(project_sort===3){
+                projects_open.reverse();
+                this.setState({projects_open:projects_open,sort:false});
+            }else if(project_sort===2){
+                const reversed = projects_rec.slice().reverse();
+                this.setState({projects_open:reversed,sort:false});
+            }else if (project_sort===1){
+                projects_open.sort((a,b)=>{
+                    var nameA = a.name.toUpperCase();
+                    var nameB = b.name.toUpperCase();
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+                this.setState({projects_open:projects_open,sort:false});
+            }else if(project_sort===0){
+                const regular = projects_rec.slice();
+                this.setState({projects_open:regular,sort:false});
+            }
+            if(profile_sort===3){
+                profiles_open.reverse();
+                this.setState({profiles_open:profiles_open,sort:false});
+            }else if(profile_sort===2){
+                const reversed = profiles_rec.slice().reverse();
+                this.setState({profiles_open:reversed,sort:false});
+            }else if (profile_sort===1){
+                profiles_open.sort((a,b)=>{
+                    var nameA = a.name.toUpperCase();
+                    var nameB = b.name.toUpperCase();
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+                this.setState({profiles_open:profiles_open,sort:false});
+            }else if(profile_sort===0){
+                const regular = profiles_rec.slice();
+                this.setState({profiles_open:regular,sort:false});
+            }
+            if(event_sort===3){
+                events_open.reverse();
+                this.setState({events_open:events_open,sort:false});
+            }else if(event_sort===2){
+                const reversed = events_rec.slice().reverse();
+                this.setState({events_open:reversed,sort:false});
+            }else if (event_sort===1){
+                events_open.sort((a,b)=>{
+                    var nameA = a.title.toUpperCase();
+                    var nameB = b.title.toUpperCase();
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+                this.setState({events_open:events_open,sort:false});
+            }else if(event_sort===0){
+                const regular = events_rec.slice();
+                this.setState({events_open:regular,sort:false});
+            }
+            this.setState({sort:false});
         }
     }
     componentDidMount() {
@@ -401,9 +515,10 @@ export default class SearchPage extends Component {
             const project_tags_id = projects.map(project=>{return project.tags.map(tag=>{return tag.id})}).flat().reduce(preprocess,[]);
 
             this.setState({projects_open:projects, events_open:res.data.events, profiles_open:res.data.profiles,});
+            this.setState({projects_rec:res.data.projects.slice(), events_rec:res.data.events.slice(), profiles_rec:res.data.profiles.slice(),});
             this.setState({project_state_filters:project_state, project_tag_filters:project_tags,project_tag_filters_id:project_tags_id});
         });
-
+        
     }
 
     render() {
@@ -428,7 +543,7 @@ export default class SearchPage extends Component {
                     />
                     <Grid container spacing={2} direction="row" justify="space-between" alignItems="baseline" style={{overflowY:"scroll", maxHeight:"87vh", marginLeft:"200px", width:`calc(100% - 200px)`}}>
                         <Grid item sm={12}>
-                        {this.renderFilters()}
+                            {this.renderFilters()}
                         </Grid>
                         <Grid item sm={12}>
                             {this.renderResults()}

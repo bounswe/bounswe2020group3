@@ -51,6 +51,7 @@ export default class HomePage extends Component {
       colabInviteId: 0,
       events: [],
       tags: [],
+      colabRequestText: "Send Colab Request",
       milestones: [],
       username: "",
       userlastname: "",
@@ -82,6 +83,9 @@ export default class HomePage extends Component {
   };
   handleTagQuery = (e) => {
     this.setState({ tagQuery: e.target.value })
+  };
+  handleColabRequestText = (myText) => {
+    this.setState({colabRequestText: myText});
   };
   handleColabQuery = (e) => {
     this.setState({ colabQuery: e.target.value })
@@ -335,6 +339,8 @@ export default class HomePage extends Component {
     axios.post(`${config.API_URL}/api/collaboration_requests/`, { from_user: getUserId(), to_project: proj_id }, getRequestHeader() )
           .then(res => {
             this.getProject(this.state.projectId);
+            var myText = "Colab Request Sent!!!";
+            this.handleColabRequestText(myText);
         }); 
   };
 
@@ -604,7 +610,7 @@ export default class HomePage extends Component {
               <br />
               {this.state.isNotMember && this.state.stat === "open for collaborators" ? 
                 <Grid item sm={12} style={{ minHeight: "10vh" }}>
-                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitColabRequest}>Send Colab Request</Button>
+                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitColabRequest}>{this.state.colabRequestText}</Button>
                 </Grid>
               :
               <></>

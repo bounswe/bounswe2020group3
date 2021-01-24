@@ -28,7 +28,7 @@ class FeedTests(APITestCase):
 
         # User 2 follows user 1
         self.client.force_authenticate(user=self.user2)
-        self.client.post('/api/follow', {
+        self.client.post('/api/follow/', {
             "to_user": 2
         }, format='json')
 

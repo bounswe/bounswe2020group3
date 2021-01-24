@@ -4,6 +4,7 @@ import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.home.data.CollaborateRequest
 import com.bounswe2020group3.paperlayer.home.data.CollaborationRequest
 import com.bounswe2020group3.paperlayer.mvp.Mvp
+import com.bounswe2020group3.paperlayer.project.data.File
 import com.bounswe2020group3.paperlayer.project.data.Milestone
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.User
@@ -25,6 +26,7 @@ interface ProjectDetailContract {
         fun subscribeAuthToken()
         fun OnClickCollab(projectId: Int,collabbed : Int)
         fun fetchRequestOfMine(projectId: Int)
+        fun fetchFiles(projectId : Int)
     }
 
     interface View: Mvp.View{
@@ -37,9 +39,14 @@ interface ProjectDetailContract {
         fun resetMemberCardList()
         fun submitMemberCardList()
         fun addMemberCard(user: User)
+
         fun resetMilestoneCardList()
         fun submitMilestoneCardList()
         fun addMilestoneCard(milestone: Milestone)
+
+        fun addFileCard(file : FileCard)
+        fun submitFileCardList()
+        fun resetFileCardList()
 
         fun updateCurrentUser(ownerID:Int)
 
@@ -53,6 +60,7 @@ interface ProjectDetailContract {
         fun fetchRequestofMine(projectId: Int): Observable<List<CollaborationRequest>>
         fun getProject(projectId: Int): Single<Project>
         fun getAuthToken(): BehaviorSubject<AuthToken>
+        fun fetchFiles(projectId: Int) : Observable<List<File>>
     }
     interface CollaborationRequestService {
         @POST("/api/collaboration_requests/")
@@ -62,5 +70,11 @@ interface ProjectDetailContract {
         fun fetchRequests(@Query("from_user__id") userId: Int,@Query("to_project__id") projectId: Int) : Observable<List<CollaborationRequest>>
         @DELETE("api/collaboration_requests/{id}/")
         fun deleteRequest(@Header("Authorization") authorization: String,@Path("id") collabId : Int ) : Completable
+    }
+    interface FileService {
+        @GET("/files/")
+        fun fetchFiles(@Query("project") projectId: Int) : Observable<List<File>>
+        //@POST()
+
     }
 }

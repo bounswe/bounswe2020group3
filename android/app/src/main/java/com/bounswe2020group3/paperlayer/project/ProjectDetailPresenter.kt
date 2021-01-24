@@ -54,6 +54,21 @@ class ProjectPresenter  @Inject constructor(private var model: ProjectDetailCont
         return project
     }
 
+    override fun fetchFiles(projectId: Int)  {
+        this.view?.writeLogMessage("i",TAG,"Fetching the files...")
+        val getFilesObservable = model.fetchFiles(projectId).subscribe(
+            { project ->
+                this.view?.writeLogMessage("i",TAG,"Fetching Successful.")
+                //this.view?.updateProjectUI(project)
+
+            },
+            { error ->
+                this.view?.writeLogMessage("e",TAG,"Error in fetching the files")
+            }
+        )
+        disposable.add(getFilesObservable)
+    }
+
     //Fetch project and update ui
     override fun fetchProject(projectId: Int) {
         this.view?.writeLogMessage("i",TAG,"Fetching the project...")

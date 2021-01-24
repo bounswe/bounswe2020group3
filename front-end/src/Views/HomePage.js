@@ -145,12 +145,12 @@ export default class HomePage extends Component {
     return id===1 || id===pageCount || id===page || id === page-1 || id === page+1 || id===page-2 || id===page+2 || id ===page+3 || id===page-3
   }
   renderButtons() {
-    const { pages } = this.state;
+    const { pages, page } = this.state;
     return(
       <p>
         {pages.map((id) => {
           if(this.buttonRenderCond(id)){
-          return(<Button variant="outlined" color="primary" size="small" onClick={() => {this.setState({page:id})}}>{id}</Button>)
+          return(<Button variant={id !== page ? "outlined" : "contained"} color="primary" size="small" onClick={() => {this.setState({page:id})}}>{id}</Button>)
           }else{
             return <></>
           }

@@ -210,7 +210,7 @@
     </fragment>
     <fragment
         android:id="@+id/recentProjectsFragment"
-        android:name="com.bounswe2020group3.paperlayer.home.RecentProjectsFragment"
+        android:name="com.bounswe2020group3.paperlayer.home.RecommendedProjectsFragment"
         android:label="Recent Projects">
         <action
             android:id="@+id/navigateToMilestonesFromProjectUpdates"
@@ -256,10 +256,21 @@
     <fragment
         android:id="@+id/manageInvitesFragment"
         android:name="com.bounswe2020group3.paperlayer.invite.ManageInvitesFragment"
-        android:label="Manage Your Invites" />
+        android:label="Manage Your Invites">
+        <action
+            android:id="@+id/navigateToUserFromManage"
+            app:destination="@id/userFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/reportFragment"
         android:name="com.bounswe2020group3.paperlayer.profile.report.ReportFragment"
         android:label="Report"
         tools:layout="@layout/fragment_report" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.bounswe2020group3.paperlayer.notifications.NotificationFragment"
+        android:label="Notifications">
+
+    </fragment>
 </navigation>

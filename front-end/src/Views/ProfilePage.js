@@ -3,7 +3,7 @@ import { Button, Input, styled, Avatar, Box, Grid, Paper, Typography,Accordion,A
 import { Rating } from '@material-ui/lab';
 import AlertTypes from "../Common/AlertTypes.json";
 import CustomSnackbar from '../Components/CustomSnackbar/CustomSnackbar';
-import { getUserId, getPhoto, getRequestHeader, isLoggedIn } from '../Components/Auth/Authenticate';
+import { getUserId, getPhoto, getRequestHeader, isLoggedIn, getAccessToken } from '../Components/Auth/Authenticate';
 import axios from 'axios';
 import config from '../config';
 import UserNavbar from '../Components/TopBar/UserNavbar';
@@ -48,24 +48,23 @@ const SelfContainer = styled(Box)({
 });
 const Container = styled(Box)({
   backgroundColor: '#f7f7f5',
+  background: "#f9f9eb",
   border: 0,
   borderRadius: 3,
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+  height: "calc(100vh -64px)",
   color: 'white',
-  paddingBottom: "60px",
-  top: "0",
-  bottom: "0",
-  left: "0",
-  right: "0",
-  height: "calc(98vh - 60px)",
+  paddingBottom:"40px",
+  top:0,
+  left:"0",
+  right:"0",
   margin: "auto",
   '& .MuiTextField-root': {
-    margin: "10px",
-    width: "30%",
-    minWidth: "250px"
-  }
+      margin: "10px",
+      width: "30%",
+      minWidth: "250px"
+    }
 });
-
 export default class ProfilePage extends Component {
   constructor(props) {
     super(props);
@@ -76,6 +75,9 @@ export default class ProfilePage extends Component {
       profileId: "",
       name: "",
       middle_name: "",
+      projNames: [],
+      inviteNames: [],
+      invites: [],
       last_name: "",
       email: "",
       img: "",
@@ -92,16 +94,21 @@ export default class ProfilePage extends Component {
       self: false,
       selfName: "",
       selfLastName: "",
+      projname: "",
+      profname: "",
       follow_reqs: [],
       followers: [],
       following: [],
+      loop: 0,
       milestones: [],
+      allColabInvites: [],
       projects: [],
       notifications: [],
       file: undefined,
       showUpload: false,
       loading: true, // For eradicating glitches due to request delays
       rating: 0,
+      publications: [],
       currentRating: 0,
       currentUserId: -1,
       comments: [],
@@ -119,6 +126,7 @@ export default class ProfilePage extends Component {
 
   componentDidMount() {
     this.getProfile();
+    this.getColabInvites();
     axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, getRequestHeader())
       .then(res => {
         this.setState({
@@ -132,7 +140,19 @@ export default class ProfilePage extends Component {
           console.log((res.data))
           this.setState({notifications: res.data})
         });
+
+      this.getPublications();
   };
+
+  distinct(value, index, self) {
+    return self.indexOf(value) === index;
+  }
+
+  handleLoop = () => {
+    var i = this.state.loop;
+    i = i + 1;
+    this.setState({loop: i}); 
+  }
 
   getProfile = () => {
     var userId = this.props.location.pathname.split('/')[2];
@@ -372,6 +392,9 @@ export default class ProfilePage extends Component {
   };
   goToProjectCreation = () => {
     this.props.history.push(config.Create_Project_Path);
+  };
+  goToPublicationLink = (link) => {
+    window.location.href = "'" + link + "'";
   };
   renderProjects() {
     const { projects } = this.state;
@@ -669,12 +692,14 @@ export default class ProfilePage extends Component {
             margin: "auto",
             marginBottom: "10px",
             textAlign: 'left',
-            maxHeight: "500px",
+            maxHeight: "400px",
             overflowY: "scroll"
           }}
           borderColor="primary" border={1}>
           {this.renderComments()}
         </Paper>
+        <Typography variant="h5" color="primary" style={titleStyleCenter}>Publications</Typography>
+        {this.renderPublications()}
         {/* </>
          :
          <></>
@@ -702,6 +727,203 @@ export default class ProfilePage extends Component {
       })
   }
 
+  getColabInvites(){
+    axios.get(`${config.API_URL}/api/collaboration_invites/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let colabInvites = res.data;
+        let invites = [];
+        var len = colabInvites.length;
+        //console.log(colabInvites);
+        for(var i=0; i<len; i++){
+          var id = colabInvites[i].to_user;
+          var myId = getUserId();
+          //console.log(myId);
+          // eslint-disable-next-line
+          if(id == myId){
+            invites.push(colabInvites[i]);
+          }
+        }
+        var uniInvs = invites.filter(this.distinct);
+        //console.log(uniInvs);
+        this.setState({ allColabInvites: uniInvs });
+
+        // ___________________________________________
+
+      const{ allColabInvites } = this.state;
+      var ids = [];
+      for(var k=0; k<allColabInvites.length; k++){
+        var idTriple = [allColabInvites[k].id, allColabInvites[k].from_user, allColabInvites[k].to_project];
+        ids.push(idTriple);
+      }
+
+      // ___________________________________________
+
+      var projnames = [];
+      var promises2 = [];
+      for(var m=0; m<ids.length; m++){
+        promises2.push(
+          axios.get(`${config.API_URL}/api/projects/${ids[m][2]}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+          .then(res => {
+            let name = res.data.name;
+            projnames.push(name);
+        }));
+      }
+      Promise.all(promises2).then(() => {
+        //console.log(projnames);
+        this.setState({projNames: projnames});
+      });
+
+      // ___________________________________________
+
+      var usernames = [];
+        let promises = [];
+        for(var t=0; t<ids.length; t++){
+          promises.push(
+            axios.get(`${config.API_URL}/api/users/${ids[t][1]}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } }).then(res => {
+              let name = res.data.profile[0].name;
+              let mname = res.data.profile[0].middle_name;
+              let lastname = res.data.profile[0].last_name;
+              let userName = name + " " + mname + " " + lastname;
+              usernames.push(userName);
+            }))
+        }
+        Promise.all(promises).then(() => {
+          //console.log(usernames);
+          this.setState({inviteNames: usernames});
+        });
+        var invDatas = [];
+        for(var n=0; n<ids.length; n++){
+          var reqData = [this.state.inviteNames[n], this.state.projNames[n], ids[n][0]];
+          invDatas.push(reqData);
+        }
+        this.setState({invites: invDatas});
+      });
+  };
+
+  deleteColabInvite = (myId) => {
+    axios.delete(`${config.API_URL}/api/collaboration_invites/${myId}/`, { id: myId }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+            this.getProfile(this.state.profileId);
+        }); 
+  }
+
+  acceptColabInvite = (myId) => {
+    axios.post(`${config.API_URL}/api/collaboration_invites/${myId}/accept_collaboration_invite/`, { id: myId }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          this.deleteColabInvite(myId);
+          window.location.reload(true);
+        }); 
+  };
+
+  rejectColabInvite = (myId) => {
+    axios.post(`${config.API_URL}/api/collaboration_invites/${myId}/reject_collaboration/`, { id: myId }, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+        .then(res => {
+          this.deleteColabInvite(myId);
+          window.location.reload(true);
+        }); 
+  };
+
+  getUsernameById(id){
+    axios.get(`${config.API_URL}/api/users/${id}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let name = res.data.profile[0].name;
+        let mname = res.data.profile[0].middle_name;
+        let lastname = res.data.profile[0].last_name;
+        let userName = name + " " + mname + " " + lastname;
+        
+        this.setState({profname : userName});
+      });
+  };
+
+  getProjectNameById(id){
+    axios.get(`${config.API_URL}/api/projects/${id}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let name = res.data.name;
+        
+        this.setState({projname : name});
+      });
+  }
+
+  renderColabInvites = () => {
+    const {invites} = this.state;
+    if(this.state.loop < 3){
+      this.getColabInvites();
+      this.handleLoop();
+    }
+
+    //console.log(invites);
+
+    if (invites.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaboration Invites</Typography>)
+    else return invites.map((item) => {
+      return (<>
+        <Typography variant="h5" color="primary" style={{ width: "100%", textAlign: "left" }}>{item[0]}</Typography>
+        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{item[1]}</Typography>
+        <Button variant="contained" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.acceptColabInvite(item[2])} > Accept </Button>
+        <Button variant="contained" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.rejectColabInvite(item[2])} > Reject </Button>
+      </>)
+    });
+  };
+
+  renderInvites(){
+    return (
+      <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
+        
+        <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+          {this.renderColabInvites()}
+        </Paper>
+      </Grid>
+    )
+  };
+
+  getPublications = () => {
+    var userId = getUserId();
+    console.log(userId);
+    axios.get(`${config.API_URL}/api/publications/?owner__id=${userId}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+      .then(res => {
+        let data = res.data;
+        //console.log(data);
+
+        var myPubs = [];
+        if(data.length > 0){
+          for(var i=0; i<10; i++){
+            var myData = [i, data[i].title, data[i].publication_year, data[i].citation_number, data[i].link];
+            myPubs.push(myData);
+          }
+        }
+
+        this.setState({publications: myPubs});
+        console.log(this.state.publications);
+      });
+  };
+
+  renderPublicationsData = () => {
+    const {publications} = this.state;
+    if(this.state.loop < 2){
+      this.getPublications();
+      this.handleLoop();
+    }
+
+    if (publications.length === 0) return (  <Typography variant='h6' color="textPrimary">No Publications</Typography>)
+    else return publications.map((item) => {
+      return (<>
+        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}> {item[0]+1}) {item[1]} - {item[2]} </Typography>
+        <a target="_blank" rel="noreferrer" href={item[4]} variant="h5" color="primary" style={{ width: "100%", textAlign: "left" }}> Go To Paper </a>
+        
+      </>)
+    });
+  };
+
+  renderPublications(){
+    return (
+      <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
+        
+        <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+          {this.renderPublicationsData()}
+        </Paper>
+      </Grid>
+    )
+  };
+
   renderSelfProfile() {
     return (<SelfContainer>
       <UserNavbar
@@ -722,6 +944,8 @@ export default class ProfilePage extends Component {
                 {this.renderMilestones()}
                 <Typography variant="h5" color="primary" style={titleStyleCenter}>Projects</Typography>
                 {this.renderProjects()}
+                <Typography variant="h5" color="primary" style={titleStyleCenter}>Collaboration Invites</Typography>
+                {this.renderInvites()}
               </>
               :
               <></>
@@ -783,7 +1007,7 @@ export default class ProfilePage extends Component {
         history ={this.props.history}
         notifications = {this.state.notifications}
       />
-      <Box>
+      <Box style={{marginTop:"8px", height:"calc(100vh -64px)", overflowY:"scroll", overflowX:"hidden"}}>
         {!this.state.self && !this.state.loading ?  // So that re-render doesn't cause any glitch-like graphics.
           <Profilebar
             name={this.state.selfName}
@@ -862,6 +1086,7 @@ export default class ProfilePage extends Component {
             <Grid item sm={3}>
               {this.renderGraph()}
               {this.renderAddComment()}
+              {this.renderPublications()}
             </Grid>
           </Grid>
         </Grid>
@@ -935,15 +1160,15 @@ export default class ProfilePage extends Component {
       axios.get(`${config.API_URL}${config.Follow_request_url}${unfId}/`, getRequestHeader())
       .then(resp=>{
 
-        console.log(resp.data)
-        console.log(resp.data.id)
+        //console.log(resp.data)
+        //console.log(resp.data.id)
 
         const fromUser = resp.data.req_from_user
         const toUser = resp.data.req_to_user
 
         var newId = unfId + ""
 
-        console.log(newId + "              newId")
+        //console.log(newId + "              newId")
 
         const action = {
           req_from_user: {
@@ -969,9 +1194,9 @@ rejectFollowRequest = (req_id) => {
     axios.get(`${config.API_URL}${config.Follow_request_url}`, getRequestHeader())
     .then(resId=>{
 
-      console.log(resId.data)
-      console.log(userId)
-      console.log(req_id)
+      //console.log(resId.data)
+      //console.log(userId)
+      //console.log(req_id)
 
       
       var unfId = 0
@@ -986,15 +1211,15 @@ rejectFollowRequest = (req_id) => {
       axios.get(`${config.API_URL}${config.Follow_request_url}${unfId}/`, getRequestHeader())
       .then(resp=>{
 
-        console.log(resp.data)
-        console.log(resp.data.id)
+        //console.log(resp.data)
+        //console.log(resp.data.id)
 
         const fromUser = resp.data.req_from_user
         const toUser = resp.data.req_to_user
 
         var newId = unfId + ""
 
-        console.log(newId + "              newId")
+        //console.log(newId + "              newId")
 
         const action = {
           req_from_user: {
@@ -1061,9 +1286,10 @@ rejectFollowRequest = (req_id) => {
     axios.get(`${config.API_URL}${config.User_Path}${getUserId()}/`, getRequestHeader())
       .then(resUser => {
 
+        // eslint-disable-next-line
         const userState = resUser.data;
-        console.log(userState)
-        console.log(userState.profile[0])
+        //console.log(userState)
+        //console.log(userState.profile[0])
 
         var userId = this.props.location.pathname.split('/')[2];
         axios.get(`${config.API_URL}${config.User_Path}${userId}/`, getRequestHeader())
@@ -1071,14 +1297,14 @@ rejectFollowRequest = (req_id) => {
 
             const profileState = res.data;
 
-            console.log(profileState.id)
-            console.log("reqId")
+            //console.log(profileState.id)
+            //console.log("reqId")
             const followReq_create = {
               req_to_user: profileState.id,
               created: "datatime-local"
             }
 
-            console.log(followReq_create)
+            //console.log(followReq_create)
 
             axios.post(`${config.API_URL}${config.Follow_request_url}`, followReq_create, getRequestHeader())
               .then(resCreate => {

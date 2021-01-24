@@ -6,53 +6,51 @@ import com.bounswe2020group3.paperlayer.home.cards.EventCard
 import com.bounswe2020group3.paperlayer.home.cards.MilestoneCard
 import com.bounswe2020group3.paperlayer.home.cards.ProjectUpdateCard
 import com.bounswe2020group3.paperlayer.home.data.*
-import com.bounswe2020group3.paperlayer.invite.InviteCard
-import com.bounswe2020group3.paperlayer.invite.data.CollaborationInvite
-import com.bounswe2020group3.paperlayer.invite.data.InviteRequest
-import com.bounswe2020group3.paperlayer.invite.data.InviteResponse
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.ProjectShort
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import retrofit2.http.*
 
 interface HomeContract {
     interface EventPresenter : Mvp.Presenter<EventView> {
-        fun setView(eventView: HomeContract.EventView)
+        fun setView(eventView: EventView)
         fun showMessage(message: String)
-        fun fetchEvents(ownerId : Int)
+        fun fetchEvents(ownerId: Int)
         fun subscribeAuthToken()
+        fun fetchNotifications()
+        fun fetchUnreadNotificationCount()
     }
-    interface EventView: Mvp.View{
+
+    interface EventView : Mvp.View {
         fun getLayout(): android.view.View
         fun showToast(message: String)
-        fun writeLogMessage(type:String ,tag: String,message: String)
-
+        fun writeLogMessage(type: String, tag: String, message: String)
+        fun updateNotificationIcon(notificationCount: Int)
         fun resetCardList()
         fun submitCardList()
-        fun addCard(card : EventCard)
+        fun addCard(card: EventCard)
 
     }
-    interface MileStoneView: Mvp.View{
+
+    interface MileStoneView : Mvp.View {
         fun getLayout(): android.view.View
         fun showToast(message: String)
-        fun writeLogMessage(type:String ,tag: String,message: String)
-
+        fun writeLogMessage(type: String, tag: String, message: String)
         fun resetCardList()
         fun submitCardList()
-        fun addCard(card : MilestoneCard)
+        fun addCard(card: MilestoneCard)
 
     }
     interface MileStonePresenter : Mvp.Presenter<MileStoneView> {
         fun setView(milestoneView: HomeContract.MileStoneView)
         fun showMessage(message: String)
-        fun fetchMilestones(ownerId : Int)
+        fun fetchMilestones(ownerId: Int)
         fun subscribeAuthToken()
     }
-    interface RecentProjectsView: Mvp.View{
+    interface RecommendedProjectsView: Mvp.View{
         fun getLayout(): android.view.View
         fun showToast(message: String)
         fun writeLogMessage(type:String ,tag: String,message: String)
@@ -65,8 +63,8 @@ interface HomeContract {
 
 
     }
-    interface RecentProjectsPresenter : Mvp.Presenter<RecentProjectsView> {
-        fun setView(view: HomeContract.RecentProjectsView)
+    interface RecommendedProjectsPresenter : Mvp.Presenter<RecommendedProjectsView> {
+        fun setView(view: HomeContract.RecommendedProjectsView)
         fun showMessage(message: String)
         fun fetchProjects(ownerId : Int)
         fun subscribeAuthToken()
@@ -84,19 +82,30 @@ interface HomeContract {
         fun getAllEvents(): Observable<List<Event>>?
         fun getAuthToken(): BehaviorSubject<AuthToken>
         fun getAllProjects(OwnerId:Int): Observable<List<ProjectShort>>
+        fun getRecommendedProjects(userId : Int): Observable<List<Project>>
         fun collaborateRequest(request : CollaborateRequest) : Observable<CollaborationRequest>
         fun fetchRequests(userId:Int)   :   Observable<List<CollaborationRequest>>
         fun deleteRequest( collabId : Int ) : Completable
         fun getMilestones() : Observable<MilestoneListWrapper>
+        fun getNotifications(): Observable<NotificationResponse>
+        fun getUnreadNotificationCount(): Observable<NotificationUnreadCountResponse>
     }
     interface EventsService{
         @GET("/api/events/")
         fun getEvents(): Observable<List<Event>>
+
+        @GET("/api/notifications/")
+        fun getNotifications(@Header("Authorization") authorization: String): Observable<NotificationResponse>
+
+        @GET("/api/notifications/unread_count/")
+        fun getUnreadNotificationCount(@Header("Authorization") authorization: String): Observable<NotificationUnreadCountResponse>
     }
     interface ProjectService {
 
         @GET("/api/projects/")
         fun getAllProjects(): Observable<List<ProjectShort>>
+        @GET("api/projects/get_project_recommendation/")
+        fun getRecommendedProjects(@Query("user_id") userId: Int): Observable<List<Project>>
 
 
     }

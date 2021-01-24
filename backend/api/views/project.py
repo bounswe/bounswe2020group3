@@ -136,7 +136,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
         project_score = {}
 
         followed_users = Following.objects.filter(from_user=user_id)
-        projects = Project.objects.filter(state="open for collaborators")
+        projects = Project.objects.filter(
+            state="open for collaborators").order_by('-created')
         for project in projects:
             rating = get_user_rating(project.owner_id)
             scaled_rating = rating/10.0 if rating else 0.5

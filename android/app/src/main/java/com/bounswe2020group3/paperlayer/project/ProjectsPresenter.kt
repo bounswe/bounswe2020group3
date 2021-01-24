@@ -1,6 +1,8 @@
 package com.bounswe2020group3.paperlayer.project
 
 
+import android.content.Intent
+import android.net.Uri
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
@@ -39,14 +41,15 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectsContra
     override fun subscribeAuthToken() {
         this.view?.writeLogMessage("i",TAG, "##1##")
         val userProfileSub = model.getAuthToken().subscribe { token ->
-            fetchAllProjectsOfOwner(token.id)
+            fetchAllProjectsOfUser(token.id)
+            fetchAllPublicationsOfOwner(token.id)
         }
         disposable.add(userProfileSub)
     }
 
-    override fun fetchAllProjectsOfOwner(ownerId: Int) {
-        this.view?.writeLogMessage("i",TAG, "Fetching all projects of owner $ownerId ...")
-        val getProjectObservable = model.getAllProjectsOfOwner(ownerId).subscribe(
+    override fun fetchAllProjectsOfUser(userId: Int) {
+        this.view?.writeLogMessage("i",TAG, "Fetching all projects of user $userId ...")
+        val getProjectObservable = model.getAllProjectsOfMember(userId).subscribe(
                 { projectList ->
                     for (project in projectList){
                         this.view?.addProjectCard(project.name,project.description,project.owner,project.id,"Project")
@@ -56,10 +59,56 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectsContra
                     this.view?.submitProjectCardList()
                 },
                 { error ->
-                    this.view?.writeLogMessage("e",TAG,"Error in fetching all projects of owner $ownerId $error")
+                    this.view?.writeLogMessage("e",TAG,"Error in fetching all projects of user $userId $error")
                 }
         )
         disposable.add(getProjectObservable)
+    }
+
+    override fun fetchAllPublicationsOfOwner(ownerId: Int) {
+        this.view?.writeLogMessage("i",TAG, "Fetching all publications of owner $ownerId ...")
+        val getPublicationObservable = model.getAllPublicationsOfOwner(ownerId).subscribe(
+                { publicationList ->
+                    for (publication in publicationList){
+                        this.view?.addPublicationCard(publication.title,publication.link,publication.citationNumber.toString(),publication.id)
+                        this.view?.writeLogMessage("i",TAG,"Publication Fetched + "+publication.title+ " ")//+ project.project_type)
+                    }
+                    this.view?.writeLogMessage("i",TAG,"Fetching finished.")
+                    this.view?.submitPublicationCardList()
+                },
+                { error ->
+                    this.view?.writeLogMessage("e",TAG,"Error in fetching all publications of owner $ownerId $error")
+                }
+        )
+        disposable.add(getPublicationObservable)
+    }
+
+    override fun connectScholarPublications(authorId: String) {
+        this.view?.writeLogMessage("i",TAG, "Connecting scholar account...")
+        val getPublicationObservable = model.addPublicationsOfOwner(authorId).subscribe(
+                { response ->
+                    this.view?.writeLogMessage("i",TAG,"Connected successfully.")
+                    this.view?.showToast("Connected Successfully.")
+                    val userProfileSub = model.getAuthToken().subscribe { token ->
+                        this.view?.hidePublicationAdd()
+                        fetchAllPublicationsOfOwner(token.id)
+                    }
+                    disposable.add(userProfileSub)
+                },
+                { error ->
+                    this.view?.writeLogMessage("e",TAG,"Error in connecting scholar id of owner $error")
+                }
+        )
+        disposable.add(getPublicationObservable)
+    }
+
+
+    override fun onViewPublicationButtonClicked(item: ProjectCard, position: Int) {
+        //Navigating to publications page
+        val url = item.projectBody
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(url)
+        this.view?.getMyContext()?.startActivity(intent)
     }
 
     override fun onViewProjectButtonClicked(item: ProjectCard, position: Int) {

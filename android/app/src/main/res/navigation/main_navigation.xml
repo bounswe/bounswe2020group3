@@ -253,9 +253,12 @@
     <fragment
         android:id="@+id/manageInvitesFragment"
         android:name="com.bounswe2020group3.paperlayer.invite.ManageInvitesFragment"
-        android:label="Manage Your Invites" >
-        <action
-            android:id="@+id/navigateToUserFromManage"
-            app:destination="@id/profileFragment" />
+        android:label="Manage Your Invites" />
+
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.bounswe2020group3.paperlayer.notifications.NotificationFragment"
+        android:label="Notifications">
+
     </fragment>
 </navigation>

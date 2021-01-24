@@ -8,6 +8,7 @@ import com.bounswe2020group3.paperlayer.home.RecommendedProjectsFragment
 import com.bounswe2020group3.paperlayer.invite.InviteFragment
 import com.bounswe2020group3.paperlayer.invite.ManageInvitesFragment
 import com.bounswe2020group3.paperlayer.login.LoginFragment
+import com.bounswe2020group3.paperlayer.notifications.NotificationFragment
 import com.bounswe2020group3.paperlayer.profile.ProfileFragment
 import com.bounswe2020group3.paperlayer.profile.edit.ProfileEditFragment
 import com.bounswe2020group3.paperlayer.profile.follow.FollowListFragment
@@ -37,7 +38,8 @@ import javax.inject.Singleton
     ProjectEditModule::class,
     SearchModule::class,
     UserModule::class,
-    EventModule::class
+    EventModule::class,
+    NotificationModule::class
 ])
 @Singleton
 interface AppComponent {
@@ -60,5 +62,5 @@ interface AppComponent {
     fun inject(fragment: EventDetailFragment)
     fun inject(fragment: CollabFragment)
     fun inject(fragment: ManageInvitesFragment)
-
+    fun inject(fragment: NotificationFragment)
 }

@@ -19,12 +19,24 @@ class HomeModel @Inject constructor(private var sessionManager: Session, retrofi
     private var projectService: HomeContract.ProjectService = retrofit.create(HomeContract.ProjectService::class.java)
     private var collaborationService : HomeContract.CollaborationRequestService  = retrofit.create(HomeContract.CollaborationRequestService::class.java)
     private var milestonesService : HomeContract.MilestonesService = retrofit.create(HomeContract.MilestonesService::class.java)
+    private val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
     override fun getAllEvents(): Observable<List<Event>>? {
         return eventService.getEvents()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
+    override fun getNotifications(): Observable<NotificationResponse> {
+        return eventService.getNotifications(authToken)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun getUnreadNotificationCount(): Observable<NotificationUnreadCountResponse> {
+        return eventService.getUnreadNotificationCount(authToken)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
     override fun getAuthToken(): BehaviorSubject<AuthToken> {
         return sessionManager.getToken()
     }
@@ -36,9 +48,7 @@ class HomeModel @Inject constructor(private var sessionManager: Session, retrofi
     }
 
     override fun collaborateRequest(request : CollaborateRequest) : Observable<CollaborationRequest> {
-        val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
-
-        return collaborationService.collaborationRequest(authToken,request)
+        return collaborationService.collaborationRequest(authToken, request)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
@@ -50,15 +60,11 @@ class HomeModel @Inject constructor(private var sessionManager: Session, retrofi
     }
 
     override fun deleteRequest(collabId: Int): Completable {
-        val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
-
         return collaborationService.deleteRequest(authToken,collabId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())    }
 
     override fun getMilestones() : Observable<MilestoneListWrapper> {
-        val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
-
         return milestonesService.getMilestones(authToken)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.R
+import com.google.android.material.chip.ChipGroup
 import kotlinx.android.synthetic.main.layout_list_item_project.view.*
 
 //Interface to communicate between fragment and recyclerview items
@@ -48,12 +49,15 @@ class PublicationAdapter(var clickListener: OnCardPublicationClickListener): Rec
         var publicationDescription: TextView =itemView.textViewProjectDescription
         var publicationCreator: TextView =itemView.textViewProjectCreator
         var publicationIcon: ImageView = itemView.imageViewProjectIcon
+        var chipGroupTag: ChipGroup =itemView.chipGroupTags
 
         fun bind(projectCard: ProjectCard,action:OnCardPublicationClickListener){
             publicationTitle.setText(projectCard.projectTitle)
             publicationDescription.setText(projectCard.projectBody)
             publicationCreator.setText("Citation number: "+projectCard.projectCreator)
             publicationIcon.setImageResource(R.drawable.ic_journal)
+
+            chipGroupTag.visibility = View.GONE
 
             //Listeners for each project cards
             itemView.buttonView.setOnClickListener {

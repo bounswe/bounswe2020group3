@@ -34,9 +34,11 @@ class ProjectPresenter  @Inject constructor(private var model: ProjectDetailCont
 
     override fun subscribeAuthToken() {
         this.view?.writeLogMessage("i",TAG, "##1##")
-        val userProfileSub = model.getAuthToken().subscribe { token ->
+        val userProfileSub = model.getAuthToken().subscribe ({ token ->
             this.view?.updateCurrentUser(token.id)
-        }
+        },{err ->
+            this.view?.writeLogMessage("e",TAG,"error while auth tokening, $err")
+        })
         disposable.add(userProfileSub)
     }
 

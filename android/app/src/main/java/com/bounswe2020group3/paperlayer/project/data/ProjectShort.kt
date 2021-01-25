@@ -18,6 +18,8 @@ data class ProjectShort (
         var isPublic: Boolean,
         @field:Json(name = "state")
         var state: String,
+        @field:Json(name = "tags")
+        var tags: List<Tag>,
         @field:Json(name = "owner_id")
         var owner_id: String,
 ): Parcelable

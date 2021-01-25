@@ -83,4 +83,15 @@
     <string name="project_detail_tab_title_member">Members</string>
     <string name="project_requirements_title">Project Requirements</string>
     <string name="content_description_paperlayer_logo">PaperLayer Logo</string>
+    <string name="content_description_report_user">Report User</string>
+    <!--  Report Page  -->
+    <string name="report_type">Report Type</string>
+    <string name="report_description">Report Description (Optional)</string>
+    <string name="send">Send</string>
+    <!-- Report Types -->
+    <string name="disturbing_other_users">Disturbing other users</string>
+    <string name="disturbing_posts">Sharing unrelated or disturbing posts</string>
+    <string name="spam">Spam</string>
+    <string name="fake_profile">Fake Profile</string>
+    <string name="stolen_account">Stolen Account</string>
 </resources>

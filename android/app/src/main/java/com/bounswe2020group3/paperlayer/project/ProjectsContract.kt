@@ -6,6 +6,7 @@ import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.ProjectShort
 import com.bounswe2020group3.paperlayer.project.data.Publication
+import com.bounswe2020group3.paperlayer.project.data.Tag
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
@@ -19,7 +20,7 @@ interface       ProjectsContract {
         fun showMessage(message: String)
 
         fun subscribeAuthToken()
-        fun fetchAllProjectsOfOwner(ownerId: Int)
+        fun fetchAllProjectsOfUser(userId: Int)
         fun fetchAllPublicationsOfOwner(ownerId: Int)
         fun connectScholarPublications(authorId: String)
         fun onViewProjectButtonClicked(item: ProjectCard, position: Int)
@@ -39,16 +40,17 @@ interface       ProjectsContract {
 
         fun resetProjectCardList()
         fun submitProjectCardList()
-        fun addProjectCard(projectName: String,projectBody: String,projectOwner: String,projectId: Int,projectType: String)
+        fun addProjectCard(projectName: String, projectBody: String, projectOwner: String, projectId: Int, tags: List<Tag>, projectType: String)
 
         fun resetPublicationCardList()
         fun submitPublicationCardList()
-        fun addPublicationCard(projectName: String,projectBody: String,projectOwner: String,projectId: Int)
+        fun addPublicationCard(projectName: String,projectBody: String,projectOwner: String,tags: List<Tag>,projectId: Int)
     }
 
     interface Model {
         //fun getProject(projectId: Int): Single<Project>
         fun getAllProjectsOfOwner(ownerId: Int): Observable<List<ProjectShort>>
+        fun getAllProjectsOfMember(userId: Int): Observable<List<ProjectShort>>
         fun getAllPublicationsOfOwner(ownerId: Int): Observable<List<Publication>>
         fun getAuthToken(): BehaviorSubject<AuthToken>
         fun addPublicationsOfOwner(authorId: String): Observable<Response<Void>>
@@ -60,6 +62,9 @@ interface       ProjectsContract {
 
         @GET("/api/projects/")
         fun getAllProjectsOfOwner(@Header("Authorization") authorization: String, @Query("owner__id") ownerId: Int): Observable<List<ProjectShort>>
+
+        @GET("/api/projects/")
+        fun getAllProjectsOfMember(@Header("Authorization") authorization: String, @Query("members__id") userId: Int): Observable<List<ProjectShort>>
 
         @POST("/api/publications/add_publications/")
         fun addPublicationsOfOwner(@Header("Authorization") authorization: String, @Query("author_id") authorId: String): Observable<Response<Void>>

@@ -54,6 +54,19 @@ class CommentUpdateSerializer(serializers.ModelSerializer):
         fields = ['id', 'comment']
 
 
+class CommentCreateSerializer(serializers.ModelSerializer):
+    """
+    Comment serializer
+    """
+    created = serializers.DateTimeField(read_only=True)
+    owner = serializers.ReadOnlyField(source='from_user.username')
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'created', 'comment', 'from_user', 'to_user',
+                  'owner']
+
+
 class CommentFeedSerializer(serializers.ModelSerializer):
     """
     Comment update serializer

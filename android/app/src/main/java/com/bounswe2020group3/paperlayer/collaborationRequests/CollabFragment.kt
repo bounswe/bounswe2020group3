@@ -41,10 +41,15 @@ class CollabFragment : Fragment(), CollabContract.CollabView, OnCardClickListene
         fragment_view = view
 
 
+
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         this.presenter.bind(this)
         initRecyclerView()
         resetCardList()
-        return view
     }
 
     override fun getLayout(): View {

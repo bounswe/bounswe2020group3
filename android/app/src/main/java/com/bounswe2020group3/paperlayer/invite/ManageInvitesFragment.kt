@@ -70,14 +70,21 @@ class ManageInvitesFragment: Fragment(),ManageInvitesContract.View, OnCardClickL
         projectId = arguments?.getInt("projectID")!!
         val view = inflater.inflate(R.layout.fragment_invite, container, false)
         this.fragment_view=view
-        initRecyclerView()
-        this.presenter.bind(this)
+
 
         view.findViewById<Button>(R.id.buttonOK).setOnClickListener {
             Navigation.findNavController(view).navigateUp()
         }
         return view
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initRecyclerView()
+        resetUserCardlist()
+        this.presenter.bind(this)
+    }
+
     override fun resetUserCardlist() {
         inviteCardList.clear()
         inviteAdapter.submitList(this.inviteCardList)
@@ -127,7 +134,7 @@ class ManageInvitesFragment: Fragment(),ManageInvitesContract.View, OnCardClickL
 
     override fun onCardClick(userId: Int) {
         val bundle = bundleOf("userID" to userId )
-        Navigation.findNavController(requireView()).navigate(R.id.navigateToUserFromInvite, bundle)
+        Navigation.findNavController(requireView()).navigate(R.id.navigateToUserFromManage, bundle)
     }
 
 

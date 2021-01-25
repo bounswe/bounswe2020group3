@@ -15,17 +15,27 @@ import "../index.scss";
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 
-const privateGender = "do not want to share";
-const titleStyle = {
-  textAlign: "left",
-  marginTop: "10px"
-}
 const dropdownMenuStyle = {
   minWidth: "150px",
   marginLeft: "12px",
   marginTop: "10px"
 }
-
+const reportTypes = {
+  distUser: "Disturbing other users",
+  post: "Sharing unrelated or disturbing posts",
+  spam: "Spam",
+  fake: "Fake Profile",
+  stolen: "Stolen Account"
+  
+}
+const Messages = {
+  report_success: "We have received your feedback. Thank you.We'll inform you about when the report is processed.",
+}
+const privateGender = "do not want to share";
+const titleStyle = {
+  textAlign: "left",
+  marginTop: "10px"
+}
 const titleStyleCenter = {
   textAlign: "center",
   marginTop: "10px"
@@ -76,20 +86,6 @@ const Container = styled(Box)({
       minWidth: "250px"
     }
 });
-
-const reportTypes = {
-  distUser: "Disturbing other users",
-  post: "Sharing unrelated or disturbing posts",
-  spam: "Spam",
-  fake: "Fake Profile",
-  stolen: "Stolen Account"
-  
-}
-const Messages = {
-  report_success: "We have received your feedback, Thank you.",
-
-}
-
 export default class ProfilePage extends Component {
   constructor(props) {
     super(props);
@@ -163,8 +159,7 @@ export default class ProfilePage extends Component {
           selfLastName: res.data.profile[0].last_name
         });
       });
-    axios.get(`${config.API_URL}/api/notifications/unread/`,
-        getRequestHeader())
+    axios.get(`${config.API_URL}/api/notifications/unread/`, getRequestHeader())
         .then(res => {
           console.log((res.data))
           this.setState({notifications: res.data})
@@ -243,7 +238,7 @@ export default class ProfilePage extends Component {
               .then(res => {
                 this.setState({ milestones: res.data.result });
               });
-            axios.get(`${config.API_URL}${config.Projectpage_url}?owner__id=${getUserId()}`, getRequestHeader())
+            axios.get(`${config.API_URL}${config.Projectpage_url}?members__id=${getUserId()}`, getRequestHeader())
               .then(res => {
                 this.setState({ projects: res.data });
               });
@@ -501,6 +496,7 @@ export default class ProfilePage extends Component {
       </Box>)
 
   };
+  
   renderMidRightColumn() {
     return (
       <Grid item sm={6} >
@@ -588,6 +584,39 @@ export default class ProfilePage extends Component {
         }
       </>
     )
+  }
+  handleReportTypeChange = (e) => {
+    this.setState({ reportType: e.target.value, showReportNav: false });
+  }
+  handleReportQuery = (e) => {
+    this.setState({ reportQuery: e.target.value })
+  };
+  submitReportQuery = () => {
+    var userId = this.props.location.pathname.split('/')[2];
+    const {reportQuery} = this.state;
+    let newReportId = userId;
+    let newReportType  = this.state.reportType;
+    let newReportDesc  = this.state.reportQuery;
+    if (reportQuery === undefined) return;
+
+    const report = {
+      report_type: newReportType,
+      description: newReportDesc,
+      created: "datatime-local",
+      reported_user: newReportId
+    }
+    axios.post(`${config.API_URL}${config.Report_URL}`, report, getRequestHeader())
+            .then(res => {
+
+              this.getProfile(this.state.profileId);
+              console.log("Report Here!!!")
+              console.log(newReportId); 
+              console.log(newReportType); 
+              console.log(newReportDesc);
+              this.setState({ message: Messages.report_success, messageType: AlertTypes.Success },
+                this.handleSnackbarOpen());
+                this.setState({ showReportTag: false, reportQuery: "", reportType:"" });
+            });
   }
 
   renderGraph() {
@@ -711,8 +740,71 @@ export default class ProfilePage extends Component {
           }
         {/* {this.state.isPublic || this.state.self ? 
           <> */}
+        {!this.state.self ?
 
-        <Grid>
+          <>
+            <Grid item sm={12}>
+              {/* <Typography variant="h5" color="primary">Tags</Typography> */}
+              <Paper elevation={6}
+                style={{ border: "solid 1px blue", width: "90%", height: "90%", padding: "15px", background: "white", margin: "auto" }}
+                borderColor="primary"
+                border={1}>
+                {this.state.showReportTag ?
+                  <>
+
+                    {!this.state.showReportNav ?
+                      <>
+
+                        <Input
+                          type="text"
+                          color='primary'
+                          style={{ width: "90%", textTransform: "capitalize" }}
+                          placeholder="Please enter a new tag and press enter"
+                          onChange={(e) => { this.handleReportQuery(e); }}
+                          value={this.state.reportQuery}
+                        />
+
+                        <br />
+                        <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitReportQuery}>Send Report</Button>
+
+                      </>
+
+                      :
+                      <>
+
+                        <div style={{ marginBottom: "10px" }}>
+                          <FormControl>
+                            <InputLabel style={{ marginLeft: "12px" }} id="projectState">Report Types</InputLabel>
+                            <Select
+                              style={dropdownMenuStyle}
+                              value={this.state.reportType}
+                              onChange={this.handleReportTypeChange}
+                              labelId="projectState"
+                            >
+                              <MenuItem value={reportTypes.distUser}>Disturbing other users</MenuItem>
+                              <MenuItem value={reportTypes.post}>Sharing unrelated or disturbing posts</MenuItem>
+                              <MenuItem value={reportTypes.spam}>Spam</MenuItem>
+                              <MenuItem value={reportTypes.fake}>Fake Profile</MenuItem>
+                              <MenuItem value={reportTypes.stolen}>Stolen Account</MenuItem>
+
+                            </Select>
+                          </FormControl>
+                        </div>
+
+                      </>
+                    }
+
+                  </>
+                  :
+                  <Button color="primary" variant="outlined" onClick={() => { this.setState({ showReportTag: true, showReportNav: true }) }}>Report This User</Button>
+                }
+              </Paper>
+            </Grid>
+          </>
+          :
+
+          <></>
+        }
         <Typography variant='h6' color='primary' style={{ margin: "10px 0" }}>Comments</Typography>
         <Paper elevation={6}
           style={{
@@ -731,126 +823,9 @@ export default class ProfilePage extends Component {
         {this.renderAddComment()}
         <Typography variant="h5" color="primary" style={titleStyleCenter}>Publications</Typography>
         {this.renderPublications()}
-        </Grid>
-        {!this.state.self ?
-
-        <>
-        <Grid item sm={12} style={{ minHeight: "10vh" }}>
-                {/* <Typography variant="h5" color="primary">Tags</Typography> */}
-                <Paper elevation={6}
-                  style={{border: "solid 1px blue", width: "90%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
-                  borderColor="primary"
-                  border={1}>
-                  {this.state.showReportTag ?
-                    <>
-
-                    {!this.state.showReportNav ?
-                    <>
-                          
-                          <Input
-                            type="text"
-                            color='primary'
-                            style={{ width: "90%", textTransform: "capitalize" }}
-                            placeholder="Please enter a new tag and press enter"
-                            onChange={(e) => { this.handleReportQuery(e); }}
-                            value={this.state.reportQuery}
-                          />
-                          
-                          <br />
-                          <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitReportQuery}>Send Report</Button>
-                        
-                          </>
-                        
-                        : 
-                        <>
-                        
-                        <div style={{ marginBottom: "10px" }}>
-                            <FormControl>
-                              <InputLabel style={{ marginLeft: "12px" }} id="projectState">Report Types</InputLabel>
-                              <Select
-                                style={dropdownMenuStyle}
-                                value={reportTypes}
-                                onChange={this.handleReportTypeChange}
-                                labelId="projectState"
-                              >
-                                <MenuItem value={reportTypes.distUser}>Disturbing other users</MenuItem>
-                                <MenuItem value={reportTypes.post}>Sharing unrelated or disturbing posts</MenuItem>
-                                <MenuItem value={reportTypes.spam}>Spam</MenuItem>
-                                <MenuItem value={reportTypes.fake}>Fake Profile</MenuItem>
-                                <MenuItem value={reportTypes.stolen}>Stolen Account</MenuItem>
-                                
-                              </Select>
-                            </FormControl>
-                          </div>
-                        
-                        </>
-                    }
-                        
-                        </>
-                    :
-                    <Button color="primary" variant="outlined" onClick={() => { this.setState({ showReportTag: true, showReportNav: true }) }}> Send New Report </Button>
-                  }
-                </Paper>
-              </Grid>
-              </>
-              :
-                
-                <></>
-              }
-
-    
-        {/* </>
-         :
-         <></>
-         } */}
+        
       </>);
   };
-
-  handleReportTypeChange = (e) => {
-    this.setState({ reportType: e.target.value, showReportNav: false });
-  }
-
-  handleReportQuery = (e) => {
-    this.setState({ reportQuery: e.target.value })
-  };
-
-  submitReportQuery = () => {
-    var userId = this.props.location.pathname.split('/')[2];
-    const {reportQuery} = this.state;
-    let newReportId = userId;
-    let newReportType  = this.state.reportType;
-    let newReportDesc  = this.state.reportQuery;
-    if (reportQuery === undefined) return;
-    
-    const report = {
-      report_type: newReportType,
-      description: newReportDesc,
-      created: "datatime-local",
-      reported_user: newReportId
-    }
-/*
-    console.log(newReportId); 
-    console.log(newReportType); 
-    console.log(newReportDesc);
-*/
-    axios.post(`${config.API_URL}${config.Report_URL}`, report, getRequestHeader())
-            .then(res => {
-              
-              this.getProfile(this.state.profileId);
-              console.log("Report Here!!!")
-              console.log(newReportId); 
-              console.log(newReportType); 
-              console.log(newReportDesc);
-              this.setState({ message: Messages.report_success, messageType: AlertTypes.Success });
-            });
-
-            this.setState({ showReportTag: false, reportQuery: "" });
-
-    
-    
-
-  }
-
   handleProfilePictureChange = (e) => {
     this.setState({ file: e.target.files[0] });
   }
@@ -873,75 +848,57 @@ export default class ProfilePage extends Component {
   }
 
   getColabInvites(){
-    axios.get(`${config.API_URL}/api/collaboration_invites/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}/api/collaboration_invites/?to_user_id=${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         let colabInvites = res.data;
-        let invites = [];
-        var len = colabInvites.length;
-        //console.log(colabInvites);
-        for(var i=0; i<len; i++){
-          var id = colabInvites[i].to_user;
-          var myId = getUserId();
-          //console.log(myId);
-          // eslint-disable-next-line
-          if(id == myId){
-            invites.push(colabInvites[i]);
+        let myInvites = [];
+        for(let i = 0 ; i < colabInvites.length ; i++){
+          if(colabInvites[i].to_user === parseInt(getUserId())){
+            myInvites.push(colabInvites[i])
           }
         }
-        var uniInvs = invites.filter(this.distinct);
-        //console.log(uniInvs);
-        this.setState({ allColabInvites: uniInvs });
+        this.setState({ allColabInvites: myInvites }, () => {
+
+        });
 
         // ___________________________________________
-
-      const{ allColabInvites } = this.state;
+      console.log("HERe", myInvites)
       var ids = [];
-      for(var k=0; k<allColabInvites.length; k++){
-        var idTriple = [allColabInvites[k].id, allColabInvites[k].from_user, allColabInvites[k].to_project];
+      for(var k=0; k<myInvites.length; k++){
+        var idTriple = [myInvites[k].id, myInvites[k].from_user, myInvites[k].to_project];
         ids.push(idTriple);
       }
 
       // ___________________________________________
 
-      var projnames = [];
-      var promises2 = [];
-      for(var m=0; m<ids.length; m++){
-        promises2.push(
-          axios.get(`${config.API_URL}/api/projects/${ids[m][2]}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-          .then(res => {
-            let name = res.data.name;
-            projnames.push(name);
-        }));
-      }
-      Promise.all(promises2).then(() => {
-        //console.log(projnames);
-        this.setState({projNames: projnames});
-      });
+        var projnames = [];
+        var promises2 = [];
+        for (var m = 0; m < myInvites.length; m++) {
+          console.log(m, myInvites[m].to_project, "PROJESINE")
 
-      // ___________________________________________
 
-      var usernames = [];
-        let promises = [];
-        for(var t=0; t<ids.length; t++){
-          promises.push(
-            axios.get(`${config.API_URL}/api/users/${ids[t][1]}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } }).then(res => {
-              let name = res.data.profile[0].name;
-              let mname = res.data.profile[0].middle_name;
-              let lastname = res.data.profile[0].last_name;
-              let userName = name + " " + mname + " " + lastname;
-              usernames.push(userName);
-            }))
+          axios.get(`${config.API_URL}/api/projects/${myInvites[m].to_project}/`, getRequestHeader())
+            .then(res => {
+              console.log(res.data);
+              let name = res.data.name;
+              projnames.push(name);
+              promises2.push(res.data); 
+            });
+
+
         }
-        Promise.all(promises).then(() => {
-          //console.log(usernames);
-          this.setState({inviteNames: usernames});
-        });
-        var invDatas = [];
-        for(var n=0; n<ids.length; n++){
-          var reqData = [this.state.inviteNames[n], this.state.projNames[n], ids[n][0]];
-          invDatas.push(reqData);
-        }
-        this.setState({invites: invDatas});
+        setTimeout(() => {
+          this.setState({ projNames: projnames });
+
+          var invDatas = [];
+          for (var n = 0; n < ids.length; n++) {
+            // var reqData = [this.state.inviteNames[n], this.state.projNames[n], ids[n][0]];
+            var reqData = ["", projnames[n], ids[n][0], ids[n][2]];
+            invDatas.push(reqData);
+          }
+          this.setState({ invites: invDatas });
+        }, 2500);
+        
       });
   };
 
@@ -990,22 +947,18 @@ export default class ProfilePage extends Component {
   }
 
   renderColabInvites = () => {
-    const {invites} = this.state;
-    if(this.state.loop < 3){
-      this.getColabInvites();
-      this.handleLoop();
-    }
-
-    //console.log(invites);
+    const {invites } = this.state;
 
     if (invites.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaboration Invites</Typography>)
     else return invites.map((item) => {
-      return (<>
-        <Typography variant="h5" color="primary" style={{ width: "100%", textAlign: "left" }}>{item[0]}</Typography>
-        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{item[1]}</Typography>
-        <Button variant="contained" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.acceptColabInvite(item[2])} > Accept </Button>
-        <Button variant="contained" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.rejectColabInvite(item[2])} > Reject </Button>
-      </>)
+      return (<Paper elevation={18} style={{padding:"5px", marginBottom:'10px', textAlign: "center"}}>
+        {/*<Typography variant="h5" color="primary" style={{ width: "100%", textAlign: "left" }}>{item[0]}</Typography>*/}
+        <Typography variant="h6" color="primary" 
+          onClick={() => { this.props.history.push(`/project/${item[3]}`) }}
+          style={{ width: "100%", textAlign: "center", cursor:"pointer" }}>Project: {item[1]}</Typography>
+        <Button variant="contained" size="small" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.acceptColabInvite(item[2])} > Accept </Button>
+        <Button variant="contained" size="small" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.rejectColabInvite(item[2])} > Reject </Button>
+      </Paper>)
     });
   };
 
@@ -1043,8 +996,9 @@ export default class ProfilePage extends Component {
 
   renderPublicationsData = () => {
     const {publications} = this.state;
+    console.log(publications)
+
     if(this.state.loop < 2){
-      this.getPublications();
       this.handleLoop();
     }
 
@@ -1060,10 +1014,10 @@ export default class ProfilePage extends Component {
 
   renderPublications(){
     return (
-      <Grid item sm={12} style={{ maxHeight: "200px", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
+      <Grid item sm={12} style={{ maxHeight: "125px", overflowY: "scroll", margin: "5px 0" }}>
         
         <Paper elevation={6} 
-          style={{border: "solid 1px blue", padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} 
+          style={{border: "solid 1px blue", padding: "5px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} 
           borderColor="primary" border={1}>
           {this.renderPublicationsData()}
         </Paper>
@@ -1326,6 +1280,8 @@ export default class ProfilePage extends Component {
 
         axios.post(`${config.API_URL}${config.Follow_request_url}${newId}${config.Accept_Path}`, action , getRequestHeader())
         .then(resAcc=>{ 
+          window.location.reload(false);
+        }, (error) => {          
           window.location.reload(false);
         });
         

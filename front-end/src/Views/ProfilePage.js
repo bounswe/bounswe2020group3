@@ -1086,7 +1086,7 @@ export default class ProfilePage extends Component {
             <Grid item sm={3}>
               {this.renderGraph()}
               {this.renderAddComment()}
-              {this.renderPublications()}
+              {/* {this.renderPublications()} */}
             </Grid>
           </Grid>
         </Grid>

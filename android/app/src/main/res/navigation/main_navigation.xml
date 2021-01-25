@@ -248,7 +248,7 @@
     <fragment
         android:id="@+id/advancedSearchFragment"
         android:name="com.bounswe2020group3.paperlayer.search.AdvancedSearchFragment"
-        android:label="AdvancedSearchFragment" >
+        android:label="Advanced Search" >
         <action
             android:id="@+id/navigateToSearchFromAdvancedSearch"
             app:destination="@id/searchFragment" />

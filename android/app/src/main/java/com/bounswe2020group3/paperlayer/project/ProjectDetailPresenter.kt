@@ -63,7 +63,7 @@ class ProjectPresenter  @Inject constructor(private var model: ProjectDetailCont
 
     override fun fetchFiles(projectId: Int)  {
         this.view?.writeLogMessage("i",TAG,"Fetching the files...")
-        val getFilesObservable = model.fetchFiles(23).subscribe(
+        val getFilesObservable = model.fetchFiles(projectId).subscribe(
             { fileList ->
                 this.view?.writeLogMessage("i",TAG,"files Fetching Successful. $projectId")
                 for( file in fileList){

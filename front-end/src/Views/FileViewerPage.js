@@ -156,7 +156,7 @@ export default class FileViewer extends Component {
         });
   };
   getFiles = (projectId) => {
-    axios.get(`https://paperlayer.herokuapp.com/api/files/?project=${projectId}`, 
+    axios.get(`${config.API_URL}/api/files/?project=${projectId}`, 
     getRequestHeader())
     .then((res) => {
       let files = res.data
@@ -521,5 +521,5 @@ export default class FileViewer extends Component {
       </Container>);
   }
 
-
+ 
 }

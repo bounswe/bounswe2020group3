@@ -54,7 +54,7 @@ export default class HomePage extends Component {
             pages : [],
             project_pages : [],
             feed:[],
-            isFeed:true
+            isFeed:isLoggedIn() 
         }
     };
 
@@ -369,7 +369,11 @@ export default class HomePage extends Component {
             return(
                 <div>
                     <ButtonGroup style={{margin:"10px"}}>
-                        <Button size="large" variant={"contained"} color="primary" onClick={() => {this.setState({isFeed:true})}}>Feed</Button>
+                        {isLoggedIn() ?
+                            <Button size="large" variant={"contained"} color="primary" onClick={() => { this.setState({ isFeed: true }) }}>Feed</Button>
+                            :
+                            <></>
+                        }
                         <Button size="large" variant={"outlined"} color="primary" onClick={() => {this.setState({isFeed:false})}}>Projects</Button>
                     </ButtonGroup>
                     {this.renderFeed()}
@@ -380,7 +384,11 @@ export default class HomePage extends Component {
             return(
                 <div>
                     <ButtonGroup style={{margin:"10px"}}>
-                        <Button size="large" variant={"outlined"} color="primary" onClick={() => {this.setState({isFeed:true})}}>Feed</Button>
+                        {isLoggedIn() ?
+                            <Button size="large" variant={"outlined"} color="primary" onClick={() => { this.setState({ isFeed: true }) }}>Feed</Button>
+                            :
+                            <></>
+                        }
                         <Button size="large" variant={"contained"} color="primary" onClick={() => {this.setState({isFeed:false})}}>Projects</Button>
                     </ButtonGroup>
                     {this.renderProject()}
@@ -425,11 +433,7 @@ export default class HomePage extends Component {
                                 <Typography variant="h5" color="primary">Upcoming Events</Typography>
                                 {this.renderEvents()}
                             </Grid>
-                            {isLoggedIn() ?
-                                <Typography variant="h5" color="primary" style={{ marginTop: "10px" }}>Recommended Projects</Typography>
-                                :
-                                <></>
-                            }
+                            <Typography variant="h5" color="primary" style={{ marginTop: "10px" }}>Recommended Projects</Typography>
                             <Grid style={{maxHeight:"50vh"}} item sm={12}>
                                 {this.renderRecommendations()}
                             </Grid>

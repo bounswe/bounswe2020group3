@@ -54,7 +54,7 @@ export default class HomePage extends Component {
             pages : [],
             project_pages : [],
             feed:[],
-            isFeed:true
+            isFeed:isLoggedIn() 
         }
     };
 
@@ -127,7 +127,6 @@ export default class HomePage extends Component {
             });
         axios.get(`${config.API_URL}/api/projects/get_project_recommendation/?user_id=${getUserId()}&user_count=5`, getRequestHeader())
             .then(res => {
-                console.log(res)
                 this.setState({ recommendations: res.data });
             });
 
@@ -140,8 +139,7 @@ export default class HomePage extends Component {
         });
     };
     renderRecommendations() {
-        console.log(this.state.recommendations)
-        const recommendations = this.state.recommendations;
+        const { recommendations } = this.state;
         return (
             <Box style={{ overflowY: "scroll", maxHeight: "300px", paddingTop: "10px", paddingBottom: "10px" }}>
 
@@ -151,11 +149,11 @@ export default class HomePage extends Component {
                         return (
                             <Paper elevation={6}
                                    style={{border: "solid 1px blue",
-                                       padding: "15px", maxHeight: "160px", width: "80%",
-                                       background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+                                       padding: "10px", width: "80%",
+                                       background: "white", margin: "auto", marginBottom: "10px", textAlign: "left",
                                    }}
                                    borderColor="primary" border={1}>
-                                <Typography variant="h6" color="primary"
+                                <Typography variant="span" color="primary"
                                             style={{ cursor: "pointer", width: "50%", textAlign: "left" }}
                                             onClick={() => { this.props.history.push("/project/" + item.id); }}
                                 >{item.name}</Typography>
@@ -371,7 +369,11 @@ export default class HomePage extends Component {
             return(
                 <div>
                     <ButtonGroup style={{margin:"10px"}}>
-                        <Button size="large" variant={"contained"} color="primary" onClick={() => {this.setState({isFeed:true})}}>Feed</Button>
+                        {isLoggedIn() ?
+                            <Button size="large" variant={"contained"} color="primary" onClick={() => { this.setState({ isFeed: true }) }}>Feed</Button>
+                            :
+                            <></>
+                        }
                         <Button size="large" variant={"outlined"} color="primary" onClick={() => {this.setState({isFeed:false})}}>Projects</Button>
                     </ButtonGroup>
                     {this.renderFeed()}
@@ -382,7 +384,11 @@ export default class HomePage extends Component {
             return(
                 <div>
                     <ButtonGroup style={{margin:"10px"}}>
-                        <Button size="large" variant={"outlined"} color="primary" onClick={() => {this.setState({isFeed:true})}}>Feed</Button>
+                        {isLoggedIn() ?
+                            <Button size="large" variant={"outlined"} color="primary" onClick={() => { this.setState({ isFeed: true }) }}>Feed</Button>
+                            :
+                            <></>
+                        }
                         <Button size="large" variant={"contained"} color="primary" onClick={() => {this.setState({isFeed:false})}}>Projects</Button>
                     </ButtonGroup>
                     {this.renderProject()}
@@ -427,11 +433,7 @@ export default class HomePage extends Component {
                                 <Typography variant="h5" color="primary">Upcoming Events</Typography>
                                 {this.renderEvents()}
                             </Grid>
-                            {isLoggedIn() ?
-                                <Typography variant="h5" color="primary" style={{ marginTop: "10px" }}>Recommended Projects</Typography>
-                                :
-                                <></>
-                            }
+                            <Typography variant="h5" color="primary" style={{ marginTop: "10px" }}>Recommended Projects</Typography>
                             <Grid style={{maxHeight:"50vh"}} item sm={12}>
                                 {this.renderRecommendations()}
                             </Grid>

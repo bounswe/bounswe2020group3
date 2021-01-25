@@ -11,7 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import Profilebar from '../Components/ProfileBar/Profilebar';
 import AlertTypes from "../Common/AlertTypes.json";
 import { getUserId, getAccessToken, getPhoto, getProfileId, getRequestHeader } from "../Components/Auth/Authenticate";
-const UnsupportedExtensions = ["jpg", "jpeg", "png", "pdf", "docx", "pptx"];
+const UnsupportedExtensions = ["jpg", "jpeg", "png", "pdf", "docx", "pptx", "json"];
 const Container = styled(Box)({
   backgroundColor: '#f7f7f5',
   background: "#f9f9eb",
@@ -156,7 +156,7 @@ export default class FileViewer extends Component {
         });
   };
   getFiles = (projectId) => {
-    axios.get(`https://paperlayer.herokuapp.com/api/files/?project=${projectId}`, 
+    axios.get(`${config.API_URL}/api/files/?project=${projectId}`, 
     getRequestHeader())
     .then((res) => {
       let files = res.data
@@ -521,5 +521,5 @@ export default class FileViewer extends Component {
       </Container>);
   }
 
-
+ 
 }

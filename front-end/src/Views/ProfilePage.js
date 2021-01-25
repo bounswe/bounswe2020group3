@@ -691,12 +691,13 @@ export default class ProfilePage extends Component {
             margin: "auto",
             marginBottom: "10px",
             textAlign: 'left',
-            maxHeight: "400px",
+            maxHeight: "200px",
             overflowY: "scroll"
           }}
           borderColor="primary" border={1}>
           {this.renderComments()}
         </Paper>
+        {this.renderAddComment()}
         <Typography variant="h5" color="primary" style={titleStyleCenter}>Publications</Typography>
         {this.renderPublications()}
         {/* </>
@@ -902,10 +903,10 @@ export default class ProfilePage extends Component {
       this.handleLoop();
     }
 
-    if (publications.length === 0) return (  <Typography variant='h6' color="textPrimary">No Publications</Typography>)
+    if (publications.length === 0) return (  <Typography variant='span' color="textPrimary">No Publications</Typography>)
     else return publications.map((item) => {
       return (<>
-        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}> {item[0]+1}) {item[1]} - {item[2]} </Typography>
+        <Typography variant="span" color="primary" style={{ width: "100%", textAlign: "left" }}> {item[0]+1}) {item[1]} - {item[2]} </Typography>
         <a target="_blank" rel="noreferrer" href={item[4]} variant="h5" color="primary" style={{ width: "100%", textAlign: "left" }}> Go To Paper </a>
         
       </>)
@@ -914,9 +915,11 @@ export default class ProfilePage extends Component {
 
   renderPublications(){
     return (
-      <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
+      <Grid item sm={12} style={{ maxHeight: "200px", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
         
-        <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+        <Paper elevation={6} 
+          style={{border: "solid 1px blue", padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} 
+          borderColor="primary" border={1}>
           {this.renderPublicationsData()}
         </Paper>
       </Grid>
@@ -1084,8 +1087,6 @@ export default class ProfilePage extends Component {
             
             <Grid item sm={3}>
               {this.renderGraph()}
-              {this.renderAddComment()}
-              {/* {this.renderPublications()} */}
             </Grid>
           </Grid>
         </Grid>

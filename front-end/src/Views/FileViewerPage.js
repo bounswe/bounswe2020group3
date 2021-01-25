@@ -20,7 +20,7 @@ const Container = styled(Box)({
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
   color: 'white',
   height: "calc(98vh -64px)",
-  paddingBottom: "60px",
+  paddingBottom: "50px",
   top: "0",
   bottom: "0",
   left: "0",
@@ -322,7 +322,7 @@ export default class FileViewer extends Component {
             onChange={this.handleFileContentChange}
             defaultValue=""
             placeholder="File Content"
-            rows={23}  // Can be changed later this looks good on my computer.
+            rows={17}  // Can be changed later this looks good on my computer.
             multiline
             style={{ width: "95%" }}
             variant="filled" />

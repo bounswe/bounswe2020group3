@@ -13,7 +13,7 @@ import io.reactivex.disposables.CompositeDisposable
 import java.io.File
 import javax.inject.Inject
 
-private const val TAG = "ProjectPresenter"
+private const val TAG = "Project Detail Presenter"
 
 class ProjectPresenter  @Inject constructor(private var model: ProjectDetailContract.Model) : BasePresenter<ProjectDetailContract.View>(),ProjectDetailContract.Presenter {
 
@@ -31,7 +31,7 @@ class ProjectPresenter  @Inject constructor(private var model: ProjectDetailCont
 
     override fun bind(view: ProjectDetailContract.View) {
         super.bind(view)
-        this.view?.writeLogMessage("i",TAG,"Project Presenter Created")
+        this.view?.writeLogMessage("i",TAG,"Project Detail Presenter Created")
         this.view?.resetProjectUI()
 
         subscribeAuthToken()

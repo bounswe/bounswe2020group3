@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.fragment_project_detail.*
 import kotlinx.android.synthetic.main.fragment_project_detail.view.*
 import javax.inject.Inject
 
-private const val TAG = "ProjectFragment"
+private const val TAG = "Project Detail Fragment"
 
 
 val tagColors = arrayOf(R.color.tagColor0, R.color.tagColor1, R.color.tagColor2, R.color.tagColor3,
@@ -81,7 +81,9 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
     override fun onDestroy() {
         super.onDestroy()
         this.presenter.unbind()
-        writeLogMessage("i",TAG,"ProjectFragment destroyed.")
+        resetMemberCardList()
+        resetMilestoneCardList()
+        writeLogMessage("i",TAG,"Project Detail Fragment destroyed.")
     }
 
     override fun onCreateView(
@@ -98,7 +100,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
 
         //Getting bundle arguments
 
-        writeLogMessage("i",TAG,"ProjectFragment view created")
+        writeLogMessage("i",TAG,"Project Detail Fragment view created")
         return view
     }
 
@@ -175,7 +177,6 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
 
     override fun updateCurrentUser(ownerID: Int) {
         this.ownerID=ownerID
-        this.presenter.getProject()?.let { updateProjectUI(it) }
     }
 
     private fun initRecyclerView() {
@@ -346,6 +347,8 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         this.fragmentView.projectType.text="Example Type"
         this.fragmentView.projectDue.text="Example Date"
         this.fragmentView.projectState.text="Example State"
+        resetMilestoneCardList()
+        resetMemberCardList()
         writeLogMessage("i",TAG,"Project UI Reset")
     }
 

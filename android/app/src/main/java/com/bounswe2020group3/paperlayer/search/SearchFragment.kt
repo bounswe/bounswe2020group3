@@ -68,6 +68,13 @@ class SearchFragment: Fragment(),SearchContract.View ,OnCardClickListener{
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_search, container, false)
         this.fragmentView = view
+        writeLogMessage("i", TAG, "Search Fragment view created")
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         //Set ProjectPresenter view to project fragment
         this.presenter.setView(this)
         this.presenter.bind(this)
@@ -75,12 +82,7 @@ class SearchFragment: Fragment(),SearchContract.View ,OnCardClickListener{
         resetSearchCardList()
         this.presenter.getTags()//getting tags that used in search filter
 
-        writeLogMessage("i", TAG, "Search Fragment view created")
-        return view
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         this.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 searchSubmit(query)
@@ -168,6 +170,8 @@ class SearchFragment: Fragment(),SearchContract.View ,OnCardClickListener{
     override fun submitSearchCardList() {
         searchAdapter.submitList(this.searchCardList)
         searchAdapter.notifyDataSetChanged() //notify to update recyclerview
+        if(searchCardList.size==0)
+            this.showToast("No results were found")
         writeLogMessage("i", TAG, "Search Card List Updated! " + searchCardList.size)
     }
 

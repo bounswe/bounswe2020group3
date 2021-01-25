@@ -13,11 +13,14 @@ from rest_framework.schemas import ManualSchema
 from rest_framework.schemas import coreapi as coreapi_schema
 from rest_framework.views import APIView
 
-from django.core.mail import send_mail
+# from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django_email_verification.views import verify
 from django.urls import get_resolver
 from django.contrib.auth.tokens import default_token_generator
+import sendgrid
+from sendgrid.helpers.mail import Email, To, Content, Mail
+import os
 
 from api.views.feed import follow_admin
 
@@ -36,14 +39,15 @@ class RegisterGenericAPIView(generics.GenericAPIView):
                 link = domain + addr[0: addr.index('%')] + token
 
         text = render_to_string('verification_body.txt', {'link': link})
-        for _ in range(5):
-            try:
-                send_mail(subject="Confirm your PaperLayer account",
-                          from_email='bounswe2020group3@gmail.com',
-                          message=text, recipient_list=[user.email])
-                return
-            except Exception as e:
-                print(e)
+
+        sg = sendgrid.SendGridAPIClient(
+            api_key=os.environ.get('SENDGRID_API_KEY'))
+        from_email = Email("bounswe2020group3@gmail.com")
+        to_email = To(user.email)
+        subject = "Confirm your PaperLayer account"
+        content = Content("text/plain", text)
+        mail = Mail(from_email, to_email, subject, content)
+        sg.client.mail.send.post(request_body=mail.get())
 
     def post(self, request, *args, **kwargs):
         """

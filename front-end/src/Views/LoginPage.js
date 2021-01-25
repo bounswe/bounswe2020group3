@@ -15,7 +15,8 @@ import { setCookie, setIdCookie, setProfileId } from '../Components/Auth/Authent
 const Messages = {
     emptyFieldError: "Please Fill All Areas!",
     loginSuccess: "Login Successful",
-    loginFail: "Login Failed"
+    loginFail: "Login Failed",
+    verifyFail: " Please Verify your email account"
 
 }
 
@@ -84,22 +85,32 @@ export default class LoginPage extends Component {
                 let token = res.data.token;
                 let user_id = res.data.id;
                 console.log(user_id)
-                this.setState({ success: true, message: Messages.loginSuccess, messageType: AlertTypes.Success }, () => {
-                    setCookie(token);
-                    setIdCookie(user_id);
+                if(!res.data.is_active){
+                    this.setState({ success: true, message: Messages.loginSuccess, messageType: AlertTypes.Success }, () => {
+                        setCookie(token);
+                        setIdCookie(user_id);
+                        this.handleSnackbarOpen();
+                        axios.get(`${config.API_URL}/api/users/${user_id}/`)
+                        .then(res => {
+                        let profile = res.data.profile[0]
+                        let profileId = profile.id;
+                        let profileURL = `${config.API_URL}/api/profile_picture/${profileId}/`;
+                        console.log(profileURL)
+                        if (profile && profile.photo_url) {setProfileId(profileURL)};
+                        })
+                        setTimeout(() => { this.props.history.push(config.Homepage_Path); }, 1500);
+                    }, (error) =>{
+                        console.log(error, "while fetching photo");
+                    });
+                }
+                else{
+                    
+                    this.setState({ success: false, message: Messages.verifyFail, messageType: AlertTypes.Error });
                     this.handleSnackbarOpen();
-                    axios.get(`${config.API_URL}/api/users/${user_id}/`)
-                    .then(res => {
-                    let profile = res.data.profile[0]
-                    let profileId = profile.id;
-                    let profileURL = `${config.API_URL}/api/profile_picture/${profileId}/`;
-                    console.log(profileURL)
-                    if (profile && profile.photo_url) {setProfileId(profileURL)};
-                    })
-                    setTimeout(() => { this.props.history.push(config.Homepage_Path); }, 1500);
-                }, (error) =>{
-                    console.log(error, "while fetching photo");
-                });
+                    console.log("Verificcation failed");
+                    
+                }
+                
             }, (error) => {
                 this.setState({ success: false, message: Messages.loginFail, messageType: AlertTypes.Error });
                 this.handleSnackbarOpen();

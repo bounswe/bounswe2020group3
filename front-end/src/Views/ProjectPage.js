@@ -552,8 +552,8 @@ export default class HomePage extends Component {
             <Box style={{marginTop:"8px", height:"calc(100vh -64px)", overflowY:"scroll"}}>
           {isLoggedIn() ? 
             <Profilebar 
-              name={this.state.name}
-              lastName={this.state.lastName}
+              name={this.state.username}
+              lastName={this.state.userLastName}
               photoUrl={getPhoto()}
               goToProjectCreation={this.goToProjectCreation}
               goToProfile={() => { this.props.history.push( "/profile/" + getUserId() ); }}

@@ -91,6 +91,7 @@ class ProfileFragment : Fragment(), ProfileContract.View {
             textViewProfileFollowers.text = user.countOfFollowers.toString()
             textViewProfileFollowings.text = user.countOfFollowings.toString()
             textViewProfileFollowRequestCount.text = user.countOfFollowRequests.toString()
+            textViewProfileRating.text = String.format("%.2f", profile.rating)
 
             val imageUrl = profile.profile_picture
             if (imageUrl != null && imageUrl != "") {

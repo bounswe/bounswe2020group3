@@ -39,4 +39,6 @@ data class Profile (
     var share_affiliations: Boolean?,
     @field:Json(name = "is_public")
     var is_public: Boolean,
+    @field:Json(name = "rating")
+    var rating: Double?
 )

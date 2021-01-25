@@ -16,7 +16,6 @@ import com.bounswe2020group3.paperlayer.profile.follow.FollowType
 import com.bounswe2020group3.paperlayer.data.user.User
 import com.bounswe2020group3.paperlayer.util.Session
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.fragment_user.imageViewProfileAvatar
 import kotlinx.android.synthetic.main.fragment_user.linearLayoutPublications
@@ -182,6 +181,7 @@ class UserFragment : Fragment(), UserContract.View {
                 // Stats
                 textViewProfileFollowers.text = user.countOfFollowers.toString()
                 textViewProfileFollowings.text = user.countOfFollowings.toString()
+                textViewProfileRating.text = String.format("%.2f", profile.rating)
 
                 // Buttons
                 buttonUserRequestSent.visibility = View.GONE

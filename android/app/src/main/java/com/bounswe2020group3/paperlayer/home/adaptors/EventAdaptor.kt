@@ -17,17 +17,13 @@ class EventAdaptor(var clickListener: OnCardClickListenerForEvents) : RecyclerVi
     class eventViewHolder(val layout: View) :RecyclerView.ViewHolder(layout){
         val title = layout.findViewById<TextView>(R.id.title)
         val description = layout.findViewById<TextView>(R.id.description)
-        val deadline = layout.findViewById<TextView>(R.id.deadline)
-        val date= layout.findViewById<TextView>(R.id.date)
         val event_type= layout.findViewById<TextView>(R.id.event_type)
 
         fun bind(item : EventCard, action: OnCardClickListenerForEvents) {
 
             title.text = item.title
             description.text = item.description
-            date.text = item.date
             event_type.text = item.event_type
-            deadline.text = item.deadline
 
             itemView.setOnClickListener{
                 action.onCardClick(item,adapterPosition)

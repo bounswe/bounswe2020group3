@@ -173,11 +173,11 @@ class UserFragment : Fragment(), UserContract.View {
                 }
 
                 // Text Views
-                textViewEmail.text = user.email
-                textViewBirthday.text = profile.birthday.toString()
-                textViewGender.text = profile.gender
-                textViewInterests.text = profile.interests
-                textViewExpertise.text = profile.expertise
+                textViewEmail.text = user.email.orEmpty()
+                textViewBirthday.text = profile.birthday.orEmpty()
+                textViewGender.text = profile.gender.orEmpty()
+                textViewInterests.text = profile.interests.orEmpty()
+                textViewExpertise.text = profile.expertise.orEmpty()
 
                 // Stats
                 textViewProfileFollowers.text = user.countOfFollowers.toString()

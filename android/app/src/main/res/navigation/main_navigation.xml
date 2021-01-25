@@ -214,7 +214,7 @@
     <fragment
         android:id="@+id/recentProjectsFragment"
         android:name="com.bounswe2020group3.paperlayer.home.RecommendedProjectsFragment"
-        android:label="Recent Projects">
+        android:label="Recommended Projects">
         <action
             android:id="@+id/navigateToMilestonesFromProjectUpdates"
             app:destination="@id/milestoneFragment2" />

@@ -16,8 +16,6 @@ import com.bounswe2020group3.paperlayer.data.user.User
 import com.bounswe2020group3.paperlayer.profile.follow.FollowType
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
-import kotlinx.android.synthetic.main.fragment_profile.imageViewProfileAvatar
-import kotlinx.android.synthetic.main.fragment_profile.layoutProfileDetail
 import javax.inject.Inject
 
 
@@ -31,8 +29,10 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         (context as MainActivity).getAppComponent().inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         presenter.bind(this)
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false)
@@ -52,15 +52,18 @@ class ProfileFragment : Fragment(), ProfileContract.View {
         val followRequestBundle = bundleOf("followType" to FollowType.FOLLOW_REQUEST)
 
         linearLayoutFollowers.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.navigateToFollowListFromProfile, followerBundle)
+            Navigation.findNavController(view)
+                .navigate(R.id.navigateToFollowListFromProfile, followerBundle)
         }
 
         linearLayoutFollowings.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.navigateToFollowListFromProfile, followingBundle)
+            Navigation.findNavController(view)
+                .navigate(R.id.navigateToFollowListFromProfile, followingBundle)
         }
 
         layoutFollowRequests.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.navigateToFollowListFromProfile, followRequestBundle)
+            Navigation.findNavController(view)
+                .navigate(R.id.navigateToFollowListFromProfile, followRequestBundle)
         }
     }
 
@@ -91,7 +94,12 @@ class ProfileFragment : Fragment(), ProfileContract.View {
             textViewProfileFollowers.text = user.countOfFollowers.toString()
             textViewProfileFollowings.text = user.countOfFollowings.toString()
             textViewProfileFollowRequestCount.text = user.countOfFollowRequests.toString()
-            textViewProfileRating.text = String.format("%.2f", profile.rating)
+            textViewProfileRating.text =
+                if (profile.rating == null) {
+                    "N/A"
+                } else {
+                    String.format("%.2f", profile.rating)
+                }
 
             val imageUrl = profile.profile_picture
             if (imageUrl != null && imageUrl != "") {

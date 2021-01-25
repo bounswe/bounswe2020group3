@@ -326,6 +326,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         {
             this.fragmentView.buttonEditProject.visibility= GONE
             this.fragmentView.buttonInvite.visibility= GONE
+            this.fragmentView.buttonManageInvites.visibility = GONE
             this.fragmentView.imageViewCollabRequests.visibility = GONE
             this.fragmentView.imageViewFileUpload.visibility = GONE
             if(project.state.equals(ProjectState.OPEN.value, true)) {

@@ -29,6 +29,9 @@ class RegisterGenericAPIView(generics.GenericAPIView):
     serializer_class = auth.RegisterSerializer
 
     def __send_verification(self, user: User):
+        setattr(user, 'is_active', False)
+        user.save()
+
         domain = 'https://paperlayer-backend.azurewebsites.net/'
         token = default_token_generator.make_token(user)
 

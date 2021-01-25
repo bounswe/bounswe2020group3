@@ -411,7 +411,7 @@ export default class ProfilePage extends Component {
                 }}
                 borderColor="primary" border={1}>
                 <Typography variant="h6" color="primary"
-                  style={{ cursor: "pointer", width: "50%", textAlign: "left" }}
+                  style={{ cursor: "pointer", width: "100%", textAlign: "left" }}
                   onClick={() => { this.props.history.push("/project/" + item.id); }}
                 >{item.name}</Typography>
               </Paper>
@@ -445,11 +445,11 @@ export default class ProfilePage extends Component {
                 }}
                 borderColor="primary" border={1}>
                 <Typography variant="h6" color="primary"
-                  style={{ cursor: "pointer", width: "50%", textAlign: "left", display: "inline-block" }}
+                  style={{ cursor: "pointer", width: "60%", textAlign: "left", display: "inline-block" }}
                   onClick={() => { this.props.history.push(`${config.Projectpage_Path}/${item.project}`) }}
                 >{item.project_name}</Typography>
-                <Typography variant="h6" color="primary"
-                  style={{ cursor: "pointer", width: "50%", textAlign: "right", display: "inline-block" }}
+                <Typography variant="h8" color="primary"
+                  style={{ cursor: "pointer", width: "40%", textAlign: "right", display: "inline-block" }}
                 >{item.date}</Typography>
                 <hr />
                 <Typography nowrap variant="body2" style={{ textAlign: "left", color: "black" }}>

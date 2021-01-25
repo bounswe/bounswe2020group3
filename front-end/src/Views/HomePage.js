@@ -12,7 +12,7 @@ import Profilebar from '../Components/ProfileBar/Profilebar';
 import { colorCodes } from "../Common/ColorTheme";
 import { getUserId, getAccessToken, getPhoto, setProfileId, getRequestHeader, isLoggedIn } from "../Components/Auth/Authenticate";
 
-const projectPerPage = 6;
+const projectPerPage = 8;
 const Container = styled(Box)({
     backgroundColor: '#f7f7f5',
     background: "#f9f9eb",
@@ -48,7 +48,7 @@ export default class HomePage extends Component {
             page: 1,
             pageCount: 0,
             notifications: [],
-            recommendations: []
+            recommendations: [],
             pages : []
             
         }

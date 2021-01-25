@@ -72,7 +72,8 @@ export default class HomePage extends Component {
       notifications: [],
       requests: [],
       owner: "",
-      ownerId:-1
+      ownerId:-1,
+      recommendations: []
     }
   };
 
@@ -204,6 +205,11 @@ export default class HomePage extends Component {
               //console.log((res.data))
               this.setState({notifications: res.data})
           });
+      axios.get(`${config.API_URL}/api/users/get_collaborator_recommendation/?project_id=${project_id}&project_count=5`, getRequestHeader())
+          .then(res => {
+              console.log(res.data)
+              this.setState({ recommendations: res.data });
+          });
   };
 
   renderContributor() {
@@ -233,7 +239,7 @@ export default class HomePage extends Component {
     const milestones = JSON.parse(JSON.stringify(this.state.milestones));
     if (milestones.length === 0) return (
         <Paper elevation={6}
-               style={{ border: "solid 1px blue",
+               style={{ border: "solid 1px blue", width: "90%",
                  padding: "15px", maxHeight: "80px",
                  background: "white", margin: "auto", marginBottom: "10px", textAlign: "middle", overflow: "clip"
                }}
@@ -244,7 +250,7 @@ export default class HomePage extends Component {
     return milestones.map((item) => {
       return (<>
         <Paper elevation={6}
-               style={{ border: "solid 1px blue",
+               style={{ border: "solid 1px blue", width: "90%",
                  padding: "15px", maxHeight: "80px",
                  background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
                }}
@@ -354,7 +360,7 @@ export default class HomePage extends Component {
     axios.post(`${config.API_URL}/api/collaboration_requests/`, { from_user: getUserId(), to_project: proj_id }, getRequestHeader() )
           .then(res => {
             this.getProject(this.state.projectId);
-            var myText = "Colab Request Sent!!!";
+            var myText = "Colab Request Sent";
             this.handleColabRequestText(myText);
         }); 
   };
@@ -418,7 +424,7 @@ export default class HomePage extends Component {
     return (
       <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
         <Typography variant="h6" color="primary">Collaboration Requests</Typography>
-        <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+        <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px",  background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
           {this.renderColabRequests()}
         </Paper>
       </Grid>
@@ -511,13 +517,49 @@ export default class HomePage extends Component {
         }); 
   };
 
+  renderRecommendations = () => {
+        console.log(this.state.recommendations)
+        const recommendations = this.state.recommendations;
+        return (
+            <Box style={{ overflowY: "scroll", maxHeight: "32vh", paddingTop: "10px", paddingBottom: "10px" }}>
+
+                {recommendations.length !== 0
+                    ?
+                    recommendations.map((item) => {
+                        return (
+                            <Paper elevation={6}
+                                   style={{border: "solid 1px blue",
+                                       padding: "15px", maxHeight: "160px", width: "90%",
+                                       background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+                                   }}
+                                   borderColor="primary" border={1}>
+                                <Typography variant="h7" color="primary"
+                                            style={{ cursor: "pointer", width: "90%", textAlign: "left" }}
+                                            onClick={() => { this.props.history.push("/profile/" + item.id); }}
+                                >{item.username}</Typography>
+                            </Paper>
+                        )
+                    })
+                    :
+                    <Paper elevation={6}
+                           style={{border: "solid 1px blue",
+                               padding: "15px", maxHeight: "160px", width: "80%",
+                               background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+                           }}
+                           borderColor="primary" border={1}>
+                        <Typography variant="h6" color="textPrimary" style={{ "textAlign": 'center' }}>No Recommend Users</Typography>
+                    </Paper>
+                }
+            </Box>)
+    };
+
   renderRelatedEvents = () => {
     const { isPublic } = this.state;
     if (isPublic)
       return (
         <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: "scroll", margin: "5px 0" }}>
           <Typography variant="h6" color="primary">Related Events</Typography>
-          <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", width: "90%", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+          <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", background: "white" }} borderColor="primary" border={1}>
             {this.renderEvents()}
           </Paper>
         </Grid>
@@ -578,10 +620,54 @@ export default class HomePage extends Component {
                 <p>{this.state.desc}</p>
               </Paper>
               {this.renderCollabQualifications()}
-              <Typography variant="h6" color="primary" style={{ marginTop: '10px' }}>Project Tags</Typography>
-              <Paper elevation={6} style={{ border: "solid 1px blue", borderRadius: '5px', padding: "10px", minHeight: "40px", marginTop: '20px', textAlign: "left" }}>
+                {this.state.isMember ?
+                    <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: 'scroll', margin: "5px 0" }}>
+                        <Typography variant="h6" color="primary">Upcoming Deadlines</Typography>
+                        <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
+                            {this.renderDeadlines()}
+                        </Paper>
+                    </Grid>
+                    :
+                    <></>
+                }
+                {this.renderRelatedEvents()}
+              <Typography variant="h6" color="primary" >Project Tags</Typography>
+              <Paper elevation={6} style={{ border: "solid 1px blue", borderRadius: '5px', padding: "10px", minHeight: "40px",  textAlign: "left" }}>
                 {this.renderTags()}
               </Paper>
+                {this.state.isMember ?
+                    <Grid item sm={12} style={{ minHeight: "10vh" ,marginTop: "10px" }}>
+                        {/* <Typography variant="h5" color="primary">Tags</Typography> */}
+                            {this.state.showAddTag ?
+                                <>
+                                    <Input
+                                        type="text"
+                                        color='primary'
+                                        style={{ width: "90%", textTransform: "capitalize" }}
+                                        placeholder="Please enter a new tag and press enter"
+                                        onChange={(e) => { this.handleTagQuery(e); }}
+                                        value={this.state.tagQuery}
+                                    />
+                                    {this.renderDesiredTags()}
+                                    <br />
+                                    <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitTagQuery}>Add Tag</Button>
+                                </>
+                                :
+                                <Button color="primary" variant="outlined" onClick={() => { this.setState({ showAddTag: true }) }}>Add New Tag</Button>
+                            }
+                    </Grid>
+                    :
+                    <></>
+                }
+                {this.state.isMember ?
+                    <Grid item sm={12} style={{ minHeight: "10vh" }}>
+                        {/* <Typography variant="h5" color="primary">Tags</Typography> */}
+                        {this.renderRequests()}
+                    </Grid>
+                    :
+                    <></>
+                }
+
               {this.state.isMember  ?
                   <Grid item sm={12} style={{ marginTop:"20px"}}>
                     <Button variant="contained" color="primary" style={{ marginTop: "10px", marginRight:"10px" }} onClick={() => this.goToEditProjectPage(project_id)}>Edit Project</Button>
@@ -592,77 +678,45 @@ export default class HomePage extends Component {
                   :
                   <></>
               }
-              {this.state.isMember && (this.state.stat === "inviting collaborators" || this.state.stat === "open for collaborators") ? 
-                <Grid item sm={12} style={{marginTop:"20px"}}>
-                <Paper elevation={6}
-                  style={{ width: "40%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
-                  borderColor="primary"
-                  border={1}>
-                    <>
-                      <Input
-                        type="text"
-                        color='primary'
-                        style={{ width: "90%" }}
-                        placeholder="Please enter a collaborator"
-                        onChange={(e) => { this.handleColabQuery(e); }}
-                        value={this.state.colabQuery}
-                      />
-                      <br />
-                      {this.getUserIdFromUsername(this.state.colabQuery)}
-                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.submitColabInviteQuery(this.state.colabInviteId)}>Invite Collaborator</Button>
-                    </>
-                </Paper>
-              </Grid>
-              :
-              <></>
-              }
+
               <p></p>
             </Grid>
             <Grid item sm={4}>
 
               {this.renderMembers()}
-              {this.renderRelatedEvents()}
               {this.renderRelatedMilestones()}
-              {this.state.isMember ? 
-              <Grid item sm={12} style={{ maxHeight: "30vh", minHeight: "10vh", overflowY: 'scroll', margin: "5px 0" }}>
-                <Typography variant="h6" color="primary">Upcoming Deadlines</Typography>
-                <Paper elevation={6} style={{border: "solid 1px blue", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }} borderColor="primary" border={1}>
-                {this.renderDeadlines()}
-                </Paper>
-              </Grid>
-              :
-              <></>
-              }
-              {this.state.isMember ? 
-                <Grid item sm={12} style={{ minHeight: "10vh" }}>
-                {/* <Typography variant="h5" color="primary">Tags</Typography> */}
-                <Paper elevation={6}
-                  style={{border: "solid 1px blue", width: "90%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
-                  borderColor="primary"
-                  border={1}>
-                  {this.state.showAddTag ?
-                    <>
-                      <Input
-                        type="text"
-                        color='primary'
-                        style={{ width: "90%", textTransform: "capitalize" }}
-                        placeholder="Please enter a new tag and press enter"
-                        onChange={(e) => { this.handleTagQuery(e); }}
-                        value={this.state.tagQuery}
-                      />
-                      {this.renderDesiredTags()}
-                      <br />
-                      <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={this.submitTagQuery}>Add Tag</Button>
-                    </>
+              {this.state.isMember ?
+                    <Grid style={{maxHeight:"50vh"}} item sm={12}>
+                        <Typography variant="h6" color="primary">Recommended Collaborators</Typography>
+                    {this.renderRecommendations()}
+                  </Grid>
+                  :
+                  <></>}
+                {this.state.isMember && (this.state.stat === "inviting collaborators" || this.state.stat === "open for collaborators") ?
+                    <Grid item sm={12} style={{marginTop:"20px"}}>
+                        <Paper elevation={6}
+                               style={{ width: "60%", height: "90%", padding: "15px", background: "white", margin: "auto", marginBottom: "10px" }}
+                               borderColor="primary"
+                               border={1}>
+                            <>
+                                <Input
+                                    type="text"
+                                    color='primary'
+                                    style={{ width: "90%" }}
+                                    placeholder="Please enter a collaborator"
+                                    onChange={(e) => { this.handleColabQuery(e); }}
+                                    value={this.state.colabQuery}
+                                />
+                                <br />
+                                {this.getUserIdFromUsername(this.state.colabQuery)}
+                                <Button variant="contained" color="primary" style={{ marginTop: "10px" }} onClick={() => this.submitColabInviteQuery(this.state.colabInviteId)}>Invite Collaborator</Button>
+                            </>
+                        </Paper>
+                    </Grid>
                     :
-                    <Button color="primary" variant="outlined" onClick={() => { this.setState({ showAddTag: true }) }}>Add New Tag</Button>
-                  }
-                </Paper>
-                {this.renderRequests()}
-              </Grid>
-              :
-              <></>
+                    <></>
                 }
+
               <br />
               <br />
               {this.state.isNotMember && this.state.stat === "open for collaborators" ? 

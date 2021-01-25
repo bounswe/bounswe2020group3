@@ -153,7 +153,7 @@ export default class HomePage extends Component {
                                        background: "white", margin: "auto", marginBottom: "10px", textAlign: "left",
                                    }}
                                    borderColor="primary" border={1}>
-                                <Typography variant="h6" color="primary"
+                                <Typography variant="span" color="primary"
                                             style={{ cursor: "pointer", width: "50%", textAlign: "left" }}
                                             onClick={() => { this.props.history.push("/project/" + item.id); }}
                                 >{item.name}</Typography>

@@ -54,7 +54,7 @@ class SearchGenericAPIView(generics.GenericAPIView):
 
         public_project_filters = set(["project_due_date_after",
                                       "project_due_date_before",
-                                      "project_event"])
+                                      "project_event", "project_event_title"])
         any_public_project_filter = len(
             public_project_filters.intersection(set(req_data.keys()))) > 0
 
@@ -102,6 +102,10 @@ class SearchGenericAPIView(generics.GenericAPIView):
                     q &= Q(due_date__lte=req_data["project_due_date_before"])
                 if "project_event" in req_data:
                     q &= Q(event__id=req_data["project_event"])
+                if "project_event_title" in req_data:
+                    q &= Q(
+                        event__title__icontains=req_data["project_event_title"]
+                        )
                 if "project_state" in req_data:
                     q &= Q(state=req_data["project_state"])
                 if "project_tags" in req_data:

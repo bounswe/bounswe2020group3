@@ -1,6 +1,8 @@
 package com.bounswe2020group3.paperlayer.project
 
+import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -197,10 +199,17 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initRecyclerView()
+        resetMemberCardList()
+        resetMilestoneCardList()
+        this.presenter.bind(this)
+
         val projectID = arguments?.getInt("projectID")
         if (projectID != null) {
             this.presenter.fetchProject(projectID) //fetch project and update ui
             this.presenter.fetchRequestOfMine(projectID)
+            this.presenter.fetchFiles(projectID)
         }
         else{
             writeLogMessage("e",TAG,"projectID null")
@@ -208,9 +217,6 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         //Giving bundle arguments
         val bundle = bundleOf("projectID" to projectID )
 
-        initRecyclerView()
-        resetMemberCardList()
-        resetMilestoneCardList()
         view.findViewById<Button>(R.id.buttonInvite).setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToInviteFromProjectDetails,bundle)
         }
@@ -223,6 +229,14 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         }
         view.findViewById<Button>(R.id.buttonCollab).setOnClickListener{
             presenter.OnClickCollab(projectID!!,collabbed)
+        }
+        view.findViewById<ImageView>(R.id.imageViewFileUpload).setOnClickListener{
+            val intent = Intent()
+                    .setType("*/*")
+                    .setAction(Intent.ACTION_GET_CONTENT)
+
+            startActivityForResult(Intent.createChooser(intent, "Select a file"), 111)
+
         }
         tabLayoutProject.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -246,10 +260,15 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         buttonEditProject.setOnClickListener {
             presenter.navigateToEditProject()
         }
-        this.presenter.bind(this)
 
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
+        if (requestCode == 111 && resultCode == RESULT_OK) {
+            val selectedFile = data?.data //The uri with the location of the file
+        }
+    }
     //Update project UI
     override fun updateProjectUI(project: Project) {
         this.fragmentView.projectTitle.text=project.name
@@ -307,6 +326,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
             this.fragmentView.buttonEditProject.visibility= GONE
             this.fragmentView.buttonInvite.visibility= GONE
             this.fragmentView.imageViewCollabRequests.visibility = GONE
+            this.fragmentView.imageViewFileUpload.visibility = GONE
             if(project.state.equals(ProjectState.OPEN.value, true)) {
                 buttonCollab.apply {
                     visibility = VISIBLE

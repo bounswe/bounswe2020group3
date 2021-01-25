@@ -13,7 +13,7 @@ data class File (
     @field:Json(name = "remark")
     var name: String,
     @field:Json(name = "timestamp")
-    var timestamp: Int,
+    var timestamp: String,
     @field:Json(name = "project")
     var project: Int
 ) : Parcelable

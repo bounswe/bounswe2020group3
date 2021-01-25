@@ -51,7 +51,7 @@ class FilesAdapter(val clickListener: OnFileCardClickListener): RecyclerView.Ada
         var fileIcon: ImageView = itemView.imageViewFileIcon
 
         fun bind(filecard: FileCard, clickListener: OnFileCardClickListener) {
-            val fullName = filecard.fileName
+            fileName.text = filecard.fileName
 
             //ToDo file icon will be implemented
 

@@ -1,12 +1,16 @@
 package com.bounswe2020group3.paperlayer.project
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.home.data.CollaborateRequest
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import com.bounswe2020group3.paperlayer.project.data.Project
 import io.reactivex.disposables.CompositeDisposable
+import java.io.File
 import javax.inject.Inject
 
 private const val TAG = "ProjectPresenter"
@@ -29,6 +33,7 @@ class ProjectPresenter  @Inject constructor(private var model: ProjectDetailCont
         super.bind(view)
         this.view?.writeLogMessage("i",TAG,"Project Presenter Created")
         this.view?.resetProjectUI()
+
         subscribeAuthToken()
     }
 
@@ -58,18 +63,23 @@ class ProjectPresenter  @Inject constructor(private var model: ProjectDetailCont
 
     override fun fetchFiles(projectId: Int)  {
         this.view?.writeLogMessage("i",TAG,"Fetching the files...")
-        val getFilesObservable = model.fetchFiles(projectId).subscribe(
-            { project ->
-                this.view?.writeLogMessage("i",TAG,"Fetching Successful.")
-                //this.view?.updateProjectUI(project)
+        val getFilesObservable = model.fetchFiles(23).subscribe(
+            { fileList ->
+                this.view?.writeLogMessage("i",TAG,"files Fetching Successful. $projectId")
+                for( file in fileList){
+                    this.view?.addFileCard(FileCard(file.id,file.name,false,""))
+                }
+                this.view?.submitFileCardList()
 
             },
             { error ->
-                this.view?.writeLogMessage("e",TAG,"Error in fetching the files")
+                this.view?.writeLogMessage("e",TAG,"Error in fetching the files $error")
             }
         )
         disposable.add(getFilesObservable)
     }
+
+
 
     //Fetch project and update ui
     override fun fetchProject(projectId: Int) {
@@ -85,6 +95,10 @@ class ProjectPresenter  @Inject constructor(private var model: ProjectDetailCont
                 }
         )
         disposable.add(getProjectObservable)
+    }
+
+    override fun uploadFile(file: File) {
+        TODO("Not yet implemented")
     }
 
     override fun fetchRequestOfMine(projectId: Int) {

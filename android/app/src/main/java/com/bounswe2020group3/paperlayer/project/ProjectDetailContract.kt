@@ -27,6 +27,7 @@ interface ProjectDetailContract {
         fun OnClickCollab(projectId: Int,collabbed : Int)
         fun fetchRequestOfMine(projectId: Int)
         fun fetchFiles(projectId : Int)
+        fun uploadFile(file: java.io.File)
     }
 
     interface View: Mvp.View{
@@ -68,13 +69,13 @@ interface ProjectDetailContract {
 
         @GET("/api/collaboration_requests/")
         fun fetchRequests(@Query("from_user__id") userId: Int,@Query("to_project__id") projectId: Int) : Observable<List<CollaborationRequest>>
-        @DELETE("api/collaboration_requests/{id}/")
+        @DELETE("/api/collaboration_requests/{id}/")
         fun deleteRequest(@Header("Authorization") authorization: String,@Path("id") collabId : Int ) : Completable
     }
     interface FileService {
-        @GET("/files/")
+        @GET("/api/files/")
         fun fetchFiles(@Query("project") projectId: Int) : Observable<List<File>>
-        //@POST()
-
+        @POST("/api/files/")
+        fun postFile(@Header("Authorization") authorization: String,@Body collaborate: CollaborateRequest) : Observable<List<File>>
     }
 }

@@ -75,8 +75,7 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
         projectId = arguments?.getInt("projectID")!!
         val view = inflater.inflate(R.layout.fragment_invite, container, false)
         this.fragment_view=view
-        initRecyclerView()
-        this.presenter.bind(this)
+
 
         view.findViewById<Button>(R.id.buttonOK).setOnClickListener {
             Navigation.findNavController(view).navigateUp()
@@ -84,6 +83,12 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initRecyclerView()
+        resetUserCardlist()
+        this.presenter.bind(this)
+    }
 
     override fun resetUserCardlist() {
         inviteCardList.clear()

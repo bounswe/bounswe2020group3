@@ -16,8 +16,10 @@ import com.bounswe2020group3.paperlayer.profile.follow.FollowType
 import com.bounswe2020group3.paperlayer.data.user.User
 import com.bounswe2020group3.paperlayer.util.Session
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.fragment_user.imageViewProfileAvatar
+import kotlinx.android.synthetic.main.fragment_user.linearLayoutPublications
 import kotlinx.android.synthetic.main.fragment_user.textViewBio
 import kotlinx.android.synthetic.main.fragment_user.textViewBirthday
 import kotlinx.android.synthetic.main.fragment_user.textViewEmail
@@ -25,6 +27,8 @@ import kotlinx.android.synthetic.main.fragment_user.textViewExpertise
 import kotlinx.android.synthetic.main.fragment_user.textViewFullName
 import kotlinx.android.synthetic.main.fragment_user.textViewGender
 import kotlinx.android.synthetic.main.fragment_user.textViewInterests
+import kotlinx.android.synthetic.main.fragment_user.textViewProfileFollowers
+import kotlinx.android.synthetic.main.fragment_user.textViewProfileFollowings
 
 import javax.inject.Inject
 
@@ -81,12 +85,23 @@ class UserFragment : Fragment(), UserContract.View {
 
         val followingBundle = bundleOf("followType" to FollowType.FOLLOWING, "userID" to userID)
 
+        val publicationBundle=bundleOf("authorID" to userID )
+
+        linearLayoutPublications.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.navigateToPublicationFromUser, publicationBundle)
+        }
+
         layoutUserFollowers.setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToFollowListFromUser, followerBundle)
         }
 
         layoutUserFollowings.setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToFollowListFromUser, followingBundle)
+        }
+
+        imageViewReportUser.setOnClickListener{
+            val reportBundle = bundleOf("userID" to userID)
+            Navigation.findNavController(view).navigate(R.id.navigateToReportFromUser, reportBundle)
         }
     }
 

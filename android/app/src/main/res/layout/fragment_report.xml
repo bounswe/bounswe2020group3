@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_sm"
+    tools:context=".profile.report.ReportFragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/report_type"
+            android:textColor="@color/primaryDarkColor"
+            android:paddingHorizontal="@dimen/padding_md"
+            android:paddingVertical="@dimen/padding_sm"/>
+
+        <RadioGroup
+            android:id="@+id/radioGroupReportType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_md"
+            android:layout_marginVertical="@dimen/margin_sm"
+            android:background="@drawable/border_with_corner_radius">
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/radioButtonDisturbingOthers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/disturbing_other_users"
+                android:textColor="@color/material_on_background_emphasis_medium" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/radioButtonDisturbingPosts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/disturbing_posts"
+                android:textColor="@color/material_on_background_emphasis_medium" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/radioButtonSpam"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/spam"
+                android:textColor="@color/material_on_background_emphasis_medium" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/radioButtonFakeProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fake_profile"
+                android:textColor="@color/material_on_background_emphasis_medium" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/radioButtonStolenAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stolen_account"
+                android:textColor="@color/material_on_background_emphasis_medium" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/padding_md"
+        android:paddingVertical="@dimen/padding_sm">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_md"
+            android:text="@string/report_description"
+            android:textColor="@color/primaryDarkColor"
+            android:textSize="14sp" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextReportDescription"
+            android:padding="@dimen/padding_md"
+            android:gravity="start"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/border_with_corner_radius" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonSendReport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_md"
+        android:layout_marginVertical="@dimen/margin_sm"
+        android:layout_gravity="end"
+        android:text="@string/send"/>
+
+</LinearLayout>

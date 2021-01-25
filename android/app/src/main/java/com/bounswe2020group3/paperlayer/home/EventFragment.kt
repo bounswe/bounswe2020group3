@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -38,14 +39,12 @@ class EventFragment : Fragment(), HomeContract.EventView, OnCardClickListenerFor
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_events, container, false)
         this.fragment_view = view
-        initRecycler()
-        this.presenter.bind(this)
-        resetCardList()
+
         writeLogMessage("i",TAG,"event fragment has been created.")
         view.findViewById<BottomNavigationView>(R.id.bottomNavigationView).setOnNavigationItemSelectedListener { item ->
             when(item.itemId){
                 R.id.eventFragment ->{}
-                R.id.projectUpdateFragment ->{
+                R.id.recommendedProjectsFragment ->{
                     Navigation.findNavController(view).navigate(R.id.navigateToProjectUpdatesFromEvents)}
                 R.id.milestoneFragment ->{Navigation.findNavController(view).navigate(R.id.navigateToMilestonesFromEvents)}
 
@@ -53,8 +52,18 @@ class EventFragment : Fragment(), HomeContract.EventView, OnCardClickListenerFor
             true
         }
 
+        presenter.fetchUnreadNotificationCount()
+
         return view
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initRecycler()
+        this.presenter.bind(this)
+        resetCardList()
+    }
+
     fun initRecycler(){
         viewManager = LinearLayoutManager(this.context)
         viewAdapter = EventAdaptor(this)
@@ -81,6 +90,13 @@ class EventFragment : Fragment(), HomeContract.EventView, OnCardClickListenerFor
         }
     }
 
+    override fun updateNotificationIcon(notificationCount: Int) {
+        (activity as MainActivity).apply {
+            setNotificationCount(notificationCount)
+            setupBadge()
+        }
+    }
+
     override fun addCard(card : EventCard){
         eventCardsList.add(card)
         writeLogMessage("i", TAG,"Project Card Added ${card.title} ")
@@ -103,7 +119,7 @@ class EventFragment : Fragment(), HomeContract.EventView, OnCardClickListenerFor
     }
 
     override fun showToast(message: String) {
-        TODO("Not yet implemented")
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onAttach(context: Context) {

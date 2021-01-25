@@ -90,6 +90,9 @@
         <action
             android:id="@+id/navigateToUserFromProject"
             app:destination="@id/userFragment" />
+        <action
+            android:id="@+id/navigateToManageInvitesFromProject"
+            app:destination="@id/manageInvitesFragment" />
     </fragment>
 
     <fragment
@@ -134,6 +137,9 @@
         <action
             android:id="@+id/navigateToProjectFromSearch"
             app:destination="@id/projectFragment" />
+        <action
+            android:id="@+id/navigateToAdvancedSearchFragmentFromSearch"
+            app:destination="@id/advancedSearchFragment" />
     </fragment>
     <fragment
         android:id="@+id/userListFragment"
@@ -157,6 +163,12 @@
         <action
             android:id="@+id/navigateToProfileFromUser"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/navigateToReportFromUser"
+            app:destination="@id/reportFragment" />
+        <action
+            android:id="@+id/navigateToPublicationFromUser"
+            app:destination="@id/publicationFragment" />
     </fragment>
     <fragment
         android:id="@+id/inviteFragment"
@@ -201,7 +213,7 @@
     </fragment>
     <fragment
         android:id="@+id/recentProjectsFragment"
-        android:name="com.bounswe2020group3.paperlayer.home.RecentProjectsFragment"
+        android:name="com.bounswe2020group3.paperlayer.home.RecommendedProjectsFragment"
         android:label="Recent Projects">
         <action
             android:id="@+id/navigateToMilestonesFromProjectUpdates"
@@ -236,4 +248,42 @@
             android:id="@+id/navigateToUserFromCollabs"
             app:destination="@id/userFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/advancedSearchFragment"
+        android:name="com.bounswe2020group3.paperlayer.search.AdvancedSearchFragment"
+        android:label="Advanced Search" >
+        <action
+            android:id="@+id/navigateToSearchFromAdvancedSearch"
+            app:destination="@id/searchFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/manageInvitesFragment"
+        android:name="com.bounswe2020group3.paperlayer.invite.ManageInvitesFragment"
+        android:label="Manage Your Invites">
+        <action
+            android:id="@+id/navigateToUserFromManage"
+            app:destination="@id/userFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/reportFragment"
+        android:name="com.bounswe2020group3.paperlayer.profile.report.ReportFragment"
+        android:label="Report"
+        tools:layout="@layout/fragment_report" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.bounswe2020group3.paperlayer.notifications.NotificationFragment"
+        android:label="Notifications">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/feedFragment"
+        android:name="com.bounswe2020group3.paperlayer.feed.FeedFragment"
+        android:label="Feed"
+        />
+    <fragment
+        android:id="@+id/publicationFragment"
+        android:name="com.bounswe2020group3.paperlayer.publication.PublicationFragment"
+        android:label="Publications" />
 </navigation>

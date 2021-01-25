@@ -8,15 +8,15 @@ import com.bounswe2020group3.paperlayer.home.data.CollaborationRequest
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
-private const val TAG = "RecentProjectsPresenter"
+private const val TAG = "RecommendedProjectsPresenter"
 
-class RecentProjectsPresenter @Inject constructor(private var model: HomeContract.Model) : BasePresenter<HomeContract.RecentProjectsView>(), HomeContract.RecentProjectsPresenter  {
+class RecommendedProjectsPresenter @Inject constructor(private var model: HomeContract.Model) : BasePresenter<HomeContract.RecommendedProjectsView>(), HomeContract.RecommendedProjectsPresenter  {
 
     private var disposable = CompositeDisposable()
     private var requestSent : ArrayList<CollaborationRequest> = ArrayList()
 
-    override fun bind(view: HomeContract.RecentProjectsView) {
-        this.view?.writeLogMessage("i", TAG,"Event Presenter Created")
+    override fun bind(view: HomeContract.RecommendedProjectsView) {
+        this.view?.writeLogMessage("i", TAG,"Recommended Presenter Created")
 
         subscribeAuthToken()
         super.bind(view)
@@ -36,7 +36,7 @@ class RecentProjectsPresenter @Inject constructor(private var model: HomeContrac
         disposable.add(userProfileSub)
     }
 
-    override fun setView(view: HomeContract.RecentProjectsView) {
+    override fun setView(view: HomeContract.RecommendedProjectsView) {
         this.view =view
     }
 
@@ -46,9 +46,9 @@ class RecentProjectsPresenter @Inject constructor(private var model: HomeContrac
 
     override fun fetchProjects(ownerId: Int) {
         this.view?.writeLogMessage("i", TAG, "Fetching all projects of owner $ownerId ...")
-        val getProjectObservable = model.getAllProjects(ownerId).subscribe(
+        val getProjectObservable = model.getRecommendedProjects(ownerId).subscribe(
                 { projectList ->
-                    val projectListReversed = projectList.reversed()
+                    //val projectListReversed = projectList.reversed()
                     val getRequestsObservable = model.fetchRequests(ownerId).subscribe(
                             { requests ->
                                 var requested = mutableMapOf<Int,Int>()
@@ -56,9 +56,9 @@ class RecentProjectsPresenter @Inject constructor(private var model: HomeContrac
                                     requested.put(request.to_project,request.id)
                                     requestSent.add(request)
                                 }
-                                for (project in projectListReversed) {
-                                    if (project.isPublic)
-                                        if(project.owner_id.toInt() != ownerId)
+                                for (project in projectList) {
+                                    if (project.is_public)
+                                        if(project.ownerId.toInt() != ownerId)
                                             if(project.id in requested.keys)
                                                 this.view?.addCard(ProjectUpdateCard(project.name, project.description, project.owner, project.id, "Project",project.state, requested.get(project.id)!!))
                                             else
@@ -69,7 +69,7 @@ class RecentProjectsPresenter @Inject constructor(private var model: HomeContrac
                                 this.view?.submitCardList()
                             },
                             { error ->
-                                this.view?.writeLogMessage("e", TAG, "Error in fetching all projects of owner $ownerId $error")
+                                this.view?.writeLogMessage("e", TAG, "Error in fetching all reqs of owner $ownerId $error")
                             }
                     )
                 },

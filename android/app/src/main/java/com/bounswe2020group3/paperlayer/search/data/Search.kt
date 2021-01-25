@@ -28,8 +28,10 @@ data class Search(
         var projectDueDateAfter: String?,
         @field:Json(name = "project_due_date_before")
         var projectDueDateBefore: String?,
-        @field:Json(name = "project_event")
-        var projectEvent: Int?,
+        @field:Json(name = "project_event_title")
+        var projectEvent: String?,
         @field:Json(name="project_state")
-        var projectState: String?
+        var projectState: String?,
+        @field:Json(name="project_tags")
+        var projectTags: List<Int>?
 ):Parcelable

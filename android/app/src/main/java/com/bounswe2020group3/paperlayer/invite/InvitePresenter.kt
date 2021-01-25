@@ -29,12 +29,41 @@ class InvitePresenter @Inject constructor(private var model: InviteContract.Mode
 
     override fun subscribeAuthToken() {
         val userProfileSub = model.getAuthToken().subscribe { token ->
-            fetchAllUsers(token.id)
+            //fetchAllUsers(token.id)
             //fetchAllInvited(2)
+            fetchRecommendedUsers(token.id)
         }
         disposable.add(userProfileSub)
     }
 
+    override fun fetchRecommendedUsers(ownerId : Int) {
+        val getRecommsObservable = model.getRecommendedUsers(projectId)?.subscribe(
+            { userlist ->
+                for (user in userlist){
+                    val invited : Boolean =  false //user.id.toString() in invitedIds
+                    if (user.profile.isNotEmpty()) {
+                        this.view?.addUserCard(
+                            user.id,
+                            user.username,
+                            "${user.profile[0].name} ${user.profile[0].lastName}",
+                            user.profile[0].expertise,
+                            user.profile[0].profile_picture,
+                            user.id,
+                            invited)
+                    }
+                }
+                this.view?.submitUserCardList()
+                this.view?.writeLogMessage("i", TAG," submit fun is Called")
+            },
+            { it ->
+                this.view?.writeLogMessage("i", TAG," fetching failed. $it")
+                this.view?.showToast("$it")
+            })
+        if (getRecommsObservable != null) {
+            disposable.add(getRecommsObservable)
+        }
+
+    }
     override fun fetchAllUsers(ownerId: Int) {
         var ids : ArrayList<String>  = ArrayList()
         var message : String = "invitedalready"

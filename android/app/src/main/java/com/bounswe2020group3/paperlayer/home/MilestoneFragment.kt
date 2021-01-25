@@ -39,16 +39,15 @@ class MilestoneFragment : Fragment(), HomeContract.MileStoneView , OnCardClickLi
         val view = inflater.inflate(R.layout.fragment_milestones, container, false)
         fragment_view = view
 
-        initRecycler()
-        resetCardList()
 
-        this.presenter.bind(this)
         writeLogMessage("i",TAG,"event fragment has been created.")
-        view.findViewById<BottomNavigationView>(R.id.bottomNavigationView).setOnNavigationItemSelectedListener { item ->
+        val mainMenu = view.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+
+        mainMenu.setOnNavigationItemSelectedListener { item ->
             when(item.itemId){
                 R.id.eventFragment ->{        Navigation.findNavController(view).navigate(R.id.navigateToEventsFromMilestones)
                 }
-                R.id.projectUpdateFragment ->{Navigation.findNavController(view).navigate(R.id.navigateToProjectUpdatesFromMilestones)}
+                R.id.recommendedProjectsFragment ->{Navigation.findNavController(view).navigate(R.id.navigateToProjectUpdatesFromMilestones)}
                 R.id.milestoneFragment ->{}
 
             }
@@ -56,6 +55,15 @@ class MilestoneFragment : Fragment(), HomeContract.MileStoneView , OnCardClickLi
         }
         return view
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initRecycler()
+        resetCardList()
+
+        this.presenter.bind(this)
+    }
+
     fun initRecycler(){
         viewManager = LinearLayoutManager(this.context)
         viewAdapter = MilestoneAdaptor(this)

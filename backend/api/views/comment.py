@@ -4,13 +4,17 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework import permissions
 from api.permission import CommentPermission
-from api.serializers.comment import CommentSerializer, CommentUpdateSerializer
+from api.serializers.comment import CommentSerializer, \
+    CommentUpdateSerializer, CommentFeedSerializer, \
+    CommentCreateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework import status
 from api.utils import get_is_following, get_is_collaborator
 from notifications.signals import notify
 from django.db.models import Q
+
+from api.views.feed import add_activity_to_feed
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -28,6 +32,8 @@ class CommentViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action in ['update', 'partial_update']:
             return CommentUpdateSerializer
+        elif self.action in ['create']:
+            return CommentCreateSerializer
         else:
             return CommentSerializer
 
@@ -62,6 +68,22 @@ class CommentViewSet(viewsets.ModelViewSet):
                         target=comment,
                         description="Comment"
                         )
+
+            """
+                Adds the comment to user feed.
+            """
+
+            comment_serializer = CommentFeedSerializer(comment).data
+            activity_data = {'actor': str(self.request.user),
+                             'verb': 'commented {}'.format(
+                                 comment_serializer['to_user']['username']),
+                             'type': 'comment',
+                             'object': comment_serializer['id'],
+                             'foreign_id': 'comment:' +
+                                           str(comment_serializer['id']),
+                             'comment': comment_serializer,
+                             }
+            add_activity_to_feed(self.request.user, activity_data)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -107,6 +129,7 @@ class CommentViewSet(viewsets.ModelViewSet):
                               Q(to_user__followers__exact=user.id) |
                               Q(from_user__exact=user.id))
 
+        queryset = queryset.distinct()
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)

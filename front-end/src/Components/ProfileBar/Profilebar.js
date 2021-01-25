@@ -5,7 +5,7 @@ import { isLoggedIn } from "../Auth/Authenticate";
 
 const Side = styled(Box)({
     backgroundColor: "#183761",
-    height: '100%',
+    height: 'calc(100vh - 64px)',
     minWidth: "200px",
     // paddingTop:"100px",
     width: '200px',

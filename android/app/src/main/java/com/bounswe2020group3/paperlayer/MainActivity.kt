@@ -1,9 +1,10 @@
 package com.bounswe2020group3.paperlayer
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -13,11 +14,14 @@ import com.bounswe2020group3.paperlayer.dagger.AppComponent
 import com.bounswe2020group3.paperlayer.dagger.DaggerAppComponent
 import com.bounswe2020group3.paperlayer.profile.follow.FollowType
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.layout_with_badge.*
+
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var navController: NavController
     private lateinit var appComponent: AppComponent
+    private var notificationCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         val bottomNavConfiguration = AppBarConfiguration(setOf(
-                R.id.eventFragment, R.id.projectMainFragment, R.id.profileFragment, R.id.searchFragment
+                R.id.eventFragment, R.id.feedFragment, R.id.projectMainFragment, R.id.profileFragment, R.id.searchFragment
         ))
 
         setupActionBarWithNavController(navController, bottomNavConfiguration)
@@ -73,12 +77,41 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.top_options_menu, menu)
+        menuInflater.inflate(R.menu.main_menu, menu)
+        val menuItem = menu?.findItem(R.id.itemNotificationAction)
+        val actionView = menuItem?.actionView
+        actionView?.setOnClickListener { onOptionsItemSelected(menuItem) }
+        setupBadge()
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.itemNotificationAction -> {
+                navController.navigate(R.id.notificationFragment)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    fun setupBadge() {
+        if (notification_badge != null) {
+            if (notificationCount == 0) {
+                notification_badge.visibility = View.GONE
+            } else {
+                notification_badge.text = Math.min(notificationCount, 99).toString()
+                notification_badge.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    fun setNotificationCount(notificationCount: Int){
+        this.notificationCount = notificationCount
     }
 
     fun getAppComponent() = appComponent

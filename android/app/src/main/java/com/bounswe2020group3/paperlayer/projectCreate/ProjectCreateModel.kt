@@ -11,7 +11,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class ProjectCreateModel @Inject constructor(private var sessionManager: Session): ProjectCreateContract.Model {
+class ProjectCreateModel @Inject constructor(sessionManager: Session): ProjectCreateContract.Model {
 
     private val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
     private var projectCreateService: ProjectCreateContract.ProjectCreateService = RetrofitProvider.instance.create(ProjectCreateContract.ProjectCreateService::class.java)

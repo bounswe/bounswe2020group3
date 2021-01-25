@@ -4,6 +4,7 @@ package com.bounswe2020group3.paperlayer.project
 import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.home.data.CollaborateRequest
 import com.bounswe2020group3.paperlayer.home.data.CollaborationRequest
+import com.bounswe2020group3.paperlayer.project.data.File
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.ProjectShort
 import com.bounswe2020group3.paperlayer.project.data.Publication
@@ -22,6 +23,8 @@ class ProjectModel @Inject constructor(private var sessionManager: Session,retro
 
     private var projectService: ProjectsContract.ProjectService = retrofit.create(ProjectsContract.ProjectService::class.java)
     private var collabService: ProjectDetailContract.CollaborationRequestService = retrofit.create(ProjectDetailContract.CollaborationRequestService::class.java)
+    private var fileService: ProjectDetailContract.FileService = retrofit.create(ProjectDetailContract.FileService::class.java)
+
     private val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
     private val ownerID=sessionManager.getToken().value?.id ?:0
     //ProjectContract.Model
@@ -85,5 +88,11 @@ class ProjectModel @Inject constructor(private var sessionManager: Session,retro
 
         return collabService.fetchRequests(ownerId!!,projectId)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())    }
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun fetchFiles(projectId: Int): Observable<List<File>> {
+        return fileService.fetchFiles(projectId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())    }
 }

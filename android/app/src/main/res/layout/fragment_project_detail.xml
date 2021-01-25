@@ -449,6 +449,54 @@
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardViewFiles"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        app:cardElevation="5dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/gradient"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <!-- Title, secondary and supporting text -->
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:text="Files"
+                                android:textAppearance="?attr/textAppearanceHeadline5" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerViewFiles"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null">
+
+                            </androidx.recyclerview.widget.RecyclerView>
+
+                            <ImageView
+                                android:id="@+id/imageViewFileUpload"
+                                android:layout_width="109dp"
+                                android:layout_height="56dp"
+                                android:visibility="visible"
+                                tools:src="@drawable/ic_upload_file"
+                                tools:visibility="visible" />
+
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
 
             </LinearLayout>
 

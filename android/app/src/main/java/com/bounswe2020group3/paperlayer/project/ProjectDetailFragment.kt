@@ -1,6 +1,8 @@
 package com.bounswe2020group3.paperlayer.project
 
+import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -18,6 +20,7 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.project.data.File
 import com.bounswe2020group3.paperlayer.project.data.Milestone
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.User
@@ -35,7 +38,7 @@ val tagColors = arrayOf(R.color.tagColor0, R.color.tagColor1, R.color.tagColor2,
     R.color.tagColor4,R.color.tagColor5,R.color.tagColor6,R.color.tagColor7,
     R.color.tagColor8,R.color.tagColor9)
 
-class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCardClickListener {
+class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCardClickListener, OnFileCardClickListener {
 
     //Presenter object
     @Inject
@@ -48,6 +51,10 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
     private lateinit var membersAdapter: MembersAdapter
 
     private lateinit var recyclerViewMembers: RecyclerView
+    //Adapter Object of files
+    private lateinit var filesAdapter: FilesAdapter
+
+    private lateinit var recyclerViewFiles: RecyclerView
 
     //Adapter Object of Milestones
     private lateinit var milestoneAdapter: MilestoneAdapter
@@ -60,6 +67,8 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
     //Milestone Card List
     private val milestoneCardList = ArrayList<MilestoneCard>()
 
+    //File Card List
+    private val fileCardList = ArrayList<FileCard>()
 
     //Current OwnerID
     private var ownerID = 0
@@ -147,7 +156,22 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         milestoneAdapter.submitList(this.milestoneCardList)
         milestoneAdapter.notifyDataSetChanged() //notify to update recyclerview
     }
+    override fun addFileCard(file: FileCard) {
+        fileCardList.add(file)
 
+        writeLogMessage("i", TAG, "File Card Added ${file.fileName}")
+    }
+    override fun submitFileCardList() {
+        filesAdapter.submitList(this.fileCardList)
+        filesAdapter.notifyDataSetChanged() //notify to update recyclerview
+        writeLogMessage("i", TAG, "File Card List Updated! " + fileCardList.size)
+    }
+
+    override fun resetFileCardList() {
+        fileCardList.clear()
+        filesAdapter.submitList(this.fileCardList)
+        filesAdapter.notifyDataSetChanged() //notify to update recyclerview
+    }
 
     override fun updateCurrentUser(ownerID: Int) {
         this.ownerID=ownerID
@@ -165,15 +189,27 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         this.milestoneAdapter=MilestoneAdapter()
         this.recyclerViewMilestone.adapter=milestoneAdapter
 
+        this.recyclerViewFiles = fragmentView.findViewById(R.id.recyclerViewFiles)!!
+        this.recyclerViewFiles.layoutManager=LinearLayoutManager(this.context)
+        this.filesAdapter=FilesAdapter(this)
+        this.recyclerViewFiles.adapter=filesAdapter
+
         writeLogMessage("i", TAG, "RecyclerView initialized.")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initRecyclerView()
+        resetMemberCardList()
+        resetMilestoneCardList()
+        this.presenter.bind(this)
+
         val projectID = arguments?.getInt("projectID")
         if (projectID != null) {
             this.presenter.fetchProject(projectID) //fetch project and update ui
             this.presenter.fetchRequestOfMine(projectID)
+            this.presenter.fetchFiles(projectID)
         }
         else{
             writeLogMessage("e",TAG,"projectID null")
@@ -181,9 +217,6 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         //Giving bundle arguments
         val bundle = bundleOf("projectID" to projectID )
 
-        initRecyclerView()
-        resetMemberCardList()
-        resetMilestoneCardList()
         view.findViewById<Button>(R.id.buttonInvite).setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.navigateToInviteFromProjectDetails,bundle)
         }
@@ -196,6 +229,14 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         }
         view.findViewById<Button>(R.id.buttonCollab).setOnClickListener{
             presenter.OnClickCollab(projectID!!,collabbed)
+        }
+        view.findViewById<ImageView>(R.id.imageViewFileUpload).setOnClickListener{
+            val intent = Intent()
+                    .setType("*/*")
+                    .setAction(Intent.ACTION_GET_CONTENT)
+
+            startActivityForResult(Intent.createChooser(intent, "Select a file"), 111)
+
         }
         tabLayoutProject.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -219,10 +260,15 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
         buttonEditProject.setOnClickListener {
             presenter.navigateToEditProject()
         }
-        this.presenter.bind(this)
 
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
+        if (requestCode == 111 && resultCode == RESULT_OK) {
+            val selectedFile = data?.data //The uri with the location of the file
+        }
+    }
     //Update project UI
     override fun updateProjectUI(project: Project) {
         this.fragmentView.projectTitle.text=project.name
@@ -280,6 +326,7 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
             this.fragmentView.buttonEditProject.visibility= GONE
             this.fragmentView.buttonInvite.visibility= GONE
             this.fragmentView.imageViewCollabRequests.visibility = GONE
+            this.fragmentView.imageViewFileUpload.visibility = GONE
             if(project.state.equals(ProjectState.OPEN.value, true)) {
                 buttonCollab.apply {
                     visibility = VISIBLE
@@ -314,5 +361,9 @@ class ProjectDetailFragment : Fragment(),ProjectDetailContract.View, OnMemberCar
     override fun collabUncheck() {
         collabbed = -1
         buttonCollab.text = "COLLABORATE"
+    }
+
+    override fun onCardClickListener(card: FileCard) {
+        writeLogMessage("i",TAG,"clicked")
     }
 }

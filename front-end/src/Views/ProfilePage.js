@@ -728,75 +728,57 @@ export default class ProfilePage extends Component {
   }
 
   getColabInvites(){
-    axios.get(`${config.API_URL}/api/collaboration_invites/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
+    axios.get(`${config.API_URL}/api/collaboration_invites/?to_user_id=${getUserId()}`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
       .then(res => {
         let colabInvites = res.data;
-        let invites = [];
-        var len = colabInvites.length;
-        //console.log(colabInvites);
-        for(var i=0; i<len; i++){
-          var id = colabInvites[i].to_user;
-          var myId = getUserId();
-          //console.log(myId);
-          // eslint-disable-next-line
-          if(id == myId){
-            invites.push(colabInvites[i]);
+        let myInvites = [];
+        for(let i = 0 ; i < colabInvites.length ; i++){
+          if(colabInvites[i].to_user === parseInt(getUserId())){
+            myInvites.push(colabInvites[i])
           }
         }
-        var uniInvs = invites.filter(this.distinct);
-        //console.log(uniInvs);
-        this.setState({ allColabInvites: uniInvs });
+        this.setState({ allColabInvites: myInvites }, () => {
+
+        });
 
         // ___________________________________________
-
-      const{ allColabInvites } = this.state;
+      console.log("HERe", myInvites)
       var ids = [];
-      for(var k=0; k<allColabInvites.length; k++){
-        var idTriple = [allColabInvites[k].id, allColabInvites[k].from_user, allColabInvites[k].to_project];
+      for(var k=0; k<myInvites.length; k++){
+        var idTriple = [myInvites[k].id, myInvites[k].from_user, myInvites[k].to_project];
         ids.push(idTriple);
       }
 
       // ___________________________________________
 
-      var projnames = [];
-      var promises2 = [];
-      for(var m=0; m<ids.length; m++){
-        promises2.push(
-          axios.get(`${config.API_URL}/api/projects/${ids[m][2]}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } })
-          .then(res => {
-            let name = res.data.name;
-            projnames.push(name);
-        }));
-      }
-      Promise.all(promises2).then(() => {
-        //console.log(projnames);
-        this.setState({projNames: projnames});
-      });
+        var projnames = [];
+        var promises2 = [];
+        for (var m = 0; m < myInvites.length; m++) {
+          console.log(m, myInvites[m].to_project, "PROJESINE")
 
-      // ___________________________________________
 
-      var usernames = [];
-        let promises = [];
-        for(var t=0; t<ids.length; t++){
-          promises.push(
-            axios.get(`${config.API_URL}/api/users/${ids[t][1]}/`, { headers: { 'Content-Type': 'Application/json', 'Authorization': `Token ${getAccessToken()}` } }).then(res => {
-              let name = res.data.profile[0].name;
-              let mname = res.data.profile[0].middle_name;
-              let lastname = res.data.profile[0].last_name;
-              let userName = name + " " + mname + " " + lastname;
-              usernames.push(userName);
-            }))
+          axios.get(`${config.API_URL}/api/projects/${myInvites[m].to_project}/`, getRequestHeader())
+            .then(res => {
+              console.log(res.data);
+              let name = res.data.name;
+              projnames.push(name);
+              promises2.push(res.data); 
+            });
+
+
         }
-        Promise.all(promises).then(() => {
-          //console.log(usernames);
-          this.setState({inviteNames: usernames});
-        });
-        var invDatas = [];
-        for(var n=0; n<ids.length; n++){
-          var reqData = [this.state.inviteNames[n], this.state.projNames[n], ids[n][0]];
-          invDatas.push(reqData);
-        }
-        this.setState({invites: invDatas});
+        setTimeout(() => {
+          this.setState({ projNames: projnames });
+
+          var invDatas = [];
+          for (var n = 0; n < ids.length; n++) {
+            // var reqData = [this.state.inviteNames[n], this.state.projNames[n], ids[n][0]];
+            var reqData = ["", projnames[n], ids[n][0], ids[n][2]];
+            invDatas.push(reqData);
+          }
+          this.setState({ invites: invDatas });
+        }, 2500);
+        
       });
   };
 
@@ -845,22 +827,18 @@ export default class ProfilePage extends Component {
   }
 
   renderColabInvites = () => {
-    const {invites} = this.state;
-    if(this.state.loop < 3){
-      this.getColabInvites();
-      this.handleLoop();
-    }
-
-    //console.log(invites);
+    const {invites } = this.state;
 
     if (invites.length === 0) return (  <Typography variant='h6' color="textPrimary">No Collaboration Invites</Typography>)
     else return invites.map((item) => {
-      return (<>
-        <Typography variant="h5" color="primary" style={{ width: "100%", textAlign: "left" }}>{item[0]}</Typography>
-        <Typography variant="h6" color="primary" style={{ width: "100%", textAlign: "left" }}>{item[1]}</Typography>
-        <Button variant="contained" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.acceptColabInvite(item[2])} > Accept </Button>
-        <Button variant="contained" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.rejectColabInvite(item[2])} > Reject </Button>
-      </>)
+      return (<Paper elevation={18} style={{padding:"5px", marginBottom:'10px', textAlign: "center"}}>
+        {/*<Typography variant="h5" color="primary" style={{ width: "100%", textAlign: "left" }}>{item[0]}</Typography>*/}
+        <Typography variant="h6" color="primary" 
+          onClick={() => { this.props.history.push(`/project/${item[3]}`) }}
+          style={{ width: "100%", textAlign: "center", cursor:"pointer" }}>Project: {item[1]}</Typography>
+        <Button variant="contained" size="small" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.acceptColabInvite(item[2])} > Accept </Button>
+        <Button variant="contained" size="small" color="primary" style={{ marginLeft:"12px" }} onClick={() => this.rejectColabInvite(item[2])} > Reject </Button>
+      </Paper>)
     });
   };
 
@@ -898,8 +876,9 @@ export default class ProfilePage extends Component {
 
   renderPublicationsData = () => {
     const {publications} = this.state;
+    console.log(publications)
+
     if(this.state.loop < 2){
-      this.getPublications();
       this.handleLoop();
     }
 
@@ -1181,6 +1160,8 @@ export default class ProfilePage extends Component {
 
         axios.post(`${config.API_URL}${config.Follow_request_url}${newId}${config.Accept_Path}`, action , getRequestHeader())
         .then(resAcc=>{ 
+          window.location.reload(false);
+        }, (error) => {          
           window.location.reload(false);
         });
         

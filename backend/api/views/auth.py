@@ -14,6 +14,7 @@ from rest_framework.schemas import coreapi as coreapi_schema
 from rest_framework.views import APIView
 
 # from django.core.mail import send_mail
+from base64 import urlsafe_b64encode
 from django.template.loader import render_to_string
 from django_email_verification.views import verify
 from django.urls import get_resolver
@@ -31,6 +32,8 @@ class RegisterGenericAPIView(generics.GenericAPIView):
     def __send_verification(self, user: User):
         domain = 'https://paperlayer-backend.azurewebsites.net/'
         token = default_token_generator.make_token(user)
+        email = urlsafe_b64encode(str(user.email).encode('utf-8'))
+        token = f'{email.decode("utf-8")}/{token}'
 
         link = ''
         for k, v in get_resolver(None).reverse_dict.items():

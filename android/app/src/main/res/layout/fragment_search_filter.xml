@@ -114,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Event Name"
                     android:textColorHint="@color/primaryColor"
-                    app:placeholderText="event_id"
+                    app:placeholderText="Event Name"
                     android:layout_marginTop="4dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                     <com.google.android.material.textfield.TextInputEditText

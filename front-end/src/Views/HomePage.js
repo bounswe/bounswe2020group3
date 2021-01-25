@@ -12,7 +12,7 @@ import Profilebar from '../Components/ProfileBar/Profilebar';
 import { colorCodes } from "../Common/ColorTheme";
 import { getUserId, getAccessToken, getPhoto, setProfileId, getRequestHeader, isLoggedIn } from "../Components/Auth/Authenticate";
 
-const projectPerPage = 6;
+const projectPerPage = 8;
 const Container = styled(Box)({
     backgroundColor: '#f7f7f5',
     background: "#f9f9eb",
@@ -50,11 +50,11 @@ export default class HomePage extends Component {
             pageCount: 0,
             project_page_count: 0,
             notifications: [],
+            recommendations: [],
             pages : [],
             project_pages : [],
             feed:[],
             isFeed:true
-
         }
     };
 
@@ -125,6 +125,11 @@ export default class HomePage extends Component {
             .then(res => {
                 this.setState({notifications: res.data})
             });
+        axios.get(`${config.API_URL}/api/projects/get_project_recommendation/?user_id=${getUserId()}&user_count=5`, getRequestHeader())
+            .then(res => {
+                console.log(res)
+                this.setState({ recommendations: res.data });
+            });
 
     }
     renderTags(tags) {
@@ -134,6 +139,42 @@ export default class HomePage extends Component {
             )
         });
     };
+    renderRecommendations() {
+        console.log(this.state.recommendations)
+        const recommendations = this.state.recommendations;
+        return (
+            <Box style={{ overflowY: "scroll", maxHeight: "300px", paddingTop: "10px", paddingBottom: "10px" }}>
+
+                {recommendations.length !== 0
+                    ?
+                    recommendations.map((item) => {
+                        return (
+                            <Paper elevation={6}
+                                   style={{border: "solid 1px blue",
+                                       padding: "15px", maxHeight: "160px", width: "80%",
+                                       background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+                                   }}
+                                   borderColor="primary" border={1}>
+                                <Typography variant="h6" color="primary"
+                                            style={{ cursor: "pointer", width: "50%", textAlign: "left" }}
+                                            onClick={() => { this.props.history.push("/project/" + item.id); }}
+                                >{item.name}</Typography>
+                            </Paper>
+                        )
+                    })
+                    :
+                    <Paper elevation={6}
+                           style={{border: "solid 1px blue",
+                               padding: "15px", maxHeight: "160px", width: "80%",
+                               background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+                           }}
+                           borderColor="primary" border={1}>
+                        <Typography variant="h6" color="textPrimary" style={{ "textAlign": 'center' }}>No Projects Found</Typography>
+                    </Paper>
+                }
+            </Box>)
+    };
+
     renderProject(){
         const { projects, project_page } = this.state;
         return projects.map((item, id) => {
@@ -173,9 +214,10 @@ export default class HomePage extends Component {
     projectButtonCond (id){
         const page = this.state.project_page;
         const pageCount = this.state.project_page_count;
-
         return id===1 || id===pageCount || id===page || id === page-1 || id === page+1 || id===page-2 || id===page+2 || id ===page+3 || id===page-3
-    }
+        }
+
+
     renderProjectButtons() {
         const { project_pages, project_page } = this.state;
         return(
@@ -386,12 +428,12 @@ export default class HomePage extends Component {
                                 {this.renderEvents()}
                             </Grid>
                             {isLoggedIn() ?
-                                <Typography variant="h5" color="primary" style={{ marginTop: "10px" }}>Milestones</Typography>
+                                <Typography variant="h5" color="primary" style={{ marginTop: "10px" }}>Recommended Projects</Typography>
                                 :
                                 <></>
                             }
-                            <Grid style={{maxHeight:"50vh", overflowY:"scroll"}} item sm={12}>
-                                {this.renderMilestones()}
+                            <Grid style={{maxHeight:"50vh"}} item sm={12}>
+                                {this.renderRecommendations()}
                             </Grid>
                         </Grid>
                     </Grid>

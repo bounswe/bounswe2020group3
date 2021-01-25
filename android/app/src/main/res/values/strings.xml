@@ -94,4 +94,5 @@
     <string name="spam">Spam</string>
     <string name="fake_profile">Fake Profile</string>
     <string name="stolen_account">Stolen Account</string>
+    <string name="feed">Feed</string>
 </resources>

@@ -28,7 +28,7 @@ data class Search(
         var projectDueDateAfter: String?,
         @field:Json(name = "project_due_date_before")
         var projectDueDateBefore: String?,
-        @field:Json(name = "project_event")
+        @field:Json(name = "project_event_title")
         var projectEvent: String?,
         @field:Json(name="project_state")
         var projectState: String?,

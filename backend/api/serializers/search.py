@@ -34,6 +34,8 @@ class SearchRequestSerializer(serializers.Serializer):
     project_due_date_before = serializers.DateField(
         allow_null=True, required=False)
     project_event = serializers.IntegerField(allow_null=True, required=False)
+    project_event_title = serializers.CharField(allow_null=True,
+                                                required=False)
     project_state = serializers.ChoiceField(
         choices=STATE_CHOICES, allow_null=True, required=False)
     project_tags = serializers.ListField(

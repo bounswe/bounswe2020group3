@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         val bottomNavConfiguration = AppBarConfiguration(setOf(
-                R.id.eventFragment, R.id.projectMainFragment, R.id.profileFragment, R.id.searchFragment
+                R.id.eventFragment, R.id.feedFragment, R.id.projectMainFragment, R.id.profileFragment, R.id.searchFragment
         ))
 
         setupActionBarWithNavController(navController, bottomNavConfiguration)

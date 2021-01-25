@@ -112,6 +112,8 @@ class SearchPresenter @Inject constructor(private var model:SearchContract.Model
                 },
                 { error ->
                     this.view?.writeLogMessage("e", TAG,"Error in getting results of search with keyword  ${searchFilter.keyword}")
+                    this.view?.hideLoading()
+                    this.view?.showToast("No results were found.")
                 }
         )
         disposable.add(getProjectObservable)

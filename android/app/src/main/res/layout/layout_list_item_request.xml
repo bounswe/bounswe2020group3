@@ -56,6 +56,8 @@
                 android:id="@+id/textViewNameSurname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:layout_marginBottom="@dimen/margin_sm"
                 android:text="nameSurname"/>
 
         </LinearLayout>

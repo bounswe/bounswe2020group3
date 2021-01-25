@@ -50,7 +50,7 @@ class CollabPresenter @Inject constructor(private var model: CollabContract.Mode
                             val fullName = "" + user.profile[0].name + user.profile[0].lastName
                             val photoURL = "" + user.profile[0].profile_picture
                             val requestItem: RequestItem =
-                                RequestItem(req.id, user.id, fullName, photoURL)
+                                RequestItem(req.id, user.id, fullName, photoURL, req.message, req.to_project)
                             view?.addItem(requestItem)
                             view?.submitItemList()
                         },

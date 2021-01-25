@@ -71,13 +71,25 @@
             android:visibility="gone"
             android:layout_height="wrap_content" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewInviteRequests"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/textViewNoInvitations"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_invitations"
+                android:layout_gravity="center"/>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewInviteRequests"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
     </LinearLayout>
 
 

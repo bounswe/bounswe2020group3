@@ -13,6 +13,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import retrofit2.Response
 import retrofit2.Retrofit
 import javax.inject.Inject
 
@@ -47,6 +48,28 @@ class InviteModel @Inject constructor(private var sessionManager: Session, retro
         return userService.deleteInvite(authToken,invite_id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())    }
+
+    override fun getInvitationsOfUser(userId: Int): Observable<List<CollaborationInvite>> {
+        return userService.getInviteRequests(userId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun acceptInviteRequest(inviteId: Int): Observable<Response<Void>> {
+        val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
+
+        return userService.acceptInviteRequest(authToken, inviteId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun rejectInviteRequest(inviteId: Int): Observable<Response<Void>> {
+        val authToken = "Token ${sessionManager.getToken().value?.token ?: ""}"
+
+        return userService.rejectInviteRequest(authToken, inviteId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
 
     override fun getRecommendedUsers(projectId : Int): Observable<List<User>>? {
         return userService.getRecommendedUsers(projectId)

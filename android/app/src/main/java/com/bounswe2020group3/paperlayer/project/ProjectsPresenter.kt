@@ -6,15 +6,22 @@ import android.net.Uri
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.invite.InviteContract
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
+import com.bounswe2020group3.paperlayer.profile.ProfileContract
 import com.bounswe2020group3.paperlayer.project.data.Tag
+import com.bounswe2020group3.paperlayer.request.RequestItem
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 
 private const val TAG = "ProjectMainPresenter"
 
-class ProjectMainPresenter @Inject constructor(private var model: ProjectsContract.Model) : BasePresenter<ProjectsContract.View>(),ProjectsContract.Presenter {
+class ProjectMainPresenter @Inject constructor(
+    private var model: ProjectsContract.Model,
+    private val inviteModel: InviteContract.Model,
+    private val profileModel: ProfileContract.Model
+) : BasePresenter<ProjectsContract.View>(),ProjectsContract.Presenter {
 
     //Disposable
     private var disposable = CompositeDisposable()
@@ -44,6 +51,7 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectsContra
         val userProfileSub = model.getAuthToken().subscribe { token ->
             fetchAllProjectsOfUser(token.id)
             fetchAllPublicationsOfOwner(token.id)
+            fetchInvitationsOfUser(token.id)
         }
         disposable.add(userProfileSub)
     }
@@ -104,6 +112,38 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectsContra
         disposable.add(getPublicationObservable)
     }
 
+    override fun fetchInvitationsOfUser(userId: Int) {
+        this.view?.writeLogMessage("i",TAG, "Fetching all invitations of user $userId ...")
+        val inviteListSub = inviteModel.getInvitationsOfUser(userId).subscribe(
+            { invitationList ->
+                for (invite in invitationList){
+                    val userObservable = profileModel.getUser(invite.from_user.toInt()).subscribe(
+                        { user ->
+                            val fullName = "" + user.profile[0].name + user.profile[0].lastName
+                            val photoURL = "" + user.profile[0].profile_picture
+                            val requestItem = RequestItem(invite.id, user.id, fullName, photoURL, invite.message, invite.to_project)
+                            this.view?.addInvitationRequest(requestItem)
+                        },
+                        { error ->
+                            view?.writeLogMessage(
+                                "e",
+                                TAG,
+                                "error while fetching invite requests for user with id ${invite.from_user} $error"
+                            )
+                        }
+                    )
+                    disposable.add(userObservable)
+                }
+                this.view?.writeLogMessage("i",TAG,"Fetching finished.")
+                this.view?.submitPublicationCardList()
+            },
+            { error ->
+                this.view?.writeLogMessage("e",TAG,"error while fetching invite requests for user with id $userId $error")
+            }
+        )
+        disposable.add(inviteListSub)
+    }
+
 
     override fun onViewPublicationButtonClicked(item: ProjectCard, position: Int) {
         //Navigating to publications page
@@ -128,6 +168,32 @@ class ProjectMainPresenter @Inject constructor(private var model: ProjectsContra
 
     override fun onNewProjectButtonClicked() {
         view?.getLayout()?.let { Navigation.findNavController(it).navigate(R.id.navigateToProjectCreateFromProjectMainFragment) }
+    }
+
+    override fun acceptInviteRequest(item: RequestItem) {
+        val acceptSub = inviteModel.acceptInviteRequest(item.id).subscribe(
+            {
+                this.view?.showToast("Invite is accepted! $it")
+                this.view?.removeInvitationRequest(item)
+            },
+            {
+                this.view?.writeLogMessage("e",TAG,"error while accepting invite requests for invite id ${item.id} $it")
+            }
+        )
+        disposable.add(acceptSub)
+    }
+
+    override fun rejectInviteRequest(item: RequestItem) {
+        val reject = inviteModel.rejectInviteRequest(item.id).subscribe(
+            {
+                this.view?.showToast("Invite is rejected!")
+                this.view?.removeInvitationRequest(item)
+            },
+            {
+                this.view?.writeLogMessage("e",TAG,"error while rejecting invite requests for invite id ${item.id} $it")
+            }
+        )
+        disposable.add(reject)
     }
 
 }

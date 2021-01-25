@@ -95,4 +95,6 @@
     <string name="fake_profile">Fake Profile</string>
     <string name="stolen_account">Stolen Account</string>
     <string name="feed">Feed</string>
+    <!--  Invitations  -->
+    <string name="no_invitations">There are no invitations</string>
 </resources>

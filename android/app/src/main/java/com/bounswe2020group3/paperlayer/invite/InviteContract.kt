@@ -7,10 +7,12 @@ import com.bounswe2020group3.paperlayer.invite.data.CollaborationInvite
 import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.data.user.User
+import com.bounswe2020group3.paperlayer.project.data.Publication
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
+import retrofit2.Response
 import retrofit2.http.*
 
 interface InviteContract {
@@ -46,6 +48,9 @@ interface InviteContract {
         fun inviteUsers(inviteRequest: InviteRequest) : Observable<CollaborationInvite>
         fun getInvited(projectId : Int ) :  Observable<List<CollaborationInvite>>
         fun uninvite(invite_id : Int) : Completable
+        fun getInvitationsOfUser(userId: Int): Observable<List<CollaborationInvite>>
+        fun acceptInviteRequest(inviteId: Int): Observable<Response<Void>>
+        fun rejectInviteRequest(inviteId: Int): Observable<Response<Void>>
     }
 
     interface UserService {
@@ -61,11 +66,17 @@ interface InviteContract {
         @GET("/api/users/get_collaborator_recommendation")
         fun getRecommendedUsers(@Query("project_id") projectId : Int): Observable<List<User>>
 
-
         @DELETE("api/collaboration_invites/{id}/")
         fun deleteInvite(@Header("Authorization") authorization: String,@Path("id") invite_id : Int ) : Completable
 
+        @GET("/api/collaboration_invites/")
+        fun getInviteRequests(@Query("to_user__id") userId: Int) : Observable<List<CollaborationInvite>>
 
+        @POST("/api/collaboration_invites/{id}/accept_collaboration_invite/")
+        fun acceptInviteRequest(@Header("Authorization") authorization: String, @Path("id") inviteId: Int) : Observable<Response<Void>>
+
+        @POST("/api/collaboration_invites/{id}/reject_collaboration/")
+        fun rejectInviteRequest(@Header("Authorization") authorization: String, @Path("id") inviteId: Int) : Observable<Response<Void>>
     }
 
 

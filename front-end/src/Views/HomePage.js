@@ -127,7 +127,6 @@ export default class HomePage extends Component {
             });
         axios.get(`${config.API_URL}/api/projects/get_project_recommendation/?user_id=${getUserId()}&user_count=5`, getRequestHeader())
             .then(res => {
-                console.log(res)
                 this.setState({ recommendations: res.data });
             });
 
@@ -140,8 +139,7 @@ export default class HomePage extends Component {
         });
     };
     renderRecommendations() {
-        console.log(this.state.recommendations)
-        const recommendations = this.state.recommendations;
+        const { recommendations } = this.state;
         return (
             <Box style={{ overflowY: "scroll", maxHeight: "300px", paddingTop: "10px", paddingBottom: "10px" }}>
 
@@ -151,8 +149,8 @@ export default class HomePage extends Component {
                         return (
                             <Paper elevation={6}
                                    style={{border: "solid 1px blue",
-                                       padding: "15px", maxHeight: "160px", width: "80%",
-                                       background: "white", margin: "auto", marginBottom: "10px", textAlign: "left", overflow: "clip"
+                                       padding: "10px", width: "80%",
+                                       background: "white", margin: "auto", marginBottom: "10px", textAlign: "left",
                                    }}
                                    borderColor="primary" border={1}>
                                 <Typography variant="h6" color="primary"

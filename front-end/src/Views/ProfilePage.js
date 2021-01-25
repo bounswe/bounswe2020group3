@@ -874,9 +874,6 @@ export default class ProfilePage extends Component {
         var projnames = [];
         var promises2 = [];
         for (var m = 0; m < myInvites.length; m++) {
-          console.log(m, myInvites[m].to_project, "PROJESINE")
-
-
           axios.get(`${config.API_URL}/api/projects/${myInvites[m].to_project}/`, getRequestHeader())
             .then(res => {
               console.log(res.data);
@@ -884,8 +881,6 @@ export default class ProfilePage extends Component {
               projnames.push(name);
               promises2.push(res.data); 
             });
-
-
         }
         setTimeout(() => {
           this.setState({ projNames: projnames });
@@ -897,7 +892,7 @@ export default class ProfilePage extends Component {
             invDatas.push(reqData);
           }
           this.setState({ invites: invDatas });
-        }, 2500);
+        }, 6000);
         
       });
   };

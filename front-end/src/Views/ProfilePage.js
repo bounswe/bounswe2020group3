@@ -134,8 +134,7 @@ export default class ProfilePage extends Component {
           selfLastName: res.data.profile[0].last_name
         });
       });
-    axios.get(`${config.API_URL}/api/notifications/unread/`,
-        getRequestHeader())
+    axios.get(`${config.API_URL}/api/notifications/unread/`, getRequestHeader())
         .then(res => {
           console.log((res.data))
           this.setState({notifications: res.data})
@@ -214,7 +213,7 @@ export default class ProfilePage extends Component {
               .then(res => {
                 this.setState({ milestones: res.data.result });
               });
-            axios.get(`${config.API_URL}${config.Projectpage_url}?owner__id=${getUserId()}`, getRequestHeader())
+            axios.get(`${config.API_URL}${config.Projectpage_url}?members__id=${getUserId()}`, getRequestHeader())
               .then(res => {
                 this.setState({ projects: res.data });
               });

@@ -325,8 +325,7 @@ export default class ProfilePage extends Component {
       })
   }
   deleteComment = (id) => {
-    axios.delete(`${config.API_URL}/api/comments/`, { id: id },
-      getRequestHeader())
+    axios.delete(`${config.API_URL}/api/comments/${id}`, getRequestHeader())
       .then(res => {
         this.setState({ message: "Comment Deleted", messageType: AlertTypes.Success }, () => {
           this.handleSnackbarOpen();

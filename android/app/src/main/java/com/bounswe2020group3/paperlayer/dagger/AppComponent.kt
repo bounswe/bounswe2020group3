@@ -2,6 +2,7 @@ package com.bounswe2020group3.paperlayer.dagger
 
 import com.bounswe2020group3.paperlayer.collaborationRequests.CollabFragment
 import com.bounswe2020group3.paperlayer.event.EventDetailFragment
+import com.bounswe2020group3.paperlayer.feed.FeedFragment
 import com.bounswe2020group3.paperlayer.home.EventFragment
 import com.bounswe2020group3.paperlayer.home.MilestoneFragment
 import com.bounswe2020group3.paperlayer.home.RecommendedProjectsFragment
@@ -40,8 +41,9 @@ import javax.inject.Singleton
     SearchModule::class,
     UserModule::class,
     EventModule::class,
+    NotificationModule::class,
+    FeedModule::class,
     ReportModule::class,
-    NotificationModule::class
 ])
 @Singleton
 interface AppComponent {
@@ -66,4 +68,5 @@ interface AppComponent {
     fun inject(fragment: ManageInvitesFragment)
     fun inject(fragment: ReportFragment)
     fun inject(fragment: NotificationFragment)
+    fun inject(fragment: FeedFragment)
 }

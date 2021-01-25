@@ -129,6 +129,7 @@ class CommentViewSet(viewsets.ModelViewSet):
                               Q(to_user__followers__exact=user.id) |
                               Q(from_user__exact=user.id))
 
+        queryset = queryset.distinct()
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)

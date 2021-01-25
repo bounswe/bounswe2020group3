@@ -40,6 +40,7 @@ class FileViewSet(viewsets.ModelViewSet):
                                        Q(project__owner__exact=user.id) |
                                        Q(project__members__exact=user.id))
 
+        queryset = queryset.distinct()
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)

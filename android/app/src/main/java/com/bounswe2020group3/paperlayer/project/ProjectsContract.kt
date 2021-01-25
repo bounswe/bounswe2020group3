@@ -6,6 +6,7 @@ import com.bounswe2020group3.paperlayer.mvp.Mvp
 import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.ProjectShort
 import com.bounswe2020group3.paperlayer.project.data.Publication
+import com.bounswe2020group3.paperlayer.project.data.Tag
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
@@ -39,11 +40,11 @@ interface       ProjectsContract {
 
         fun resetProjectCardList()
         fun submitProjectCardList()
-        fun addProjectCard(projectName: String,projectBody: String,projectOwner: String,projectId: Int,projectType: String)
+        fun addProjectCard(projectName: String, projectBody: String, projectOwner: String, projectId: Int, tags: List<Tag>, projectType: String)
 
         fun resetPublicationCardList()
         fun submitPublicationCardList()
-        fun addPublicationCard(projectName: String,projectBody: String,projectOwner: String,projectId: Int)
+        fun addPublicationCard(projectName: String,projectBody: String,projectOwner: String,tags: List<Tag>,projectId: Int)
     }
 
     interface Model {

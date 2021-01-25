@@ -99,19 +99,29 @@ class ProjectsFragment : Fragment(), ProjectsContract.View, OnCardClickListener,
                     fragmentView.buttonAddProject.visibility= VISIBLE
                     fragmentView.editTextScholarID.visibility=GONE
                     fragmentView.buttonConnectScholar.visibility=GONE
+                    fragmentView.recyclerViewInviteRequests.visibility=GONE
+
                     if(projectCardList.size==0){
                         showToast("You can add projects from create project icon.")
                     }
                 }
-                else{
+                else if (tab.position == 1){
                     fragmentView.recyclerViewProjects.visibility= GONE
                     fragmentView.recyclerViewPublications.visibility= VISIBLE
                     fragmentView.buttonAddProject.visibility= GONE
+                    fragmentView.recyclerViewInviteRequests.visibility=GONE
 
                     if(publicationsCardList.size==0){
                         showToast("Please connect your scholar id.")
                         showPublicationAdd()
                     }
+                } else {
+                    fragmentView.recyclerViewInviteRequests.visibility= VISIBLE
+                    fragmentView.recyclerViewProjects.visibility=GONE
+                    fragmentView.recyclerViewPublications.visibility= GONE
+                    fragmentView.buttonAddProject.visibility= GONE
+                    fragmentView.editTextScholarID.visibility=GONE
+                    fragmentView.buttonConnectScholar.visibility=GONE
                 }
 
             }

@@ -14,34 +14,37 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
+import com.bounswe2020group3.paperlayer.request.RequestAdapter
+import com.bounswe2020group3.paperlayer.request.RequestItem
+import com.bounswe2020group3.paperlayer.request.RequestListener
 import javax.inject.Inject
 
 private const val TAG = "CollabFragment"
 
-class CollabFragment : Fragment(), CollabContract.CollabView, OnCardClickListener{
+class CollabFragment : Fragment(), CollabContract.CollabView, RequestListener {
 
     @Inject
-    lateinit var presenter : CollabPresenter
+    lateinit var presenter: CollabPresenter
 
-    lateinit var fragment_view : View
+    private lateinit var fragmentView: View
     private lateinit var mContext: Context
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdaptor: CollabAdaptor
+    private lateinit var viewAdapter: RequestAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
 
-    private val collabsList = ArrayList<CollabCard>()
-    override var projectId : Int = -1;
+    private val requestList = ArrayList<RequestItem>()
+    override var projectId: Int = -1;
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         projectId = arguments?.getInt("projectID")!!
-        writeLogMessage("i",TAG,"$projectId 's reqs")
+        writeLogMessage("i", TAG, "$projectId 's reqs")
         val view = inflater.inflate(R.layout.fragment_collaboration_requests, container, false)
-        fragment_view = view
-
-
-
+        fragmentView = view
         return view
     }
 
@@ -49,7 +52,7 @@ class CollabFragment : Fragment(), CollabContract.CollabView, OnCardClickListene
         super.onViewCreated(view, savedInstanceState)
         this.presenter.bind(this)
         initRecyclerView()
-        resetCardList()
+        resetItemList()
     }
 
     override fun getLayout(): View {
@@ -59,73 +62,68 @@ class CollabFragment : Fragment(), CollabContract.CollabView, OnCardClickListene
     override fun showToast(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
-    private fun initRecyclerView(){
+
+    private fun initRecyclerView() {
         viewManager = LinearLayoutManager(this.context)
-        viewAdaptor= CollabAdaptor(this)
-        recyclerView = fragment_view.findViewById<RecyclerView>(R.id.recyclerViewCollabs).apply{
+        viewAdapter = RequestAdapter(this)
+        recyclerView = fragmentView.findViewById<RecyclerView>(R.id.recyclerViewCollabs).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
-            adapter = viewAdaptor
+            adapter = viewAdapter
         }
 
 
     }
 
     override fun writeLogMessage(type: String, tag: String, message: String) {
-        when(type){
-            "e"-> Log.e(tag,message) //error
-            "w"-> Log.w(tag,message) //warning
-            "i"-> Log.i(tag,message) //information
-            "d"-> Log.d(tag,message) //debug
-            "v"-> Log.v(tag,message) //verbose
-            else-> Log.e(tag,"Type is not defined")
+        when (type) {
+            "e" -> Log.e(tag, message) //error
+            "w" -> Log.w(tag, message) //warning
+            "i" -> Log.i(tag, message) //information
+            "d" -> Log.d(tag, message) //debug
+            "v" -> Log.v(tag, message) //verbose
+            else -> Log.e(tag, "Type is not defined")
         }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (context as MainActivity).getAppComponent().inject(this)
-        mContext=context
+        mContext = context
     }
 
-    override fun resetCardList() {
-
-        collabsList.clear()
-        viewAdaptor.submitList(this.collabsList)
-        viewAdaptor.notifyDataSetChanged() //notify to update recyclerview
-
-        }
-
-    override fun submitCardList() {
-
-        viewAdaptor.submitList(this.collabsList)
-        viewAdaptor.notifyDataSetChanged() //notify to update recyclerview
-        writeLogMessage("i", TAG,"Project Card List Updated! " + collabsList.size)      }
-
-    override fun addCard(card: CollabCard) {
-        collabsList.add(card)
-        writeLogMessage("i", TAG,"Addeddededed " + card)
+    override fun resetItemList() {
+        requestList.clear()
+        viewAdapter.submitList(this.requestList)
+        viewAdapter.notifyDataSetChanged() //notify to update recyclerview
     }
 
-
-
-    override fun onAcceptButtonClick(item: CollabCard, position: Int) {
-        presenter.onAcceptButtonClick(item,position)
+    override fun submitItemList() {
+        viewAdapter.submitList(this.requestList)
+        viewAdapter.notifyDataSetChanged() //notify to update recyclerview
+        writeLogMessage("i", TAG, "Project Item List Updated! " + requestList.size)
     }
 
-    override fun onRejectButtonClick(item: CollabCard, position: Int) {
-        presenter.onRejectButtonClick(item,position)
+    override fun addItem(card: RequestItem) {
+        requestList.add(card)
+        writeLogMessage("i", TAG, "Addeddededed " + card)
     }
 
-    override fun onCardClick(item: CollabCard, position: Int) {
-        val bundle = bundleOf("userID" to item.userid )
-
-        Navigation.findNavController(fragment_view).navigate(R.id.navigateToUserFromCollabs,bundle)
+    override fun onAcceptButtonClick(item: RequestItem, position: Int) {
+        presenter.onAcceptButtonClick(item, position)
     }
 
-    override fun removeCard(card: CollabCard) {
+    override fun onRejectButtonClick(item: RequestItem, position: Int) {
+        presenter.onRejectButtonClick(item, position)
+    }
 
-        if(collabsList.remove(card))
-            writeLogMessage("i",TAG,"removal from the list is successfull for card $card")
+    override fun onItemClick(item: RequestItem, position: Int) {
+        val bundle = bundleOf("userID" to item.userId)
+        Navigation.findNavController(fragmentView).navigate(R.id.navigateToUserFromCollabs, bundle)
+    }
+
+    override fun removeItem(item: RequestItem) {
+        if (requestList.remove(item))
+            writeLogMessage("i", TAG, "Removal from the list is successful for item $item")
     }
 }

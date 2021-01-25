@@ -1,20 +1,21 @@
 package com.bounswe2020group3.paperlayer.collaborationRequests
 
-import android.widget.TabHost
 import com.bounswe2020group3.paperlayer.home.HomeContract
 import com.bounswe2020group3.paperlayer.mvp.BasePresenter
+import com.bounswe2020group3.paperlayer.request.RequestItem
 
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 private const val TAG = "CollabPresenter"
 
-class CollabPresenter  @Inject constructor(private var model: CollabContract.Model) : BasePresenter<CollabContract.CollabView>(), CollabContract.CollabPresenter  {
+class CollabPresenter @Inject constructor(private var model: CollabContract.Model) :
+    BasePresenter<CollabContract.CollabView>(), CollabContract.CollabPresenter {
     private var disposable = CompositeDisposable()
-    private var projectId : Int = -1
+    private var projectId: Int = -1
 
     override fun bind(view: CollabContract.CollabView) {
-        this.view?.writeLogMessage("i", TAG,"Event Presenter Created")
+        this.view?.writeLogMessage("i", TAG, "Event Presenter Created")
         projectId = view.projectId
 
         subscribeAuthToken()
@@ -23,16 +24,12 @@ class CollabPresenter  @Inject constructor(private var model: CollabContract.Mod
 
     override fun unbind() {
         disposable.clear()
-
         super.unbind()
     }
 
     override fun setView(eventView: HomeContract.EventView) {
-        this.view =view
         projectId = view?.projectId!!
-        view?.writeLogMessage("i",TAG,"$projectId 's reqs")
-
-
+        view?.writeLogMessage("i", TAG, "$projectId 's reqs")
     }
 
     override fun showMessage(message: String) {
@@ -41,32 +38,41 @@ class CollabPresenter  @Inject constructor(private var model: CollabContract.Mod
 
     override fun fetchRequests(ownerId: Int) {
         val requestsObservable = model.fetchRequests(projectId).subscribe(
-                { requests ->
-                    view?.writeLogMessage("i",TAG,"${requests.size} reqs has been fetched for the project $projectId")
-                    for(req in requests){
-                        val  userObservable = model.getUser(req.from_user.toInt()).subscribe(
-                                {user ->
-                                    var fullname = "" + user.profile[0].name + user.profile[0].lastName
-                                    var photoURL = "" + user.profile[0].profile_picture
-                                    var expertise = "" + user.profile[0].expertise
-                                    view?.addCard(CollabCard(req.id,user.id,user.username,fullname,req.created,req.message,photoURL,expertise))
-                                    view?.submitCardList()
-                                },
-                                {error->
-                                    view?.writeLogMessage("e",TAG,"error while fetching user with id ${req.from_user} $error")
-                                }
-                        )
-                        if(userObservable != null)
-                            disposable.add(userObservable)
+            { requests ->
+                view?.writeLogMessage(
+                    "i",
+                    TAG,
+                    "${requests.size} reqs has been fetched for the project $projectId"
+                )
+                for (req in requests) {
+                    val userObservable = model.getUser(req.from_user.toInt()).subscribe(
+                        { user ->
+                            val fullName = "" + user.profile[0].name + user.profile[0].lastName
+                            val photoURL = "" + user.profile[0].profile_picture
+                            val requestItem: RequestItem =
+                                RequestItem(req.id, user.id, fullName, photoURL)
+                            view?.addItem(requestItem)
+                            view?.submitItemList()
+                        },
+                        { error ->
+                            view?.writeLogMessage(
+                                "e",
+                                TAG,
+                                "error while fetching user with id ${req.from_user} $error"
+                            )
+                        }
+                    )
+                    if (userObservable != null)
+                        disposable.add(userObservable)
 
-                    }
-
-                },
-                {error ->
-                    view?.writeLogMessage("e",TAG,"error while fetching requests")
                 }
+
+            },
+            { error ->
+                view?.writeLogMessage("e", TAG, "error while fetching requests")
+            }
         )
-        if(requestsObservable != null)
+        if (requestsObservable != null)
             disposable.add(requestsObservable)
     }
 
@@ -79,37 +85,32 @@ class CollabPresenter  @Inject constructor(private var model: CollabContract.Mod
         disposable.add(userProfileSub)
     }
 
-    override fun onAcceptButtonClick(item: CollabCard, position: Int) {
-        val acceptrequestObservable  = model.acceptRequest(item.id).subscribe(
-                {
-                    view?.writeLogMessage("i",TAG,"Collaboration Request Accepted successfully")
-                    view?.removeCard(item)
-                    view?.submitCardList()
+    override fun onAcceptButtonClick(item: RequestItem, position: Int) {
+        val acceptRequestObservable = model.acceptRequest(item.id).subscribe(
+            {
+                view?.writeLogMessage("i", TAG, "Collaboration Request Accepted successfully")
+                view?.removeItem(item)
+                view?.submitItemList()
 
-                },
-                { error ->
-                    view?.writeLogMessage("e",TAG,"Accept failed $error")
-                }
+            },
+            { error ->
+                view?.writeLogMessage("e", TAG, "Accept failed $error")
+            }
         )
-        if(acceptrequestObservable != null)
-            disposable.add(acceptrequestObservable)
-
+        disposable.add(acceptRequestObservable)
     }
 
-    override fun onRejectButtonClick(item: CollabCard, position: Int) {
-        val rejectrequestObservable  = model.rejectRequest(item.id).subscribe(
-                {
-                    view?.writeLogMessage("i",TAG,"Collaboration Request Rejected successfully")
-                    view?.removeCard(item)
-                    view?.submitCardList()
-                },
-                {error ->
-                    view?.writeLogMessage("e",TAG,"Reject failed $error")
-                }
+    override fun onRejectButtonClick(item: RequestItem, position: Int) {
+        val rejectRequestObservable = model.rejectRequest(item.id).subscribe(
+            {
+                view?.writeLogMessage("i", TAG, "Collaboration Request Rejected successfully")
+                view?.removeItem(item)
+                view?.submitItemList()
+            },
+            { error ->
+                view?.writeLogMessage("e", TAG, "Reject failed $error")
+            }
         )
-        if(rejectrequestObservable != null)
-            disposable.add(rejectrequestObservable)
+        disposable.add(rejectRequestObservable)
     }
-
-
 }

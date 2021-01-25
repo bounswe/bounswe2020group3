@@ -20,6 +20,7 @@ import com.bounswe2020group3.paperlayer.project.ProjectDetailFragment
 import com.bounswe2020group3.paperlayer.project.ProjectsFragment
 import com.bounswe2020group3.paperlayer.projectCreate.ProjectCreateFragment
 import com.bounswe2020group3.paperlayer.projectEdit.ProjectEditFragment
+import com.bounswe2020group3.paperlayer.publication.PublicationFragment
 import com.bounswe2020group3.paperlayer.register.RegisterFragment
 import com.bounswe2020group3.paperlayer.search.SearchFragment
 import dagger.Component
@@ -44,6 +45,7 @@ import javax.inject.Singleton
     NotificationModule::class,
     FeedModule::class,
     ReportModule::class,
+    PublicationModule::class
 ])
 @Singleton
 interface AppComponent {
@@ -68,5 +70,6 @@ interface AppComponent {
     fun inject(fragment: ManageInvitesFragment)
     fun inject(fragment: ReportFragment)
     fun inject(fragment: NotificationFragment)
+    fun inject(fragment: PublicationFragment)
     fun inject(fragment: FeedFragment)
 }

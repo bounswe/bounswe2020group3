@@ -166,6 +166,9 @@
         <action
             android:id="@+id/navigateToReportFromUser"
             app:destination="@id/reportFragment" />
+        <action
+            android:id="@+id/navigateToPublicationFromUser"
+            app:destination="@id/publicationFragment" />
     </fragment>
     <fragment
         android:id="@+id/inviteFragment"
@@ -248,7 +251,7 @@
     <fragment
         android:id="@+id/advancedSearchFragment"
         android:name="com.bounswe2020group3.paperlayer.search.AdvancedSearchFragment"
-        android:label="AdvancedSearchFragment" >
+        android:label="Advanced Search" >
         <action
             android:id="@+id/navigateToSearchFromAdvancedSearch"
             app:destination="@id/searchFragment" />
@@ -279,4 +282,8 @@
         android:name="com.bounswe2020group3.paperlayer.feed.FeedFragment"
         android:label="Feed"
         />
+    <fragment
+        android:id="@+id/publicationFragment"
+        android:name="com.bounswe2020group3.paperlayer.publication.PublicationFragment"
+        android:label="Publications" />
 </navigation>

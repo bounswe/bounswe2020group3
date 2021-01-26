@@ -2,42 +2,30 @@ package com.bounswe2020group3.paperlayer.profile.user
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
-import androidx.navigation.NavController
+import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
-import com.bounswe2020group3.paperlayer.profile.follow.FollowType
 import com.bounswe2020group3.paperlayer.data.user.User
+import com.bounswe2020group3.paperlayer.profile.follow.FollowType
 import com.bounswe2020group3.paperlayer.util.Session
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_user.*
-import kotlinx.android.synthetic.main.fragment_user.imageViewProfileAvatar
-import kotlinx.android.synthetic.main.fragment_user.linearLayoutPublications
-import kotlinx.android.synthetic.main.fragment_user.textViewBio
-import kotlinx.android.synthetic.main.fragment_user.textViewBirthday
-import kotlinx.android.synthetic.main.fragment_user.textViewEmail
-import kotlinx.android.synthetic.main.fragment_user.textViewExpertise
-import kotlinx.android.synthetic.main.fragment_user.textViewFullName
-import kotlinx.android.synthetic.main.fragment_user.textViewGender
-import kotlinx.android.synthetic.main.fragment_user.textViewInterests
-import kotlinx.android.synthetic.main.fragment_user.textViewProfileFollowers
-import kotlinx.android.synthetic.main.fragment_user.textViewProfileFollowings
-
 import javax.inject.Inject
 
 private const val ARG_USER_ID = "userID"
 
 class UserFragment : Fragment(), UserContract.View {
 
-    @Inject lateinit var sessionManager: Session
-    @Inject lateinit var presenter: UserContract.Presenter
+    @Inject
+    lateinit var sessionManager: Session
+    @Inject
+    lateinit var presenter: UserContract.Presenter
 
     private var userID: Int? = -1
     private var isFollowRequest = true
@@ -68,8 +56,8 @@ class UserFragment : Fragment(), UserContract.View {
         super.onViewCreated(view, savedInstanceState)
 
         buttonUserFollow.setOnClickListener {
-            if(this.userID != null && this.userID!! > 0) {
-                if(this.isFollowRequest) {
+            if (this.userID != null && this.userID!! > 0) {
+                if (this.isFollowRequest) {
                     presenter.sendFollowRequest(userID!!)
                 } else {
                     presenter.sendFollow(userID!!)
@@ -85,21 +73,24 @@ class UserFragment : Fragment(), UserContract.View {
 
         val followingBundle = bundleOf("followType" to FollowType.FOLLOWING, "userID" to userID)
 
-        val publicationBundle=bundleOf("authorID" to userID )
+        val publicationBundle = bundleOf("authorID" to userID)
 
         linearLayoutPublications.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.navigateToPublicationFromUser, publicationBundle)
+            Navigation.findNavController(view)
+                .navigate(R.id.navigateToPublicationFromUser, publicationBundle)
         }
 
-        layoutUserFollowers.setOnClickListener{
-            Navigation.findNavController(view).navigate(R.id.navigateToFollowListFromUser, followerBundle)
+        layoutUserFollowers.setOnClickListener {
+            Navigation.findNavController(view)
+                .navigate(R.id.navigateToFollowListFromUser, followerBundle)
         }
 
-        layoutUserFollowings.setOnClickListener{
-            Navigation.findNavController(view).navigate(R.id.navigateToFollowListFromUser, followingBundle)
+        layoutUserFollowings.setOnClickListener {
+            Navigation.findNavController(view)
+                .navigate(R.id.navigateToFollowListFromUser, followingBundle)
         }
 
-        imageViewReportUser.setOnClickListener{
+        imageViewReportUser.setOnClickListener {
             val reportBundle = bundleOf("userID" to userID)
             Navigation.findNavController(view).navigate(R.id.navigateToReportFromUser, reportBundle)
         }
@@ -150,7 +141,7 @@ class UserFragment : Fragment(), UserContract.View {
             textViewFullName.text = fullName
 
             val imageUrl = profile.profile_picture
-            if(imageUrl != null && imageUrl != "") {
+            if (imageUrl != null && imageUrl != "") {
                 Picasso.get().load(imageUrl).into(imageViewProfileAvatar)
             }
 
@@ -182,6 +173,11 @@ class UserFragment : Fragment(), UserContract.View {
                 // Stats
                 textViewProfileFollowers.text = user.countOfFollowers.toString()
                 textViewProfileFollowings.text = user.countOfFollowings.toString()
+                textViewProfileRating.text = if (profile.rating == null) {
+                    "N/A"
+                } else {
+                    String.format("%.2f", profile.rating)
+                }
 
                 // Buttons
                 buttonUserRequestSent.visibility = View.GONE
@@ -218,7 +214,7 @@ class UserFragment : Fragment(), UserContract.View {
     }
 
     override fun loadUser() {
-        if(userID != null && userID!! > 0) {
+        if (userID != null && userID!! > 0) {
             presenter.loadUser(userID!!)
         } else {
             showErrorToast("User id is invalid. Please try again.")

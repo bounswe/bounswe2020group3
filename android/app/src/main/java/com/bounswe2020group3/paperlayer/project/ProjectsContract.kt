@@ -7,6 +7,7 @@ import com.bounswe2020group3.paperlayer.project.data.Project
 import com.bounswe2020group3.paperlayer.project.data.ProjectShort
 import com.bounswe2020group3.paperlayer.project.data.Publication
 import com.bounswe2020group3.paperlayer.project.data.Tag
+import com.bounswe2020group3.paperlayer.request.RequestItem
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
@@ -23,10 +24,13 @@ interface       ProjectsContract {
         fun fetchAllProjectsOfUser(userId: Int)
         fun fetchAllPublicationsOfOwner(ownerId: Int)
         fun connectScholarPublications(authorId: String)
+        fun fetchInvitationsOfUser(userId: Int)
         fun onViewProjectButtonClicked(item: ProjectCard, position: Int)
         fun onViewPublicationButtonClicked(item: ProjectCard, position: Int)
         fun onEditProjectButtonClicked(item: ProjectCard, position: Int)
         fun onNewProjectButtonClicked()
+        fun acceptInviteRequest(item: RequestItem)
+        fun rejectInviteRequest(item: RequestItem)
     }
 
     interface View: Mvp.View{
@@ -45,6 +49,11 @@ interface       ProjectsContract {
         fun resetPublicationCardList()
         fun submitPublicationCardList()
         fun addPublicationCard(projectName: String,projectBody: String,projectOwner: String,tags: List<Tag>,projectId: Int)
+
+        fun resetInvitationRequestList()
+        fun submitInvitationRequestList()
+        fun addInvitationRequest(item: RequestItem)
+        fun removeInvitationRequest(item: RequestItem)
     }
 
     interface Model {

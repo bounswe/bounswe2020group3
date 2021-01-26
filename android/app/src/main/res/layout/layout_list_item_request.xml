@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_margin="@dimen/margin_sm"
         android:paddingVertical="@dimen/padding_md"
         android:background="@drawable/gradient">
 
@@ -55,6 +56,8 @@
                 android:id="@+id/textViewNameSurname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:layout_marginBottom="@dimen/margin_sm"
                 android:text="nameSurname"/>
 
         </LinearLayout>

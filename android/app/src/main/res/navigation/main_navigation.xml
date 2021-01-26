@@ -122,6 +122,9 @@
         <action
             android:id="@+id/navigateToProjectCreateFromProjectMainFragment"
             app:destination="@id/projectCreateFragment" />
+        <action
+            android:id="@+id/navigateToUserFromProjectsMain"
+            app:destination="@id/userFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"

@@ -3,9 +3,9 @@ package com.bounswe2020group3.paperlayer.collaborationRequests
 import com.bounswe2020group3.paperlayer.data.user.AuthToken
 import com.bounswe2020group3.paperlayer.data.user.User
 import com.bounswe2020group3.paperlayer.home.HomeContract
-import com.bounswe2020group3.paperlayer.home.cards.EventCard
 import com.bounswe2020group3.paperlayer.home.data.CollaborationRequest
 import com.bounswe2020group3.paperlayer.mvp.Mvp
+import com.bounswe2020group3.paperlayer.request.RequestItem
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -19,18 +19,18 @@ class CollabContract {
         fun fetchRequests(ownerId : Int)
         fun subscribeAuthToken()
 
-        fun onAcceptButtonClick(item: CollabCard, position: Int )
-        fun onRejectButtonClick(item: CollabCard, position: Int )
+        fun onAcceptButtonClick(item: RequestItem, position: Int )
+        fun onRejectButtonClick(item: RequestItem, position: Int )
     }
     interface CollabView: Mvp.View{
         fun getLayout(): android.view.View
         fun showToast(message: String)
         fun writeLogMessage(type:String ,tag: String,message: String)
         var projectId  : Int
-        fun resetCardList()
-        fun submitCardList()
-        fun addCard(card : CollabCard)
-        fun removeCard(card : CollabCard)
+        fun resetItemList()
+        fun submitItemList()
+        fun addItem(item : RequestItem)
+        fun removeItem(item : RequestItem)
 
     }
     interface Model {

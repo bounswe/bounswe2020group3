@@ -132,6 +132,16 @@ def get_count_of_publications(this_user):
 
 
 def get_user_rating(user_id):
+    """
+        Returns average rating of a user.
+    """
     ratings = Rating.objects.filter(to_user=user_id)
     rating = ratings.aggregate(Avg('rating'))
     return rating['rating__avg']
+
+
+def get_count_of_raters(user_id):
+    """
+        Returns number of raters of a user.
+    """
+    return Rating.objects.filter(to_user=user_id).count()

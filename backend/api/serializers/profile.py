@@ -3,7 +3,7 @@ from rest_framework import serializers
 from api.models.rating import Rating
 from django.db.models import Avg
 from api.utils import get_my_rating, get_my_rating_id, \
-    get_is_collaborator
+    get_is_collaborator, get_count_of_raters
 
 
 class ProfileFullSerializer(serializers.HyperlinkedModelSerializer):
@@ -16,6 +16,7 @@ class ProfileFullSerializer(serializers.HyperlinkedModelSerializer):
     rating = serializers.SerializerMethodField('get_rating')
     my_rating = serializers.SerializerMethodField('get_my_rating')
     my_rating_id = serializers.SerializerMethodField('get_my_rating_id')
+    count_of_raters = serializers.SerializerMethodField('get_count_of_raters')
     is_commentable = serializers.SerializerMethodField('get_is_commentable')
 
     class Meta:
@@ -25,6 +26,7 @@ class ProfileFullSerializer(serializers.HyperlinkedModelSerializer):
                   'expertise', 'gender', 'interests', 'affiliations',
                   'share_bio', 'share_gender', 'share_affiliations',
                   'is_public', 'rating', 'my_rating', 'my_rating_id',
+                  'count_of_raters',
                   'is_commentable', 'owner_id']
 
     def get_rating(self, obj):
@@ -43,6 +45,9 @@ class ProfileFullSerializer(serializers.HyperlinkedModelSerializer):
     def get_is_commentable(self, obj):
         request = self.context.get("request")
         return get_is_collaborator(request.user, obj.owner)
+
+    def get_count_of_raters(self, obj):
+        return get_count_of_raters(obj.owner)
 
 
 class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
@@ -55,6 +60,7 @@ class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
     rating = serializers.SerializerMethodField('get_rating')
     my_rating = serializers.SerializerMethodField('get_my_rating')
     my_rating_id = serializers.SerializerMethodField('get_my_rating_id')
+    count_of_raters = serializers.SerializerMethodField('get_count_of_raters')
     is_commentable = serializers.SerializerMethodField('get_is_commentable')
 
     class Meta:
@@ -65,6 +71,7 @@ class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
                   'gender', 'interests', 'affiliations', 'share_bio',
                   'share_gender', 'share_affiliations',
                   'is_public', 'rating', 'my_rating', 'my_rating_id',
+                  'count_of_raters',
                   'is_commentable', 'owner_id']
 
     def get_rating(self, obj):
@@ -83,6 +90,9 @@ class ProfileBasicSerializer(serializers.HyperlinkedModelSerializer):
     def get_is_commentable(self, obj):
         request = self.context.get("request")
         return get_is_collaborator(request.user, obj.owner)
+
+    def get_count_of_raters(self, obj):
+        return get_count_of_raters(obj.owner)
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)

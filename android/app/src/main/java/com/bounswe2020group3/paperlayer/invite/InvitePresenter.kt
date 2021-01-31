@@ -64,7 +64,8 @@ class InvitePresenter @Inject constructor(private var model: InviteContract.Mode
         }
 
     }
-    override fun fetchAllUsers(ownerId: Int) {
+    override fun fetchAllUsers(ownerId: Int) { //deprecated, is not in use
+
         var ids : ArrayList<String>  = ArrayList()
         var message : String = "invitedalready"
 
@@ -120,6 +121,11 @@ class InvitePresenter @Inject constructor(private var model: InviteContract.Mode
 
 
     override fun OnInviteButtonClicked(item: InviteCard, position: Int) {
+        /*
+       * checks the invited users and changes the button functionality and the text of it accordingly.
+       * if already invited gets uninvited
+
+         */
         view?.writeLogMessage("i",TAG,"button pressed, ${item.id}, ${projectId}")
         if(!item.called) {
             val inviteUserObservable = model.inviteUsers(InviteRequest(item.id, projectId, "Come")).subscribe({response->
@@ -171,6 +177,9 @@ class InvitePresenter @Inject constructor(private var model: InviteContract.Mode
 
     }
     override fun bind(view: InviteContract.View) {
+        /*
+        binds the presenter
+* */
         projectId = view.projectId
         subscribeAuthToken()
         view.writeLogMessage("i",TAG,"presenter set the view, projectID : $projectId")

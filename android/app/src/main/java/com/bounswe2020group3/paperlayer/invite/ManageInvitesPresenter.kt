@@ -34,8 +34,8 @@ class ManageInvitesPresenter @Inject constructor(private var model: InviteContra
         if(!item.called) {
             val inviteUserObservable = model.inviteUsers(InviteRequest(item.id, projectId, "Come")).subscribe({ response->
 
-                view?.writeLogMessage("i", TAG, "invite sent")
-                view?.writeLogMessage("i", TAG, "invite response: $response")
+                view?.writeLogMessage("i", TAG, "uninvite sent")
+                view?.writeLogMessage("i", TAG, "uninvite response: $response")
 
                 view?.cardInviteCheck(item.id,position)
                 disposable.clear()
@@ -96,6 +96,10 @@ class ManageInvitesPresenter @Inject constructor(private var model: InviteContra
     }
 
     override fun fetchInvited(ownerId: Int) {
+        /*
+        * fetches the all the users and the invitations that has been set with different backend calls.
+        * compares the results and gets all the invited users with their info to be showed.
+         */
         var ids : ArrayList<String>  = ArrayList()
         var message : String = "invitedalready"
 

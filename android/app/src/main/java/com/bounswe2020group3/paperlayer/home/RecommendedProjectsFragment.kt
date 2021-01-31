@@ -25,14 +25,18 @@ class RecommendedProjectsFragment : Fragment(), HomeContract.RecommendedProjects
 
     @Inject
     lateinit var presenter : RecommendedProjectsPresenter
-
+    //View object
     lateinit var fragment_view : View
+
+    // Declare Context variable at class level in Fragment
     private lateinit var mContext: Context
 
+    //recyclerview declaration
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: ProjectAdaptor
     private lateinit var viewManager: RecyclerView.LayoutManager
 
+    //cards to be shown in recyclerview
     private val projectslist = ArrayList<ProjectUpdateCard>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

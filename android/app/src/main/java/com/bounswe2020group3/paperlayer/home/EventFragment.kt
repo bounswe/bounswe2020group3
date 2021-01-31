@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2020group3.paperlayer.MainActivity
 import com.bounswe2020group3.paperlayer.R
 import com.bounswe2020group3.paperlayer.home.adaptors.EventAdaptor
+import com.bounswe2020group3.paperlayer.home.adaptors.MilestoneAdaptor
 import com.bounswe2020group3.paperlayer.home.adaptors.OnCardClickListenerForEvents
 import com.bounswe2020group3.paperlayer.home.cards.EventCard
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -26,14 +27,18 @@ class EventFragment : Fragment(), HomeContract.EventView, OnCardClickListenerFor
 
     @Inject
     lateinit var presenter : EventPresenter
-
+    //View object
     lateinit var fragment_view : View
+
+    // Declare Context variable at class level in Fragment
     private lateinit var mContext: Context
 
+    //recyclerview declaration
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: EventAdaptor
     private lateinit var viewManager: RecyclerView.LayoutManager
 
+    //cards to be shown in recyclerview
     private val eventCardsList = ArrayList<EventCard>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

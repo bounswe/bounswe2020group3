@@ -30,10 +30,12 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
     // Declare Context variable at class level in Fragment
     private lateinit var mContext: Context
 
+    // recycler object and its adapter object declared
     private lateinit var inviteAdapter: UserInviteAdapter
     override lateinit var recyclerView: RecyclerView
     private lateinit var viewManager: RecyclerView.LayoutManager
 
+    //cards to be shown in recyclerview
     private val inviteCardList=ArrayList<InviteCard>()
     private val invitedCardList = setOf<Int>()
     override var projectId : Int = -1;
@@ -58,7 +60,7 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
     override fun onDestroy() {
         super.onDestroy()
 
-        resetUserCardlist()
+        resetUserCardlist() // resets cardlist to be updated on the next call
         this.presenter.unbind()
     }
 
@@ -72,13 +74,13 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        projectId = arguments?.getInt("projectID")!!
-        val view = inflater.inflate(R.layout.fragment_invite, container, false)
+        projectId = arguments?.getInt("projectID")!! //receives the projectID from the previous fragment
+        val view = inflater.inflate(R.layout.fragment_invite, container, false) //
         this.fragment_view=view
 
 
         view.findViewById<Button>(R.id.buttonOK).setOnClickListener {
-            Navigation.findNavController(view).navigateUp()
+            Navigation.findNavController(view).navigateUp() // to go back to the previous fragment
         }
         return view
     }
@@ -91,8 +93,8 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
     }
 
     override fun resetUserCardlist() {
-        inviteCardList.clear()
-        inviteAdapter.submitList(this.inviteCardList)
+        inviteCardList.clear() //clears the list of the cards
+        inviteAdapter.submitList(this.inviteCardList) //update the data
         inviteAdapter.notifyDataSetChanged() //notify to update recyclerview
     }
     override fun submitUserCardList() {
@@ -100,30 +102,35 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
         for (invite in inviteCardList){
             message += invite.username + ", "
         }
-        writeLogMessage("i", TAG,message)
 
         inviteAdapter.submitList(this.inviteCardList)
         inviteAdapter.notifyDataSetChanged() //notify to update recyclerview
     }
 
     override fun cardInviteCheck(id: Int,position : Int) {
-
+    /*
+        Changes the data on the hand without having another get call. So that unnecessary get calls
+        to backend isn't made.
+    */
         inviteCardList[position].called = true
-
-
         submitUserCardList()
         inviteAdapter.notifyDataSetChanged()
     }
 
     override fun cardUnInviteCheck(id: Int ,position : Int) {
-
+        /*
+            Changes the data on the hand without having another get call. So that unnecessary get calls
+            to backend isn't made.
+        */
         inviteCardList[position].called = false
-
         submitUserCardList()
         inviteAdapter.notifyDataSetChanged()
     }
 
     private fun initRecyclerView(){
+        /*
+            Initializes the already declared Recycler view.
+        */
         viewManager = LinearLayoutManager(this.context)
         inviteAdapter= UserInviteAdapter(this)
         recyclerView = fragment_view.findViewById<RecyclerView>(R.id.recyclerViewInvites).apply{
@@ -141,12 +148,18 @@ class InviteFragment : Fragment(),InviteContract.View, OnCardClickListener {
     }
 
     override fun onCardClick(userId: Int) {
+        /*
+            Navigates to the profile of the card clicked
+        */
         val bundle = bundleOf("userID" to userId )
         Navigation.findNavController(requireView()).navigate(R.id.navigateToUserFromInvite, bundle)
     }
 
 
     override fun addUserCard(userId: Int, username: String, name : String, expertise: String?, photoURL : String?, id : Int, invited : Boolean) {
+        /*
+            Adds a usercard to the list to be shown in recyclerview
+        */
         inviteCardList.add(
                 InviteCard(
                         userId,

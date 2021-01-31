@@ -49,7 +49,6 @@ class CreateUserService {
         }
 
         fun usernameCheck(view: View): String? {
-            // TODO: add a system to check if the username has been taken
             var username = view.findViewById<EditText>(R.id.editTextUsername).text.toString()
             if (username.length < 6) {
                 view.findViewById<TextView>(R.id.errorUsername).setText("You must enter a username at " +
@@ -62,8 +61,7 @@ class CreateUserService {
         }
 
         fun emailCheck(view: View): String? {
-            // TODO: add a system to check if the email has been taken
-            // TODO: add a system to check if the email exists
+
             var email = view.findViewById<EditText>(R.id.editTextEmail).text.toString()
             if (email == "") {
                 view.findViewById<TextView>(R.id.errorEmail).setText("You must enter a valid email.")

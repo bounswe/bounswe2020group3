@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -26,13 +27,18 @@ class MilestoneFragment : Fragment(), HomeContract.MileStoneView , OnCardClickLi
     @Inject
     lateinit var presenter : MilestonePresenter
 
+    //View object
     lateinit var fragment_view : View
+
+    // Declare Context variable at class level in Fragment
     private lateinit var mContext: Context
 
+    //recyclerview declaration
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: MilestoneAdaptor
     private lateinit var viewManager: RecyclerView.LayoutManager
 
+    //cards to be shown in recyclerview
     private val milestoneCardsList = ArrayList<MilestoneCard>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -91,11 +97,11 @@ class MilestoneFragment : Fragment(), HomeContract.MileStoneView , OnCardClickLi
     }
 
     override fun getLayout(): View {
-        TODO("Not yet implemented")
+        return this.fragment_view
     }
 
     override fun showToast(message: String) {
-        TODO("Not yet implemented")
+        Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 
     override fun writeLogMessage(type: String, tag: String, message: String) {
@@ -110,6 +116,9 @@ class MilestoneFragment : Fragment(), HomeContract.MileStoneView , OnCardClickLi
     }
 
     override fun onViewButtonClick(item: MilestoneCard, position: Int) {
+        /*
+        navigates to the project detail page with project id info.
+         */
         val bundle = bundleOf("projectID" to item.projectId )
 
         Navigation.findNavController(fragment_view).navigate(R.id.navigateToProjectFromHomepageMilestones,bundle)
